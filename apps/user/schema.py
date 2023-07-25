@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 from ninja_schema import ModelSchema, model_validator, Schema
 from ninja_extra.exceptions import APIException
 from ninja_extra import status
+from pydantic import validator
 from datetime import datetime
 from typing import List, Optional
 from utils.chen_response import ChenResponse
@@ -26,7 +27,7 @@ class GroupSchema(ModelSchema):
 class CreateUserSchema(ModelSchema):
     class Config:
         model = UserModel
-        include = ('username','email','name','password','phone','status',)
+        include = ('username', 'email', 'name', 'password', 'phone', 'status',)
 
     # username判重
     @model_validator("username")
@@ -64,3 +65,15 @@ class UserRetrieveOutSchema(ModelSchema):
     class Config:
         model = UserModel
         exclude = ("password",)
+
+# 删除和更新用户
+class UpdateDeleteUserSchema(ModelSchema):
+    class Config:
+        model = UserModel
+        include = ("name", "username", "phone", "email", "status")
+
+class UpdateDeleteUserOutSchema(Schema):
+    message: str
+
+class DeleteUserSchema(Schema):
+    ids: List[int]

@@ -19,7 +19,8 @@ INSTALLED_APPS = [
     'ninja_jwt',
     # apps
     'apps.user',
-    'apps.dict'
+    'apps.dict',
+    'apps.project'
 ]
 
 MIDDLEWARE = [
@@ -105,3 +106,6 @@ NINJA_JWT = {
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
 # Extra配置
+NINJA_EXTRA={
+
+}
