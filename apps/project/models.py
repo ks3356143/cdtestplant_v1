@@ -1,5 +1,6 @@
 from django.db import models
 from utils.models import CoreModel
+from tinymce.models import HTMLField
 
 class Project(CoreModel):
     ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="项目标识",
@@ -67,7 +68,7 @@ class Round(CoreModel):
     low_condition_tem = models.CharField(max_length=64, blank=True, null=True, verbose_name="最低工况温度",
                                          help_text="最低工况温度")
     project = models.ForeignKey(to="Project", db_constraint=False, related_name="pField", on_delete=models.CASCADE,
-                                verbose_name='归属项目', help_text='归属项目',related_query_name='pQuery')
+                                verbose_name='归属项目', help_text='归属项目', related_query_name='pQuery')
     level = models.CharField(max_length=15, verbose_name='树状级别第一级', help_text="树状级别第一级", default='0')
     key = models.CharField(max_length=15, verbose_name='给前端的树状级别', help_text="给前端的树状级别")
     title = models.CharField(max_length=15, verbose_name='给前端的name', help_text="给前端的name")
@@ -79,26 +80,50 @@ class Round(CoreModel):
         ordering = ('key',)
 
 class Dut(CoreModel):
-    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="被测件标识",help_text="被测件标识")  # 后面加上unique=True
-    type = models.CharField(max_length=16, blank=True, null=True, verbose_name="被测件类型",help_text="被测件类型")
-    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="被测件名称",help_text="被测件名称")
-    black_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="空行代码数",help_text="空行代码数")
-    pure_code_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="代码行数",help_text="代码行数")
-    mix_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="混合行数",help_text="混合行数")
-    total_comment_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="总注释行",help_text="总注释行")
+    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="被测件标识",
+                             help_text="被测件标识")  # 后面加上unique=True
+    type = models.CharField(max_length=16, blank=True, null=True, verbose_name="被测件类型", help_text="被测件类型")
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="被测件名称", help_text="被测件名称")
+    black_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="空行代码数", help_text="空行代码数")
+    pure_code_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="代码行数", help_text="代码行数")
+    mix_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="混合行数", help_text="混合行数")
+    total_comment_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="总注释行", help_text="总注释行")
     total_code_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="总代码行", help_text="总代码行")
     total_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="总行数", help_text="总行数")
     comment_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="注释率", help_text="注释率")
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
     key = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-key", help_text="树-key")
-    level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",default=1) #默认为1
+    level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",
+                             default=1)  # 默认为1
     project = models.ForeignKey(to="Project", db_constraint=False, related_name="pdField", on_delete=models.CASCADE,
                                 verbose_name='归属项目', help_text='归属项目', related_query_name='pdQuery')
     round = models.ForeignKey(to="Round", db_constraint=False, related_name="rdField", on_delete=models.CASCADE,
-                                verbose_name='归属轮次', help_text='归属轮次', related_query_name='rdQuery')
+                              verbose_name='归属轮次', help_text='归属轮次', related_query_name='rdQuery')
 
     class Meta:
         db_table = 'project_dut'
         verbose_name = "被测件信息"
+        verbose_name_plural = verbose_name
+        ordering = ('key',)
+
+class Design(CoreModel):
+    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求标识", help_text="测试需求标识")
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求名称", help_text="测试需求名称")
+    demandType = models.CharField(max_length=8, blank=True, null=True, verbose_name="测试需求类型", help_text="测试需求类型")
+    description = HTMLField(blank=True, null=True, verbose_name="测试需求描述", help_text="测试需求描述")
+    title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
+    key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey", help_text="round-dut-designkey")
+    level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",
+                             default=2)  # 默认为2
+    project = models.ForeignKey(to="Project", db_constraint=False, related_name="psField", on_delete=models.CASCADE,
+                                verbose_name='归属项目', help_text='归属项目', related_query_name='psQuery')
+    round = models.ForeignKey(to="Round", db_constraint=False, related_name="rsField", on_delete=models.CASCADE,
+                              verbose_name='归属轮次', help_text='归属轮次', related_query_name='rsQuery')
+    dut = models.ForeignKey(to="Dut", db_constraint=False, related_name="rsField", on_delete=models.CASCADE,
+                              verbose_name='归属轮次', help_text='归属轮次', related_query_name='rsQuery')
+
+    class Meta:
+        db_table = 'project_design'
+        verbose_name = "测试需求"
         verbose_name_plural = verbose_name
         ordering = ('key',)

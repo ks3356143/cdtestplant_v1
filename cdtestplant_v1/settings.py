@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     # 第三方包
     'ninja_extra',
     'ninja_jwt',
+    'tinymce',
     # apps
     'apps.user',
     'apps.dict',
@@ -88,11 +89,11 @@ LANGUAGE_CODE = 'zh-hans'
 TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 USE_TZ = True
-# Static files (CSS, JavaScript, Images)
+# 静态文件目录
 STATIC_URL = 'static/'
-# Default primary key field type
+# 默认ORM主键pk
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-# token 有效时间 时 分 秒
+# token 有效时间 时 分 秒（暂未使用）
 TOKEN_LIFETIME = 12 * 60 * 60
 # User表去找我们自定义的
 AUTH_USER_MODEL = 'user.Users'
@@ -101,7 +102,9 @@ ALL_MODELS_OBJECTS = []  # 所有app models 对象
 
 # JWT配置
 NINJA_JWT = {
+    # token类型，其他方案：SlidingToken
     "AUTH_TOKEN_CLASSES": ("ninja_jwt.tokens.AccessToken",),
+    # token失效时间
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=1),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
