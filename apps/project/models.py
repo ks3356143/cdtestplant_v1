@@ -107,12 +107,13 @@ class Dut(CoreModel):
         ordering = ('key',)
 
 class Design(CoreModel):
-    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求标识", help_text="测试需求标识")
-    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求名称", help_text="测试需求名称")
-    demandType = models.CharField(max_length=8, blank=True, null=True, verbose_name="测试需求类型", help_text="测试需求类型")
-    description = HTMLField(blank=True, null=True, verbose_name="测试需求描述", help_text="测试需求描述")
+    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="设计需求标识", help_text="设计需求标识")
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="设计需求名称", help_text="设计需求名称")
+    demandType = models.CharField(max_length=8, blank=True, null=True, verbose_name="设计需求类型", help_text="设计需求类型")
+    description = HTMLField(blank=True, null=True, verbose_name="设计需求描述", help_text="设计需求描述")
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
-    key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey", help_text="round-dut-designkey")
+    key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey",
+                           help_text="round-dut-designkey")
     level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",
                              default=2)  # 默认为2
     project = models.ForeignKey(to="Project", db_constraint=False, related_name="psField", on_delete=models.CASCADE,
@@ -120,10 +121,40 @@ class Design(CoreModel):
     round = models.ForeignKey(to="Round", db_constraint=False, related_name="rsField", on_delete=models.CASCADE,
                               verbose_name='归属轮次', help_text='归属轮次', related_query_name='rsQuery')
     dut = models.ForeignKey(to="Dut", db_constraint=False, related_name="rsField", on_delete=models.CASCADE,
-                              verbose_name='归属轮次', help_text='归属轮次', related_query_name='rsQuery')
+                            verbose_name='归属轮次', help_text='归属轮次', related_query_name='rsQuery')
 
     class Meta:
         db_table = 'project_design'
         verbose_name = "测试需求"
         verbose_name_plural = verbose_name
         ordering = ('key',)
+
+class TestDemand(CoreModel):
+    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求标识", help_text="测试需求标识")
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求名称", help_text="测试需求名称")
+    adequacy = models.CharField(max_length=128, blank=True, null=True, verbose_name="充分条件", help_text="充分条件")
+    termination = models.CharField(max_length=64, blank=True, null=True, verbose_name="终止条件", help_text="终止条件")
+    premise = models.CharField(max_length=64, blank=True, null=True, verbose_name="前提", help_text="前提")
+    priority = models.CharField(max_length=8, blank=True, null=True, verbose_name="优先级", help_text="优先级")
+    testType = models.CharField(max_length=32,null=True, blank=True, help_text="测试类型", verbose_name="测试类型",default="1")
+    testMethod = models.CharField(max_length=512, blank=True, null=True, verbose_name="测试方法", help_text="测试方法")
+    title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
+    key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey-testdemand",
+                           help_text="round-dut-designkey-testdemand")
+    level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",
+                             default=3)  # 默认为3
+    project = models.ForeignKey(to="Project", db_constraint=False, related_name="ptField", on_delete=models.CASCADE,
+                                verbose_name='归属项目', help_text='归属项目', related_query_name='ptQuery')
+    round = models.ForeignKey(to="Round", db_constraint=False, related_name="rtField", on_delete=models.CASCADE,
+                              verbose_name='归属轮次', help_text='归属轮次', related_query_name='dutQuery')
+    dut = models.ForeignKey(to="Dut", db_constraint=False, related_name="dutField", on_delete=models.CASCADE,
+                            verbose_name='归属轮次', help_text='归属轮次', related_query_name='dtQuery')
+    design = models.ForeignKey(to="Design", db_constraint=False, related_name="dtField", on_delete=models.CASCADE,
+                               verbose_name='归属轮次', help_text='归属轮次', related_query_name='dtQuery')
+
+class TestDemandContent(CoreModel):
+    testXuQiu = models.CharField(max_length=1024, blank=True, null=True, verbose_name="测试需求条目", help_text="测试需求条目")
+    testYuQi = models.CharField(max_length=1024, blank=True, null=True, verbose_name="测试需求条目的预期", help_text="测试需求条目的预期")
+    testDemand = models.ForeignKey(to="TestDemand", db_constraint=False, related_name="testQField",
+                                   on_delete=models.CASCADE, verbose_name='归属的测试项', help_text='归属的测试项',
+                                   related_query_name='testQField')

@@ -15,6 +15,7 @@ from apps.project.schemas.dut import DutModelOutSchema, DutFilterSchema, DutTree
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['被测件数据'])
 class DutController(ControllerBase):
     @route.get("/getDutList", response=List[DutModelOutSchema], exclude_none=True, url_name="dut-list")
+    @transaction.atomic
     @paginate(MyPagination)
     def get_dut_list(self, filters: DutFilterSchema = Query(...)):
         for attr, value in filters.__dict__.items():
@@ -44,9 +45,10 @@ class DutController(ControllerBase):
         # 查询当前key应该为多少
         dut_count = Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key).count()
         key_string = ''.join([payload.round_key, "-", str(dut_count)])
+        print(key_string)
         # 查询当前的round_id
         round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
-        asert_dict.update({'key': key_string, 'round': round_instance})
+        asert_dict.update({'key': key_string, 'round': round_instance,'title':payload.name})
         asert_dict.pop("round_key")
         qs = Dut.objects.create(**asert_dict)
         return qs
@@ -65,12 +67,25 @@ class DutController(ControllerBase):
             print(attr)
             if attr == 'project_id' or attr == 'round_key':
                 continue
+            if attr == 'name':
+                setattr(dut_qs, "title", value)
             setattr(dut_qs, attr, value)
         dut_qs.save()
         return ChenResponse(message="被测件更新成功!")
 
     # 删除被测件
     @route.delete("/dut/delete", url_name="dut-delete")
+    @transaction.atomic
     def delete_dut(self, data:DeleteSchema):
+        dut_single = Dut.objects.filter(id=data.ids[0])[0]
+        round_id = dut_single.round.id
+        round_key = dut_single.round.key
         multi_delete(data.ids,Dut)
+        index = 0
+        dut_all_qs = Dut.objects.filter(round__id=round_id)
+        for single_qs in dut_all_qs:
+            dut_key = "".join([round_key,'-',str(index)])
+            single_qs.key = dut_key
+            index = index + 1
+            single_qs.save()
         return ChenResponse(message="被测件删除成功！")
