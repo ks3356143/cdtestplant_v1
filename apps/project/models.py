@@ -133,10 +133,10 @@ class TestDemand(CoreModel):
     ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求标识", help_text="测试需求标识")
     name = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求名称", help_text="测试需求名称")
     adequacy = models.CharField(max_length=128, blank=True, null=True, verbose_name="充分条件", help_text="充分条件")
-    termination = models.CharField(max_length=64, blank=True, null=True, verbose_name="终止条件", help_text="终止条件")
+    termination = models.CharField(max_length=1024, blank=True, null=True, verbose_name="终止条件", help_text="终止条件")
     premise = models.CharField(max_length=64, blank=True, null=True, verbose_name="前提", help_text="前提")
     priority = models.CharField(max_length=8, blank=True, null=True, verbose_name="优先级", help_text="优先级")
-    testType = models.CharField(max_length=32,null=True, blank=True, help_text="测试类型", verbose_name="测试类型",default="1")
+    testType = models.CharField(max_length=8,null=True, blank=True, help_text="测试类型", verbose_name="测试类型",default="1")
     testMethod = models.CharField(max_length=512, blank=True, null=True, verbose_name="测试方法", help_text="测试方法")
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
     key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey-testdemand",
@@ -158,3 +158,44 @@ class TestDemandContent(CoreModel):
     testDemand = models.ForeignKey(to="TestDemand", db_constraint=False, related_name="testQField",
                                    on_delete=models.CASCADE, verbose_name='归属的测试项', help_text='归属的测试项',
                                    related_query_name='testQField')
+
+class Case(CoreModel):
+    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="用例标识", help_text="用例标识")
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="用例名称", help_text="用例名称")
+    initialization = models.CharField(max_length=128, blank=True, null=True, verbose_name="初始条件", help_text="用例名称")
+    premise = models.CharField(max_length=128, blank=True, null=True, verbose_name="前提和约束", help_text="前提和约束")
+    summarize = models.CharField(max_length=256, blank=True, null=True, verbose_name="用例综述", help_text="用例综述")
+    designPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="设计人员", help_text="设计人员")
+    testPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="测试人员", help_text="测试人员")
+    monitorPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="审核人员", help_text="审核人员")
+    project = models.ForeignKey(to="Project", db_constraint=False, related_name="pcField", on_delete=models.CASCADE,
+                                verbose_name='归属项目', help_text='归属项目', related_query_name='pcQuery')
+    round = models.ForeignKey(to="Round", db_constraint=False, related_name="rcField", on_delete=models.CASCADE,
+                              verbose_name='归属轮次', help_text='归属轮次', related_query_name='rcQuery')
+    dut = models.ForeignKey(to="Dut", db_constraint=False, related_name="ducField", on_delete=models.CASCADE,
+                            verbose_name='归属被测件', help_text='归属被测件', related_query_name='ducQuery')
+    design = models.ForeignKey(to="Design", db_constraint=False, related_name="dcField", on_delete=models.CASCADE,
+                               verbose_name='归属设计需求', help_text='归属设计需求', related_query_name='dcQuery')
+    test = models.ForeignKey(to="TestDemand", db_constraint=False, related_name="tcField", on_delete=models.CASCADE,
+                               verbose_name='归属测试需求', help_text='归属测试需求', related_query_name='tcQuery')
+    title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
+    key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey-testdemand-case",
+                           help_text="round-dut-designkey-testdemand-case")
+    level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",
+                             default=4)  # 默认为4
+
+    class Meta:
+        db_table = 'project_case'
+        verbose_name = "测试用例"
+        verbose_name_plural = verbose_name
+        ordering = ('key',)
+
+class CaseStep(CoreModel):
+    operation = HTMLField(blank=True, null=True, verbose_name="测试步骤-操作", help_text="测试步骤-操作")
+    expect = models.CharField(max_length=64, blank=True, null=True, verbose_name="用例预期", help_text="用例预期")
+    result = HTMLField(blank=True, null=True, verbose_name="测试步骤-结果", help_text="测试步骤-结果")
+    passed = models.CharField(max_length=8, null=True, blank=True, help_text="是否通过", verbose_name="是否通过", default="3")
+    status = models.CharField(max_length=8, null=True, blank=True, help_text="执行状态", verbose_name="执行状态", default="3")
+    case = models.ForeignKey(to="Case", db_constraint=False, related_name="step",
+                                   on_delete=models.CASCADE, verbose_name='归属的测试用例', help_text='归属的测试用例',
+                                   related_query_name='stepQ')
