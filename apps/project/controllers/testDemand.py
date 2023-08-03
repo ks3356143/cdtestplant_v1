@@ -12,7 +12,7 @@ from apps.project.models import Design, Dut, Round, TestDemand, TestDemandConten
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
     TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, TestDemandCreateInputSchema
 
-@api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试项相关接口'])
+@api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试项接口'])
 class TestDemandController(ControllerBase):
     @route.get("/getTestDemandList", response=List[TestDemandModelOutSchema], exclude_none=True,
                url_name="testDemand-list")
@@ -38,7 +38,7 @@ class TestDemandController(ControllerBase):
     # 处理树状数据
     @route.get("/getTestdemandInfo", response=List[TestDemandTreeReturnSchema], url_name="testDemand-info")
     @transaction.atomic
-    def get_round_tree(self, payload: TestDemandTreeInputSchema = Query(...)):
+    def get_testDemand_tree(self, payload: TestDemandTreeInputSchema = Query(...)):
         qs = TestDemand.objects.filter(project__id=payload.project_id, design__key=payload.key)
         return qs
 
@@ -53,7 +53,7 @@ class TestDemandController(ControllerBase):
         if TestDemand.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
                                      design__key=design_key,
                                      ident=payload.ident).exists():
-            return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
+            return ChenResponse(code=400, status=400, message='测试需求的标识重复，请检查')
         # 查询当前key应该为多少
         test_demand_count = TestDemand.objects.filter(project__id=payload.project_id, design__key=design_key).count()
         key_string = ''.join([design_key, "-", str(test_demand_count)])
@@ -78,12 +78,12 @@ class TestDemandController(ControllerBase):
             item["testDemand"] = qs
             data_list.append(TestDemandContent(**item))
         TestDemandContent.objects.bulk_create(data_list)
-        return ChenResponse(code=200,status=200,message="新增测试项成功!")
+        return ChenResponse(code=200, status=200, message="新增测试需求成功!")
 
     # 更新测试需求
     @route.put("/testDemand/update/{id}", url_name="testDemand-update")
     @transaction.atomic
-    def update_dut(self, id: int, payload: TestDemandCreateInputSchema):
+    def update_testDemand(self, id: int, payload: TestDemandCreateInputSchema):
         test_demand_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident)
         # 判断是否和同项目同轮次的标识重复
         if len(test_demand_search) > 1:
@@ -100,7 +100,7 @@ class TestDemandController(ControllerBase):
                 index = 0
                 for item in value:
                     td_qs = testDemand_qs.testQField.all()[index]
-                    setattr(td_qs,"testXuQiu",item["testXuQiu"])
+                    setattr(td_qs, "testXuQiu", item["testXuQiu"])
                     setattr(td_qs, "testYuQi", item["testYuQi"])
                     td_qs.save()
                     index = index + 1
@@ -111,7 +111,7 @@ class TestDemandController(ControllerBase):
     # 删除测试需求
     @route.delete("/testDemand/delete", url_name="design-delete")
     @transaction.atomic
-    def delete_dut(self, data: DeleteSchema):
+    def delete_testDemand(self, data: DeleteSchema):
         # 根据其中一个id查询出dut_id
         test_demand_single = TestDemand.objects.filter(id=data.ids[0])[0]
         design_id = test_demand_single.design.id
@@ -124,4 +124,4 @@ class TestDemandController(ControllerBase):
             single_qs.key = test_demand_key
             index = index + 1
             single_qs.save()
-        return ChenResponse(message="被测件删除成功！")
+        return ChenResponse(message="测试需求删除成功！")

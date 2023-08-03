@@ -136,7 +136,7 @@ class TestDemand(CoreModel):
     termination = models.CharField(max_length=1024, blank=True, null=True, verbose_name="终止条件", help_text="终止条件")
     premise = models.CharField(max_length=64, blank=True, null=True, verbose_name="前提", help_text="前提")
     priority = models.CharField(max_length=8, blank=True, null=True, verbose_name="优先级", help_text="优先级")
-    testType = models.CharField(max_length=8,null=True, blank=True, help_text="测试类型", verbose_name="测试类型",default="1")
+    testType = models.CharField(max_length=8, null=True, blank=True, help_text="测试类型", verbose_name="测试类型", default="1")
     testMethod = models.CharField(max_length=512, blank=True, null=True, verbose_name="测试方法", help_text="测试方法")
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
     key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey-testdemand",
@@ -177,7 +177,7 @@ class Case(CoreModel):
     design = models.ForeignKey(to="Design", db_constraint=False, related_name="dcField", on_delete=models.CASCADE,
                                verbose_name='归属设计需求', help_text='归属设计需求', related_query_name='dcQuery')
     test = models.ForeignKey(to="TestDemand", db_constraint=False, related_name="tcField", on_delete=models.CASCADE,
-                               verbose_name='归属测试需求', help_text='归属测试需求', related_query_name='tcQuery')
+                             verbose_name='归属测试需求', help_text='归属测试需求', related_query_name='tcQuery')
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
     key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey-testdemand-case",
                            help_text="round-dut-designkey-testdemand-case")
@@ -197,5 +197,51 @@ class CaseStep(CoreModel):
     passed = models.CharField(max_length=8, null=True, blank=True, help_text="是否通过", verbose_name="是否通过", default="3")
     status = models.CharField(max_length=8, null=True, blank=True, help_text="执行状态", verbose_name="执行状态", default="3")
     case = models.ForeignKey(to="Case", db_constraint=False, related_name="step",
-                                   on_delete=models.CASCADE, verbose_name='归属的测试用例', help_text='归属的测试用例',
-                                   related_query_name='stepQ')
+                             on_delete=models.CASCADE, verbose_name='归属的测试用例', help_text='归属的测试用例',
+                             related_query_name='stepQ')
+
+class Problem(CoreModel):
+    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="问题单标识", help_text="问题单标识")
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="问题单名称", help_text="问题单名称")
+    status = models.CharField(max_length=8, blank=True, null=True, verbose_name="缺陷状态", help_text="缺陷状态")
+    grade = models.CharField(max_length=8, blank=True, null=True, verbose_name="缺陷等级", help_text="缺陷等级")
+    type = models.CharField(max_length=8, blank=True, null=True, verbose_name="缺陷类型", help_text="缺陷类型")
+    closeMethod = models.JSONField(null=True, blank=True, help_text="闭环方式", verbose_name="闭环方式", default=['1'])
+    operation = HTMLField(blank=True, null=True, verbose_name="问题出现操作", help_text="问题出现操作")
+    expect = models.CharField(max_length=1024, blank=True, null=True, verbose_name="期望", help_text="期望")
+    result = HTMLField(blank=True, null=True, verbose_name="问题结果", help_text="问题结果")
+    rules = models.CharField(max_length=512, blank=True, null=True, verbose_name="违反规则", help_text="违反规则")
+    suggest = models.CharField(max_length=512, blank=True, null=True, verbose_name="修改建议", help_text="修改建议")
+    postPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="提出人员", help_text="提出人员")
+    postDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="提单日期", verbose_name="提单日期")
+    designerPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="开发人员上级确认人", help_text="开发人员上级确认人")
+    designDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="确认日期", verbose_name="确认日期")
+    verifyPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="验证人员", help_text="验证人员")
+    verifyDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="验证日期", verbose_name="验证日期")
+    revokePerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="撤销人员", help_text="撤销人员")
+    revokeDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="撤销日期", verbose_name="撤销日期")
+    isLeaf = models.BooleanField(default=True, verbose_name="树状图最后一个节点", help_text="树状图最后一个节点")
+    title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
+    key = models.CharField(max_length=16, blank=True, null=True, verbose_name="round-dut-designkey-testdemand-case-problem",
+                           help_text="round-dut-designkey-testdemand-case-problem")
+    level = models.CharField(max_length=16, blank=True, null=True, verbose_name="树-level", help_text="树-level",
+                             default=5)  # 默认为5
+    project = models.ForeignKey(to="Project", db_constraint=False, related_name="projField", on_delete=models.CASCADE,
+                                verbose_name='归属项目', help_text='归属项目', related_query_name='projQuery')
+    round = models.ForeignKey(to="Round", db_constraint=False, related_name="roundField", on_delete=models.CASCADE,
+                              verbose_name='归属轮次', help_text='归属轮次', related_query_name='roundQuery')
+    dut = models.ForeignKey(to="Dut", db_constraint=False, related_name="dutcField", on_delete=models.CASCADE,
+                            verbose_name='归属被测件', help_text='归属被测件', related_query_name='dutcQuery')
+    design = models.ForeignKey(to="Design", db_constraint=False, related_name="designField", on_delete=models.CASCADE,
+                               verbose_name='归属设计需求', help_text='归属设计需求', related_query_name='designQuery')
+    test = models.ForeignKey(to="TestDemand", db_constraint=False, related_name="testField", on_delete=models.CASCADE,
+                             verbose_name='归属测试需求', help_text='归属测试需求', related_query_name='testQuery')
+    case = models.ForeignKey(to="Case", db_constraint=False, related_name="caseField", on_delete=models.CASCADE,
+                             verbose_name='归属测试用例', help_text='归属测试用例', related_query_name='caseQuery')
+
+    class Meta:
+        db_table = 'project_problem'
+        verbose_name = "问题单"
+        verbose_name_plural = verbose_name
+        ordering = ('key',)
+

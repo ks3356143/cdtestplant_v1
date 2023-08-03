@@ -17,7 +17,7 @@ class DesignController(ControllerBase):
     @route.get("/getDesignDemandList", response=List[DesignModelOutSchema], exclude_none=True, url_name="design-list")
     @transaction.atomic
     @paginate(MyPagination)
-    def get_dut_list(self, datafilter: DesignFilterSchema = Query(...)):
+    def get_design_list(self, datafilter: DesignFilterSchema = Query(...)):
         for attr, value in datafilter.__dict__.items():
             if getattr(datafilter, attr) is None:
                 setattr(datafilter, attr, '')
@@ -30,21 +30,21 @@ class DesignController(ControllerBase):
 
     # 处理树状数据
     @route.get("/getDesignDemandInfo", response=List[DesignTreeReturnSchema], url_name="design-info")
-    def get_round_tree(self, payload: DesignTreeInputSchema = Query(...)):
+    def get_design_tree(self, payload: DesignTreeInputSchema = Query(...)):
         qs = Design.objects.filter(project__id=payload.project_id, dut__key=payload.key)
         return qs
 
     # 添加测试需求
     @route.post("/designDemand/save", response=DesignCreateOutSchema, url_name="design-create")
     @transaction.atomic
-    def create_dut(self, payload: DesignCreateInputSchema):
+    def create_design(self, payload: DesignCreateInputSchema):
         asert_dict = payload.dict(exclude_none=True)
         # 构造dut_key
         dut_key = "".join([payload.round_key, "-", payload.dut_key])
         # 判重标识-不需要再查询round以后的
         if Design.objects.filter(project__id=payload.project_id, round__key=payload.round_key, dut__key=dut_key,
                                  ident=payload.ident).exists():
-            return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
+            return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
         # 查询当前key应该为多少
         design_count = Design.objects.filter(project__id=payload.project_id, dut__key=dut_key).count()
         key_string = ''.join([dut_key, "-", str(design_count)])
@@ -60,11 +60,11 @@ class DesignController(ControllerBase):
     # 更新测试需求
     @route.put("/editDesignDemand/{id}", url_name="design-update")
     @transaction.atomic
-    def update_dut(self, id: int, payload: DesignCreateInputSchema):
+    def update_design(self, id: int, payload: DesignCreateInputSchema):
         design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident)
         # 判断是否和同项目同轮次的标识重复
         if len(design_search) > 1:
-            return ChenResponse(code=400, status=400, message='测试需求的标识重复，请检查')
+            return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
         # 查到当前
         design_qs = Design.objects.get(id=id)
         for attr, value in payload.dict().items():
@@ -75,12 +75,12 @@ class DesignController(ControllerBase):
                 setattr(design_qs, "title", value)
             setattr(design_qs, attr, value)
         design_qs.save()
-        return ChenResponse(message="测试需求更新成功!")
+        return ChenResponse(message="研制需求更新成功!")
 
     # 删除被测件
     @route.delete("/designDemand/delete", url_name="design-delete")
     @transaction.atomic
-    def delete_dut(self, data: DeleteSchema):
+    def delete_design(self, data: DeleteSchema):
         # 根据其中一个id查询出dut_id
         design_single = Design.objects.filter(id=data.ids[0])[0]
         dut_id = design_single.dut.id
@@ -93,4 +93,4 @@ class DesignController(ControllerBase):
             single_qs.key = design_key
             index = index + 1
             single_qs.save()
-        return ChenResponse(message="被测件删除成功！")
+        return ChenResponse(message="研制需求删除成功！")
