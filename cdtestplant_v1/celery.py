@@ -3,7 +3,7 @@ import os
 from celery import Celery, platforms
 from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', "fuadmin.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', "cdtestplant_v1.settings")
 
 # app = Celery(f"application")
 app = Celery(f"system")
