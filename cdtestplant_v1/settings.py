@@ -35,6 +35,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# 设置跨域
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'None'
+
 ROOT_URLCONF = 'cdtestplant_v1.urls'
 
 TEMPLATES = [
@@ -106,7 +109,7 @@ NINJA_JWT = {
     # token类型，其他方案：SlidingToken
     "AUTH_TOKEN_CLASSES": ("ninja_jwt.tokens.AccessToken",),
     # token失效时间
-    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=1),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=12),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
 # Extra配置
