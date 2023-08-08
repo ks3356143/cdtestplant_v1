@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 第三方包
+    'ninja',
     'ninja_extra',
     'ninja_jwt',
     'tinymce',
