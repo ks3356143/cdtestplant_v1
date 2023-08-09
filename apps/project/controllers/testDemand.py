@@ -97,13 +97,16 @@ class TestDemandController(ControllerBase):
                 setattr(testDemand_qs, "title", value)
             # 找到attr为testContent的
             if attr == 'testContent':
-                index = 0
+                content_list = testDemand_qs.testQField.all()
+                for content_single in content_list:
+                    content_single.delete()
+                # 添加测试项步骤
+                data_list = []
                 for item in value:
-                    td_qs = testDemand_qs.testQField.all()[index]
-                    setattr(td_qs, "testXuQiu", item["testXuQiu"])
-                    setattr(td_qs, "testYuQi", item["testYuQi"])
-                    td_qs.save()
-                    index = index + 1
+                    if item['testXuQiu'] or item['testYuQi']:
+                        item["testDemand"] = testDemand_qs
+                        data_list.append(TestDemandContent(**item))
+                TestDemandContent.objects.bulk_create(data_list)
             setattr(testDemand_qs, attr, value)
         testDemand_qs.save()
         return ChenResponse(message="测试需求更新成功!")

@@ -102,18 +102,18 @@ class CaseController(ControllerBase):
                 continue
             if attr == 'name':
                 setattr(case_qs, "title", value)
-            # 找到attr为testContent的
+            # testStep处理
             if attr == 'testStep':
-                index = 0
+                content_list = case_qs.step.all()
+                for content_single in content_list:
+                    content_single.delete()
+                data_list = []
                 for item in value:
-                    cs = case_qs.step.all()[index]
-                    setattr(cs, "operation", item["operation"])
-                    setattr(cs, "expect", item["expect"])
-                    setattr(cs, "result", item["result"])
-                    setattr(cs, "passed", item["passed"])
-                    setattr(cs, "status", item["status"])
-                    cs.save()
-                    index = index + 1
+                    if item['operation'] or item['expect'] or item['result'] or item['passed'] or item['status']:
+                        item["case"] = case_qs
+                        data_list.append(CaseStep(**item))
+                CaseStep.objects.bulk_create(data_list)
+
             setattr(case_qs, attr, value)
         case_qs.save()
         return ChenResponse(message="用例更新成功!")
