@@ -31,7 +31,6 @@ class CaseController(ControllerBase):
                                  monitorPerson__icontains=data.monitorPerson,
                                  summarize__icontains=data.summarize,
                                  ).order_by("key")
-        print(qs)
         # 由于有嵌套query_set存在，把每个用例的schema加上一个字段
         query_list = []
         for query_single in qs:
