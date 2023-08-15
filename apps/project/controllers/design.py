@@ -58,7 +58,7 @@ class DesignController(ControllerBase):
         return qs
 
     # 更新测试需求
-    @route.put("/editDesignDemand/{id}", url_name="design-update")
+    @route.put("/editDesignDemand/{id}", response=DesignCreateOutSchema, url_name="design-update")
     @transaction.atomic
     def update_design(self, id: int, payload: DesignCreateInputSchema):
         design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident)
@@ -68,14 +68,13 @@ class DesignController(ControllerBase):
         # 查到当前
         design_qs = Design.objects.get(id=id)
         for attr, value in payload.dict().items():
-            print(attr)
             if attr == 'project_id' or attr == 'round_key' or attr == 'dut_key':
                 continue
             if attr == 'name':
                 setattr(design_qs, "title", value)
             setattr(design_qs, attr, value)
         design_qs.save()
-        return ChenResponse(message="研制需求更新成功!")
+        return design_qs
 
     # 删除被测件
     @route.delete("/designDemand/delete", url_name="design-delete")
@@ -89,7 +88,7 @@ class DesignController(ControllerBase):
         index = 0
         design_all_qs = Design.objects.filter(dut__id=dut_id)
         for single_qs in design_all_qs:
-            design_key = "".join([dut_key,'-',str(index)])
+            design_key = "".join([dut_key, '-', str(index)])
             single_qs.key = design_key
             index = index + 1
             single_qs.save()

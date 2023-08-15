@@ -85,10 +85,10 @@ class CaseController(ControllerBase):
             item["case"] = qs
             data_list.append(CaseStep(**item))
         CaseStep.objects.bulk_create(data_list)
-        return ChenResponse(code=200, status=200, message="新增测试用例成功!")
+        return qs
 
     # 更新测试用例
-    @route.put("/case/update/{id}", url_name="case-update")
+    @route.put("/case/update/{id}", response=CaseCreateOutSchema, url_name="case-update")
     @transaction.atomic
     def update_case(self, id: int, payload: CaseCreateInputSchema):
         test_case_search = Case.objects.filter(project__id=payload.project_id, ident=payload.ident)
@@ -116,7 +116,7 @@ class CaseController(ControllerBase):
 
             setattr(case_qs, attr, value)
         case_qs.save()
-        return ChenResponse(message="用例更新成功!")
+        return case_qs
 
     # 删除测试用例
     @route.delete("/case/delete", url_name="case-delete")

@@ -48,13 +48,13 @@ class DutController(ControllerBase):
         print(key_string)
         # 查询当前的round_id
         round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
-        asert_dict.update({'key': key_string, 'round': round_instance,'title':payload.name})
+        asert_dict.update({'key': key_string, 'round': round_instance, 'title': payload.name})
         asert_dict.pop("round_key")
         qs = Dut.objects.create(**asert_dict)
         return qs
 
     # 更新被测件
-    @route.put("/dut/update/{id}", url_name="dut-update")
+    @route.put("/dut/update/{id}", url_name="dut-update", response=DutCreateOutSchema)
     @transaction.atomic
     def update_dut(self, id: int, payload: DutCreateInputSchema):
         dut_search = Dut.objects.filter(project__id=payload.project_id, ident=payload.ident)
@@ -64,27 +64,26 @@ class DutController(ControllerBase):
         # 查到当前
         dut_qs = Dut.objects.get(id=id)
         for attr, value in payload.dict().items():
-            print(attr)
             if attr == 'project_id' or attr == 'round_key':
                 continue
             if attr == 'name':
                 setattr(dut_qs, "title", value)
             setattr(dut_qs, attr, value)
         dut_qs.save()
-        return ChenResponse(message="被测件更新成功!")
+        return dut_qs
 
     # 删除被测件
     @route.delete("/dut/delete", url_name="dut-delete")
     @transaction.atomic
-    def delete_dut(self, data:DeleteSchema):
+    def delete_dut(self, data: DeleteSchema):
         dut_single = Dut.objects.filter(id=data.ids[0])[0]
         round_id = dut_single.round.id
         round_key = dut_single.round.key
-        multi_delete(data.ids,Dut)
+        multi_delete(data.ids, Dut)
         index = 0
         dut_all_qs = Dut.objects.filter(round__id=round_id)
         for single_qs in dut_all_qs:
-            dut_key = "".join([round_key,'-',str(index)])
+            dut_key = "".join([round_key, '-', str(index)])
             single_qs.key = dut_key
             index = index + 1
             single_qs.save()

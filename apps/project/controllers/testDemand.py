@@ -78,10 +78,10 @@ class TestDemandController(ControllerBase):
             item["testDemand"] = qs
             data_list.append(TestDemandContent(**item))
         TestDemandContent.objects.bulk_create(data_list)
-        return ChenResponse(code=200, status=200, message="新增测试需求成功!")
+        return qs
 
     # 更新测试需求
-    @route.put("/testDemand/update/{id}", url_name="testDemand-update")
+    @route.put("/testDemand/update/{id}", response=TestDemandCreateOutSchema, url_name="testDemand-update")
     @transaction.atomic
     def update_testDemand(self, id: int, payload: TestDemandCreateInputSchema):
         test_demand_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident)
@@ -109,7 +109,7 @@ class TestDemandController(ControllerBase):
                 TestDemandContent.objects.bulk_create(data_list)
             setattr(testDemand_qs, attr, value)
         testDemand_qs.save()
-        return ChenResponse(message="测试需求更新成功!")
+        return testDemand_qs
 
     # 删除测试需求
     @route.delete("/testDemand/delete", url_name="design-delete")

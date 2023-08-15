@@ -64,7 +64,6 @@ class ProblemController(ControllerBase):
     @transaction.atomic
     def create_case_demand(self, payload: ProblemCreateInputSchema):
         asert_dict = payload.dict(exclude_none=True)
-        print(asert_dict)
         # 构造design_key
         problem_whole_key = "".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key, '-',
@@ -95,12 +94,11 @@ class ProblemController(ControllerBase):
         asert_dict.pop("design_key")
         asert_dict.pop("test_key")
         asert_dict.pop("case_key")
-        print(asert_dict)
-        Problem.objects.create(**asert_dict)
-        return ChenResponse(code=200, status=200, message="新增问题单成功!")
+        qs = Problem.objects.create(**asert_dict)
+        return qs
 
     # 更新问题单
-    @route.put("/problem/update/{id}", url_name="problem-update")
+    @route.put("/problem/update/{id}", response=ProblemCreateOutSchema,url_name="problem-update")
     @transaction.atomic
     def update_dut(self, id: int, payload: ProblemCreateInputSchema):
         problem_search = Problem.objects.filter(project__id=payload.project_id, ident=payload.ident)
@@ -116,7 +114,7 @@ class ProblemController(ControllerBase):
                 setattr(problem_qs, "title", value)
             setattr(problem_qs, attr, value)
         problem_qs.save()
-        return ChenResponse(message="问题单更新成功!")
+        return problem_qs
 
     # 删除问题单
     @route.delete("/problem/delete", url_name="problem-delete")
