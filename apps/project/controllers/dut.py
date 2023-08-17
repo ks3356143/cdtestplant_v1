@@ -45,6 +45,8 @@ class DutController(ControllerBase):
         # 查询当前key应该为多少
         dut_count = Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key).count()
         key_string = ''.join([payload.round_key, "-", str(dut_count)])
+        # 然后在标识后面加上UT+KEY -> 注意删除时也改了key要对应修改blink1->>>>>>
+        asert_dict['ident'] = ''.join([asert_dict['ident'], str(dut_count + 1)])
         # 查询当前的round_id
         round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
         asert_dict.update({'key': key_string, 'round': round_instance, 'title': payload.name})
@@ -95,9 +97,12 @@ class DutController(ControllerBase):
         multi_delete(data.ids, Dut)
         index = 0
         dut_all_qs = Dut.objects.filter(round__id=round_id)
+        # blink1->>>>>> 这里不仅重排key，还要重排ident中编号,先取出前面的RXXXX-RX等信息
+        ident_before_string = dut_all_qs[0].ident.split("UT")[0]
         for single_qs in dut_all_qs:
             dut_key = "".join([round_key, '-', str(index)])
             single_qs.key = dut_key
+            single_qs.ident = ident_before_string + "UT" + str(index + 1)
             index = index + 1
             single_qs.save()
         return ChenResponse(message="被测件删除成功！")

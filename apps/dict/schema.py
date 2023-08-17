@@ -1,5 +1,6 @@
 from ninja_schema import ModelSchema
 from apps.dict.models import Dict, DictItem
+from apps.project.models import Contact
 from ninja import Field, Schema
 from typing import List
 
@@ -59,3 +60,14 @@ class DictItemUpdateInputSchema(Schema):
 # 删除schema
 class DeleteSchema(Schema):
     ids: List[int]
+
+#############公司信息处理##############
+class ContactOut(ModelSchema):
+    class Config:
+        model = Contact
+        include = ('id', 'entrust_person', 'name', 'key', 'update_datetime')
+
+class ContactListInputSchema(Schema):
+    key: str = Field(None, alias='key')
+    name: str = Field(None, alias='name')
+    entrust_person: str = Field(None, alias='entrust_person')

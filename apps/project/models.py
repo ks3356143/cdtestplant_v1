@@ -20,19 +20,16 @@ class Project(CoreModel):
     report_type = models.CharField(max_length=64, blank=True, null=True, verbose_name="报告类型", help_text="报告类型")
     language = models.JSONField(null=True, blank=True, help_text="被测语言", verbose_name="被测语言", default=[])
     standard = models.JSONField(null=True, blank=True, help_text="依据标准", verbose_name="依据标准", default=[])
-    entrust_ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方标识", help_text="委托方标识")
-    entrust_legal = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方法人", help_text="委托方法人")
+    entrust_unit = models.CharField(max_length=64, verbose_name="委托方单位", help_text="委托方单位")
     entrust_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方联系人", help_text="委托方联系人")
     entrust_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方电话",
                                              help_text="委托方电话")
     entrust_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方邮箱", help_text="委托方邮箱")
-    dev_ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方标识", help_text="研制方标识")
-    dev_legal = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方法人", help_text="研制方法人")
+    dev_unit = models.CharField(max_length=64, verbose_name="开发方单位", help_text="开发方单位")
     dev_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方联系人", help_text="研制方联系人")
     dev_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方电话", help_text="研制方电话")
     dev_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方邮箱", help_text="研制方邮箱")
-    test_ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心标识", help_text="测评中心标识")
-    test_legal = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心法人", help_text="测评中心法人")
+    test_unit = models.CharField(max_length=64, verbose_name="测试方单位", help_text="测试方单位")
     test_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心联系人", help_text="测评中心联系人")
     test_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心电话",
                                           help_text="测评中心电话")
@@ -214,7 +211,8 @@ class Problem(CoreModel):
     suggest = models.CharField(max_length=512, blank=True, null=True, verbose_name="修改建议", help_text="修改建议")
     postPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="提出人员", help_text="提出人员")
     postDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="提单日期", verbose_name="提单日期")
-    designerPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="开发人员上级确认人", help_text="开发人员上级确认人")
+    designerPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="开发人员上级确认人",
+                                      help_text="开发人员上级确认人")
     designDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="确认日期", verbose_name="确认日期")
     verifyPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="验证人员", help_text="验证人员")
     verifyDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="验证日期", verbose_name="验证日期")
@@ -222,7 +220,8 @@ class Problem(CoreModel):
     revokeDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="撤销日期", verbose_name="撤销日期")
     isLeaf = models.BooleanField(default=True, verbose_name="树状图最后一个节点", help_text="树状图最后一个节点")
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
-    key = models.CharField(max_length=16, blank=True, null=True, verbose_name="round-dut-designkey-testdemand-case-problem",
+    key = models.CharField(max_length=16, blank=True, null=True,
+                           verbose_name="round-dut-designkey-testdemand-case-problem",
                            help_text="round-dut-designkey-testdemand-case-problem")
     level = models.CharField(max_length=16, blank=True, null=True, verbose_name="树-level", help_text="树-level",
                              default=5)  # 默认为5
@@ -245,3 +244,13 @@ class Problem(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ('key',)
 
+class Contact(CoreModel):
+    entrust_person = models.CharField(max_length=16, blank=True, verbose_name="法人", help_text="法人")
+    name = models.CharField(max_length=64, blank=True, verbose_name="公司名称", help_text="公司名称")
+    key = models.IntegerField(auto_created=True, verbose_name="公司编号", help_text="公司编号")
+
+    class Meta:
+        db_table = 'contact_gongsi'
+        verbose_name = '委托方、研制方、测试方信息'
+        verbose_name_plural = verbose_name
+        ordering = ('create_datetime',)

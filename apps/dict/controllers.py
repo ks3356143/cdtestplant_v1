@@ -1,6 +1,7 @@
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
 from apps.dict.models import Dict, DictItem
+from apps.project.models import Contact
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
@@ -10,7 +11,8 @@ from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
 from apps.dict.schema import DictItemOut, DictOut, DictIndexInput, ChangeStautsSchemaInput, DictItemInput, DictItemOut, \
-    DictItemChangeSrotInput, DictItemCreateInputSchema, DictItemUpdateInputSchema,DeleteSchema
+    DictItemChangeSrotInput, DictItemCreateInputSchema, DictItemUpdateInputSchema, DeleteSchema, ContactListInputSchema, \
+    ContactOut
 
 @api_controller("/system", tags=['字典相关'], auth=JWTAuth(), permissions=[IsAuthenticated])
 class DictController(ControllerBase):
@@ -112,9 +114,9 @@ class DictController(ControllerBase):
         return dictitem_qs
 
     # 删除dictItem数据
-    @route.delete("/dictType/realDeleteItem",url_name="dictitem-delete")
+    @route.delete("/dictType/realDeleteItem", url_name="dictitem-delete")
     @transaction.atomic
-    def delete_dictitem(self,data:DeleteSchema):
+    def delete_dictitem(self, data: DeleteSchema):
         # 根据其中一个id查询出dict的id
         dictItem_single = DictItem.objects.filter(id=data.ids[0])[0]
         dict_id = dictItem_single.dict.id
@@ -127,7 +129,67 @@ class DictController(ControllerBase):
             qs_item.save()
         return ChenResponse(message="字典条目删除成功！")
 
+# 公司信息处理接口
+@api_controller("/system", tags=['公司信息相关'], auth=JWTAuth(), permissions=[IsAuthenticated])
+class ContactController(ControllerBase):
+    @route.get("/contact/getlist", response=List[ContactOut], url_name="contact-search")
+    @transaction.atomic
+    @paginate(MyPagination)
+    def get_contact_list(self, payload: ContactListInputSchema = Query(...)):
+        for attr, value in payload.__dict__.items():
+            if getattr(payload, attr) is None:
+                setattr(payload, attr, '')
+        if payload.key == '':
+            qs = Contact.objects.filter(name__icontains=payload.name, entrust_person__icontains=payload.entrust_person)
+        else:
+            qs = Contact.objects.filter(name__icontains=payload.name, entrust_person__icontains=payload.entrust_person,
+                                        key=int(payload.key))
+        return qs
 
+    # 单独获取
+    @route.get("/contact/index", response=List[ContactOut], url_name="contact-all")
+    @transaction.atomic
+    def get_contact_index(self):
+        qs = Contact.objects.all()
+        return qs
+
+    @route.post("/contact/save", response=ContactOut, url_name='contact-create')
+    @transaction.atomic
+    def create_contact(self, data: ContactListInputSchema):
+        for attr, value in data.__dict__.items():
+            if getattr(data, attr) is None:
+                setattr(data, attr, '')
+        # 判重key
+        assert_dict = data.dict()
+        key_qs = Contact.objects.filter(key=data.key)
+        if len(key_qs) > 0:
+            return ChenResponse(code=400,status=400,message="公司或单位的编号重复，请修改")
+        # 正常添加
+        qs = Contact.objects.create(**assert_dict)
+        return qs
+
+    @route.put("/contact/update/{id}",response=ContactOut,url_name='contact-update')
+    @transaction.atomic
+    def update_contact(self,id:int,data:ContactListInputSchema):
+        print(id)
+        for attr, value in data.__dict__.items():
+            if getattr(data, attr) is None:
+                setattr(data, attr, '')
+        key_qs = Contact.objects.filter(key=data.key)
+        if len(key_qs) > 1:
+            return ChenResponse(code=400, status=400, message="公司或单位的编号重复，请修改")
+        # 查询id
+        qs = Contact.objects.get(id=id)
+        for attr, value in data.__dict__.items():
+            setattr(qs,attr,value)
+        qs.save()
+        return qs
+
+    @route.delete('/contact/delete',url_name='contact-delete')
+    @transaction.atomic
+    def delete_contact(self,data:DeleteSchema):
+        multi_delete(data.ids,Contact)
+        return ChenResponse(message='单位或公司删除成功')
 
 # 这是其他common内容接口
 @api_controller("/system", tags=['通用接口'])

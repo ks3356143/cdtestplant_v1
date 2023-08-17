@@ -5,6 +5,7 @@ from ninja.pagination import paginate
 from utils.chen_pagination import MyPagination
 from ninja_extra.permissions import IsAuthenticated, IsAdminUser
 from ninja import Query
+from django.db import transaction
 from ninja_jwt.tokens import AccessToken, RefreshToken
 from ninja_jwt.authentication import JWTAuth
 from ninja_jwt.controller import TokenObtainPairController
@@ -54,6 +55,7 @@ class UserManageController(ControllerBase):
 
     # 给前端传所有用户当做字典
     @route.get('/list',response=List[UserRetrieveOutSchema],url_name="user_list",auth=None)
+    @transaction.atomic
     def list_user(self):
         qs = Users.objects.all()
         return qs
