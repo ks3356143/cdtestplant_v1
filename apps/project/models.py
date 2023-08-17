@@ -16,7 +16,7 @@ class Project(CoreModel):
     member = models.JSONField(null=True, blank=True, help_text="项目成员", verbose_name="项目成员", default=[])
     security_level = models.CharField(max_length=8, blank=True, null=True, verbose_name="安全等级", help_text="安全等级")
     test_level = models.JSONField(null=True, blank=True, help_text="测试级别", verbose_name="测试级别", default=[])
-    plant_type = models.CharField(max_length=64, blank=True, null=True, verbose_name="平台类型", help_text="平台类型")
+    plant_type = models.JSONField(null=True, blank=True, help_text="平台类型", verbose_name="平台类型", default=[])
     report_type = models.CharField(max_length=64, blank=True, null=True, verbose_name="报告类型", help_text="报告类型")
     language = models.JSONField(null=True, blank=True, help_text="被测语言", verbose_name="被测语言", default=[])
     standard = models.JSONField(null=True, blank=True, help_text="依据标准", verbose_name="依据标准", default=[])

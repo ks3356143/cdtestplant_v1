@@ -45,7 +45,6 @@ class DutController(ControllerBase):
         # 查询当前key应该为多少
         dut_count = Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key).count()
         key_string = ''.join([payload.round_key, "-", str(dut_count)])
-        print(key_string)
         # 查询当前的round_id
         round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
         asert_dict.update({'key': key_string, 'round': round_instance, 'title': payload.name})
@@ -62,15 +61,29 @@ class DutController(ControllerBase):
         if len(dut_search) > 1:
             return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
         # 查到当前
-        dut_qs = Dut.objects.get(id=id)
-        for attr, value in payload.dict().items():
-            if attr == 'project_id' or attr == 'round_key':
-                continue
-            if attr == 'name':
-                setattr(dut_qs, "title", value)
-            setattr(dut_qs, attr, value)
-        dut_qs.save()
-        return dut_qs
+        if payload.type == 'SO':
+            dut_qs = Dut.objects.get(id=id)
+            for attr, value in payload.dict().items():
+                if attr == 'project_id' or attr == 'round_key':
+                    continue
+                if attr == 'name':
+                    setattr(dut_qs, "title", value)
+                setattr(dut_qs, attr, value)
+            dut_qs.save()
+            return dut_qs
+        else:
+            dut_qs = Dut.objects.get(id=id)
+            for attr, value in payload.dict().items():
+                if attr == 'project_id' or attr == 'round_key':
+                    continue
+                if attr == 'black_line' or attr == 'comment_line' or attr == 'pure_code_line' or attr == 'total_code_line' or attr == 'total_comment_line' or attr == 'total_line' or attr == 'mix_line':
+                    setattr(dut_qs, attr, "")
+                    continue
+                if attr == 'name':
+                    setattr(dut_qs, "title", value)
+                setattr(dut_qs, attr, value)
+            dut_qs.save()
+            return dut_qs
 
     # 删除被测件
     @route.delete("/dut/delete", url_name="dut-delete")
