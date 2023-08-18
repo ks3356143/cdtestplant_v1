@@ -87,18 +87,18 @@ class DutController(ControllerBase):
             dut_qs.save()
             return dut_qs
 
-    # 删除被测件
+    # 删除被测件 - 1.重新对key排序 2.重新对表示尾号排序
     @route.delete("/dut/delete", url_name="dut-delete")
     @transaction.atomic
     def delete_dut(self, data: DeleteSchema):
         dut_single = Dut.objects.filter(id=data.ids[0])[0]
         round_id = dut_single.round.id
         round_key = dut_single.round.key
+        # blink1->>>>>> 这里不仅重排key，还要重排ident中编号,先取出前面的RXXXX-RX等信息,这里必须要在删除之前
+        dut_all_qs = Dut.objects.filter(round__id=round_id)
+        ident_before_string = dut_all_qs[0].ident.split("UT")[0]
         multi_delete(data.ids, Dut)
         index = 0
-        dut_all_qs = Dut.objects.filter(round__id=round_id)
-        # blink1->>>>>> 这里不仅重排key，还要重排ident中编号,先取出前面的RXXXX-RX等信息
-        ident_before_string = dut_all_qs[0].ident.split("UT")[0]
         for single_qs in dut_all_qs:
             dut_key = "".join([round_key, '-', str(index)])
             single_qs.key = dut_key
