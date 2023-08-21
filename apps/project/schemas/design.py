@@ -11,10 +11,11 @@ class DesignFilterSchema(Schema):
     project_id: int = Field(None, alias='projectId')
     round_id: str = Field(None, alias='round')
     dut_id: str = Field(None, alias='dut')
-    # 其他字段
     ident: str = Field(None, alias='ident')
     demandType: str = Field(None, alias='demandType')
     name: str = Field(None, alias='name')
+    # 新增字段 - chapter
+    chapter:str = Field(None, alias='chapter')
 
 class DesignModelOutSchema(ModelSchema):
     class Config:
@@ -48,5 +49,6 @@ class DesignCreateInputSchema(Schema):
     name: str = Field(None, alias="name")
     demandType:str = Field(None, alias="demandType")
     description : str = Field(None,alias="description")
+    chapter: str = Field(None, alias='chapter')
 
 

@@ -90,6 +90,11 @@ class Dut(CoreModel):
     comment_line = models.CharField(max_length=64, blank=True, null=True, verbose_name="注释率", help_text="注释率")
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
     key = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-key", help_text="树-key")
+    # 被测件添加版本、发布单位、发布时间
+    version = models.CharField(max_length=64, blank=True, null=True, verbose_name="发布版本", help_text="发布版本")
+    release_union = models.CharField(max_length=64, blank=True, null=True, verbose_name="发布版本", help_text="发布版本")
+    release_date = models.DateField(auto_now=True, null=True, blank=True, help_text="发布时间", verbose_name="发布时间")
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",
                              default=1)  # 默认为1
     project = models.ForeignKey(to="Project", db_constraint=False, related_name="pdField", on_delete=models.CASCADE,
@@ -113,6 +118,9 @@ class Design(CoreModel):
                            help_text="round-dut-designkey")
     level = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-level", help_text="树-level",
                              default=2)  # 默认为2
+    # 增加chapter章节号字段 - 8月21日
+    chapter = models.CharField(max_length=64, blank=True, verbose_name="设计需求章节号", help_text="设计需求章节号")
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     project = models.ForeignKey(to="Project", db_constraint=False, related_name="psField", on_delete=models.CASCADE,
                                 verbose_name='归属项目', help_text='归属项目', related_query_name='psQuery')
     round = models.ForeignKey(to="Round", db_constraint=False, related_name="rsField", on_delete=models.CASCADE,

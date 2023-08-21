@@ -13,6 +13,9 @@ class DutFilterSchema(Schema):
     ident: str = Field(None, alias='ident')
     type: str = Field(None, alias='type')
     name: str = Field(None, alias='name')
+    # 新增版本、单位
+    version: str = Field(None, alias="version")
+    release_union: str = Field(None, alias="release_union")
 
 # 树状目录schema
 class DutTreeInputSchema(Schema):
@@ -40,6 +43,10 @@ class DutCreateInputSchema(Schema):
     total_code_line: str = Field(None, alias="total_code_line")
     total_comment_line: str = Field(None, alias="total_comment_line")
     total_line: str = Field(None, alias="total_line")
+    # 新增版本、单位、发布日期
+    version: str = Field(None, alias="version")
+    release_union: str = Field(None, alias="release_union")
+    release_date: str = Field(None, alias="release_date")
 
 class DutCreateOutSchema(ModelSchema):
     class Config:
