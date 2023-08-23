@@ -17,7 +17,7 @@ class DictOut(ModelSchema):
 class DictItemOut(ModelSchema):
     class Config:
         model = DictItem
-        include = ('id', 'update_datetime', 'sort', 'title', 'key', 'status', 'remark')
+        include = ('id', 'update_datetime', 'sort', 'title', 'key', 'status', 'remark', 'show_title')
 
 class DictIndexInput(Schema):
     name: str = Field(None, alias='name')
@@ -36,6 +36,7 @@ class DictItemInput(Schema):
     title: str = Field(None, alias='title')
     key: str = Field(None, alias='key')
     status: str = Field(None, alias='status')
+    show_title: str = Field(None, alias='show_title')
     update_datetime_start: str = Field(None, alias='update_datetime[0]')
     update_datetime_end: str = Field(None, alias='update_datetime[1]')
 
@@ -50,12 +51,14 @@ class DictItemCreateInputSchema(Schema):
     sort: int = Field(None, alias='sort')
     status: str = Field(None, alias='status')
     title: str = Field(None, alias='title')
+    show_title: str = Field(None, alias='show_title')
 
 class DictItemUpdateInputSchema(Schema):
     remark: str = Field(None, alias='remark')
     sort: int = Field(None, alias='sort')
     status: str = Field(None, alias='status')
     title: str = Field(None, alias='title')
+    show_title: str = Field(None, alias='show_title')
 
 # 删除schema
 class DeleteSchema(Schema):

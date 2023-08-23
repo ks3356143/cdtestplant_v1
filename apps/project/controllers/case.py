@@ -53,11 +53,6 @@ class CaseController(ControllerBase):
         # 构造design_key
         test_whole_key = "".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key])
-        # 判重标识-不需要再查询round以后的
-        if Case.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
-                               test__key=test_whole_key,
-                               ident=payload.ident).exists():
-            return ChenResponse(code=400, status=400, message='测试用例的标识重复，请检查')
         # 查询当前key应该为多少
         case_count = Case.objects.filter(project__id=payload.project_id, test__key=test_whole_key).count()
         key_string = ''.join([test_whole_key, "-", str(case_count)])
@@ -69,6 +64,9 @@ class CaseController(ControllerBase):
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key]))
         test_instance = TestDemand.objects.get(project__id=payload.project_id, key="".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key]))
+        # 直接把测试项的标识给前端处理显示
+        asert_dict['ident'] = test_instance.ident
+        # ~~~~~~~~~end~~~~~~~~~
         asert_dict.update({'key': key_string, 'round': round_instance, 'dut': dut_instance, 'design': design_instance,
                            "test": test_instance, 'title': payload.name})
         asert_dict.pop("round_key")
@@ -91,10 +89,6 @@ class CaseController(ControllerBase):
     @route.put("/case/update/{id}", response=CaseCreateOutSchema, url_name="case-update")
     @transaction.atomic
     def update_case(self, id: int, payload: CaseCreateInputSchema):
-        test_case_search = Case.objects.filter(project__id=payload.project_id, ident=payload.ident)
-        # 判断是否和同项目同轮次的标识重复
-        if len(test_case_search) > 1:
-            return ChenResponse(code=400, status=400, message='测试用例的标识重复，请检查')
         # 查到当前
         case_qs = Case.objects.get(id=id)
         for attr, value in payload.dict().items():
@@ -115,6 +109,9 @@ class CaseController(ControllerBase):
                 CaseStep.objects.bulk_create(data_list)
 
             setattr(case_qs, attr, value)
+        # 处理标识-统一设置为YL
+        case_qs.ident = case_qs.test.ident
+        # ~~~~~~~~~end~~~~~~~~~
         case_qs.save()
         return case_qs
 

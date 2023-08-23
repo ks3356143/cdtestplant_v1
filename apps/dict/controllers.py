@@ -74,7 +74,8 @@ class DictController(ControllerBase):
         dict_qs = Dict.objects.get(id=payload.dict_id)
         # 反向连接
         qs = dict_qs.dictItem.filter(update_datetime__range=date_list, status__icontains=payload.status,
-                                     key__icontains=payload.key, title__icontains=payload.title).order_by('sort')
+                                     key__icontains=payload.key, title__icontains=payload.title,
+                                     show_title__icontains=payload.show_title).order_by('sort')
         return qs
 
     # 更改dictItem的sort字段接口
@@ -163,14 +164,14 @@ class ContactController(ControllerBase):
         assert_dict = data.dict()
         key_qs = Contact.objects.filter(key=data.key)
         if len(key_qs) > 0:
-            return ChenResponse(code=400,status=400,message="公司或单位的编号重复，请修改")
+            return ChenResponse(code=400, status=400, message="公司或单位的编号重复，请修改")
         # 正常添加
         qs = Contact.objects.create(**assert_dict)
         return qs
 
-    @route.put("/contact/update/{id}",response=ContactOut,url_name='contact-update')
+    @route.put("/contact/update/{id}", response=ContactOut, url_name='contact-update')
     @transaction.atomic
-    def update_contact(self,id:int,data:ContactListInputSchema):
+    def update_contact(self, id: int, data: ContactListInputSchema):
         print(id)
         for attr, value in data.__dict__.items():
             if getattr(data, attr) is None:
@@ -181,14 +182,14 @@ class ContactController(ControllerBase):
         # 查询id
         qs = Contact.objects.get(id=id)
         for attr, value in data.__dict__.items():
-            setattr(qs,attr,value)
+            setattr(qs, attr, value)
         qs.save()
         return qs
 
-    @route.delete('/contact/delete',url_name='contact-delete')
+    @route.delete('/contact/delete', url_name='contact-delete')
     @transaction.atomic
-    def delete_contact(self,data:DeleteSchema):
-        multi_delete(data.ids,Contact)
+    def delete_contact(self, data: DeleteSchema):
+        multi_delete(data.ids, Contact)
         return ChenResponse(message='单位或公司删除成功')
 
 # 这是其他common内容接口

@@ -68,11 +68,6 @@ class ProblemController(ControllerBase):
         problem_whole_key = "".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key, '-',
              payload.case_key])
-        # 判重标识-不需要再查询round以后的
-        if Case.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
-                               test__key=problem_whole_key,
-                               ident=payload.ident).exists():
-            return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
         # 查询当前key应该为多少
         problem_count = Problem.objects.filter(project__id=payload.project_id, case__key=problem_whole_key).count()
         key_string = ''.join([problem_whole_key, "-", str(problem_count)])
@@ -101,10 +96,6 @@ class ProblemController(ControllerBase):
     @route.put("/problem/update/{id}", response=ProblemCreateOutSchema,url_name="problem-update")
     @transaction.atomic
     def update_dut(self, id: int, payload: ProblemCreateInputSchema):
-        problem_search = Problem.objects.filter(project__id=payload.project_id, ident=payload.ident)
-        # 判断是否和同项目同轮次的标识重复
-        if len(problem_search) > 1:
-            return ChenResponse(code=400, status=400, message='测试需求的标识重复，请检查')
         # 查到当前
         problem_qs = Problem.objects.get(id=id)
         for attr, value in payload.dict().items():
