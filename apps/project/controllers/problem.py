@@ -89,11 +89,14 @@ class ProblemController(ControllerBase):
         asert_dict.pop("design_key")
         asert_dict.pop("test_key")
         asert_dict.pop("case_key")
+        # 处理问题单标识PT_项目ident_数目依次增加
+        asert_dict["ident"] = str(problem_count + 1)
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         qs = Problem.objects.create(**asert_dict)
         return qs
 
     # 更新问题单
-    @route.put("/problem/update/{id}", response=ProblemCreateOutSchema,url_name="problem-update")
+    @route.put("/problem/update/{id}", response=ProblemCreateOutSchema, url_name="problem-update")
     @transaction.atomic
     def update_dut(self, id: int, payload: ProblemCreateInputSchema):
         # 查到当前
@@ -117,10 +120,13 @@ class ProblemController(ControllerBase):
         case_key = problem_single.case.key
         multi_delete(data.ids, Problem)
         index = 0
-        case_all_qs = Problem.objects.filter(case__id=case_id)
-        for single_qs in case_all_qs:
+        problem_all_qs = Problem.objects.filter(case__id=case_id)
+        for single_qs in problem_all_qs:
             problem_key = "".join([case_key, '-', str(index)])
             single_qs.key = problem_key
+            # 问题单的ident也重新生成排序
+            single_qs.ident = str(index + 1)
+            # ~~~~~~~~~~~~~~~~~~~~~~~~~~
             index = index + 1
             single_qs.save()
         return ChenResponse(message="问题单删除成功！")
