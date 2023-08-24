@@ -49,11 +49,6 @@ class TestDemandController(ControllerBase):
         asert_dict = payload.dict(exclude_none=True)
         # 构造design_key
         design_key = "".join([payload.round_key, "-", payload.dut_key, '-', payload.design_key])
-        # 判重标识-不需要再查询round以后的
-        if TestDemand.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
-                                     design__key=design_key,
-                                     ident=payload.ident).exists():
-            return ChenResponse(code=400, status=400, message='测试需求的标识重复，请检查')
         # 查询当前key应该为多少
         test_demand_count = TestDemand.objects.filter(project__id=payload.project_id, design__key=design_key).count()
         key_string = ''.join([design_key, "-", str(test_demand_count)])
@@ -69,6 +64,9 @@ class TestDemandController(ControllerBase):
         asert_dict.pop("dut_key")
         asert_dict.pop("design_key")
         asert_dict.pop("testContent")
+        # 对标识进行处理，获取设计需求的标识，然后存入例如RS422
+        asert_dict['ident'] = design_instance.ident
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         qs = TestDemand.objects.create(**asert_dict)
         # 对testContent单独处理
         data_list = []
@@ -84,10 +82,6 @@ class TestDemandController(ControllerBase):
     @route.put("/testDemand/update/{id}", response=TestDemandCreateOutSchema, url_name="testDemand-update")
     @transaction.atomic
     def update_testDemand(self, id: int, payload: TestDemandCreateInputSchema):
-        test_demand_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident)
-        # 判断是否和同项目同轮次的标识重复
-        if len(test_demand_search) > 1:
-            return ChenResponse(code=400, status=400, message='测试需求的标识重复，请检查')
         # 查到当前
         testDemand_qs = TestDemand.objects.get(id=id)
         for attr, value in payload.dict().items():

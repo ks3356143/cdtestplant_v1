@@ -14,6 +14,11 @@ class Project(CoreModel):
     endTime = models.DateField(auto_now_add=True, null=True, blank=True, help_text="结束时间", verbose_name="结束时间")
     duty_person = models.CharField(max_length=64, verbose_name="负责人", help_text="负责人")
     member = models.JSONField(null=True, blank=True, help_text="项目成员", verbose_name="项目成员", default=[])
+    # 8月新增字段
+    quality_person = models.CharField(max_length=64, verbose_name="质量保证员", help_text="质量保证员")
+    vise_person = models.CharField(max_length=64, verbose_name="质量监督员", help_text="质量监督员")
+    config_person = models.CharField(max_length=64, verbose_name="配置管理员", help_text="配置管理员")
+    # ~~~~~~~~~~~
     security_level = models.CharField(max_length=8, blank=True, null=True, verbose_name="安全等级", help_text="安全等级")
     test_level = models.JSONField(null=True, blank=True, help_text="测试级别", verbose_name="测试级别", default=[])
     plant_type = models.JSONField(null=True, blank=True, help_text="平台类型", verbose_name="平台类型", default=[])
@@ -137,12 +142,12 @@ class Design(CoreModel):
 class TestDemand(CoreModel):
     ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求标识", help_text="测试需求标识")
     name = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求名称", help_text="测试需求名称")
-    adequacy = models.CharField(max_length=128, blank=True, null=True, verbose_name="充分条件", help_text="充分条件")
+    adequacy = models.CharField(max_length=256, blank=True, null=True, verbose_name="充分条件", help_text="充分条件")
     termination = models.CharField(max_length=1024, blank=True, null=True, verbose_name="终止条件", help_text="终止条件")
-    premise = models.CharField(max_length=64, blank=True, null=True, verbose_name="前提", help_text="前提")
+    premise = models.CharField(max_length=256, blank=True, null=True, verbose_name="前提", help_text="前提")
     priority = models.CharField(max_length=8, blank=True, null=True, verbose_name="优先级", help_text="优先级")
     testType = models.CharField(max_length=8, null=True, blank=True, help_text="测试类型", verbose_name="测试类型", default="1")
-    testMethod = models.CharField(max_length=512, blank=True, null=True, verbose_name="测试方法", help_text="测试方法")
+    testMethod = models.JSONField(blank=True, help_text="测试方法", verbose_name="测试方法", default=[])
     title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
     key = models.CharField(max_length=64, blank=True, null=True, verbose_name="round-dut-designkey-testdemand",
                            help_text="round-dut-designkey-testdemand")

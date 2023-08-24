@@ -67,5 +67,5 @@ class TestDemandCreateInputSchema(Schema):
     priority: str = Field(None, alias="priority")
     termination: str = Field(None, alias="termination")
     testContent: List[TestContentInputSchema]
-    testMethod: str = Field(None, alias="testMethod")
+    testMethod: List[str]
     testType: str = Field(None, alias="testType")
