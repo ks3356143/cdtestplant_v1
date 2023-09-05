@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 from conf.env import *
 import datetime
 
@@ -22,7 +23,8 @@ INSTALLED_APPS = [
     # apps
     'apps.user',
     'apps.dict',
-    'apps.project'
+    'apps.project',
+    'apps.createDocument'
 ]
 
 MIDDLEWARE = [
@@ -116,3 +118,7 @@ NINJA_JWT = {
 NINJA_EXTRA={
 
 }
+
+# 配置MEDIA_ROOT和MEDIA_URL
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')

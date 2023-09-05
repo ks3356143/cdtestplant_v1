@@ -29,3 +29,6 @@ simplejwt==2.0.1
 six==1.16.0
 sqlparse==0.4.3
 typing==3.7.4.3
+docxtpl==0.16.6
+python-docx==0.8.11
+pydantic~=1.10.7
