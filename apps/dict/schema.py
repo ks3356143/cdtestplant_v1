@@ -17,7 +17,9 @@ class DictOut(ModelSchema):
 class DictItemOut(ModelSchema):
     class Config:
         model = DictItem
-        include = ('id', 'update_datetime', 'sort', 'title', 'key', 'status', 'remark', 'show_title')
+        include = (
+        'id', 'update_datetime', 'sort', 'title', 'key', 'status', 'remark', 'show_title', 'doc_name', 'publish_date',
+        'source')
 
 class DictIndexInput(Schema):
     name: str = Field(None, alias='name')
@@ -52,6 +54,9 @@ class DictItemCreateInputSchema(Schema):
     status: str = Field(None, alias='status')
     title: str = Field(None, alias='title')
     show_title: str = Field(None, alias='show_title')
+    doc_name: str = Field(None, alias='doc_name')
+    publish_date: str = Field(None, alias='publish_date')
+    source: str = Field(None, alias='source')
 
 class DictItemUpdateInputSchema(Schema):
     remark: str = Field(None, alias='remark')
@@ -59,6 +64,9 @@ class DictItemUpdateInputSchema(Schema):
     status: str = Field(None, alias='status')
     title: str = Field(None, alias='title')
     show_title: str = Field(None, alias='show_title')
+    doc_name: str = Field(None, alias='doc_name')
+    publish_date: str = Field(None, alias='publish_date')
+    source: str = Field(None, alias='source')
 
 # 删除schema
 class DeleteSchema(Schema):
@@ -68,9 +76,10 @@ class DeleteSchema(Schema):
 class ContactOut(ModelSchema):
     class Config:
         model = Contact
-        include = ('id', 'entrust_person', 'name', 'key', 'update_datetime')
+        include = ('id', 'entrust_person', 'name', 'key', 'update_datetime', 'addr')
 
 class ContactListInputSchema(Schema):
     key: str = Field(None, alias='key')
     name: str = Field(None, alias='name')
     entrust_person: str = Field(None, alias='entrust_person')
+    addr: str = Field(None, alias='addr')

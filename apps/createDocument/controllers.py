@@ -1,3 +1,4 @@
+"""目前将所有项目的均生成，todo：指定项目进行生成"""
 import base64
 import io
 from ninja_extra import ControllerBase, api_controller, route
@@ -9,11 +10,13 @@ from docx.shared import Mm
 from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
-from apps.project.models import TestDemand, TestDemandContent
+from apps.project.models import TestDemand, TestDemandContent, Project, Contact
 from apps.dict.models import Dict, DictItem
 # 导入工具函数
-from utils.util import get_str_dict
+from utils.util import get_str_dict, get_list_dict
 from utils.util import MyHTMLParser
+from django.shortcuts import get_object_or_404
+from django.forms.models import model_to_dict
 
 @api_controller("/generate", tags=['生成文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateController(ControllerBase):
@@ -94,11 +97,57 @@ class GenerateController(ControllerBase):
         output_list = sorted(output_list, key=(lambda x: x["sort"]))
         context["data"] = output_list
 
-        # 测试
-        # print(context)
-
         doc.render(context)
         try:
             doc.save(Path.cwd() / "media/output_dir" / "测试项及方法.docx")
+            return ChenResponse(status=200, code=200, message="文档生成成功！")
+        except PermissionError as e:
+            return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+
+    @route.get("/create/yiju", url_name='create-yiju')
+    @transaction.atomic
+    def create_yiju(self, id: int):
+        tplTestYijuGenerate_path = Path.cwd() / "media" / "form_template" / "dg" / "依据文件.docx"
+        doc = DocxTemplate(tplTestYijuGenerate_path)
+        # 先找出所属项目
+        project_qs = get_object_or_404(Project, id=id)
+        # 找出该项目的真实依据文件qs
+        yiju_list = get_list_dict('standard', project_qs.standard)
+        context = {
+            'std_documents': yiju_list
+        }
+        doc.render(context)
+        try:
+            doc.save(Path.cwd() / "media/output_dir" / "依据文件.docx")
+            return ChenResponse(status=200, code=200, message='文档生成成功！')
+        except PermissionError as e:
+            return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+
+    @route.get("/create/contact", url_name='create-contact')
+    @transaction.atomic
+    def create_contact(self, id: int):
+        tplTestContactGenerate_path = Path.cwd() / "media" / "form_template" / "dg" / "练习人和方式.docx"
+        doc = DocxTemplate(tplTestContactGenerate_path)
+        # 先找出所属项目
+        project_qs = get_object_or_404(Project, id=id)
+        contact_dict = model_to_dict(project_qs,
+                                     fields=['entrust_unit', 'entrust_contact', 'entrust_contact_phone', 'dev_unit',
+                                             'dev_contact', 'dev_contact_phone', 'test_unit', 'test_contact',
+                                             'test_contact_phone'])
+        # 根据entrust_unit、dev_unit、test_unit查找Contact中地址信息
+        entrust_addr = Contact.objects.get(name=contact_dict['entrust_unit']).addr
+        dev_addr = Contact.objects.get(name=contact_dict['dev_unit']).addr
+        test_addr = Contact.objects.get(name=contact_dict['test_unit']).addr
+        contact_dict['entrust_addr'] = entrust_addr
+        contact_dict['dev_addr'] = dev_addr
+        contact_dict['test_addr'] = test_addr
+        context = {
+            'datas': contact_dict
+        }
+        print(context)
+        doc.render(context)
+        try:
+            doc.save(Path.cwd() / "media/output_dir" / "练习人和方式.docx")
+            return ChenResponse(status=200, code=200, message='文档生成成功！')
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))

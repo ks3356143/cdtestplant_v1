@@ -141,10 +141,11 @@ class ContactController(ControllerBase):
             if getattr(payload, attr) is None:
                 setattr(payload, attr, '')
         if payload.key == '':
-            qs = Contact.objects.filter(name__icontains=payload.name, entrust_person__icontains=payload.entrust_person)
+            qs = Contact.objects.filter(name__icontains=payload.name, entrust_person__icontains=payload.entrust_person,
+                                        addr__icontains=payload.addr)
         else:
             qs = Contact.objects.filter(name__icontains=payload.name, entrust_person__icontains=payload.entrust_person,
-                                        key=int(payload.key))
+                                        key=int(payload.key), addr__icontains=payload.addr)
         return qs
 
     # 单独获取

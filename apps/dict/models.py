@@ -23,6 +23,10 @@ class DictItem(CoreModel):
     dict = models.ForeignKey(to="Dict", db_constraint=False, related_name="dictItem", on_delete=models.CASCADE,
                              help_text="字典")
     remark = models.CharField(max_length=2000, blank=True, null=True, verbose_name="备注", help_text="备注")
+    # 针对依据文件的字段
+    doc_name = models.CharField(max_length=64,blank=True, null=True,verbose_name="文档名称", help_text="文档名称")
+    publish_date = models.CharField(max_length=64, blank=True, null=True, verbose_name="发布日期", help_text="发布日期")
+    source = models.CharField(max_length=32, blank=True, null=True, verbose_name='来源', help_text="来源")
 
     class Meta:
         db_table = 'system_dict_item'

@@ -261,6 +261,8 @@ class Contact(CoreModel):
     entrust_person = models.CharField(max_length=16, blank=True, verbose_name="法人", help_text="法人")
     name = models.CharField(max_length=64, blank=True, verbose_name="公司名称", help_text="公司名称")
     key = models.IntegerField(auto_created=True, verbose_name="公司编号", help_text="公司编号")
+    # 新增地址
+    addr = models.CharField(max_length=64, blank=True, verbose_name="公司地址", help_text="公司地址")
 
     class Meta:
         db_table = 'contact_gongsi'
