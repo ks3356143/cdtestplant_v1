@@ -2,8 +2,8 @@
 import base64
 import io
 from ninja_extra import ControllerBase, api_controller, route
-from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from docxtpl import DocxTemplate, RichText, InlineImage
 from docx.shared import Mm
