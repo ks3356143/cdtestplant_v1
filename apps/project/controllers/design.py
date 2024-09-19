@@ -42,6 +42,9 @@ class DesignController(ControllerBase):
     @transaction.atomic
     def create_design(self, payload: DesignCreateInputSchema):
         asert_dict = payload.dict(exclude_none=True)
+        # 如果识别description为None变为空字符串
+        description = asert_dict.get('description')
+        print(description)
         # 构造dut_key
         dut_key = "".join([payload.round_key, "-", payload.dut_key])
         # 判重标识-不需要再查询round以后的
@@ -91,7 +94,8 @@ class DesignController(ControllerBase):
     @route.put("/editDesignDemand/{id}", response=DesignCreateOutSchema, url_name="design-update")
     @transaction.atomic
     def update_design(self, id: int, payload: DesignCreateInputSchema):
-        design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident)
+        design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident,
+                                              round__key=payload.round_key)
         # 判断是否和同项目同轮次的标识重复
         if len(design_search) > 1 and payload.ident != '':
             return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')

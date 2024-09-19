@@ -7,12 +7,16 @@ from django.shortcuts import get_object_or_404
 # 导入文档处理模块
 from docxtpl import DocxTemplate, InlineImage
 # 导入ORM模型
-from apps.project.models import Project, Dut, Round
+from apps.project.models import Project
 # 导入工具
-from utils.util import get_str_abbr, get_str_dict, MyHTMLParser_p
+from utils.util import get_str_abbr, get_str_dict
 from utils.chen_response import ChenResponse
 from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
+# 导入生成日志记录模块
+from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
+
+gloger = GenerateLogger("问题单二段文档")
 
 # @api_controller("/generateWtd", tags=['生成问题单文档系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller('/generateWtd', tags=['生成问题单文档系列'])
@@ -20,10 +24,10 @@ class GenerateControllerWtd(ControllerBase):
     @route.get("/create/problem", url_name="create-problem")
     @transaction.atomic
     def create_problem(self, id: int):
+        """生成问题单"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/wtd' / '问题详情表.docx'
         doc = DocxTemplate(tpl_path)
-        """生成问题单"""
         project_obj = get_object_or_404(Project, id=id)
         problem_list = list(project_obj.projField.distinct())  # 去掉重复，因为和case是多对多
         problem_list.sort(key=lambda x: int(x.ident))
@@ -32,6 +36,9 @@ class GenerateControllerWtd(ControllerBase):
             problem_dict = {'ident': problem.ident, 'name': problem.name}
             # 1.生成被测对象名称、被测对象标识、被测对象版本
             cases = problem.case.all()
+            # generate_log:无关联问题单进入生成日志
+            if cases.count() < 1:
+                gloger.write_warning_log('单个问题单表格', f'问题单{problem.ident}未关联用例，请检查')
             str_dut_name_list = []
             str_dut_ident_list = []
             str_dut_version_list = []
@@ -64,20 +71,21 @@ class GenerateControllerWtd(ControllerBase):
                             else:
                                 p_list.append(rich)
 
-                        case_design_list.append("-".join([case.dut.name, case.design.chapter + '章节' + ":" + ''.join(p_list)]))
+                        case_design_list.append(
+                            "-".join([case.dut.name, case.design.chapter + '章节' + ":" + ''.join(p_list)]))
                 # 2.用例标识修改-YL_测试项类型_测试项标识_用例key+1
                 demand = case.test  # 中间变量
                 demand_testType = demand.testType  # 中间变量
                 testType_abbr = get_str_abbr(demand_testType, 'testType')  # 输出FT
                 case_ident_list.append("_".join(
                     ['YL', testType_abbr, demand.ident, str(int(case.key[-1]) + 1).rjust(3, '0')]))
-
             problem_dict['duts_name'] = "/".join(set(str_dut_name_list))
             problem_dict['duts_ref'] = "/".join(set(str_dut_ident_list))
             problem_dict['duts_version'] = "/".join(set(str_dut_version_list))
             temp_name_version = []
             for i in range(len(str_dut_name_list)):
-                temp_name_version.append("".join([str_dut_name_list[i] + str_dut_ident_list[i], '/V', str_dut_version_list[i]]))
+                temp_name_version.append(
+                    "".join([str_dut_name_list[i] + str_dut_ident_list[i], '/V', str_dut_version_list[i]]))
             problem_dict['dut_name_version'] = "\a".join(temp_name_version)
             problem_dict['case_ident'] = "，".join(set(case_ident_list))
             problem_dict['type'] = get_str_dict(problem.type, 'problemType')
@@ -94,7 +102,6 @@ class GenerateControllerWtd(ControllerBase):
             desc_list_result = [f'\a【问题影响】\a{problem.result}']
             desc_list.extend(desc_list_result)
             # 问题描述赋值
-            print(desc_list)
             problem_dict['desc'] = desc_list
 
             # 4.原因分析

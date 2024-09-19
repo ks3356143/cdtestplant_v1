@@ -211,7 +211,9 @@ class CaseController(ControllerBase):
                 case_model = Case.objects.create(**case_dict)
                 # 创建用例步骤
                 case_step_dict = {
-                    'operation': "".join([sub.condition, '，', sub.operation, '，', sub.observe]),
+                    'operation': "".join([sub.condition if sub.condition is not None else "", '，',
+                                          sub.operation if sub.operation is not None else "", '，',
+                                          sub.observe if sub.observe is not None else ""]),
                     'expect': sub.expect,
                     'result': '',  # 暂时为空
                     'case': case_model,

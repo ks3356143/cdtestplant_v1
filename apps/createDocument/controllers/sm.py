@@ -190,6 +190,7 @@ class GenerateControllerSM(ControllerBase):
     @route.get('/create/smtrack', url_name='create-smtrack')
     @transaction.atomic
     def create_smtrack(self, id: int):
+        """生成说明的需求追踪表"""
         project_path_str = project_path(id)
         project_obj = get_object_or_404(Project, id=id)
         demand_prefix = '6.2'
@@ -200,13 +201,14 @@ class GenerateControllerSM(ControllerBase):
             # 找出第一轮被测件为'SO'的
             so_dut = project_round_one.rdField.filter(type='SO').first()
             if so_dut:
-                so_designs = so_dut.rsField.filter()
+                so_designs = so_dut.rsField.all()
                 for design in so_designs:
                     design_dict = {'name': design.name, 'chapter': design.chapter, 'test_demand': []}
                     test_items = []
                     test_items.extend(design.dtField.all())
                     test_items.extend(design.odField.all())
                     for test_item in test_items:
+                        # 对4个测试类型单独处理：因为这4类肯定没有章节号
                         if test_item.testType in ['2', '3', '15', '8']:
                             design_dict.update({'name': "/", 'chapter': "/"})
                         reveal_ident = "_".join(
@@ -226,7 +228,7 @@ class GenerateControllerSM(ControllerBase):
                         design_dict['test_demand'].append(test_item_dict)
                     design_list.append(design_dict)
 
-            # 找出第一轮的被测件为'XQ'的第一个
+            # 上面找出了源代码被测件，这里找XQ被测件
             xq_dut = project_round_one.rdField.filter(type='XQ').first()
             if xq_dut:
                 xq_designs = xq_dut.rsField.all()

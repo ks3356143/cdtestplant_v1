@@ -6,7 +6,6 @@ from typing import List, Optional
 class DeleteSchema(Schema):
     ids: List[int]
 
-
 # 问题单-输出schema
 class ProblemModelOutSchema(ModelSchema):
     related: Optional[bool] = Field(False)  # 给前端反应是否为关联的问题单
@@ -76,9 +75,9 @@ class ProblemCreateInputSchema(Schema):
     type: str = Field(None, alias='type')
     postPerson: str = Field(None, alias='postPerson')
     postDate: str = Field(None, alias='postDate')
-    designerPerson: str = Field(None, alias='designerPerson')
+    designerPerson: str = Field("", alias='designerPerson')
     designDate: str = Field(None, alias='designDate')
-    verifyPerson: str = Field(None, alias='verifyPerson')
+    verifyPerson: str = Field("", alias='verifyPerson')
     verifyDate: str = Field(None, alias='verifyDate')
     closeMethod: List[str]
     # 2024年3月27日新增-处理方式字段

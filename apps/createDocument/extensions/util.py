@@ -3,7 +3,7 @@ from docxtpl import DocxTemplate
 from docx.table import Table
 from utils.chen_response import ChenResponse
 from typing import Any
-from apps.project.models import Problem, Round, Project
+from apps.project.models import Project
 from utils.path_utils import project_path
 
 def merge_all_cell(table: Table) -> None:
@@ -18,6 +18,8 @@ def merge_all_cell(table: Table) -> None:
                 temp_text = cell.text
             else:
                 if cell.text == temp_text:
+                    if cell.text == '': # 不知道什么原因必须这样判断下
+                        cell.text = '/'
                     text_temp = cell.text
                     ce = cell.merge(col_right.cells[index - 1])
                     ce.text = text_temp

@@ -12,6 +12,9 @@ from docx.shared import Mm
 # text.replace('\xa0', ' '))
 class RichParser:
     def __init__(self, rich_text):
+        # 将rich_text的None变为空字符串：鲁棒
+        if rich_text is None:
+            rich_text = ""
         # 对原始html解析后的bs对象
         self.bs = BeautifulSoup(rich_text, 'html.parser')
         self.content = self.remove_n_in_contents()

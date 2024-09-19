@@ -140,7 +140,9 @@ class ProblemController(ControllerBase):
 
     @staticmethod
     def __date_solve(payload: ProblemCreateInputSchema):
-        """辅助函数：设置问题单时间，而不是默认进入时间，传入schema对象，返回schema对象，只对里面时间进行处理"""
+        """辅助函数：
+        1.设置问题单时间，而不是默认进入时间，传入schema对象，返回schema对象，只对里面时间进行处理
+        """
         project_obj = get_object_or_404(Project, id=payload.project_id)
         round_obj = project_obj.pField.filter(key=payload.round_key).first()
         if round_obj:

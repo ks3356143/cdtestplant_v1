@@ -26,7 +26,7 @@ LOGGING = {
     # 两种分发器
     "handlers": {  # 定义了三种分发器
         'root_log_file': {
-            'level': "INFO",
+            'level': "WARNING",
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': LOG_DIR / 'root_log',
             'maxBytes': 1024 * 1024 * 10,
