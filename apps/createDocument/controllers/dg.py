@@ -9,7 +9,7 @@ from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
 from apps.project.models import Project, Contact, Abbreviation
-from apps.dict.models import Dict
+from apps.dict.models import Dict, Fragment
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
@@ -22,6 +22,8 @@ from apps.createDocument.extensions.documentTime import DocTime
 from utils.path_utils import project_path
 # 记录生成日志
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
+# 导入片段enum
+from apps.dict.fragment.enums import DocNameEnum
 
 # @api_controller("/generate", tags=['生成大纲文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generate", tags=['生成大纲文档'])
@@ -219,16 +221,35 @@ class GenerateControllerDG(ControllerBase):
         print('进入了该区域，为调试代码请检查为什么进入此处')
         pass
 
-    # 生成测评对象 - 包括大纲、说明
+    # 生成测评对象 - 包括大纲、说明、回归说明和报告
     @route.get('/create/softComposition', url_name='create-softComposition')
     @transaction.atomic
     def create_softComposition(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评对象.docx'
+        doc = DocxTemplate(input_path)
         project_qs = get_object_or_404(Project, id=id)
-        project_name = project_qs.name
+        # 先设置标志以及user_content默认值
+        replace = False
+        rich_text_list = []
+        # 首先判断是否由项目级别文档片段
+        fragments = project_qs.frag.filter(belong_doc=DocNameEnum.dg.value)
+        # 判断名称是否为测评对象和is_main -> 硬编码
+        frag: Fragment = fragments.filter(name='测评对象', is_main=True).first()
+        if frag:
+            replace = True
+            # 取出文档html内容
+            rich_text_list = RichParser(frag.content).get_final_format_list(doc)
         context = {
-            'project_name': project_name
+            "replace": replace,  # 指定是否由数据库文档片段进行生成
+            "user_content": frag and rich_text_list
         }
-        return create_dg_docx('测评对象.docx', context, id)
+        print(context)
+        doc.render(context)
+        try:
+            doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '测评对象.docx')
+            return ChenResponse(status=200, code=200, message="文档生成成功！")
+        except PermissionError as e:
+            return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
     # 生成被测软件接口章节
     @route.get('/create/interface', url_name='create-interface')

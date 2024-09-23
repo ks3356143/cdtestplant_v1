@@ -4,15 +4,15 @@ from ninja import Schema, Field, Query, ModelSchema
 from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
+from ninja_schema import model_validator
+
 # 小工具函数
 from utils.smallTools.interfaceTools import model_retrieve
 from ninja.pagination import paginate
 from utils.chen_pagination import MyPagination
-from utils.chen_crud import updateWithoutRequestParam, multi_delete
+from utils.chen_crud import updateWithoutRequestParam, multi_delete, createWithOutRequestParam
 # ORM模型
 from apps.dict.models import Fragment
-# fragment操作类代入
-from apps.dict.fragment.fragmentOperation import FragmentOperation
 
 # Schemas
 ## 查询fragment的输入
@@ -28,6 +28,22 @@ class FragmentOutSchema(ModelSchema):
         model = Fragment
         fields = ['id', 'name', 'belong_doc', 'project', 'is_main', 'content']
 
+## 新增
+class FragmentAddSchema(Schema):
+    name: str  # 必填
+    is_main: bool = False  # 后端直接设置为False
+    belong_doc: Union[int, str]
+    project_id: int = Field(None, alias='projectId')
+    content: str = ""
+
+    # username判重
+    @model_validator("name")
+    @classmethod
+    def unique_name(cls, value):
+        if Fragment.objects.filter(name=value).exists():
+            raise HttpError(400, "文档片段名称重复")
+        return value
+
 ## 更新文档片段
 class FragmentUpdateSchema(Schema):
     name: str = None
@@ -35,6 +51,18 @@ class FragmentUpdateSchema(Schema):
     belong_doc: Union[int, str] = Field(None, alias='belong_doc')
     project_id: int = Field(None, alias='projectId')
     content: str = Field(None, alias='content')
+
+    def validate_unique_update_fragName(self, id: int):
+        frag_filters = Fragment.objects.filter(name=self.name)
+        if len(frag_filters) > 1:
+            raise HttpError(400, "文档片段名称重复")
+        elif len(frag_filters) == 1:
+            if frag_filters[0].id == id:
+                return
+            else:
+                raise HttpError(400, "文档片段名称重复")
+        else:
+            return
 
 # 删除schema
 class FragmentDeleteSchema(Schema):
@@ -53,6 +81,10 @@ class UserFiledController(ControllerBase):
         res_qs = model_retrieve(condition, fragment_qs, ['project_id', 'is_main'])
         res_qs = res_qs.filter(project_id=condition.project_id)
         return res_qs
+
+    @route.post("/add", url_name='fragment-add', response=FragmentOutSchema)
+    def add_fragement(self, data: FragmentAddSchema):
+        return createWithOutRequestParam(data, Fragment)
 
     @route.delete("/delete", url_name="fragment-delete")
     def delete_fragment(self, data: FragmentDeleteSchema):

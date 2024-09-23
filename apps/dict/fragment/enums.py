@@ -13,3 +13,4 @@ class DocNameEnum(Enum):
 
 if __name__ == '__main__':
     print(DocNameEnum.dg)
+    print(DocNameEnum.dg.value)

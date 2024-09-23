@@ -1,13 +1,20 @@
 from django.shortcuts import get_object_or_404
 
-# 这个函数参数1：request、参数2：schema或schema.dict()、参数3：ORM模型
+# 1.1)这个函数参数1：request、参数2：schema或schema.dict()、参数3：ORM模型
 def create(request, data, model):
     if not isinstance(data, dict):
         data = data.dict()
     query_set = model.objects.create(**data)
     return query_set
 
-# 更新便捷函数，特别注意参数0为request后面有用，参数1：id，参数2：schema，参数3：ORM模型
+# 1.2)新增快捷函数，直接填入data
+def createWithOutRequestParam(data, model):
+    if not isinstance(data, dict):
+        data = data.dict()
+    query_set = model.objects.create(**data)
+    return query_set
+
+# 2.1)更新便捷函数，特别注意参数0为request后面有用，参数1：id，参数2：schema，参数3：ORM模型
 def update(request, id, data, model):
     dict_data = data.dict()
     instance = get_object_or_404(model, id=id)
@@ -16,12 +23,12 @@ def update(request, id, data, model):
     instance.save()
     return instance
 
-# 更新便捷函数-无request参数 -> data参数为schema对象
+# 2.2)更新便捷函数-无request参数 -> data参数为schema对象
 def updateWithoutRequestParam(id, data, model):
     dict_data = data.model_dump(exclude_none=True)
     instance = get_object_or_404(model, id=id)
     for attr, value in dict_data.items():
-        if attr != 'id': # 不对id更新
+        if attr != 'id':  # 不对id更新
             setattr(instance, attr, value)
     instance.save()
     return instance
