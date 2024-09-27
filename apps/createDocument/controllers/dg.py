@@ -55,11 +55,11 @@ class GenerateControllerDG(ControllerBase):
                     "index": index + 1,
                     "rindex": str(index + 1).rjust(2, '0'),
                     "subName": content.subName,
-                    "subDesc": content.subDesc,
-                    "condition": content.condition,
-                    "operation": content.operation,
-                    "observe": content.observe,
-                    "expect": content.expect,
+                    "subDesc": content.subDesc.replace("\n", "\a") if content.subDesc else "",
+                    "condition": content.condition.replace("\n", "\a") if content.condition else "",
+                    "operation": content.operation.replace("\n", "\a") if content.operation else "",
+                    "observe": content.observe.replace("\n", "\a") if content.observe else "",
+                    "expect": content.expect.replace("\n", "\a") if content.expect else "",
                 }
                 content_list.append(content_dict)
             # 查询测试项中testMethod

@@ -50,3 +50,21 @@ response.project_id
   Field required [type=missing, input_value=<DjangoGetter: None>, input_type=DjangoGetter]
     For further information visit https://errors.pydantic.dev/2.9/v/missing
 [ERROR][2024-09-23 19:06:12,413][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-09-25 17:48:11,271][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-09-25 17:51:20,063][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
+[WARNING][2024-09-25 17:58:18,057][operation.py:121]"GET - GenerateControllerDG[create_testdemand] /api/generate/create/testdemand" ("'NoneType' object has no attribute 'replace'",)
+[ERROR][2024-09-25 17:58:18,058][errors.py:116]'NoneType' object has no attribute 'replace'
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 194, in run
+    result = self.view_func(request, **values)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 89, in as_view
+    result = self.route.view_func(
+  File "C:\Users\chenjunyi\AppData\Local\Programs\Python\Python38\lib\contextlib.py", line 75, in inner
+    return func(*args, **kwds)
+  File "E:\PycharmProject\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 61, in create_testdemand
+    "observe": content.observe.replace("\n", "\a"),
+AttributeError: 'NoneType' object has no attribute 'replace'
+[ERROR][2024-09-25 17:58:18,078][log.py:241]Internal Server Error: /api/generate/create/testdemand
+[WARNING][2024-09-25 18:02:00,421][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
+[WARNING][2024-09-25 18:02:00,704][log.py:241]Bad Request: /api/generate/create/testdemand
+[WARNING][2024-09-25 18:02:05,246][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
