@@ -42,7 +42,9 @@ class ContactController(ControllerBase):
         for attr, value in data.__dict__.items():
             if getattr(data, attr) is None:
                 setattr(data, attr, '')
-        # 判重key
+        # 判重key -> key可能为空
+        if data.key == '':
+            data.key = 0
         assert_dict = data.dict()
         key_qs = Contact.objects.filter(key=str(data.key))
         if len(key_qs) > 0:
@@ -52,7 +54,12 @@ class ContactController(ControllerBase):
         if len(name_qs) > 0:
             return ChenResponse(code=400, status=400, message="全称重复，请修改")
 
+        # 去掉key
+        assert_dict.pop("key")
+        assert_dict['key'] = 999999
         qs = Contact.objects.create(**assert_dict)
+        qs.key = qs.id
+        qs.save()
         return qs
 
     @route.put("/contact/update/{id}", response=ContactOut, url_name='contact-update')
