@@ -4673,3 +4673,480 @@ Traceback (most recent call last):
     _mysql.connection.query(self, query)
 django.db.utils.IntegrityError: (1048, "Column 'key' cannot be null")
 [ERROR][2024-10-15 15:11:30,964][log.py:241]Internal Server Error: /api/system/contact/save
+[WARNING][2024-10-16 09:11:14,266][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-10-16 09:11:14,442][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-10-16 09:11:26,245][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-10-16 09:22:48,447][log.py:241]Bad Request: /api/system/contact/save
+[WARNING][2024-10-16 11:03:26,491][log.py:241]Bad Request: /api/project/problem/relateProblem
+[WARNING][2024-10-16 11:08:39,517][logger.py:25][回归测试记录模块][字典数据缺失]片段:字典数据devplant数据缺失，请检查相应数据是否存在
+[WARNING][2024-10-16 13:42:20,118][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (400, '文档片段名称重复')
+[WARNING][2024-10-16 13:42:20,120][log.py:241]Bad Request: /api/system/userField/add
+[WARNING][2024-10-16 13:45:03,873][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" ('project_id',)
+[ERROR][2024-10-16 13:45:03,873][errors.py:116]project_id
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
+    values = self._get_values(request, kw, temporal_response)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
+    data = model.resolve(request, self.api, path_params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
+    return cls.model_validate(data, context={"request": request})
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
+    return handler(values)
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 43, in unique_name
+    if Fragment.objects.filter(name=value, project_id=cls.project_id).exists():
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\_internal\_model_construction.py", line 262, in __getattr__
+    raise AttributeError(item)
+AttributeError: project_id
+[ERROR][2024-10-16 13:45:03,879][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 13:46:03,859][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" ('project_id',)
+[ERROR][2024-10-16 13:46:03,859][errors.py:116]project_id
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
+    values = self._get_values(request, kw, temporal_response)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
+    data = model.resolve(request, self.api, path_params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
+    return cls.model_validate(data, context={"request": request})
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
+    return handler(values)
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 43, in unique_name
+    print(cls.project_id)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\_internal\_model_construction.py", line 262, in __getattr__
+    raise AttributeError(item)
+AttributeError: project_id
+[ERROR][2024-10-16 13:46:03,875][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 13:46:54,748][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" ('project_id',)
+[ERROR][2024-10-16 13:46:54,748][errors.py:116]project_id
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
+    values = self._get_values(request, kw, temporal_response)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
+    data = model.resolve(request, self.api, path_params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
+    return cls.model_validate(data, context={"request": request})
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
+    return handler(values)
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 44, in unique_name
+    if Fragment.objects.filter(name=value, project_id=cls.project_id).exists():
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\_internal\_model_construction.py", line 262, in __getattr__
+    raise AttributeError(item)
+AttributeError: project_id
+[ERROR][2024-10-16 13:46:54,752][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 13:47:58,372][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" ('name',)
+[ERROR][2024-10-16 13:47:58,372][errors.py:116]name
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
+    values = self._get_values(request, kw, temporal_response)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
+    data = model.resolve(request, self.api, path_params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
+    return cls.model_validate(data, context={"request": request})
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
+    return handler(values)
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 43, in unique_name
+    print(cls.name)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\_internal\_model_construction.py", line 262, in __getattr__
+    raise AttributeError(item)
+AttributeError: name
+[ERROR][2024-10-16 13:47:58,376][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 13:51:19,436][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" ("model_dump() missing 1 required positional argument: 'self'",)
+[ERROR][2024-10-16 13:51:19,436][errors.py:116]model_dump() missing 1 required positional argument: 'self': Did you fail to use functools.wraps() in a decorator?
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
+    values = self._get_values(request, kw, temporal_response)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
+    data = model.resolve(request, self.api, path_params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
+    return cls.model_validate(data, context={"request": request})
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
+    return handler(values)
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 43, in unique_name
+    print(cls.model_dump())
+TypeError: model_dump() missing 1 required positional argument: 'self': Did you fail to use functools.wraps() in a decorator?
+[ERROR][2024-10-16 13:51:19,441][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 13:58:35,395][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" ('project_id',)
+[ERROR][2024-10-16 13:58:35,395][errors.py:116]project_id
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
+    values = self._get_values(request, kw, temporal_response)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
+    data = model.resolve(request, self.api, path_params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
+    return cls.model_validate(data, context={"request": request})
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
+    return handler(values)
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 44, in unique_name
+    if Fragment.objects.filter(name=value, project_id=cls.project_id).exists():
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\_internal\_model_construction.py", line 262, in __getattr__
+    raise AttributeError(item)
+AttributeError: project_id
+[ERROR][2024-10-16 13:58:35,399][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 13:59:26,280][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (400, '文档片段名称重复')
+[WARNING][2024-10-16 13:59:26,281][log.py:241]Bad Request: /api/system/userField/add
+[WARNING][2024-10-16 14:00:36,834][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (400, '文档片段名称重复')
+[WARNING][2024-10-16 14:00:36,835][log.py:241]Bad Request: /api/system/userField/add
+[WARNING][2024-10-16 14:03:27,655][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" ("'pydantic_core._pydantic_core.ValidationInfo' object has no attribute 'project_id'",)
+[ERROR][2024-10-16 14:03:27,655][errors.py:116]'pydantic_core._pydantic_core.ValidationInfo' object has no attribute 'project_id'
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
+    values = self._get_values(request, kw, temporal_response)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
+    data = model.resolve(request, self.api, path_params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
+    return cls.model_validate(data, context={"request": request})
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
+    return handler(values)
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 44, in unique_name
+    print('其他值：', info.project_id)
+AttributeError: 'pydantic_core._pydantic_core.ValidationInfo' object has no attribute 'project_id'
+[ERROR][2024-10-16 14:03:27,659][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 14:04:47,705][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (400, '文档片段名称重复')
+[WARNING][2024-10-16 14:04:47,706][log.py:241]Bad Request: /api/system/userField/add
+[WARNING][2024-10-16 14:05:52,858][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (400, '文档片段名称重复')
+[WARNING][2024-10-16 14:05:52,859][log.py:241]Bad Request: /api/system/userField/add
+[WARNING][2024-10-16 14:08:31,151][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:08:31,151][errors.py:116](1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+MySQLdb.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 194, in run
+    result = self.view_func(request, **values)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 89, in as_view
+    result = self.route.view_func(
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 86, in add_fragement
+    return createWithOutRequestParam(data, Fragment)
+  File "E:\PycharmProject\cdtestplant_v1\utils\chen_crud.py", line 14, in createWithOutRequestParam
+    query_set = model.objects.create(**data)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 658, in create
+    obj.save(force_insert=True, using=self.db)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 814, in save
+    self.save_base(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 877, in save_base
+    updated = self._save_table(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1020, in _save_table
+    results = self._do_insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1061, in _do_insert
+    return manager._insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 1805, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\sql\compiler.py", line 1822, in execute_sql
+    cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+django.db.utils.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:08:31,163][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 14:09:25,940][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:09:25,940][errors.py:116](1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+MySQLdb.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 194, in run
+    result = self.view_func(request, **values)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 89, in as_view
+    result = self.route.view_func(
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 86, in add_fragement
+    return createWithOutRequestParam(data, Fragment)
+  File "E:\PycharmProject\cdtestplant_v1\utils\chen_crud.py", line 14, in createWithOutRequestParam
+    query_set = model.objects.create(**data)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 658, in create
+    obj.save(force_insert=True, using=self.db)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 814, in save
+    self.save_base(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 877, in save_base
+    updated = self._save_table(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1020, in _save_table
+    results = self._do_insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1061, in _do_insert
+    return manager._insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 1805, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\sql\compiler.py", line 1822, in execute_sql
+    cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+django.db.utils.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:09:25,952][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 14:10:19,582][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:10:19,582][errors.py:116](1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+MySQLdb.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 194, in run
+    result = self.view_func(request, **values)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 89, in as_view
+    result = self.route.view_func(
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 86, in add_fragement
+    return createWithOutRequestParam(data, Fragment)
+  File "E:\PycharmProject\cdtestplant_v1\utils\chen_crud.py", line 15, in createWithOutRequestParam
+    query_set = model.objects.create(**data)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 658, in create
+    obj.save(force_insert=True, using=self.db)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 814, in save
+    self.save_base(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 877, in save_base
+    updated = self._save_table(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1020, in _save_table
+    results = self._do_insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1061, in _do_insert
+    return manager._insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 1805, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\sql\compiler.py", line 1822, in execute_sql
+    cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+django.db.utils.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:10:19,602][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 14:11:42,043][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:11:42,044][errors.py:116](1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+MySQLdb.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 194, in run
+    result = self.view_func(request, **values)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 89, in as_view
+    result = self.route.view_func(
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 85, in add_fragement
+    return createWithOutRequestParam(data, Fragment)
+  File "E:\PycharmProject\cdtestplant_v1\utils\chen_crud.py", line 14, in createWithOutRequestParam
+    query_set = model.objects.create(**data)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 658, in create
+    obj.save(force_insert=True, using=self.db)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 814, in save
+    self.save_base(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 877, in save_base
+    updated = self._save_table(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1020, in _save_table
+    results = self._do_insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1061, in _do_insert
+    return manager._insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 1805, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\sql\compiler.py", line 1822, in execute_sql
+    cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+django.db.utils.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:11:42,057][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 14:12:41,663][operation.py:121]"POST - UserFiledController[add_fragement] /api/system/userField/add" (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:12:41,663][errors.py:116](1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+MySQLdb.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\operation.py", line 194, in run
+    result = self.view_func(request, **values)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 89, in as_view
+    result = self.route.view_func(
+  File "E:\PycharmProject\cdtestplant_v1\apps\dict\controllers\fragment.py", line 85, in add_fragement
+    return createWithOutRequestParam(data, Fragment)
+  File "E:\PycharmProject\cdtestplant_v1\utils\chen_crud.py", line 14, in createWithOutRequestParam
+    query_set = model.objects.create(**data)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 658, in create
+    obj.save(force_insert=True, using=self.db)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 814, in save
+    self.save_base(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 877, in save_base
+    updated = self._save_table(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1020, in _save_table
+    results = self._do_insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\base.py", line 1061, in _do_insert
+    return manager._insert(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\query.py", line 1805, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\models\sql\compiler.py", line 1822, in execute_sql
+    cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 102, in execute
+    return super().execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\django\db\backends\mysql\base.py", line 75, in execute
+    return self.cursor.execute(query, args)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+  File "E:\PycharmProject\cdtestplant_v1\venv\lib\site-packages\MySQLdb\connections.py", line 261, in query
+    _mysql.connection.query(self, query)
+django.db.utils.IntegrityError: (1062, "Duplicate entry '测评对象-1' for key 'fragment_core.unique_name_belong_doc'")
+[ERROR][2024-10-16 14:12:41,675][log.py:241]Internal Server Error: /api/system/userField/add
+[WARNING][2024-10-16 14:18:03,257][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
+[WARNING][2024-10-16 14:20:06,237][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝

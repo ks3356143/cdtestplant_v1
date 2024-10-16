@@ -4,8 +4,7 @@ from ninja import Schema, Field, Query, ModelSchema
 from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
-from ninja_schema import model_validator
-
+from pydantic import model_validator
 # 小工具函数
 from utils.smallTools.interfaceTools import model_retrieve
 from ninja.pagination import paginate
@@ -37,12 +36,11 @@ class FragmentAddSchema(Schema):
     content: str = ""
 
     # username判重
-    @model_validator("name")
-    @classmethod
-    def unique_name(cls, value):
-        if Fragment.objects.filter(name=value).exists():
+    @model_validator(mode='after')
+    def unique_name(self):
+        if Fragment.objects.filter(name=self.name, project_id=self.project_id).exists():
             raise HttpError(400, "文档片段名称重复")
-        return value
+        return self
 
 ## 更新文档片段
 class FragmentUpdateSchema(Schema):

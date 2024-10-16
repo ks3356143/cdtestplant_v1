@@ -68,5 +68,5 @@ class Fragment(CoreModel):
         ordering = ('-create_datetime', '-id')
         # 片段名称name和所属产品文档联合唯一
         constraints = [
-            models.UniqueConstraint(fields=['name', 'belong_doc'], name='unique_name_belong_doc')
+            models.UniqueConstraint(fields=['name', 'belong_doc', 'project_id'], name='unique_name_belong_doc')
         ]

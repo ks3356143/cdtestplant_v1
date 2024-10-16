@@ -231,7 +231,7 @@ class GenerateControllerDG(ControllerBase):
         # 先设置标志以及user_content默认值
         replace = False
         rich_text_list = []
-        # 首先判断是否由项目级别文档片段
+        # 首先判断是否有项目级别文档片段
         fragments = project_qs.frag.filter(belong_doc=DocNameEnum.dg.value)
         # 判断名称是否为测评对象和is_main -> 硬编码
         frag: Fragment = fragments.filter(name='测评对象', is_main=True).first()
@@ -243,7 +243,6 @@ class GenerateControllerDG(ControllerBase):
             "replace": replace,  # 指定是否由数据库文档片段进行生成
             "user_content": frag and rich_text_list
         }
-        print(context)
         doc.render(context)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '测评对象.docx')
