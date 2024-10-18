@@ -131,6 +131,7 @@ class MyHTMLParser_p(HTMLParser):
 
     def handle_data(self, data):
         if data != '\n':
+            print(data)
             self.allStrList.append(data)
 
 def create_problem_grade_str(problems):
