@@ -1,3 +1,8 @@
 [WARNING][2024-10-17 10:08:54,455][log.py:241]Unauthorized: /api/system/getInfo
 [WARNING][2024-10-17 10:08:54,605][log.py:241]Unauthorized: /api/system/logout
 [WARNING][2024-10-17 10:08:59,813][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-10-21 14:49:11,248][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-10-21 14:49:11,389][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-10-21 14:49:17,266][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-10-21 15:11:24,223][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-10-21 15:55:00,050][log.py:241]Bad Request: /api/project/problem/relateProblem
