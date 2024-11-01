@@ -6,3 +6,10 @@
 [WARNING][2024-10-21 14:49:17,266][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
 [WARNING][2024-10-21 15:11:24,223][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
 [WARNING][2024-10-21 15:55:00,050][log.py:241]Bad Request: /api/project/problem/relateProblem
+[WARNING][2024-10-23 15:24:51,251][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-10-28 11:05:42,879][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-10-28 11:05:43,297][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-10-28 11:05:48,092][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-10-31 09:05:23,938][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-10-31 09:05:24,007][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-10-31 09:05:27,869][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
