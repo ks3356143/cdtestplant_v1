@@ -13,3 +13,11 @@
 [WARNING][2024-10-31 09:05:23,938][log.py:241]Unauthorized: /api/system/getInfo
 [WARNING][2024-10-31 09:05:24,007][log.py:241]Unauthorized: /api/system/logout
 [WARNING][2024-10-31 09:05:27,869][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-11-01 15:46:24,995][log.py:241]Not Found: /
+[WARNING][2024-11-01 15:46:25,180][log.py:241]Not Found: /favicon.ico
+[WARNING][2024-11-04 09:06:04,961][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-11-07 10:33:49,959][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-11-07 10:33:50,036][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-11-07 10:33:55,120][backend.py:365]Caught LDAPError while authenticating superAdmin: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-11-10 15:16:20,580][log.py:241]Not Found: /
+[WARNING][2024-11-10 15:16:20,762][log.py:241]Not Found: /favicon.ico

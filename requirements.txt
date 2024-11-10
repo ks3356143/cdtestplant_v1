@@ -24,3 +24,13 @@ waitress==3.0.0
 django-redis~=5.4.0
 redis~=5.0.3
 pyinstaller~=6.8.0
+# 自动导入的需求包
+PyJWT~=2.8.0
+asgiref~=3.7.2
+sqlparse~=0.4.4
+colorama~=0.4.6
+Jinja2~=3.1.3
+requests~=2.31.0
+ipython~=8.12.3
+traitlets~=5.14.2
+orjson~=3.10.7

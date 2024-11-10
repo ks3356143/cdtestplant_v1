@@ -28,6 +28,7 @@ from apps.createDocument.extensions.documentTime import DocTime
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 
+
 # @api_controller("/generateBG", tags=['生成报告文档系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generateBG", tags=['生成报告文档系列'])
 class GenerateControllerBG(ControllerBase):
