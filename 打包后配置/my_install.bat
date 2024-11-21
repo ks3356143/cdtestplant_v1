@@ -4,7 +4,7 @@ echo 请使用管理员运行该脚本
 
 echo 正在设置环境变量...
 set currentDir=%~dp0
-set currentDir=%currentDir%\mysql-8.0.36-winx64
+set currentDir=%currentDir%mysql-8.4.3-winx64
 set basedir=%currentDir%
 
 echo **********当前mysql根路径:%basedir%**********

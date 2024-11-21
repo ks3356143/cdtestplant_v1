@@ -1,3 +1,5 @@
 1.nginx监听端口 8181
 2.my.ini配置的数据库端口为 3307
 3.务必改动django里面的数据库端口以及DEBUG=False -> 因为开发环境为 3306/DEBUG=True
+
+文件信息：

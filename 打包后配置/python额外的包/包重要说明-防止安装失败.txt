@@ -1,0 +1,1 @@
+mysqlclient支持python3.8版本是2.2.4超过2.2.4无法安装
