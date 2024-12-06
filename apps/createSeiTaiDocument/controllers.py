@@ -4,17 +4,11 @@ from ninja_extra.permissions import IsAuthenticated
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import QuerySet
-# 文档处理相关库
 from docxtpl import DocxTemplate
-# 导入docx进行文件“域”替换操作
 from apps.createSeiTaiDocument.docXmlUtils import generate_temp_doc
-# 自己的工具模块
 from utils.chen_response import ChenResponse
-# 模型模块
 from apps.project.models import Project, Dut
-# 时间设置模块
 from apps.createDocument.extensions.documentTime import DocTime
-# 查询字典工具函数
 from utils.util import get_str_dict
 
 # @api_controller("/create", tags=['生成产品文档接口'], auth=JWTAuth(), permissions=[IsAuthenticated])

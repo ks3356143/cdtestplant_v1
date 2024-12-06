@@ -1,10 +1,10 @@
 from pathlib import Path
 import os
+import datetime
+# 导入其他配置：env、ninja_extra、ldap、log
 from conf.env import *
 from conf.ninja_extra_settings import *
-import datetime
 from django_auth_ldap.config import LDAPSearch
-# 导入日志配置
 from conf.logConfig import LOGGING
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'apps.createSeiTaiDocument',
 ]
 
+# auth中间件未打开
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     # 'django.contrib.sessions.middleware.SessionMiddleware',
@@ -80,6 +81,9 @@ DATABASES = {
         "NAME": DATABASE_NAME,
     }
 }
+
+# 调试模式
+DEBUG = False
 
 # 配置缓存
 CACHES = {
@@ -134,11 +138,11 @@ ALLOWED_HOSTS = ["*"]  # 线上环境设置
 # 静态文件目录 - manage.py collectstatic
 # -> 会将所有app静态文件移动到STATIC_ROOT目录下面
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, '../../static')
 
 # 配置MEDIA_ROOT和MEDIA_URL
 MEDIA_URL = "/uploads/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, '../../uploads')
 
 # 接口日志记录
 API_LOG_ENABLE = False

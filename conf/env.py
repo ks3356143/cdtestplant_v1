@@ -1,8 +1,10 @@
+"""全部是生产环境配置"""
 import ldap
 from django_auth_ldap.config import LDAPSearch
 import environ
 from pathlib import Path
 
+# ***************读取LDAP的.env文件配置*************** #
 env_file = '.env'
 env = environ.Env()
 env.read_env(env_file=Path(__file__).resolve().parent.parent / env_file)
@@ -13,8 +15,7 @@ env.read_env(env_file=Path(__file__).resolve().parent.parent / env_file)
 # 数据库地址
 DATABASE_HOST = "127.0.0.1"
 # 数据库端口
-# DATABASE_PORT = 3307  # --> 打包使用
-DATABASE_PORT = 3306
+DATABASE_PORT = 3307  # 生成环境配置
 # 数据库用户名
 DATABASE_USER = "root"
 # 数据库密码
@@ -40,8 +41,6 @@ CELERY_MAX_TASKS_PER_CHILD = 10  # 每worker最多执行5个任务自动销毁
 # ================================================= #
 # ******************  其他 配置  ****************** #
 # ================================================= #
-DEBUG = True
-# DEBUG = False  # --> 打包使用
 ALLOWED_HOSTS = ["*"]  # 线上环境设置
 LOGIN_NO_CAPTCHA_AUTH = True  # 登录接口 /api/token/ 是否需要验证码认证，用于测试，正式环境建议取消
 ENABLE_LOGIN_ANALYSIS_LOG = True  # 启动登录详细概略获取(通过调用api获取ip详细地址)

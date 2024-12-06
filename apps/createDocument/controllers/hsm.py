@@ -6,6 +6,7 @@ from typing import Union
 from ninja_extra import api_controller, ControllerBase, route
 from ninja_extra.permissions import IsAuthenticated
 from ninja_jwt.authentication import JWTAuth
+from ninja.errors import HttpError
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import QuerySet, Q

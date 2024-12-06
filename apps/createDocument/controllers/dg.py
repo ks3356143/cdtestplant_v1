@@ -24,10 +24,12 @@ from utils.path_utils import project_path
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入片段enum
 from apps.dict.fragment.enums import DocNameEnum
+# 导入mixins-处理文档片段
+from apps.createDocument.extensions.mixins import FragementToolsMixin
 
 # @api_controller("/generate", tags=['生成大纲文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generate", tags=['生成大纲文档'])
-class GenerateControllerDG(ControllerBase):
+class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     logger = GenerateLogger('测评大纲')
 
     @route.get("/create/testdemand", url_name="create-testdemand")
@@ -227,18 +229,7 @@ class GenerateControllerDG(ControllerBase):
     def create_softComposition(self, id: int):
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评对象.docx'
         doc = DocxTemplate(input_path)
-        project_qs = get_object_or_404(Project, id=id)
-        # 先设置标志以及user_content默认值
-        replace = False
-        rich_text_list = []
-        # 首先判断是否有项目级别文档片段
-        fragments = project_qs.frag.filter(belong_doc=DocNameEnum.dg.value)
-        # 判断名称是否为测评对象和is_main -> 硬编码
-        frag: Fragment = fragments.filter(name='测评对象', is_main=True).first()
-        if frag:
-            replace = True
-            # 取出文档html内容
-            rich_text_list = RichParser(frag.content).get_final_format_list(doc)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '测评对象')
         context = {
             "replace": replace,  # 指定是否由数据库文档片段进行生成
             "user_content": frag and rich_text_list
@@ -304,12 +295,101 @@ class GenerateControllerDG(ControllerBase):
         }
         return create_dg_docx('被测软件性能.docx', context, id)
 
-    # 生成软硬件环境
-    @route.get('/create/environment', url_name='create-environment')
-    def create_environment(self, id: int):
-        project_qs = get_object_or_404(Project, id=id)
-        context = {}
-        return create_dg_docx("软硬件环境.docx", context, id)
+    # 静态测试环境说明
+    @route.get('/create/static_env', url_name='create-static_env')
+    def create_static_env(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '静态测试环境说明.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '静态测试环境说明')
+        context = {
+            "replace": replace,  # 指定是否由数据库文档片段进行生成
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("静态测试环境说明.docx", context, id)
+
+    # 静态软件项
+    @route.get('/create/static_soft', url_name='create-static_soft')
+    def create_static_soft(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '静态软件项.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '静态软件项')
+        context = {
+            "replace": replace,  # 指定是否由数据库文档片段进行生成
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("静态软件项.docx", context, id)
+
+    # 静态硬件和固件项
+    @route.get('/create/static_hard', url_name='create-static_hard')
+    def create_static_hard(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '静态硬件和固件项.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '静态硬件和固件项')
+        context = {
+            "replace": replace,  # 指定是否由数据库文档片段进行生成
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("静态硬件和固件项.docx", context, id)
+
+    # 动态测评环境说明
+    @route.get('/create/dynamic_env', url_name='create-dynamic_env')
+    def create_dynamic_env(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态测试环境说明.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '动态测试环境说明')
+        context = {
+            "replace": replace,
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("动态测试环境说明.docx", context, id)
+
+    # 动态软件项
+    @route.get('/create/dynamic_soft', url_name='create-dynamic_soft')
+    def create_dynamic_soft(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态软件项.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '动态软件项')
+        context = {
+            "replace": replace,
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("动态软件项.docx", context, id)
+
+    # 动态软件项
+    @route.get('/create/dynamic_hard', url_name='create-dynamic_hard')
+    def create_dynamic_hard(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态硬件和固件项.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '动态硬件和固件项')
+        context = {
+            "replace": replace,
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("动态硬件和固件项.docx", context, id)
+
+    # 测试数据
+    @route.get('/create/test_data', url_name='create-test_data')
+    def create_test_data(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评数据.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '测评数据')
+        context = {
+            "replace": replace,
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("测评数据.docx", context, id)
+
+    # 环境差异性分析
+    @route.get('/create/env_diff', url_name='create-env_diff')
+    def create_env_diff(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '环境差异性分析.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '环境差异性分析')
+        context = {
+            "replace": replace,
+            "user_content": frag and rich_text_list
+        }
+        return create_dg_docx("环境差异性分析.docx", context, id)
 
     # 生成被测软件-基本信息
     @route.get('/create/baseInformation', url_name='create-baseInformation')

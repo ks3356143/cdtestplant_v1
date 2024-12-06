@@ -3,7 +3,7 @@ import os
 import sys
 
 def main():
-    # 设置django的环境变量(必要)
+    # 设置开发环境的django的环境变量(必要)
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'cdtestplant_v1.settings')
     try:
         from django.core.management import execute_from_command_line
