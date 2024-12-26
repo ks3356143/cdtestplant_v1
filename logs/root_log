@@ -1,170 +1,28 @@
-[WARNING][2024-11-24 18:19:38,990][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-11-24 18:19:39,055][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-11-24 18:19:44,441][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-25 13:36:39,012][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-11-25 13:36:39,066][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-11-25 13:36:43,848][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-25 13:42:49,336][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-25 13:50:12,468][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-25 14:58:06,016][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-11-25 14:58:06,096][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-11-25 14:58:12,896][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-25 18:23:12,054][log.py:241]Not Found: /api/generate/create/environment
-[WARNING][2024-11-26 09:05:53,848][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-26 09:25:57,321][log.py:241]Bad Request: /api/generate/create/dynamic_env
-[WARNING][2024-11-26 09:47:36,715][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-26 10:12:46,038][logger.py:25][回归测试说明模块][当前文档全部片段]片段:该项目没有创建轮次
-[WARNING][2024-11-26 10:12:46,047][log.py:241]Bad Request: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:12:51,620][logger.py:25][回归测试说明模块][当前文档全部片段]片段:该项目没有创建轮次
-[WARNING][2024-11-26 10:12:51,632][log.py:241]Bad Request: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:14:38,950][log.py:241]Bad Request: /api/generateHSM/create/changePart
-[WARNING][2024-11-26 10:14:38,962][log.py:241]Bad Request: /api/generateHSM/create/docsummary
-[WARNING][2024-11-26 10:14:38,994][log.py:241]Bad Request: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:14:39,060][log.py:241]Bad Request: /api/generateHSM/create/track
-[WARNING][2024-11-26 10:14:46,579][log.py:241]Bad Request: /api/generateHSM/create/docsummary
-[WARNING][2024-11-26 10:14:46,583][log.py:241]Bad Request: /api/generateHSM/create/changePart
-[WARNING][2024-11-26 10:14:46,603][log.py:241]Bad Request: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:14:46,629][log.py:241]Bad Request: /api/generateHSM/create/track
-[WARNING][2024-11-26 10:14:54,637][log.py:241]Bad Request: /api/generateHSM/create/changePart
-[WARNING][2024-11-26 10:14:54,641][log.py:241]Bad Request: /api/generateHSM/create/docsummary
-[WARNING][2024-11-26 10:14:54,666][log.py:241]Bad Request: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:14:54,737][log.py:241]Bad Request: /api/generateHSM/create/track
-[WARNING][2024-11-26 10:15:28,258][log.py:241]Bad Request: /api/generateHSM/create/docsummary
-[WARNING][2024-11-26 10:15:28,258][log.py:241]Bad Request: /api/generateHSM/create/changePart
-[WARNING][2024-11-26 10:15:28,271][log.py:241]Bad Request: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:15:28,296][log.py:241]Bad Request: /api/generateHSM/create/track
-[WARNING][2024-11-26 10:17:24,314][log.py:241]Bad Request: /api/generateHSM/create/docsummary
-[WARNING][2024-11-26 10:17:24,319][operation.py:121]"GET - GenerateControllerHSM[create_basicInformation] /api/generateHSM/create/basicInformation" (500, '您第二轮次中缺少源代码被测件，请添加')
-[WARNING][2024-11-26 10:17:24,319][log.py:241]Bad Request: /api/generateHSM/create/changePart
-[ERROR][2024-11-26 10:17:24,320][log.py:241]Internal Server Error: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:17:24,355][log.py:241]Bad Request: /api/generateHSM/create/track
-[WARNING][2024-11-26 10:17:36,095][log.py:241]Bad Request: /api/generateHSM/create/docsummary
-[WARNING][2024-11-26 10:17:36,099][log.py:241]Bad Request: /api/generateHSM/create/changePart
-[WARNING][2024-11-26 10:17:36,105][operation.py:121]"GET - GenerateControllerHSM[create_basicInformation] /api/generateHSM/create/basicInformation" (500, '您第二轮次中缺少源代码被测件，请添加')
-[ERROR][2024-11-26 10:17:36,105][log.py:241]Internal Server Error: /api/generateHSM/create/basicInformation
-[WARNING][2024-11-26 10:17:36,130][log.py:241]Bad Request: /api/generateHSM/create/track
-[WARNING][2024-11-26 10:26:08,721][operation.py:121]"GET - GenerateSeitaiController[create_bgDocument] /api/create/bgDocument" (400, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
-[WARNING][2024-11-26 10:26:08,721][log.py:241]Bad Request: /api/create/bgDocument
-[WARNING][2024-11-26 10:26:14,992][operation.py:121]"GET - GenerateSeitaiController[create_bgDocument] /api/create/bgDocument" (400, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
-[WARNING][2024-11-26 10:26:14,992][log.py:241]Bad Request: /api/create/bgDocument
-[WARNING][2024-11-26 10:27:01,233][operation.py:121]"GET - GenerateSeitaiController[create_bgDocument] /api/create/bgDocument" (400, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
-[WARNING][2024-11-26 10:27:01,233][log.py:241]Bad Request: /api/create/bgDocument
-[WARNING][2024-11-27 18:08:00,735][log.py:241]Not Found: /
-[WARNING][2024-11-27 18:08:00,886][log.py:241]Not Found: /favicon.ico
-[WARNING][2024-11-27 18:08:02,540][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-11-27 18:08:02,575][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-11-27 18:08:09,923][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-29 13:13:54,108][log.py:241]Not Found: /
-[WARNING][2024-11-29 13:13:54,698][log.py:241]Not Found: /favicon.ico
-[WARNING][2024-11-29 13:37:11,405][log.py:241]Not Found: /static/ninja/favicon.png
-[WARNING][2024-11-29 13:51:16,565][log.py:241]Not Found: /
-[WARNING][2024-11-29 13:54:01,013][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-11-29 13:54:01,080][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-11-29 13:54:08,989][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-29 13:54:11,022][operation.py:121]"POST - UserTokenController[obtain_token] /api/system/login" (2002, "Can't connect to server on '127.0.0.1' (10061)")
-[ERROR][2024-11-29 13:54:11,022][log.py:241]Internal Server Error: /api/system/login
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\base\base.py", line 289, in ensure_connection
-    self.connect()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\utils\asyncio.py", line 26, in inner
-    return func(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\base\base.py", line 270, in connect
-    self.connection = self.get_new_connection(conn_params)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\utils\asyncio.py", line 26, in inner
-    return func(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\mysql\base.py", line 247, in get_new_connection
-    connection = Database.connect(**conn_params)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\MySQLdb\__init__.py", line 121, in Connect
-    return Connection(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\MySQLdb\connections.py", line 195, in __init__
-    super().__init__(*args, **kwargs2)
-MySQLdb.OperationalError: (2002, "Can't connect to server on '127.0.0.1' (10061)")
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
-    response = get_response(request)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
-    response = wrapped_callback(request, *callback_args, **callback_kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 334, in _sync_view
-    return super(PathView, self)._sync_view(request, *args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\operation.py", line 470, in _sync_view
-    return operation.run(request, *a, **kw)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 206, in run
-    return self.api.on_exception(request, e)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\main.py", line 515, in on_exception
-    return handler(request, exc)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\errors.py", line 114, in _default_exception
-    raise exc  # let django deal with it
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 192, in run
-    values = self._get_values(request, kw, temporal_response)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\operation.py", line 288, in _get_values
-    data = model.resolve(request, self.api, path_params)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\params\models.py", line 57, in resolve
-    return cls.model_validate(data, context={"request": request})
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\pydantic\main.py", line 596, in model_validate
-    return cls.__pydantic_validator__.validate_python(
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\schema.py", line 228, in _run_root_validator
-    return handler(values)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_jwt\schema.py", line 110, in validate_inputs
-    cls.validate_values(request=request, values=input_values)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_jwt\schema.py", line 73, in validate_values
-    _user = authenticate(request, **values)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\views\decorators\debug.py", line 42, in sensitive_variables_wrapper
-    return func(*func_args, **func_kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\contrib\auth\__init__.py", line 77, in authenticate
-    user = backend.authenticate(request, **credentials)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\contrib\auth\backends.py", line 46, in authenticate
-    user = UserModel._default_manager.get_by_natural_key(username)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\contrib\auth\base_user.py", line 54, in get_by_natural_key
-    return self.get(**{self.model.USERNAME_FIELD: username})
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\manager.py", line 87, in manager_method
-    return getattr(self.get_queryset(), name)(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\query.py", line 633, in get
-    num = len(clone)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\query.py", line 380, in __len__
-    self._fetch_all()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\query.py", line 1881, in _fetch_all
-    self._result_cache = list(self._iterable_class(self))
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\query.py", line 91, in __iter__
-    results = compiler.execute_sql(
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\sql\compiler.py", line 1560, in execute_sql
-    cursor = self.connection.cursor()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\utils\asyncio.py", line 26, in inner
-    return func(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\base\base.py", line 330, in cursor
-    return self._cursor()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\base\base.py", line 306, in _cursor
-    self.ensure_connection()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\utils\asyncio.py", line 26, in inner
-    return func(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\base\base.py", line 289, in ensure_connection
-    self.connect()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\utils.py", line 91, in __exit__
-    raise dj_exc_value.with_traceback(traceback) from exc_value
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\base\base.py", line 289, in ensure_connection
-    self.connect()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\utils\asyncio.py", line 26, in inner
-    return func(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\base\base.py", line 270, in connect
-    self.connection = self.get_new_connection(conn_params)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\utils\asyncio.py", line 26, in inner
-    return func(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\backends\mysql\base.py", line 247, in get_new_connection
-    connection = Database.connect(**conn_params)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\MySQLdb\__init__.py", line 121, in Connect
-    return Connection(*args, **kwargs)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\MySQLdb\connections.py", line 195, in __init__
-    super().__init__(*args, **kwargs2)
-django.db.utils.OperationalError: (2002, "Can't connect to server on '127.0.0.1' (10061)")
-[WARNING][2024-11-29 13:54:39,444][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-11-29 14:45:02,523][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-11-29 14:45:02,595][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-11-29 14:45:07,128][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-12-02 15:34:43,391][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-12-02 15:34:43,472][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-12-02 15:34:47,908][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2024-12-05 10:59:28,885][log.py:241]Unauthorized: /api/system/getInfo
-[WARNING][2024-12-05 10:59:28,952][log.py:241]Unauthorized: /api/system/logout
-[WARNING][2024-12-05 10:59:32,277][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-12-24 13:17:00,485][log.py:241]Not Found: /
+[WARNING][2024-12-24 13:17:00,622][log.py:241]Not Found: /favicon.ico
+[WARNING][2024-12-24 13:21:25,262][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-12-25 09:38:39,362][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-12-25 09:38:39,426][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-12-25 09:38:47,716][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-12-25 13:27:02,782][log.py:241]Not Found: /
+[WARNING][2024-12-25 13:27:02,919][log.py:241]Not Found: /favicon.ico
+[WARNING][2024-12-25 13:27:49,511][log.py:241]Unauthorized: /api/project/getDutOne
+[WARNING][2024-12-26 09:17:21,314][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-12-26 09:17:21,384][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-12-26 09:17:27,398][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-12-26 14:06:38,393][operation.py:133]"GET - DutController[get_dut] /api/project/getDutOne" ([{'type': 'missing', 'loc': ('query', 'key'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 14:06:38,393][log.py:241]Unprocessable Entity: /api/project/getDutOne
+[WARNING][2024-12-26 14:06:49,424][operation.py:133]"GET - DutController[get_dut] /api/project/getDutOne" ([{'type': 'missing', 'loc': ('query', 'key'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 14:06:49,424][log.py:241]Unprocessable Entity: /api/project/getDutOne
+[WARNING][2024-12-26 15:03:40,426][operation.py:133]"PUT - DutController[update_dut] /api/project/dut/update/258" ([{'type': 'missing', 'loc': ('body', 'payload', 'projectId'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 15:03:40,426][log.py:241]Unprocessable Entity: /api/project/dut/update/258
+[WARNING][2024-12-26 15:07:01,726][operation.py:133]"PUT - DutController[update_dut] /api/project/dut/update/258" ([{'type': 'missing', 'loc': ('body', 'payload', 'project_id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 15:07:01,727][log.py:241]Unprocessable Entity: /api/project/dut/update/258
+[WARNING][2024-12-26 15:07:06,541][operation.py:133]"PUT - DutController[update_dut] /api/project/dut/update/258" ([{'type': 'missing', 'loc': ('body', 'payload', 'project_id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 15:07:06,541][log.py:241]Unprocessable Entity: /api/project/dut/update/258
+[WARNING][2024-12-26 15:08:12,512][operation.py:133]"PUT - DutController[update_dut] /api/project/dut/update/258" ([{'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 15:08:12,512][log.py:241]Unprocessable Entity: /api/project/dut/update/258
+[WARNING][2024-12-26 15:09:32,307][operation.py:133]"PUT - DutController[update_dut] /api/project/dut/update/258" ([{'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 15:09:32,307][log.py:241]Unprocessable Entity: /api/project/dut/update/258
+[WARNING][2024-12-26 15:09:37,005][operation.py:133]"PUT - DutController[update_dut] /api/project/dut/update/258" ([{'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 15:09:37,005][log.py:241]Unprocessable Entity: /api/project/dut/update/258

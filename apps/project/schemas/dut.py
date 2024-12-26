@@ -2,6 +2,7 @@ from apps.project.models import Dut
 from ninja import Field, Schema, ModelSchema
 from typing import List, Union, Optional
 from datetime import date
+from pydantic import AliasChoices
 
 class DutModelOutSchema(ModelSchema):
     class Config:
@@ -32,7 +33,8 @@ class DutTreeReturnSchema(Schema):
 
 # 新增接口schema
 class DutCreateInputSchema(Schema):
-    project_id: int = Field(..., alias="projectId")
+    project_id: int = Field(..., validation_alias=AliasChoices('project_id', 'projectId'),
+                            serialization_alias='projectId')
     round_key: str = Field(..., alias="round")
     ident: str = Field(None, alias="ident")
     name: str = Field(None, alias="name")

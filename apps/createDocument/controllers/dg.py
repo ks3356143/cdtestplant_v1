@@ -11,7 +11,7 @@ from utils.chen_response import ChenResponse
 from apps.project.models import Project, Contact, Abbreviation
 from apps.dict.models import Dict, Fragment
 # 导入工具函数
-from utils.util import get_str_dict, get_list_dict, get_testType, get_ident
+from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from utils.util import MyHTMLParser_p
 from django.shortcuts import get_object_or_404
@@ -22,8 +22,6 @@ from apps.createDocument.extensions.documentTime import DocTime
 from utils.path_utils import project_path
 # 记录生成日志
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
-# 导入片段enum
-from apps.dict.fragment.enums import DocNameEnum
 # 导入mixins-处理文档片段
 from apps.createDocument.extensions.mixins import FragementToolsMixin
 
@@ -426,25 +424,68 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         }
         return create_dg_docx('被测软件基本信息.docx', context, id)
 
-    # 生成测试总体要求
-    @route.get('/create/requirement', url_name='create-requirement')
-    def create_requirement(self, id: int):
-        project_qs = get_object_or_404(Project, id=id)
-        # 查询首轮被测件
-        round1 = project_qs.pField.filter(key='0').first()
-        dut_qs = round1.rdField.filter(Q(type='XQ') | Q(type='XY') | Q(type='SJ'))
-        dut_str_list = []
-        for dut in dut_qs:
-            dut_str_list.append(dut.name)
-        security_boolean = True if int(project_qs.security_level) <= 2 else False
-        # 查看测试类型-TODO:暂未思考出解决方案
+    # 生成测试级别和测试类型
+    @route.get('/create/levelAndType', url_name='create-levelAndType')
+    def create_levelAndType(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测试级别和测试类型.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '测试级别和测试类型')
+        if replace:
+            context = {
+                "replace": replace,
+                "user_content": frag and rich_text_list
+            }
+        else:
+            # 如果没有片段替换，则利用数据生成信息
+            project_qs = get_object_or_404(Project, id=id)
+            # 获取所有已录入测试类型
+            test_types = project_qs.ptField.values("testType").distinct()
+            # 通过测试类型查询字典中的中文
+            type_name_list = list(map(lambda qs_item: get_str_dict(qs_item['testType'], 'testType'), test_types))
+            # 定义测试类型一览的顺序，注意word里面也要一样
+            word_types = ['文档审查', '静态分析', '代码审查', '逻辑测试', '功能测试', '性能测试', '边界测试',
+                          '恢复性测试', '安装性测试', '数据处理测试', '余量测试', '强度测试', '接口测试',
+                          '人机交互界面测试', '兼容性测试']
+            type_index = []
+            for index, test_type in enumerate(word_types):
+                for exist_type in type_name_list:
+                    if exist_type == test_type:
+                        type_index.append(str(index))
+            context = {
+                "testTypes": "、".join(type_name_list),
+                "project_name": project_qs.name,
+                "type_index": type_index
+            }
+        return create_dg_docx("测试级别和测试类型.docx", context, id)
 
-        context = {
-            'project_name': project_qs.name,
-            'dut_str': '、'.join(dut_str_list),
-            'security_boolean': security_boolean,
-        }
-        return create_dg_docx('测试总体要求.docx', context, id)
+    # 生成测试策略
+    @route.get('/create/strategy', url_name='create-strategy')
+    def create_strategy(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测试策略.docx'
+        doc = DocxTemplate(input_path)
+        replace, frag, rich_text_list = self._generate_frag(id, doc, '测试策略')
+        if replace:
+            context = {
+                "replace": replace,
+                "user_content": frag and rich_text_list
+            }
+        else:
+            # 如果没有片段替换，则利用数据生成信息
+            project_qs = get_object_or_404(Project, id=id)
+            # 根据关键等级检查是否有代码审查
+            security = project_qs.security_level
+            isDmsc = True if int(security) <= 2 else False
+            # 获取当前测试项的测试类型
+            test_types = project_qs.ptField.values("testType").distinct()
+            type_name_list = list(map(lambda qs_item: get_str_dict(qs_item['testType'], 'testType'), test_types))
+            context = {
+                "project_name": project_qs.name,
+                # 查询关键等级-类似“关键”输出
+                "security_level_str": get_str_abbr(security, 'security_level'),
+                "isDmsc": isDmsc,
+                "test_types": type_name_list
+            }
+        return create_dg_docx("测试策略.docx", context, id)
 
     # 生成-测试内容充分性及测试方法有效性
     @route.get('/create/adequacy_effectiveness', url_name='create-adequacy_effectiveness')

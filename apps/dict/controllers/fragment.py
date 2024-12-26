@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Schema, Field, Query, ModelSchema
 from ninja.errors import HttpError
@@ -16,7 +16,6 @@ from apps.dict.models import Fragment
 # Schemas
 ## 查询fragment的输入
 class FragementListSchema(Schema):
-    belong_doc: Union[int, str] = None  # 所属产品文档名称
     name: str = None  # 片段名称
     is_main: bool = None  # 是否替换磁盘的片段
     project_id: int = Field(None, alias='projectId')
@@ -25,13 +24,12 @@ class FragementListSchema(Schema):
 class FragmentOutSchema(ModelSchema):
     class Meta:
         model = Fragment
-        fields = ['id', 'name', 'belong_doc', 'project', 'is_main', 'content']
+        fields = ['id', 'name', 'project', 'is_main', 'content']
 
 ## 新增
 class FragmentAddSchema(Schema):
     name: str  # 必填
     is_main: bool = False  # 后端直接设置为False
-    belong_doc: Union[int, str]
     project_id: int = Field(None, alias='projectId')
     content: str = ""
 
@@ -46,7 +44,6 @@ class FragmentAddSchema(Schema):
 class FragmentUpdateSchema(Schema):
     name: str = None
     is_main: bool = None
-    belong_doc: Union[int, str] = Field(None, alias='belong_doc')
     project_id: int = Field(None, alias='projectId')
     content: str = Field(None, alias='content')
 

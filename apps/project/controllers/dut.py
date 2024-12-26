@@ -2,6 +2,7 @@ import datetime
 from copy import deepcopy
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
+from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
@@ -35,6 +36,15 @@ class DutController(ControllerBase):
     def get_round_tree(self, payload: DutTreeInputSchema = Query(...)):
         qs = Dut.objects.filter(project__id=payload.project_id, round__key=payload.key)
         return qs
+
+    # 获取单个dut
+    @route.get("/getDutOne", response=DutModelOutSchema, url_name="dut-one")
+    @transaction.atomic
+    def get_dut(self, project_id: int, key: str):
+        dut_qs = Dut.objects.filter(project_id=project_id, key=key).first()
+        if dut_qs:
+            return dut_qs
+        raise HttpError(500, "未找到相应的数据")
 
     # 添加被测件
     @route.post("/dut/save", url_name="dut-create", response=DutCreateOutSchema)
@@ -162,7 +172,8 @@ class DutController(ControllerBase):
         # 查询当前key应该为多少
         dut_count = Dut.objects.filter(project__id=data.project_id, round__key=round_key).count()
         key_string = ''.join([round_key, "-", str(dut_count)])
-        asert_dict['ident'] = "-".join([project_obj.ident, ''.join(['R', str(int(round_key) + 1)]), 'UT', str(dut_count + 1)]).replace("UT-", "UT")
+        asert_dict['ident'] = "-".join(
+            [project_obj.ident, ''.join(['R', str(int(round_key) + 1)]), 'UT', str(dut_count + 1)]).replace("UT-", "UT")
         # 查询round_id
         round_id = project_obj.pField.filter(key=round_key).first().id
         asert_dict['round_id'] = round_id

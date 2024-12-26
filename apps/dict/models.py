@@ -1,6 +1,5 @@
 from django.db import models
 from utils.models import CoreModel
-from apps.dict.fragment.enums import DocNameEnum
 from apps.project.models import Project
 from tinymce.models import HTMLField
 
@@ -45,17 +44,7 @@ class DictItem(CoreModel):
 # ~~~~~~~~~~~~~用户文档片段~~~~~~~~~~~~~
 # fragment表
 class Fragment(CoreModel):
-    belong_doc_choice = (
-        (DocNameEnum.dg.value, DocNameEnum.dg.name),
-        (DocNameEnum.sm.value, DocNameEnum.sm.name),
-        (DocNameEnum.jl.value, DocNameEnum.jl.name),
-        (DocNameEnum.hsm.value, DocNameEnum.hsm.name),
-        (DocNameEnum.hjl.value, DocNameEnum.hjl.name),
-        (DocNameEnum.bg.value, DocNameEnum.bg.name),
-        (DocNameEnum.wtd.value, DocNameEnum.wtd.name)
-    )
     name = models.CharField(verbose_name='片段名称-必须和文件名一致', max_length=128)
-    belong_doc = models.PositiveSmallIntegerField("所属文档", choices=belong_doc_choice)
     is_main = models.BooleanField(default=False, verbose_name='是否替换磁盘的片段')
     content = HTMLField(null=True, blank=True, verbose_name='片段富文本', help_text='文档片段的富文本')
     # 关联的项目
@@ -68,5 +57,5 @@ class Fragment(CoreModel):
         ordering = ('-create_datetime', '-id')
         # 片段名称name和所属产品文档联合唯一
         constraints = [
-            models.UniqueConstraint(fields=['name', 'belong_doc', 'project_id'], name='unique_name_belong_doc')
+            models.UniqueConstraint(fields=['name', 'project_id'], name='unique_name')
         ]
