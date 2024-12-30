@@ -1,6 +1,7 @@
 from apps.project.models import TestDemand, TestDemandContent
 from ninja import Field, Schema, ModelSchema
 from typing import List, Union
+from pydantic import AliasChoices
 
 # 删除schema
 class DeleteSchema(Schema):
@@ -62,7 +63,8 @@ class TestContentInputSchema(Schema):
 
 # 新增/更新测试项Schema
 class TestDemandCreateInputSchema(Schema):
-    project_id: int = Field(..., alias="projectId")
+    project_id: int = Field(..., validation_alias=AliasChoices("projectId", "project_id"),
+                            serialization_alias="projectId")
     round_key: str = Field(..., alias="round")
     dut_key: str = Field(..., alias="dut")
     design_key: str = Field(..., alias="designDemand")

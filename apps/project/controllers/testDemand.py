@@ -4,6 +4,7 @@ from ninja import Query
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
+from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -42,6 +43,14 @@ class TestDemandController(ControllerBase):
             setattr(query_single, "testContent", query_single.testQField.all().values())
             query_list.append(query_single)
         return query_list
+
+    @route.get("/getTestDemandOne", response=TestDemandModelOutSchema, url_name='testDemand-one')
+    def get_dut(self, project_id: int, key: str):
+        demand_qs = TestDemand.objects.filter(project_id=project_id, key=key).first()
+        if demand_qs:
+            setattr(demand_qs, "testContent", demand_qs.testQField.all().values())
+            return demand_qs
+        raise HttpError(500, "未找到相应的数据")
 
     # 处理树状数据
     @route.get("/getTestdemandInfo", response=List[TestDemandTreeReturnSchema], url_name="testDemand-info")

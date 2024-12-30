@@ -1,3 +1,4 @@
+from pydantic import AliasChoices
 from apps.project.models import Case, CaseStep
 from ninja import Field, Schema, ModelSchema
 from typing import List, Union, Optional
@@ -90,7 +91,8 @@ class CaseInputSchema(Schema):
     passed: str = Field('3', alias="passed")
 
 class CaseCreateInputSchema(Schema):
-    project_id: int = Field(None, alias="projectId")
+    project_id: int = Field(..., validation_alias=AliasChoices('project_id', 'projectId'),
+                            serialization_alias='projectId')
     round_key: str = Field(None, alias="round")
     dut_key: str = Field(None, alias="dut")
     design_key: str = Field(None, alias="designDemand")

@@ -3,6 +3,7 @@ from ninja import Query
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
+from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -31,6 +32,13 @@ class DesignController(ControllerBase):
                                    chapter__icontains=datafilter.chapter).order_by('id')
         return qs
 
+    @route.get("/getDesignOne", response=DesignModelOutSchema, url_name='design-one')
+    def get_dut(self, project_id: int, key: str):
+        design_qs = Design.objects.filter(project_id=project_id, key=key).first()
+        if design_qs:
+            return design_qs
+        raise HttpError(500, "未找到相应的数据")
+
     # 处理树状数据
     @route.get("/getDesignDemandInfo", response=List[DesignTreeReturnSchema], url_name="design-info")
     def get_design_tree(self, payload: DesignTreeInputSchema = Query(...)):
@@ -44,7 +52,6 @@ class DesignController(ControllerBase):
         asert_dict = payload.dict(exclude_none=True)
         # 如果识别description为None变为空字符串
         description = asert_dict.get('description')
-        print(description)
         # 构造dut_key
         dut_key = "".join([payload.round_key, "-", payload.dut_key])
         # 判重标识-不需要再查询round以后的

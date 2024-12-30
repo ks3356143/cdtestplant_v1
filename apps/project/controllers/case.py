@@ -3,6 +3,7 @@ from ninja import Query
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
+from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -59,13 +60,14 @@ class CaseController(ControllerBase):
     @route.get("/getCaseOne", response=CaseModelOutSchemaWithoutProblem, url_name='case-one')
     @transaction.atomic
     def get_case_one(self, key: str, projectId: int):
-        """用于在用例树状页面，获取的是promblem信息，这里根据key获取信息"""
+        """用于在用例树状页面，获取promblem信息，这里根据key获取信息"""
         project_obj = get_object_or_404(Project, id=projectId)
         case = project_obj.pcField.filter(key=key).first()
         if case:
             setattr(case, "testStep", case.step.all().values())
             setattr(case, 'testType', get_testType(case.test.testType, dict_code='testType'))
             return case
+        raise HttpError(500, "您获取的数据不存在")
 
     # 处理树状数据
     @route.get("/getCaseInfo", response=List[CaseTreeReturnSchema], url_name="case-info")

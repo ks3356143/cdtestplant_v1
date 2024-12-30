@@ -1,6 +1,7 @@
 from apps.project.models import Design
 from ninja import Field, Schema, ModelSchema
 from typing import List, Union
+from pydantic import AliasChoices
 
 # 删除schema
 class DeleteSchema(Schema):
@@ -44,7 +45,8 @@ class DesignCreateOutSchema(ModelSchema):
 
 # 新增接口schema
 class DesignCreateInputSchema(Schema):
-    project_id: int = Field(..., alias="projectId")
+    project_id: int = Field(..., validation_alias=AliasChoices('project_id', 'projectId'),
+                            serialization_alias='projectId')
     round_key: str = Field(..., alias="round")
     dut_key: str = Field(..., alias="dut")
     ident: str = Field("", alias="ident")

@@ -26,3 +26,80 @@
 [WARNING][2024-12-26 15:09:32,307][log.py:241]Unprocessable Entity: /api/project/dut/update/258
 [WARNING][2024-12-26 15:09:37,005][operation.py:133]"PUT - DutController[update_dut] /api/project/dut/update/258" ([{'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}],)
 [WARNING][2024-12-26 15:09:37,005][log.py:241]Unprocessable Entity: /api/project/dut/update/258
+[WARNING][2024-12-26 21:44:45,704][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-12-26 21:44:45,777][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-12-26 21:44:53,564][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-12-26 22:52:55,425][log.py:241]Not Found: /api/project/designDemand/update/3752
+[WARNING][2024-12-26 22:53:57,977][log.py:241]Not Found: /api/project/designDemand/update/3753
+[WARNING][2024-12-26 22:55:15,255][log.py:241]Not Found: /api/project/designDemand/update/3752
+[WARNING][2024-12-26 22:55:18,872][log.py:241]Not Found: /api/project/designDemand/update/3752
+[WARNING][2024-12-26 22:59:11,289][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3752" ([{'type': 'missing', 'loc': ('body', 'payload', 'projectId'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'dut'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 22:59:11,290][log.py:241]Unprocessable Entity: /api/project/editDesignDemand/3752
+[WARNING][2024-12-26 23:00:33,247][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3752" ([{'type': 'missing', 'loc': ('body', 'payload', 'dut'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 23:00:33,247][log.py:241]Unprocessable Entity: /api/project/editDesignDemand/3752
+[WARNING][2024-12-26 23:02:16,241][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3752" ([{'type': 'missing', 'loc': ('body', 'payload', 'dut'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 23:02:16,241][log.py:241]Unprocessable Entity: /api/project/editDesignDemand/3752
+[WARNING][2024-12-26 23:04:49,480][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3752" ([{'type': 'missing', 'loc': ('body', 'payload', 'dut'), 'msg': 'Field required'}],)
+[WARNING][2024-12-26 23:04:49,480][log.py:241]Unprocessable Entity: /api/project/editDesignDemand/3752
+[WARNING][2024-12-26 23:22:29,217][log.py:241]Unauthorized: /api/system/dataDict/list
+[WARNING][2024-12-26 23:22:29,217][log.py:241]Unauthorized: /api/project/dut/dut_type
+[WARNING][2024-12-26 23:22:29,221][log.py:241]Unauthorized: /api/system/dataDict/list
+[WARNING][2024-12-26 23:22:29,224][log.py:241]Unauthorized: /api/system/dataDict/list
+[WARNING][2024-12-26 23:22:29,229][log.py:241]Unauthorized: /api/project/getDesignDemandList
+[WARNING][2024-12-26 23:22:29,233][log.py:241]Unauthorized: /api/project/dut/soExist
+[WARNING][2024-12-26 23:23:38,332][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2024-12-27 10:41:50,700][operation.py:133]"GET - TestDemandController[get_dut] /api/project/getTestDemandOne" ()
+[ERROR][2024-12-27 10:41:50,700][errors.py:116]1 validation error for NinjaResponseSchema
+response.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 211, in run
+    _processed_results = self._result_to_response(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\operation.py", line 260, in _result_to_response
+    validated_object = response_model.model_validate(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\pydantic\main.py", line 627, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+[ERROR][2024-12-27 10:41:50,728][log.py:241]Internal Server Error: /api/project/getTestDemandOne
+[WARNING][2024-12-27 10:42:06,158][operation.py:133]"GET - TestDemandController[get_dut] /api/project/getTestDemandOne" ()
+[ERROR][2024-12-27 10:42:06,158][errors.py:116]1 validation error for NinjaResponseSchema
+response.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 211, in run
+    _processed_results = self._result_to_response(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja\operation.py", line 260, in _result_to_response
+    validated_object = response_model.model_validate(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\pydantic\main.py", line 627, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.10/v/missing
+[ERROR][2024-12-27 10:42:06,159][log.py:241]Internal Server Error: /api/project/getTestDemandOne
+[WARNING][2024-12-27 12:09:53,476][operation.py:133]"GET - TestDemandController[get_dut] /api/project/getTestDemandOne" (500, '未找到相应的数据')
+[ERROR][2024-12-27 12:09:53,476][log.py:241]Internal Server Error: /api/project/getTestDemandOne
+[WARNING][2024-12-27 12:12:40,916][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:12:40,916][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-27 12:13:26,024][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:13:26,024][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-27 12:17:06,073][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:17:06,073][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-27 12:17:12,290][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:17:12,290][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-27 12:17:29,729][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:17:29,734][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-27 12:17:33,539][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:17:33,544][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-27 12:20:25,270][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:20:25,270][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-27 12:20:32,445][operation.py:133]"GET - CaseController[get_case_one] /api/project/getCaseOne" ([{'type': 'missing', 'loc': ('query', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2024-12-27 12:20:32,445][log.py:241]Unprocessable Entity: /api/project/getCaseOne
+[WARNING][2024-12-28 11:44:18,063][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2024-12-28 11:44:18,088][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2024-12-28 11:44:27,409][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
