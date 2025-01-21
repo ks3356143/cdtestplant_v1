@@ -3,3 +3,10 @@
 [WARNING][2024-12-31 13:42:45,017][log.py:241]Unauthorized: /api/system/getInfo
 [WARNING][2024-12-31 13:42:45,087][log.py:241]Unauthorized: /api/system/logout
 [WARNING][2024-12-31 13:42:51,722][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-01-03 19:26:13,538][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-01-03 19:26:13,606][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-01-03 19:26:18,082][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-01-14 11:14:07,994][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-01-14 11:14:08,067][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-01-14 11:14:16,652][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-01-14 11:16:32,409][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})

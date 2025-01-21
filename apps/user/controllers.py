@@ -25,7 +25,7 @@ from apps.user.tools.ldap_tools import load_ldap_users
 # 导入登录日志函数
 from utils.log_util.request_util import save_login_log
 
-Users: UserClass = get_user_model()
+Users: UserClass = get_user_model()  # type:ignore
 
 # 定义用户登录接口，包含token刷新和生成
 @api_controller("/system", tags=['用户token控制和登录接口'])
@@ -61,7 +61,8 @@ class UserTokenController(TokenObtainPairController):
 @api_controller("/system/user", tags=['用户管理'], auth=JWTAuth())
 class UserManageController(ControllerBase):
     # 用户创建接口
-    @route.post("/save", response=CreateUserOutSchema, url_name="user_create", auth=JWTAuth(), permissions=[IsAuthenticated, IsAdminUser])
+    @route.post("/save", response=CreateUserOutSchema, url_name="user_create", auth=JWTAuth(),
+                permissions=[IsAuthenticated, IsAdminUser])
     def create_user(self, user_schema: CreateUserSchema):
         user = user_schema.create()
         return user
@@ -134,7 +135,7 @@ class UserManageController(ControllerBase):
 
     @route.post("/modifyPassword", auth=JWTAuth(), permissions=[IsAuthenticated, IsAdminUser])
     def modify_password(self, payload: AdminModifyPasswordSchema):
-        user: UserClass = self.context.request.user
+        user: UserClass = self.context.request.user  # type:ignore
         if user:
             # 判断就密码是否正确
             user_old = authenticate(username=user.username, password=payload.oldPassword)

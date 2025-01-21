@@ -145,7 +145,7 @@ MEDIA_URL = "/uploads/"
 MEDIA_ROOT = os.path.join(BASE_DIR, '../../uploads')
 
 # 接口日志记录
-API_LOG_ENABLE = False
+API_LOG_ENABLE = True
 API_LOG_METHODS = ['POST', 'GET', 'DELETE', 'PUT']
 API_MODEL_MAP = {}  # 暂时不使用，使用信号记录模型操作
 # 接口日志黑名单：字典的操作日志、所有联系人的操作、所有缩略语的操作、判断轮次是否有源代码被测件、不记录自己
