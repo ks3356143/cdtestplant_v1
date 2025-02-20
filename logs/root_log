@@ -10,3 +10,18 @@
 [WARNING][2025-01-14 11:14:08,067][log.py:241]Unauthorized: /api/system/logout
 [WARNING][2025-01-14 11:14:16,652][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
 [WARNING][2025-01-14 11:16:32,409][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-01-24 10:08:47,388][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-01-24 10:08:47,442][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-01-24 10:08:59,390][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-01-24 10:36:02,887][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-01-24 10:59:48,866][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-01-28 17:55:49,733][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-01-28 17:55:49,797][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-01-28 17:55:57,708][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-02-04 15:03:56,185][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-02-04 15:03:56,334][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-02-04 15:04:08,628][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-02-15 20:38:10,333][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-02-19 21:47:04,034][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-02-19 21:47:04,110][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-02-19 21:47:23,409][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
