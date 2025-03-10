@@ -25,3 +25,983 @@
 [WARNING][2025-02-19 21:47:04,034][log.py:241]Unauthorized: /api/system/getInfo
 [WARNING][2025-02-19 21:47:04,110][log.py:241]Unauthorized: /api/system/logout
 [WARNING][2025-02-19 21:47:23,409][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-02-24 13:27:27,951][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-02-24 13:27:28,021][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-02-24 13:36:53,043][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-02-24 14:00:10,839][operation.py:133]"GET - ProjectController[document_time_show] /api/testmanage/project/document_time_show" (400, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
+[WARNING][2025-02-24 14:00:10,848][log.py:241]Bad Request: /api/testmanage/project/document_time_show
+[WARNING][2025-02-25 09:09:44,357][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-02-25 09:09:44,430][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-02-25 09:10:55,947][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-02-25 09:47:25,583][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
+[WARNING][2025-02-25 09:47:26,191][operation.py:133]"GET - GenerateControllerDG[create_levelAndType] /api/generate/create/levelAndType" (2, 'No such file or directory')
+[WARNING][2025-02-25 09:47:26,201][operation.py:133]"GET - GenerateControllerDG[create_strategy] /api/generate/create/strategy" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,201][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试级别和测试类型.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 459, in create_levelAndType
+    return create_dg_docx("测试级别和测试类型.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试级别和测试类型.docx'
+[ERROR][2025-02-25 09:47:26,201][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试策略.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 488, in create_strategy
+    return create_dg_docx("测试策略.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试策略.docx'
+[ERROR][2025-02-25 09:47:26,349][log.py:241]Internal Server Error: /api/generate/create/levelAndType
+[ERROR][2025-02-25 09:47:26,349][log.py:241]Internal Server Error: /api/generate/create/strategy
+[WARNING][2025-02-25 09:47:26,405][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,405][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态测试环境说明.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态测试环境说明.docx'
+[WARNING][2025-02-25 09:47:26,421][operation.py:133]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" (2, 'No such file or directory')
+[WARNING][2025-02-25 09:47:26,421][operation.py:133]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,421][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态硬件和固件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 330, in create_static_hard
+    return create_dg_docx("静态硬件和固件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态硬件和固件项.docx'
+[ERROR][2025-02-25 09:47:26,421][log.py:241]Internal Server Error: /api/generate/create/static_env
+[ERROR][2025-02-25 09:47:26,421][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态软件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 318, in create_static_soft
+    return create_dg_docx("静态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态软件项.docx'
+[ERROR][2025-02-25 09:47:26,436][log.py:241]Internal Server Error: /api/generate/create/static_hard
+[ERROR][2025-02-25 09:47:26,452][log.py:241]Internal Server Error: /api/generate/create/static_soft
+[WARNING][2025-02-25 09:47:26,484][operation.py:133]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,484][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态测试环境说明.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 342, in create_dynamic_env
+    return create_dg_docx("动态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态测试环境说明.docx'
+[WARNING][2025-02-25 09:47:26,484][operation.py:133]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,499][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态硬件和固件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 366, in create_dynamic_hard
+    return create_dg_docx("动态硬件和固件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态硬件和固件项.docx'
+[WARNING][2025-02-25 09:47:26,499][operation.py:133]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,531][log.py:241]Internal Server Error: /api/generate/create/dynamic_hard
+[ERROR][2025-02-25 09:47:26,531][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态软件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 354, in create_dynamic_soft
+    return create_dg_docx("动态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态软件项.docx'
+[ERROR][2025-02-25 09:47:26,531][log.py:241]Internal Server Error: /api/generate/create/dynamic_env
+[ERROR][2025-02-25 09:47:26,547][log.py:241]Internal Server Error: /api/generate/create/dynamic_soft
+[WARNING][2025-02-25 09:47:26,562][operation.py:133]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,562][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测评数据.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 378, in create_test_data
+    return create_dg_docx("测评数据.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测评数据.docx'
+[WARNING][2025-02-25 09:47:26,594][operation.py:133]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:26,610][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\环境差异性分析.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 390, in create_env_diff
+    return create_dg_docx("环境差异性分析.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\环境差异性分析.docx'
+[ERROR][2025-02-25 09:47:26,625][log.py:241]Internal Server Error: /api/generate/create/test_data
+[ERROR][2025-02-25 09:47:26,641][log.py:241]Internal Server Error: /api/generate/create/env_diff
+[WARNING][2025-02-25 09:47:47,567][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
+[WARNING][2025-02-25 09:47:47,891][operation.py:133]"GET - GenerateControllerDG[create_levelAndType] /api/generate/create/levelAndType" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:47,895][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试级别和测试类型.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 459, in create_levelAndType
+    return create_dg_docx("测试级别和测试类型.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试级别和测试类型.docx'
+[WARNING][2025-02-25 09:47:47,895][operation.py:133]"GET - GenerateControllerDG[create_strategy] /api/generate/create/strategy" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:47,923][log.py:241]Internal Server Error: /api/generate/create/levelAndType
+[ERROR][2025-02-25 09:47:47,923][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试策略.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 488, in create_strategy
+    return create_dg_docx("测试策略.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测试策略.docx'
+[ERROR][2025-02-25 09:47:47,944][log.py:241]Internal Server Error: /api/generate/create/strategy
+[WARNING][2025-02-25 09:47:47,982][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:47,984][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态测试环境说明.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态测试环境说明.docx'
+[WARNING][2025-02-25 09:47:47,985][operation.py:133]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:47,990][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态软件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 318, in create_static_soft
+    return create_dg_docx("静态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态软件项.docx'
+[ERROR][2025-02-25 09:47:47,991][log.py:241]Internal Server Error: /api/generate/create/static_env
+[ERROR][2025-02-25 09:47:47,993][log.py:241]Internal Server Error: /api/generate/create/static_soft
+[WARNING][2025-02-25 09:47:48,015][operation.py:133]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:48,017][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态硬件和固件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 330, in create_static_hard
+    return create_dg_docx("静态硬件和固件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\静态硬件和固件项.docx'
+[WARNING][2025-02-25 09:47:48,017][operation.py:133]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" (2, 'No such file or directory')
+[WARNING][2025-02-25 09:47:48,018][operation.py:133]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:48,019][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态测试环境说明.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 342, in create_dynamic_env
+    return create_dg_docx("动态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态测试环境说明.docx'
+[ERROR][2025-02-25 09:47:48,019][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态软件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 354, in create_dynamic_soft
+    return create_dg_docx("动态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态软件项.docx'
+[ERROR][2025-02-25 09:47:48,034][log.py:241]Internal Server Error: /api/generate/create/static_hard
+[ERROR][2025-02-25 09:47:48,039][log.py:241]Internal Server Error: /api/generate/create/dynamic_env
+[ERROR][2025-02-25 09:47:48,044][log.py:241]Internal Server Error: /api/generate/create/dynamic_soft
+[WARNING][2025-02-25 09:47:48,057][operation.py:133]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:48,058][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态硬件和固件项.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 366, in create_dynamic_hard
+    return create_dg_docx("动态硬件和固件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\动态硬件和固件项.docx'
+[WARNING][2025-02-25 09:47:48,062][operation.py:133]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" (2, 'No such file or directory')
+[WARNING][2025-02-25 09:47:48,063][operation.py:133]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" (2, 'No such file or directory')
+[ERROR][2025-02-25 09:47:48,063][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测评数据.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 378, in create_test_data
+    return create_dg_docx("测评数据.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\测评数据.docx'
+[ERROR][2025-02-25 09:47:48,064][errors.py:116][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\环境差异性分析.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 390, in create_env_diff
+    return create_dg_docx("环境差异性分析.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 475, in render
+    self.render_init()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 56, in render_init
+    self.init_docx()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 52, in init_docx
+    self.docx = Document(self.template_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\package.py", line 127, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+  File "D:\python\lib\zipfile.py", line 1251, in __init__
+    self.fp = io.open(file, filemode)
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R4444\\form_template\\dg\\环境差异性分析.docx'
+[ERROR][2025-02-25 09:47:48,065][log.py:241]Internal Server Error: /api/generate/create/dynamic_hard
+[ERROR][2025-02-25 09:47:48,067][log.py:241]Internal Server Error: /api/generate/create/test_data
+[ERROR][2025-02-25 09:47:48,068][log.py:241]Internal Server Error: /api/generate/create/env_diff
+[WARNING][2025-02-25 09:49:01,675][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
+[WARNING][2025-02-25 15:50:26,262][operation.py:133]"POST - UserFiledController[add_fragement] /api/system/userField/add" (400, '文档片段名称重复')
+[WARNING][2025-02-25 15:50:26,270][log.py:241]Bad Request: /api/system/userField/add
+[WARNING][2025-02-25 17:12:21,820][log.py:241]Bad Request: /api/generate/create/softComposition
+[WARNING][2025-02-25 17:36:18,635][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:36:18,648][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:36:18,802][log.py:241]Internal Server Error: /api/generate/create/static_env
+[WARNING][2025-02-25 17:37:10,789][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:37:10,801][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:37:10,826][log.py:241]Internal Server Error: /api/generate/create/static_env
+[WARNING][2025-02-25 17:40:04,112][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:40:04,149][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:40:04,190][log.py:241]Internal Server Error: /api/generate/create/static_env
+[WARNING][2025-02-25 17:40:18,475][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:40:18,490][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:40:18,539][log.py:241]Internal Server Error: /api/generate/create/static_env
+[WARNING][2025-02-25 17:47:44,118][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:47:44,118][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:47:44,126][log.py:241]Internal Server Error: /api/generate/create/static_env
+[WARNING][2025-02-25 17:47:59,930][operation.py:133]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:47:59,964][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 318, in create_static_soft
+    return create_dg_docx("静态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:47:59,980][log.py:241]Internal Server Error: /api/generate/create/static_soft
+[WARNING][2025-02-25 17:50:45,641][operation.py:133]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:50:45,641][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 318, in create_static_soft
+    return create_dg_docx("静态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:50:45,649][log.py:241]Internal Server Error: /api/generate/create/static_soft
+[WARNING][2025-02-25 17:52:28,560][operation.py:133]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:52:28,560][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 318, in create_static_soft
+    return create_dg_docx("静态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:52:28,656][log.py:241]Internal Server Error: /api/generate/create/static_soft
+[WARNING][2025-02-25 17:56:39,416][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 17:56:39,416][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 17:56:39,445][log.py:241]Internal Server Error: /api/generate/create/static_env
+[WARNING][2025-02-25 18:06:47,091][logger.py:25][回归测试记录模块][测试项]片段:设计需求中的描述为空，请检查 -> SQBB-神奇宝贝
+[WARNING][2025-02-25 18:06:51,945][operation.py:133]"GET - GenerateControllerDG[create_static_env] /api/generate/create/static_env" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 18:06:51,982][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 306, in create_static_env
+    return create_dg_docx("静态测试环境说明.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 18:06:52,024][log.py:241]Internal Server Error: /api/generate/create/static_env
+[WARNING][2025-02-25 18:14:22,910][operation.py:133]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("'NoneType' object has no attribute 'current_rendering_part'",)
+[ERROR][2025-02-25 18:14:22,910][errors.py:116]'NoneType' object has no attribute 'current_rendering_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 323, in create_static_soft
+    return create_dg_docx("静态软件项.docx", context, id)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 1304, in render
+    self.environment.handle_exception()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\jinja2\environment.py", line 939, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 3, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 75, in __str__
+    return self._insert_image()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\inline_image.py", line 53, in _insert_image
+    pic = self.tpl.current_rendering_part.new_pic_inline(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\docxtpl\template.py", line 63, in __getattr__
+    return getattr(self.docx, name)
+AttributeError: 'NoneType' object has no attribute 'current_rendering_part'
+[ERROR][2025-02-25 18:14:22,935][log.py:241]Internal Server Error: /api/generate/create/static_soft
+[WARNING][2025-02-25 18:17:04,616][log.py:241]Bad Request: /api/generate/create/static_soft
+[WARNING][2025-02-25 18:19:43,056][log.py:241]Bad Request: /api/generate/create/static_soft
+[WARNING][2025-02-26 09:02:38,440][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-02-26 09:02:38,461][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-02-26 09:02:49,114][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-02-26 10:12:41,149][operation.py:133]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" ('cannot insert 0, already exists',)
+[ERROR][2025-02-26 10:12:41,150][errors.py:116]cannot insert 0, already exists
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 383, in create_test_data
+    replace, frag, rich_text_list = self._generate_frag(id, doc, '测评数据')
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\mixins.py", line 20, in _generate_frag
+    rich_text_list = RichParser(frag.content).get_final_format_list(doc)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\parse_rich_text.py", line 24, in __init__
+    self.line_parse()
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\parse_rich_text.py", line 54, in line_parse
+    df_dict_list = self.parse_tag2list(table)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\parse_rich_text.py", line 70, in parse_tag2list
+    return df.fillna('').T.reset_index().T.values.tolist()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\pandas\core\frame.py", line 6209, in reset_index
+    new_obj.insert(
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\pandas\core\frame.py", line 4772, in insert
+    raise ValueError(f"cannot insert {column}, already exists")
+ValueError: cannot insert 0, already exists
+[ERROR][2025-02-26 10:12:41,229][log.py:241]Internal Server Error: /api/generate/create/test_data
+[WARNING][2025-02-26 10:13:37,512][log.py:241]Bad Request: /api/generate/create/test_data
+[WARNING][2025-03-03 11:26:37,545][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-03 11:26:37,595][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-03 11:26:49,387][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-03 13:17:53,774][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-03 15:14:50,295][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-03 15:14:50,349][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-03 15:15:02,056][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-05 09:09:20,128][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-05 09:09:20,192][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-05 09:09:27,539][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-05 14:43:38,671][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-05 14:43:38,784][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-05 14:43:47,250][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-05 14:45:41,332][log.py:241]Bad Request: /api/generate/create/baseInformation
+[WARNING][2025-03-05 14:49:36,467][log.py:241]Bad Request: /api/create/dgDocument
+[WARNING][2025-03-05 14:50:32,511][log.py:241]Bad Request: /api/create/dgDocument
+[WARNING][2025-03-06 09:26:59,291][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-06 09:26:59,350][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-06 09:27:07,204][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-06 10:17:38,341][log.py:241]Not Found: /
+[WARNING][2025-03-06 10:17:38,462][log.py:241]Not Found: /favicon.ico
+[WARNING][2025-03-10 09:13:32,143][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-10 10:06:53,808][log.py:241]Not Found: /api/create/dgDocument
+[WARNING][2025-03-10 10:07:22,804][log.py:241]Not Found: /api/create/dgDocument
+[WARNING][2025-03-10 10:08:10,561][log.py:241]Not Found: /api/create/dgDocument
+[WARNING][2025-03-10 10:08:40,839][log.py:241]Not Found: /api/create/dgDocument

@@ -1,3 +1,7 @@
+from pathlib import Path
+from django.conf import settings
+from django.utils.encoding import escape_uri_path
+from utils.path_utils import project_path
 from ninja_extra.controllers import api_controller, ControllerBase, route
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
@@ -10,6 +14,19 @@ from utils.chen_response import ChenResponse
 from apps.project.models import Project, Dut
 from apps.createDocument.extensions.documentTime import DocTime
 from utils.util import get_str_dict
+from django.http import FileResponse
+
+main_download_path = Path(settings.BASE_DIR) / 'media'
+
+def get_file_respone(id: int, file_name: str):
+    file_name = "".join([file_name, '.docx'])
+    file_abs_path = main_download_path / project_path(id) / 'final_seitai' / file_name
+    if not file_abs_path.is_file():
+        return ChenResponse(status=404, code=404, message="文档未生成或生成错误！")
+    response = FileResponse(open(file_abs_path, 'rb'))
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = "attachment; filename=测评大纲.docx"
+    return response
 
 # @api_controller("/create", tags=['生成产品文档接口'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/create", tags=['生成产品文档接口'])
@@ -51,9 +68,10 @@ class GenerateSeitaiController(ControllerBase):
 
         try:
             doc.save(dg_seitai_final_path)
-            return ChenResponse(status=200, code=200, message="最终大纲生成成功！")
+            # 文件下载
+            return get_file_respone(id, '测评大纲')
         except PermissionError as e:
-            return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+            return ChenResponse(status=400, code=400, message="文档未生成或生成错误！，{0}".format(e))
 
     @route.get('/smDocument', url_name='create-smDocument')
     @transaction.atomic
@@ -88,7 +106,7 @@ class GenerateSeitaiController(ControllerBase):
         doc.render(context)  # 耗时最长，TODO:异步任务处理？或前端等待？
         try:
             doc.save(sm_seitai_final_file)
-            return ChenResponse(status=200, code=200, message="最终测试说明生成成功！")
+            return get_file_respone(id, '测试说明')
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -128,7 +146,7 @@ class GenerateSeitaiController(ControllerBase):
         doc.render(context)  # 耗时最长，TODO:异步任务处理？或前端等待？
         try:
             doc.save(jl_seitai_final_file)
-            return ChenResponse(status=200, code=200, message="最终记录生成成功！")
+            return get_file_respone(id, '测试记录')
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -160,7 +178,7 @@ class GenerateSeitaiController(ControllerBase):
         doc.render(context)  # 耗时最长，TODO:异步任务处理？或前端等待？
         try:
             doc.save(bg_seitai_final_path)
-            return ChenResponse(status=200, code=200, message="最终报告生成成功！")
+            return get_file_respone(id, '测评报告')
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -186,7 +204,7 @@ class GenerateSeitaiController(ControllerBase):
         doc.render(context)  # 耗时最长，TODO:异步任务处理？或前端等待？
         try:
             doc.save(wtd_seitai_final_path)
-            return ChenResponse(status=200, code=200, message="问题单生成成功！")
+            return get_file_respone(id, '测试问题单')
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -230,7 +248,7 @@ class GenerateSeitaiController(ControllerBase):
                 doc.save(hsm_seitai_final_path)
             except PermissionError as e:
                 return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
-        return ChenResponse(status=200, code=200, message="回归测试说明文档生成成功")
+        return get_file_respone(id, '第二轮回归测试说明')
 
     @route.get('/hjlDocument', url_name='create-hjlDocument')
     @transaction.atomic
@@ -268,4 +286,4 @@ class GenerateSeitaiController(ControllerBase):
                 doc.save(hjl_seitai_final_path)
             except PermissionError as e:
                 return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
-        return ChenResponse(status=200, code=200, message="回归测试记录文档生成成功")
+        return get_file_respone(id, '第二轮回归测试记录')

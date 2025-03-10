@@ -303,7 +303,12 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             "replace": replace,  # 指定是否由数据库文档片段进行生成
             "user_content": frag and rich_text_list
         }
-        return create_dg_docx("静态测试环境说明.docx", context, id)
+        doc.render(context)
+        try:
+            doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '静态测试环境说明.docx')
+            return ChenResponse(status=200, code=200, message="文档生成成功！")
+        except PermissionError as e:
+            return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
     # 静态软件项
     @route.get('/create/static_soft', url_name='create-static_soft')
@@ -339,7 +344,12 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             "replace": replace,
             "user_content": frag and rich_text_list
         }
-        return create_dg_docx("动态测试环境说明.docx", context, id)
+        doc.render(context)
+        try:
+            doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '动态测试环境说明.docx')
+            return ChenResponse(status=200, code=200, message="文档生成成功！")
+        except PermissionError as e:
+            return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
     # 动态软件项
     @route.get('/create/dynamic_soft', url_name='create-dynamic_soft')

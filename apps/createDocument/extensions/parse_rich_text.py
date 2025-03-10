@@ -60,6 +60,10 @@ class RichParser:
         pd_list = pd.read_html(str(table_tag))
         # 将dataframe变为数组
         df = pd_list[0]
+        # 处理第一行为数字的情况，如果为数字则删除第一行，让第二行为列名
+        if all(isinstance(col, int) for col in df.columns):
+            df.columns = df.iloc[0]
+            df = df.drop(0)  # 删除原来的第一行
         # 转为列表的列表（二维列表）
         # return df.values.tolist()
         return df.fillna('').T.reset_index().T.values.tolist()
@@ -103,7 +107,7 @@ class RichParser:
                     {'isCenter': True, 'data': InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(img_size))})
             else:
                 # 2.和上面区别：如果<p>带有“图”则居中
-                if re.match(r"图\d.*", oneline):
+                if re.match(r"[表图]\d.*", oneline):
                     final_list.append({"isCenter": True, "data": oneline})
                 else:
                     final_list.append({"isCenter": False, "data": oneline})
