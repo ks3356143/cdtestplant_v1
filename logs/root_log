@@ -1005,3 +1005,49 @@ ValueError: cannot insert 0, already exists
 [WARNING][2025-03-10 10:07:22,804][log.py:241]Not Found: /api/create/dgDocument
 [WARNING][2025-03-10 10:08:10,561][log.py:241]Not Found: /api/create/dgDocument
 [WARNING][2025-03-10 10:08:40,839][log.py:241]Not Found: /api/create/dgDocument
+[WARNING][2025-03-10 15:54:53,961][log.py:241]Bad Request: /api/create/dgDocument
+[WARNING][2025-03-10 16:37:26,520][log.py:241]Bad Request: /api/create/dgDocument
+[WARNING][2025-03-11 09:13:01,602][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-11 09:13:01,641][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-11 09:13:19,401][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-11 09:13:32,642][operation.py:133]"GET - ProjectController[document_time_show] /api/testmanage/project/document_time_show" (400, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
+[WARNING][2025-03-11 09:13:32,651][log.py:241]Bad Request: /api/testmanage/project/document_time_show
+[WARNING][2025-03-11 15:22:52,986][operation.py:133]"GET - GenerateControllerDG[create_testdemand] /api/generate/create/testdemand" ('Invalid order_by arguments: [<function sort_by_key at 0x000001E287F3A940>]',)
+[ERROR][2025-03-11 15:22:52,987][errors.py:116]Invalid order_by arguments: [<function sort_by_key at 0x000001E287F3A940>]
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "D:\python\lib\contextlib.py", line 75, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 52, in create_testdemand
+    testDemand_qs = project_round_one.rtField.all().order_by(sort_by_key)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\query.py", line 1659, in order_by
+    obj.query.add_ordering(*field_names)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\django\db\models\sql\query.py", line 2231, in add_ordering
+    raise FieldError("Invalid order_by arguments: %s" % errors)
+django.core.exceptions.FieldError: Invalid order_by arguments: [<function sort_by_key at 0x000001E287F3A940>]
+[ERROR][2025-03-11 15:22:53,049][log.py:241]Internal Server Error: /api/generate/create/testdemand
+[WARNING][2025-03-11 16:07:43,327][operation.py:133]"GET - GenerateControllerDG[create_testdemand] /api/generate/create/testdemand" ('key',)
+[ERROR][2025-03-11 16:07:43,329][errors.py:116]'key'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 97, in as_view
+    result = self.route.view_func(
+  File "D:\python\lib\contextlib.py", line 75, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 126, in create_testdemand
+    print(i['name'], i['key'])
+KeyError: 'key'
+[ERROR][2025-03-11 16:07:43,335][log.py:241]Internal Server Error: /api/generate/create/testdemand
+[WARNING][2025-03-12 13:15:13,385][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-12 13:15:13,454][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-12 13:15:22,144][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-15 10:26:07,500][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-15 10:26:07,568][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-15 10:26:18,800][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-03-24 14:33:40,926][log.py:241]Unauthorized: /api/system/getInfo
+[WARNING][2025-03-24 14:33:40,958][log.py:241]Unauthorized: /api/system/logout
+[WARNING][2025-03-24 14:33:52,604][backend.py:92]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})

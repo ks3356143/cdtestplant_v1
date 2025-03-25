@@ -76,6 +76,7 @@ class TestDemandCreateInputSchema(Schema):
     testContent: List[TestContentInputSchema] = []
     testMethod: List[str] = []
     testType: str = Field(None, alias="testType")
+    testDesciption: str = Field("", alias='testDesciption')
 
 # 处理前端请求-设计需求关联测试需求（测试项）
 class TestDemandRelatedSchema(Schema):

@@ -30,11 +30,15 @@ class Project(CoreModel):
     # ~~~~~~~~~~~
     security_level = models.CharField(max_length=8, blank=True, null=True, verbose_name="安全等级",
                                       help_text="安全等级")
-    test_level = models.JSONField(null=True, blank=True, help_text="测试级别", verbose_name="测试级别", default=create_list)
-    plant_type = models.JSONField(null=True, blank=True, help_text="平台类型", verbose_name="平台类型", default=create_list)
+    test_level = models.JSONField(null=True, blank=True, help_text="测试级别", verbose_name="测试级别",
+                                  default=create_list)
+    plant_type = models.JSONField(null=True, blank=True, help_text="平台类型", verbose_name="平台类型",
+                                  default=create_list)
     report_type = models.CharField(max_length=64, blank=True, null=True, verbose_name="报告类型", help_text="报告类型")
-    language = models.JSONField(null=True, blank=True, help_text="被测语言", verbose_name="被测语言", default=create_list)
-    standard = models.JSONField(null=True, blank=True, help_text="依据标准", verbose_name="依据标准", default=create_list)
+    language = models.JSONField(null=True, blank=True, help_text="被测语言", verbose_name="被测语言",
+                                default=create_list)
+    standard = models.JSONField(null=True, blank=True, help_text="依据标准", verbose_name="依据标准",
+                                default=create_list)
     entrust_unit = models.CharField(max_length=64, verbose_name="委托方单位", help_text="委托方单位")
     entrust_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方联系人",
                                        help_text="委托方联系人")
@@ -57,8 +61,10 @@ class Project(CoreModel):
     test_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心邮箱",
                                   help_text="测评中心邮箱")
     step = models.CharField(max_length=8, blank=True, null=True, verbose_name="项目阶段", help_text="项目阶段")
-    abbreviation = models.JSONField(null=True, blank=True, help_text="缩略语", verbose_name="缩略语", default=create_list)
-    soft_type = models.SmallIntegerField(verbose_name='软件类型', choices=((1, '新研'), (2, '改造'), (3, '沿用')), default=1)
+    abbreviation = models.JSONField(null=True, blank=True, help_text="缩略语", verbose_name="缩略语",
+                                    default=create_list)
+    soft_type = models.SmallIntegerField(verbose_name='软件类型', choices=((1, '新研'), (2, '改造'), (3, '沿用')),
+                                         default=1)
     runtime = models.CharField(max_length=8, blank=True, null=True, verbose_name="运行环境",
                                help_text="运行环境")
     devplant = models.CharField(max_length=8, blank=True, null=True, verbose_name="开发环境",
@@ -178,11 +184,15 @@ class Design(CoreModel):
     dut = models.ForeignKey(to="Dut", db_constraint=False, related_name="rsField", on_delete=models.CASCADE,
                             verbose_name='归属轮次', help_text='归属轮次', related_query_name='rsQuery')
     # 如果是demandTye='3'则加上如下字段
-    source = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口来源', help_text='接口来源')
-    to = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口目的地', help_text='接口目的地')
-    type = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口类型', help_text='接口类型')
+    source = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口来源',
+                              help_text='接口来源')
+    to = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口目的地',
+                          help_text='接口目的地')
+    type = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口类型',
+                            help_text='接口类型')
     # 注意：该字段改为接口数据
-    protocal = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口数据', help_text='接口数据')
+    protocal = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口数据',
+                                help_text='接口数据')
 
     def __str__(self):
         return f'设计需求:{self.name}'
@@ -218,6 +228,9 @@ class TestDemand(CoreModel):
                                verbose_name='归属设计需求', help_text='归属设计需求', related_query_name='dtQuery')
     otherDesign = models.ManyToManyField(to="Design", db_constraint=False, related_name="odField",
                                          related_query_name='odQuery', blank=True)
+    # 老模版新增-测试项描述
+    testDesciption = models.CharField(max_length=1024, blank=True, null=True, verbose_name='测试项描述', default="",
+                                      help_text='老版本-测试项描述')
 
     def __str__(self):
         return f'测试项:{self.name}'
@@ -301,7 +314,8 @@ class Problem(CoreModel):
     grade = models.CharField(max_length=8, blank=True, null=True, verbose_name="缺陷等级", help_text="缺陷等级")
     # 问题类型1-其他问题 2-文档问题 3-程序问题 4-设计问题 5-需求问题 6-数据问题
     type = models.CharField(max_length=8, blank=True, null=True, verbose_name="缺陷类型", help_text="缺陷类型")
-    closeMethod = models.JSONField(null=True, blank=True, help_text="闭环方式", verbose_name="闭环方式", default=create_list_1)
+    closeMethod = models.JSONField(null=True, blank=True, help_text="闭环方式", verbose_name="闭环方式",
+                                   default=create_list_1)
     operation = HTMLField(blank=True, null=True, verbose_name="问题描述", help_text="问题描述")
     result = HTMLField(blank=True, null=True, verbose_name="问题结果/影响", help_text="问题结果/影响")
     postPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="提出人员", help_text="提出人员")
@@ -317,9 +331,11 @@ class Problem(CoreModel):
                                 verbose_name='归属项目', help_text='归属项目', related_query_name='projQuery')
     case = models.ManyToManyField(to="Case", db_constraint=False, related_name="caseField", verbose_name='归属测试用例',
                                   help_text='归属测试用例-多对多', related_query_name='caseQuery')
-    solve = models.TextField(verbose_name='开发人员填写-改正措施', help_text='开发人员填写-改正措施，该字段需要关联“status=1”', blank=True, null=True)
+    solve = models.TextField(verbose_name='开发人员填写-改正措施',
+                             help_text='开发人员填写-改正措施，该字段需要关联“status=1”', blank=True, null=True)
     analysis = HTMLField(blank=True, null=True, verbose_name="开发人员填写-原因分析", help_text="开发人员填写-原因分析")
-    effect_scope = HTMLField(blank=True, null=True, verbose_name="开发人员填写-影响域分析", help_text="开发人员填写-影响域分析")
+    effect_scope = HTMLField(blank=True, null=True, verbose_name="开发人员填写-影响域分析",
+                             help_text="开发人员填写-影响域分析")
     verify_result = HTMLField(blank=True, null=True, verbose_name="回归结果", help_text="回归结果")
 
     def __str__(self):

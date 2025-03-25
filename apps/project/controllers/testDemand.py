@@ -104,6 +104,7 @@ class TestDemandController(ControllerBase):
     @transaction.atomic
     def update_testDemand(self, id: int, payload: TestDemandCreateInputSchema):
         project_qs = get_object_or_404(Project, id=payload.project_id)
+        print(payload)
         # 查到当前
         testDemand_qs = TestDemand.objects.get(id=id)
         old_ident = testDemand_qs.ident  # 用于判断是否要集体修改case的ident

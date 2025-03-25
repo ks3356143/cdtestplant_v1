@@ -8,7 +8,7 @@ from docxtpl import DocxTemplate
 from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
-from apps.project.models import Project, Contact, Abbreviation
+from apps.project.models import Project, Contact, Abbreviation, TestDemand
 from apps.dict.models import Dict, Fragment
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
@@ -45,7 +45,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 查出第一轮所有testdemand
         project_round_one = project_qs.pField.filter(key=0).first()
         testDemand_qs = project_round_one.rtField.all()
-        # 遍历第一轮测试项
+
+        # 遍历第一轮测试项：默认是ID排序
         for single_qs in testDemand_qs:
             type_index = type_number_list.index(int(single_qs.testType))
             # 先查询其testDemandContent信息
@@ -88,6 +89,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             # 组装单个测试项
             testdemand_dict = {
                 "name": single_qs.name,
+                "key": single_qs.key,
                 "ident": get_ident(single_qs),
                 "priority": get_str_dict(single_qs.priority, "priority"),
                 "doc_list": doc_list,
@@ -95,6 +97,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 "test_demand_content": content_list,
                 "testMethod": testmethod_str,
                 "adequacy": single_qs.adequacy.replace("\n", "\a"),
+                # 新增FPGA老模版测试项描述
+                "testDesciption": single_qs.testDesciption.replace("\n", "\a")
             }
             list_list[type_index].append(testdemand_dict)
 
@@ -114,8 +118,10 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 "sort": sort
             }
             output_list.append(table)
-        # 排序
+
+        # 排序1：测试类型排序
         output_list = sorted(output_list, key=(lambda x: x["sort"]))
+
         context["data"] = output_list
         doc.render(context)
         try:
