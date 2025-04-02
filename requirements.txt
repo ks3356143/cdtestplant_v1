@@ -1,39 +1,29 @@
-# 基础服务器库
-Django==4.2.19
-django_tinymce==4.1.0
-django-ninja~=1.3.0
-django-ninja-jwt~=5.3.5
-django-ninja-extra~=0.22.3
-ninja_schema==0.14.1
-numpy==1.24.4
-pydantic~=2.10.6
-python-docx==1.1.2
-docxtpl~=0.19.1
-celery==5.3.1
-mysqlclient~=2.2.4
-user-agents~=2.2.0
-django-environ~=0.11.2
-Pillow~=10.4.0
-Beautifulsoup4~=4.12.3
-django_auth_ldap~=5.0.0
-# pandas解析html的表格用的库
-pandas==2.0.3
-html5lib==1.1
-# 生成环境才使用库
-waitress==3.0.0
-# 暂时没用到写在项目里面
-django-redis~=5.4.0
-redis~=5.0.3
-pyinstaller~=6.12.0
-# 自动导入的需求包
-PyJWT~=2.8.0
-asgiref~=3.7.2
-sqlparse~=0.5.2
-colorama~=0.4.6
-Jinja2~=3.1.4
-requests~=2.32.3
-ipython~=8.12.3
-traitlets~=5.14.2
-orjson~=3.10.15
+Django~=5.1.7
+django-auth-ldap~=5.1.0
+asgiref~=3.8.1
+sqlparse~=0.5.3
+# 基础包
+mysqlclient~=2.2.7
+orjson~=3.10.16
+# 必须whl安装的包
+python-ldap~=3.4.4
+# 项目包
+django-environ~=0.12.0
+django-ninja~=1.4.0
+pydantic~=2.11.1
+django-ninja-extra~=0.22.6
+django-ninja-jwt~=1.4.0
 django-tinymce~=4.1.0
-django-auth-ldap~=5.0.0
+PyJWT~=2.10.1
+cryptography~=44.0.2
+ninja-schema~=0.14.1
+user-agents~=2.2.0
+numpy~=2.2.4
+docxtpl~=0.19.1
+python-docx~=1.1.2
+Jinja2~=3.1.6
+django-redis~=5.4.0
+pandas~=2.2.3
+beautifulsoup4~=4.13.3
+python-dateutil~=2.9.0.post0
+redis~=5.2.1

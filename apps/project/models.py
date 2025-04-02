@@ -347,6 +347,7 @@ class Problem(CoreModel):
         verbose_name_plural = verbose_name
         ordering = ('id',)
 
+# 单位信息
 class Contact(CoreModel):
     entrust_person = models.CharField(max_length=16, blank=True, verbose_name="法人", help_text="法人")
     name = models.CharField(max_length=64, blank=True, verbose_name="公司名称", help_text="公司名称")

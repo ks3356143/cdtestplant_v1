@@ -1,20 +1,18 @@
-from datetime import date
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
 from apps.dict.models import Dict, DictItem
-from apps.project.models import Contact, Abbreviation, Project
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated, IsAdminUser
 from ninja.pagination import paginate
+from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
 from django.db import transaction
-from django.contrib.auth import get_user_model
 from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
-from apps.dict.schema import DictItemOut, DictOut, DictIndexInput, ChangeStautsSchemaInput, DictItemInput, DictItemOut, \
-    DictItemChangeSrotInput, DictItemCreateInputSchema, DictItemUpdateInputSchema, DeleteSchema, ContactListInputSchema, \
-    ContactOut, AbbreviationOut, AbbreviationListInputSchema
+from apps.dict.schema import DictOut, DictIndexInput, ChangeStautsSchemaInput, DictItemInput, DictItemOut, \
+    DictItemChangeSrotInput, DictItemCreateInputSchema, DictItemUpdateInputSchema, DeleteSchema, \
+    DictItemFastCreateInputSchema, DictStdItemCreateInputSchema
 
 @api_controller("/system", tags=['字典相关'], auth=JWTAuth(), permissions=[IsAuthenticated])
 class DictController(ControllerBase):
@@ -132,3 +130,42 @@ class DictController(ControllerBase):
             index = index + 1
             qs_item.save()
         return ChenResponse(message="字典条目删除成功！")
+
+    # 快速新增dictItem数据
+    @route.post("/dataDict/fastSave", url_name="dictitem-save-fast", permissions=[IsAuthenticated])
+    @transaction.atomic
+    def save_fast_dictitem(self, data: DictItemFastCreateInputSchema):
+        # 首先根据data.code查询出是哪个Dict
+        dict_single = Dict.objects.filter(code=data.code).first()
+        # 判断是否有该dict
+        if dict_single:
+            # 再判断是否dictItem重复
+            qs = dict_single.dictItem.filter(title=data.title)
+            if len(qs) > 0:
+                return ChenResponse(code=400, status=400, message='字典标签重复，请检查')
+            # 查看key值应该为多少了
+            key_number = str(len(dict_single.dictItem.all()) + 1)
+            DictItem.objects.create(title=data.title,
+                                    key=key_number,
+                                    show_title=data.title,
+                                    dict=dict_single)
+        else:
+            raise HttpError(404, "未查询到字典，请创建字典数据后进行")
+        return ChenResponse(message="新增成功")
+
+    # 快速新增依据标准dictItem数据 - 输入更变为code
+    @route.post("/dataDict/saveStdItem", response=DictItemOut, url_name="dictitem-save")
+    @transaction.atomic
+    def save(self, payload: DictStdItemCreateInputSchema):
+        # 先根据dict_id查询出dict
+        dict_qs = Dict.objects.get(code=payload.code)
+        qs1 = dict_qs.dictItem.filter(title=payload.title)
+        if len(qs1) > 0:
+            return ChenResponse(code=400, status=400, message='字典标签重复，请检查')
+        # 计算key值应该为多少
+        key_number = str(len(dict_qs.dictItem.all()) + 1)
+        asert_dict = payload.dict(exclude_none=True)
+        asert_dict.pop('code')
+        asert_dict.update({'dict': dict_qs, 'key': key_number})
+        qs=DictItem.objects.create(**asert_dict)
+        return qs

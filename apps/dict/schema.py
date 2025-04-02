@@ -54,6 +54,23 @@ class DictItemCreateInputSchema(Schema):
     publish_date: str = Field(None, alias='publish_date')
     source: str = Field(None, alias='source')
 
+# 定义快速新增依据标注接口
+class DictStdItemCreateInputSchema(Schema):
+    code: str = Field(None, alias='code')
+    remark: str = Field(None, alias='remark')
+    sort: int = Field(None, alias='sort')
+    status: str = Field(None, alias='status')
+    title: str = Field(None, alias='title')
+    show_title: str = Field(None, alias='show_title')
+    doc_name: str = Field(None, alias='doc_name')
+    publish_date: str = Field(None, alias='publish_date')
+    source: str = Field(None, alias='source')
+
+# 定义快速新增DictItem的接口
+class DictItemFastCreateInputSchema(Schema):
+    code: str = Field(alias='code')  # Dict的code字段
+    title: str = Field("", alias='title')
+
 class DictItemUpdateInputSchema(Schema):
     remark: str = Field(None, alias='remark')
     sort: int = Field(None, alias='sort')

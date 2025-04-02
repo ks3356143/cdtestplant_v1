@@ -46,7 +46,7 @@ def multi_delete_project(ids, model):
     idents = []
     for item in ids:
         instance = get_object_or_404(model, pk=item)
-        # (project所属problem全部删除，且关联关系删除)
+        # (注意：project所属problem全部删除，且关联关系删除)
         for problem in instance.projField.all():
             problem.case.clear()
         idents.append(instance.ident)

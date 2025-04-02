@@ -2,6 +2,7 @@ from utils.chen_ninja import ChenNinjaAPI
 # 导入orjson解析器，渲染器，提升性能
 from cdtestplant_v1.parser import MyParser
 from cdtestplant_v1.renderer import MyRenderer
+from ninja import Redoc
 
 api = ChenNinjaAPI(
     title="测试管理平台API",
@@ -9,6 +10,7 @@ api = ChenNinjaAPI(
     urls_namespace="cdtestplant_v1",
     parser=MyParser(),
     renderer=MyRenderer(),
+    docs=Redoc()
 )
 
 # 自动寻找每个app下面controllers.py中被@api_controller修饰的类
