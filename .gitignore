@@ -1,0 +1,10 @@
+/dist
+/venv
+/.idea
+/build
+/static
+*.zip
+/uploads
+.idea
+/打包后配置
+/packagesInitialize

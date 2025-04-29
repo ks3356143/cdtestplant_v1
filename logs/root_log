@@ -1,0 +1,516 @@
+[WARNING][2025-04-28 10:43:31,783][operation.py:133]"GET - GenerateControllerDG[create_information] /api/generate/create/baseInformation" ("int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",)
+[ERROR][2025-04-28 10:43:31,783][errors.py:131]int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 490, in create_information
+    line_count = int(first_round_SO.total_lines)
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+[ERROR][2025-04-28 10:43:31,812][log.py:248]Internal Server Error: /api/generate/create/baseInformation
+[WARNING][2025-04-28 10:43:32,140][operation.py:133]"GET - GenerateControllerDG[create_codeQuality] /api/generate/create/codeQuality" ("int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",)
+[ERROR][2025-04-28 10:43:32,140][errors.py:131]int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 789, in create_codeQuality
+    context.update({'size': int(source_dut.total_lines)})
+                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+[ERROR][2025-04-28 10:43:32,148][log.py:248]Internal Server Error: /api/generate/create/codeQuality
+[WARNING][2025-04-28 10:43:41,712][operation.py:133]"GET - GenerateControllerDG[create_information] /api/generate/create/baseInformation" ("int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",)
+[ERROR][2025-04-28 10:43:41,712][errors.py:131]int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 490, in create_information
+    line_count = int(first_round_SO.total_lines)
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+[ERROR][2025-04-28 10:43:41,713][log.py:248]Internal Server Error: /api/generate/create/baseInformation
+[WARNING][2025-04-28 10:43:41,986][operation.py:133]"GET - GenerateControllerDG[create_codeQuality] /api/generate/create/codeQuality" ("int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",)
+[ERROR][2025-04-28 10:43:41,987][errors.py:131]int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 789, in create_codeQuality
+    context.update({'size': int(source_dut.total_lines)})
+                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+[ERROR][2025-04-28 10:43:41,996][log.py:248]Internal Server Error: /api/generate/create/codeQuality
+[WARNING][2025-04-28 10:44:37,243][operation.py:133]"GET - GenerateControllerDG[create_information] /api/generate/create/baseInformation" ("'item' is undefined",)
+[ERROR][2025-04-28 10:44:37,243][errors.py:131]'item' is undefined
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 506, in create_information
+    return create_dg_docx('被测软件基本信息.docx', context, id)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\util.py", line 45, in create_dg_docx
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 484, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 431, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 317, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 308, in render_xml_part
+    dst_xml = template.render(context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1295, in render
+    self.environment.handle_exception()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<template>", line 26, in top-level template code
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 490, in getattr
+    return getattr(obj, attribute)
+jinja2.exceptions.UndefinedError: 'item' is undefined
+[ERROR][2025-04-28 10:44:37,304][log.py:248]Internal Server Error: /api/generate/create/baseInformation
+[WARNING][2025-04-28 10:50:45,257][operation.py:133]"GET - GenerateControllerBG[create_quality_evaluate] /api/generateBG/create/quality_evaluate" ("unsupported operand type(s) for /: 'int' and 'str'",)
+[ERROR][2025-04-28 10:50:45,257][errors.py:131]unsupported operand type(s) for /: 'int' and 'str'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\bg.py", line 517, in create_quality_evaluate
+    'qian_comment_rate': format(problem_count / last_dut_so.total_lines * 1000, '.4f'),
+                                ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+TypeError: unsupported operand type(s) for /: 'int' and 'str'
+[ERROR][2025-04-28 10:50:45,297][log.py:248]Internal Server Error: /api/generateBG/create/quality_evaluate
+[WARNING][2025-04-28 11:20:53,711][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 11:22:35,904][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ("'WSGIRequest' object has no attribute 'user'",)
+[ERROR][2025-04-28 11:22:35,904][errors.py:131]'WSGIRequest' object has no attribute 'user'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 209, in run
+    route_function.run_permission_check(ctx)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 85, in run_permission_check
+    ctx.controller_instance.check_permissions()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\base.py", line 247, in check_permissions
+    and not permission.has_permission(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=self.context.request, controller=self
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\permissions\common.py", line 33, in has_permission
+    user = request.user or request.auth  # type: ignore
+           ^^^^^^^^^^^^
+AttributeError: 'WSGIRequest' object has no attribute 'user'
+[ERROR][2025-04-28 11:22:35,913][log.py:248]Internal Server Error: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:21:15,101][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:22:09,278][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:22:36,936][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:23:26,167][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:23:48,758][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:23:49,301][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:23:49,647][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:23:49,842][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:23:50,262][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:25:08,127][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:25:16,877][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:26:50,173][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:26:50,634][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:32:17,562][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:32:17,569][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:34:36,777][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:34:36,785][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:34:48,715][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:34:48,723][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:34:53,274][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:34:53,282][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:35:12,359][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:35:12,367][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:35:22,241][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:35:22,250][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:35:25,412][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:35:25,420][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:36:53,358][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:36:53,367][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:37:15,024][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:37:15,032][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:38:22,773][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:38:22,782][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:39:40,522][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ([{'type': 'missing', 'loc': ('file', 'file'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:39:40,530][log.py:248]Unprocessable Content: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:40:12,351][log.py:248]Not Found: /
+[WARNING][2025-04-28 13:40:12,479][log.py:248]Not Found: /favicon.ico
+[WARNING][2025-04-28 13:42:40,185][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:42:56,830][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-28 13:43:04,089][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:43:36,782][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-28 13:44:05,801][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:44:08,789][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:44:09,186][log.py:248]Unauthorized: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:45:54,713][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" ("'WSGIRequest' object has no attribute 'user'",)
+[ERROR][2025-04-28 13:45:54,713][errors.py:131]'WSGIRequest' object has no attribute 'user'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 209, in run
+    route_function.run_permission_check(ctx)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 85, in run_permission_check
+    ctx.controller_instance.check_permissions()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\base.py", line 247, in check_permissions
+    and not permission.has_permission(
+            ~~~~~~~~~~~~~~~~~~~~~~~~~^
+        request=self.context.request, controller=self
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\permissions\common.py", line 33, in has_permission
+    user = request.user or request.auth  # type: ignore
+           ^^^^^^^^^^^^
+AttributeError: 'WSGIRequest' object has no attribute 'user'
+[ERROR][2025-04-28 13:45:54,716][log.py:248]Internal Server Error: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:47:38,976][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" 403
+[WARNING][2025-04-28 13:47:38,977][log.py:248]Forbidden: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:47:40,106][operation.py:133]"POST - DutController[upload_code_lines] /api/project/dut/upload_file" 403
+[WARNING][2025-04-28 13:47:40,107][log.py:248]Forbidden: /api/project/dut/upload_file
+[WARNING][2025-04-28 13:56:21,615][operation.py:133]"POST - UploadController[upload_code_lines] /api/dut_upload/upload_file" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2025-04-28 13:56:21,616][log.py:248]Unprocessable Content: /api/dut_upload/upload_file
+[WARNING][2025-04-28 15:26:25,966][operation.py:133]"POST - UploadController[upload_code_lines] /api/dut_upload/upload_file" ('Dut has no metrics.',)
+[ERROR][2025-04-28 15:26:25,967][errors.py:131]Dut has no metrics.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 221, in upload_code_lines
+    print(dut_qs.metrics)
+          ^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 531, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Dut.metrics.RelatedObjectDoesNotExist: Dut has no metrics.
+[ERROR][2025-04-28 15:26:25,978][log.py:248]Internal Server Error: /api/dut_upload/upload_file
+[WARNING][2025-04-28 15:27:12,485][operation.py:133]"POST - UploadController[upload_code_lines] /api/dut_upload/upload_file" ('Dut has no metrics.',)
+[ERROR][2025-04-28 15:27:12,485][errors.py:131]Dut has no metrics.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 221, in upload_code_lines
+    print(dut_qs.metrics)
+          ^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 531, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Dut.metrics.RelatedObjectDoesNotExist: Dut has no metrics.
+[ERROR][2025-04-28 15:27:12,487][log.py:248]Internal Server Error: /api/dut_upload/upload_file
+[WARNING][2025-04-28 15:48:27,788][operation.py:133]"POST - UploadController[upload_code_lines] /api/dut_upload/upload_file" ("DutMetrics() got unexpected keyword arguments: 'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'",)
+[ERROR][2025-04-28 15:48:27,788][errors.py:131]DutMetrics() got unexpected keyword arguments: 'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 221, in upload_code_lines
+    DutMetrics.objects.create(**results)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 661, in create
+    obj = self.model(**kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\base.py", line 569, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: DutMetrics() got unexpected keyword arguments: 'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'
+[ERROR][2025-04-28 15:48:27,816][log.py:248]Internal Server Error: /api/dut_upload/upload_file
+[WARNING][2025-04-28 15:50:03,477][operation.py:133]"POST - UploadController[upload_code_lines] /api/dut_upload/upload_file" ("DutMetrics() got unexpected keyword arguments: 'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'",)
+[ERROR][2025-04-28 15:50:03,477][errors.py:131]DutMetrics() got unexpected keyword arguments: 'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 220, in upload_code_lines
+    DutMetrics.objects.create(**results, dut=dut_qs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 661, in create
+    obj = self.model(**kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\base.py", line 569, in __init__
+    raise TypeError(
+    ...<2 lines>...
+    )
+TypeError: DutMetrics() got unexpected keyword arguments: 'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'
+[ERROR][2025-04-28 15:50:03,480][log.py:248]Internal Server Error: /api/dut_upload/upload_file
+[ERROR][2025-04-28 19:49:36,017][log.py:248]Internal Server Error: /api/createfragment/get_fragments
+[WARNING][2025-04-29 09:28:56,371][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-04-29 09:28:56,435][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-04-29 09:29:11,245][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-29 10:32:52,236][log.py:248]Not Found: /api/generate/create/top_file
+[WARNING][2025-04-29 10:33:21,564][log.py:248]Not Found: /api/generate/create/top_file
+[WARNING][2025-04-29 10:52:51,498][log.py:248]Bad Request: /api/project/dut/save
+[WARNING][2025-04-29 11:30:22,483][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'QuerySet' object has no attribute 'sort'",)
+[ERROR][2025-04-29 11:30:22,483][errors.py:131]'QuerySet' object has no attribute 'sort'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 313, in reset_problem_ident
+    print(dict_item_qs.sort)
+          ^^^^^^^^^^^^^^^^^
+AttributeError: 'QuerySet' object has no attribute 'sort'
+[ERROR][2025-04-29 11:30:22,509][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 13:28:47,738][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("Cannot resolve keyword 'code' into field. Choices are: create_datetime, dict, dict_id, doc_name, id, key, publish_date, remark, show_title, sort, source, status, title, update_datetime",)
+[ERROR][2025-04-29 13:28:47,739][errors.py:131]Cannot resolve keyword 'code' into field. Choices are: create_datetime, dict, dict_id, doc_name, id, key, publish_date, remark, show_title, sort, source, status, title, update_datetime
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 312, in reset_problem_ident
+    DictItem.objects.filter(
+    ~~~~~~~~~~~~~~~~~~~~~~~^
+        code=OuterRef('case__test__testType')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ).values('sort')[:1]
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1523, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1330, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1802, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'code' into field. Choices are: create_datetime, dict, dict_id, doc_name, id, key, publish_date, remark, show_title, sort, source, status, title, update_datetime
+[ERROR][2025-04-29 13:28:47,774][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 13:37:01,560][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'ManyRelatedManager' object has no attribute 'ident'",)
+[ERROR][2025-04-29 13:37:01,561][errors.py:131]'ManyRelatedManager' object has no attribute 'ident'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 314, in reset_problem_ident
+    print(problem.case.ident)
+          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'ManyRelatedManager' object has no attribute 'ident'
+[ERROR][2025-04-29 13:37:01,564][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 13:37:30,954][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("object of type 'ManyRelatedManager' has no len()",)
+[ERROR][2025-04-29 13:37:30,954][errors.py:131]object of type 'ManyRelatedManager' has no len()
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 314, in reset_problem_ident
+    print(len(problem.case))
+          ~~~^^^^^^^^^^^^^^
+TypeError: object of type 'ManyRelatedManager' has no len()
+[ERROR][2025-04-29 13:37:30,956][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 14:07:45,542][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ('sorted expected 1 argument, got 2',)
+[ERROR][2025-04-29 14:07:45,543][errors.py:131]sorted expected 1 argument, got 2
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 335, in reset_problem_ident
+    sorted_problems = sorted(not_sorted_problems, lambda x: x['round_key'])
+TypeError: sorted expected 1 argument, got 2
+[ERROR][2025-04-29 14:07:45,545][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 14:08:19,066][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'<' not supported between instances of 'str' and 'NoneType'",)
+[ERROR][2025-04-29 14:08:19,067][errors.py:131]'<' not supported between instances of 'str' and 'NoneType'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 335, in reset_problem_ident
+    sorted_problems = sorted(not_sorted_problems, key=lambda x: x['round_key'])
+TypeError: '<' not supported between instances of 'str' and 'NoneType'
+[ERROR][2025-04-29 14:08:19,070][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 14:08:21,588][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'<' not supported between instances of 'str' and 'NoneType'",)
+[ERROR][2025-04-29 14:08:21,589][errors.py:131]'<' not supported between instances of 'str' and 'NoneType'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 335, in reset_problem_ident
+    sorted_problems = sorted(not_sorted_problems, key=lambda x: x['round_key'])
+TypeError: '<' not supported between instances of 'str' and 'NoneType'
+[ERROR][2025-04-29 14:08:21,589][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 14:14:00,291][operation.py:133]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'dict' object has no attribute 'ident' and no __dict__ for setting new attributes",)
+[ERROR][2025-04-29 14:14:00,291][errors.py:131]'dict' object has no attribute 'ident' and no __dict__ for setting new attributes
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 38, in get_problem_list
+    self.reset_problem_ident(data.project_id)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 339, in reset_problem_ident
+    problem.ident = str(index + 1)
+    ^^^^^^^^^^^^^
+AttributeError: 'dict' object has no attribute 'ident' and no __dict__ for setting new attributes
+[ERROR][2025-04-29 14:14:00,293][log.py:248]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-04-29 14:20:41,997][logger.py:25][回归测试记录模块][单个问题单表格]片段:问题单4未关联用例，请检查
+[WARNING][2025-04-29 15:20:56,294][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-29 15:23:34,614][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-29 15:29:59,272][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-29 15:45:48,390][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-29 16:44:54,481][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-29 16:55:01,632][log.py:248]Not Found: /api/dut_upload/upload_xq_docx
+[WARNING][2025-04-29 16:55:25,656][log.py:248]Not Found: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-29 16:55:51,668][log.py:248]Not Found: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-29 16:56:24,091][log.py:248]Not Found: /api/dut_upload/upload_xq_docx
+[WARNING][2025-04-29 16:56:27,780][log.py:248]Not Found: /api/dut_upload/upload_xq_docx
+[ERROR][2025-04-29 16:58:22,506][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\utils\deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\middleware\common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\middleware\common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+    ...<9 lines>...
+    )
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/dut_upload/upload_xq_docx/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+[WARNING][2025-04-29 16:59:22,330][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ([{'type': 'missing', 'loc': ('query', 'dut_id'), 'msg': 'Field required'}],)
+[WARNING][2025-04-29 16:59:22,330][log.py:248]Unprocessable Content: /api/dut_upload/upload_xq_docx/
