@@ -514,3 +514,224 @@ Traceback (most recent call last):
 RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/dut_upload/upload_xq_docx/ (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
 [WARNING][2025-04-29 16:59:22,330][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ([{'type': 'missing', 'loc': ('query', 'dut_id'), 'msg': 'Field required'}],)
 [WARNING][2025-04-29 16:59:22,330][log.py:248]Unprocessable Content: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-29 18:38:37,450][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" (1,)
+[ERROR][2025-04-29 18:38:37,450][errors.py:131]1
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 245, in upload_xq_docx
+    XqDocParser(docx_path)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 38, in __init__
+    target[last_section]['content'].append(para.text)
+    ~~~~~~^^^^^^^^^^^^^^
+KeyError: 1
+[ERROR][2025-04-29 18:38:37,452][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-29 18:40:15,874][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ("name 'current_title' is not defined",)
+[ERROR][2025-04-29 18:40:15,874][errors.py:131]name 'current_title' is not defined
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 245, in upload_xq_docx
+    XqDocParser(docx_path)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 39, in __init__
+    'title': current_title,
+             ^^^^^^^^^^^^^
+NameError: name 'current_title' is not defined. Did you mean: 'current_path'?
+[ERROR][2025-04-29 18:40:15,877][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-29 18:42:05,951][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ("invalid literal for int() with base 10: 'Normal'",)
+[ERROR][2025-04-29 18:42:05,951][errors.py:131]invalid literal for int() with base 10: 'Normal'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 245, in upload_xq_docx
+    XqDocParser(docx_path)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 41, in __init__
+    'level': int(para.style.name.split()[-1])
+             ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Normal'
+[ERROR][2025-04-29 18:42:05,953][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-29 18:42:45,406][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ('subsections',)
+[ERROR][2025-04-29 18:42:45,406][errors.py:131]'subsections'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 245, in upload_xq_docx
+    XqDocParser(docx_path)
+    ~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 37, in __init__
+    target = target[num]['subsections']
+             ~~~~~~~~~~~^^^^^^^^^^^^^^^
+KeyError: 'subsections'
+[ERROR][2025-04-29 18:42:45,408][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-30 09:10:35,965][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-04-30 09:10:36,022][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-04-30 09:10:44,595][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-04-30 09:44:38,925][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ([{'type': 'missing', 'loc': ('query', 'dut_key'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('query', 'project_id'), 'msg': 'Field required'}],)
+[WARNING][2025-04-30 09:44:38,926][log.py:248]Unprocessable Content: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-30 10:11:41,482][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ([{'type': 'missing', 'loc': ('query', 'parseChapter'), 'msg': 'Field required'}],)
+[WARNING][2025-04-30 10:11:41,482][log.py:248]Unprocessable Content: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-30 10:11:44,705][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ([{'type': 'missing', 'loc': ('query', 'parseChapter'), 'msg': 'Field required'}],)
+[WARNING][2025-04-30 10:11:44,706][log.py:248]Unprocessable Content: /api/dut_upload/upload_xq_docx/
+[ERROR][2025-04-30 10:12:21,133][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\utils\deprecation.py", line 122, in __call__
+    response = self.process_response(request, response)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\middleware\common.py", line 108, in process_response
+    return self.response_redirect_class(self.get_full_path_with_slash(request))
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\middleware\common.py", line 87, in get_full_path_with_slash
+    raise RuntimeError(
+    ...<9 lines>...
+    )
+RuntimeError: You called this URL via POST, but the URL doesn't end in a slash and you have APPEND_SLASH set. Django can't redirect to the slash URL while maintaining POST data. Change your form to point to 127.0.0.1:8000/api/dut_upload/upload_xq_docx/?parseChapter=123 (note the trailing slash), or set APPEND_SLASH=False in your Django settings.
+[WARNING][2025-04-30 13:23:11,769][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ('the JSON object must be str, bytes or bytearray, not dict',)
+[ERROR][2025-04-30 13:23:11,769][errors.py:131]the JSON object must be str, bytes or bytearray, not dict
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 246, in upload_xq_docx
+    return extracter.main(parseChapter)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 236, in main
+    return json.loads(json_tree)
+           ~~~~~~~~~~^^^^^^^^^^^
+  File "D:\python13\Lib\json\__init__.py", line 339, in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                    f'not {s.__class__.__name__}')
+TypeError: the JSON object must be str, bytes or bytearray, not dict
+[ERROR][2025-04-30 13:23:11,791][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-30 13:24:22,932][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ('Expecting value: line 1 column 2 (char 1)',)
+[ERROR][2025-04-30 13:24:22,932][errors.py:131]Expecting value: line 1 column 2 (char 1)
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 246, in upload_xq_docx
+    return extracter.main(parseChapter)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 235, in main
+    json_tree = self.build_json_tree(chapter_body_list)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 142, in build_json_tree
+    node_map[num]["content"] = json.loads(chapter_content)
+                               ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python13\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "D:\python13\Lib\json\decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python13\Lib\json\decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)
+[ERROR][2025-04-30 13:24:22,936][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-30 13:24:40,665][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ('Expecting value: line 1 column 2 (char 1)',)
+[ERROR][2025-04-30 13:24:40,665][errors.py:131]Expecting value: line 1 column 2 (char 1)
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 246, in upload_xq_docx
+    return extracter.main(parseChapter)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 235, in main
+    json_tree = self.build_json_tree(chapter_body_list)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 142, in build_json_tree
+    node_map[num]["content"] = json.loads(chapter_content)
+                               ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python13\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "D:\python13\Lib\json\decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python13\Lib\json\decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)
+[ERROR][2025-04-30 13:24:40,667][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-30 13:24:42,942][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ('Expecting value: line 1 column 2 (char 1)',)
+[ERROR][2025-04-30 13:24:42,942][errors.py:131]Expecting value: line 1 column 2 (char 1)
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 246, in upload_xq_docx
+    return extracter.main(parseChapter)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 235, in main
+    json_tree = self.build_json_tree(chapter_body_list)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 142, in build_json_tree
+    node_map[num]["content"] = json.loads(chapter_content)
+                               ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\python13\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "D:\python13\Lib\json\decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python13\Lib\json\decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 2 (char 1)
+[ERROR][2025-04-30 13:24:42,943][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-04-30 14:54:39,508][operation.py:133]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ('Object of type bytes is not JSON serializable',)
+[ERROR][2025-04-30 14:54:39,508][errors.py:131]Object of type bytes is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 246, in upload_xq_docx
+    return extracter.main(parseChapter)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 230, in main
+    chapter_body_list = self.iter_block_items(self.doc, directory)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 191, in iter_block_items
+    new_tuple = directory[i] + (json.dumps(body, ensure_ascii=False),)
+                                ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\python13\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\python13\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\python13\Lib\json\encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "D:\python13\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type bytes is not JSON serializable
+[ERROR][2025-04-30 14:54:39,513][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/

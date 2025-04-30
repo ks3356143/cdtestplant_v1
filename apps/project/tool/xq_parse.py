@@ -1,11 +1,16 @@
+import json
 import re
 import docx
+import base64
+
 from docx.document import Document
+
 from docx.text.paragraph import Paragraph
 from docx.parts.image import ImagePart
 from docx.table import _Cell, Table
 from docx.oxml.table import CT_Tbl
 from docx.oxml.text.paragraph import CT_P
+
 from collections import OrderedDict
 
 class DocxChapterExtractor(object):
@@ -160,6 +165,15 @@ class DocxChapterExtractor(object):
         return None
 
     def iter_block_items(self, parent, directory):
+        def custom_serializer(obj):
+            if isinstance(obj, bytes):
+                return {
+                    '__type__': 'image',
+                    'format': 'base64',
+                    'data': base64.b64encode(obj).decode('utf-8')
+                }
+            return obj
+
         """
         根据目录匹配章节内容
         parent: docx解析内容, 传入self.doc
@@ -185,7 +199,13 @@ class DocxChapterExtractor(object):
                         continue
                     if paragraph.text == directory[i + 1][1] and 'Heading' in paragraph.style.name:
                         # body_list.append(body)
-                        new_tuple = directory[i] + (repr(body),)
+                        new_tuple = directory[i] + (
+                            json.dumps(
+                                body,
+                                default=custom_serializer,
+                                ensure_ascii=False,
+                            ),
+                        )
                         body_list.append(new_tuple)
                         # print(new_tuple)
                         body = []
@@ -199,7 +219,13 @@ class DocxChapterExtractor(object):
                             body.append(paragraph.text)
                 elif i == len(directory) - 1:
                     if 'Heading' in paragraph.style.name:
-                        new_tuple = directory[i] + (repr(body),)
+                        new_tuple = directory[i] + (
+                            json.dumps(
+                                body,
+                                default=custom_serializer,
+                                ensure_ascii=False,
+                            ),
+                        )
                         body_list.append(new_tuple)
                         break
                     if self.is_image(paragraph, parent):
@@ -223,14 +249,14 @@ class DocxChapterExtractor(object):
 
     def main(self, chapter_name):
         directory = self.get_chapter_number(chapter_name)
-        print(directory)
+        # print(directory)
         chapter_body_list = self.iter_block_items(self.doc, directory)
-        print(chapter_body_list)
+        # print(chapter_body_list)
         # 构建层级结构
         # hierarchy = self.build_hierarchy(chapter_body_list)
         # print(hierarchy)
         json_tree = self.build_json_tree(chapter_body_list)
-        print(json_tree)
+        return json_tree
 
 if __name__ == '__main__':
     docx_path = 'test - 副本.docx'

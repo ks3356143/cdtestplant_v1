@@ -234,7 +234,7 @@ class UploadController(ControllerBase):
 
     # 上传需求规格说明.docx进行解析
     @route.post("/upload_xq_docx/", url_name='dut-xq-docx')
-    def upload_xq_docx(self, dut_key: str, project_id: int, file: File[UploadedFile]):
+    def upload_xq_docx(self, parseChapter: str, file: File[UploadedFile]):
         # 构建临时目录
         with tempfile.TemporaryDirectory() as tmp_dir:
             # 保存到临时目录
@@ -242,5 +242,5 @@ class UploadController(ControllerBase):
             with open(docx_path, 'wb') as f:
                 for chunk in file.chunks():
                     f.write(chunk)
-            extractor = DocxChapterExtractor(docx_path)
-            extractor.main('需求')
+            extracter = DocxChapterExtractor(docx_path)
+            return extracter.main(parseChapter)
