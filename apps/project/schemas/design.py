@@ -1,7 +1,10 @@
+from typing import Optional
 from apps.project.models import Design
 from ninja import Field, Schema, ModelSchema
 from typing import List, Union
 from pydantic import AliasChoices
+# 上级dut-schema
+from apps.project.schemas.dut import DutModelOutSchema
 
 # 删除schema
 class DeleteSchema(Schema):
@@ -18,7 +21,16 @@ class DesignFilterSchema(Schema):
     # 新增字段 - chapter
     chapter: str = Field(None, alias='chapter')
 
+# 2025年改为2个输出，因为下级需要上级，原始不再嵌套上级
+class DesignModelOutSchemaOrigin(ModelSchema):
+    class Config:
+        model = Design
+        model_exclude = ['project', 'round', 'dut', 'remark', 'sort']
+
 class DesignModelOutSchema(ModelSchema):
+    # 新增字段 - 上级的dut对象
+    dut: Optional[DutModelOutSchema] = None
+
     class Config:
         model = Design
         model_exclude = ['project', 'round', 'dut', 'remark', 'sort']
@@ -72,3 +84,12 @@ class MultiDesignCreateInputSchema(Schema):
     project_id: int = Field(..., alias="projectId")
     dut_key: str = Field(..., alias="key")
     data: List[SingleDesignSchema]
+
+# 批量替换design的接口Schema
+class ReplaceDesignContentSchema(Schema):
+    project_id: int
+    round_key: str
+    originText: str
+    replaceText: str
+    selectRows: List[int]
+    selectColumn: List[str]

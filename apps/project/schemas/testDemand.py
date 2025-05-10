@@ -1,4 +1,5 @@
 from apps.project.models import TestDemand, TestDemandContent, TestDemandContentStep
+from apps.project.schemas.design import DesignModelOutSchemaOrigin  # 注意导入的是不含上级的Schema
 from ninja import Field, Schema, ModelSchema
 from typing import List, Union, Optional
 from pydantic import AliasChoices
@@ -20,8 +21,18 @@ class TestContentSchema(ModelSchema):
         model = TestDemandContent
         fields = ["subName"]
 
+# 2025年修改为两个，一个含上级一个不含
+class TestDemandModelOutSchemaOrigin(ModelSchema):
+    testContent: List[TestContentSchema]  # 下级对象
+
+    class Meta:
+        model = TestDemand
+        exclude = ['project', 'round', 'dut', 'design', 'remark', 'sort']
+
 class TestDemandModelOutSchema(ModelSchema):
-    testContent: List[TestContentSchema]
+    testContent: List[TestContentSchema]  # 下级对象
+    # 2025年5月9日新增上级字段design
+    design: Optional[DesignModelOutSchemaOrigin] = None
 
     class Meta:
         model = TestDemand
@@ -38,6 +49,9 @@ class TestDemandFilterSchema(Schema):
     testType: str = Field(None, alias='testType')
     name: str = Field(None, alias='name')
     priority: str = Field(None, alias="priority")
+    # 新增查询字段，给大表的查询
+    testDesciption: str = Field(None, alias="testDesciption")
+    testContent: str = Field(None, alias="testContent")
 
 # 处理树状结构的schema
 class TestDemandTreeReturnSchema(Schema):
@@ -102,3 +116,12 @@ class DemandCopyToDesignSchema(Schema):
     design_id: int
     demand_key: str
     depth: bool = False
+
+# 替换文本输入Schema
+class ReplaceDemandContentSchema(Schema):
+    project_id: int
+    round_key: str
+    originText: str
+    replaceText: str
+    selectRows: List[int]
+    selectColumn: List[str]

@@ -42,11 +42,18 @@ class DutController(ControllerBase):
         qs = Dut.objects.filter(project__id=payload.project_id, round__key=payload.key)
         return qs
 
-    # 获取单个dut
+    # 获取单个dut-根据项目id和dut.key
     @route.get("/getDutOne", response=DutModelOutSchema, url_name="dut-one")
     @transaction.atomic
     def get_dut(self, project_id: int, key: str):
         dut_qs = Dut.objects.filter(project_id=project_id, key=key).first()
+        if dut_qs:
+            return dut_qs
+        raise HttpError(500, "未找到相应的数据")
+
+    @route.get("/getDutOneById", response=DutModelOutSchema, url_name='dut-one-by-id')
+    def get_one_by_id(self, id: int):
+        dut_qs = Dut.objects.filter(id=id).first()
         if dut_qs:
             return dut_qs
         raise HttpError(500, "未找到相应的数据")

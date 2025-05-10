@@ -6,35 +6,56 @@ from ninja.pagination import paginate
 from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
 from django.db import transaction
+from django.db.models import F, Value
+from django.db.models.functions import Replace
 from django.shortcuts import get_object_or_404
 from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_design
 from utils.codes import HTTP_INDEX_ERROR
 from apps.project.models import Design, Dut, Round, Project
-from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, DesignModelOutSchema, DesignTreeReturnSchema, \
-    DesignTreeInputSchema, DesignCreateOutSchema, DesignCreateInputSchema, MultiDesignCreateInputSchema
+from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, DesignModelOutSchema, \
+    DesignTreeReturnSchema, \
+    DesignTreeInputSchema, DesignCreateOutSchema, DesignCreateInputSchema, MultiDesignCreateInputSchema, \
+    ReplaceDesignContentSchema
 from apps.project.tools.delete_change_key import design_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['设计需求数据'])
 class DesignController(ControllerBase):
-    @route.get("/getDesignDemandList", response=List[DesignModelOutSchema], exclude_none=True, url_name="design-list")
+    @route.get("/getDesignDemandList", response=List[DesignModelOutSchema], exclude_none=True,
+               url_name="design-list")
     @transaction.atomic
     @paginate(MyPagination)
     def get_design_list(self, datafilter: DesignFilterSchema = Query(...)):
         conditionNoneToBlank(datafilter)
-        dut_key = "".join([datafilter.round_id, '-', datafilter.dut_id])
-        qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
-                                   ident__icontains=datafilter.ident,
-                                   name__icontains=datafilter.name,
-                                   demandType__contains=datafilter.demandType,
-                                   chapter__icontains=datafilter.chapter).order_by('id')
+        query_params = {
+            'project__id': datafilter.project_id,
+            'ident__icontains': datafilter.ident,
+            'name__icontains': datafilter.name,
+            'demandType__contains': datafilter.demandType,
+            'chapter__icontains': datafilter.chapter
+        }
+        # 判断是否传递dut_id，如果没传递则查询轮次全部
+        if datafilter.dut_id:
+            dut_key = f"{datafilter.round_id}-{datafilter.dut_id}"
+            query_params['dut__key'] = dut_key
+        else:
+            # 如果没有dut__key则要查询round__key
+            query_params['round__key'] = datafilter.round_id
+        qs = Design.objects.filter(**query_params).order_by('id')
         return qs
 
     @route.get("/getDesignOne", response=DesignModelOutSchema, url_name='design-one')
     def get_dut(self, project_id: int, key: str):
         design_qs = Design.objects.filter(project_id=project_id, key=key).first()
+        if design_qs:
+            return design_qs
+        raise HttpError(500, "未找到相应的数据")
+
+    @route.get("/getDesignOneById", response=DesignModelOutSchema, url_name='design-one-by-id')
+    def get_one_by_id(self, id: int):
+        design_qs = Design.objects.filter(id=id).first()
         if design_qs:
             return design_qs
         raise HttpError(500, "未找到相应的数据")
@@ -55,7 +76,8 @@ class DesignController(ControllerBase):
         # 构造dut_key
         dut_key = "".join([payload.round_key, "-", payload.dut_key])
         # 判重标识-不需要再查询round以后的
-        if Design.objects.filter(project__id=payload.project_id, round__key=payload.round_key, dut__key=dut_key,
+        if Design.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
+                                 dut__key=dut_key,
                                  ident=payload.ident).exists() and asert_dict['ident'] != "":
             return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
         # 查询当前key应该为多少
@@ -64,7 +86,8 @@ class DesignController(ControllerBase):
         # 查询当前的round_id
         round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
         dut_instance = Dut.objects.get(project__id=payload.project_id, key=dut_key)
-        asert_dict.update({'key': key_string, 'round': round_instance, 'dut': dut_instance, 'title': payload.name})
+        asert_dict.update(
+            {'key': key_string, 'round': round_instance, 'dut': dut_instance, 'title': payload.name})
         asert_dict.pop("round_key")
         asert_dict.pop("dut_key")
         qs = Design.objects.create(**asert_dict)
@@ -156,3 +179,20 @@ class DesignController(ControllerBase):
                 round_dict['children'].append(dut_dict)
             data_list.append(round_dict)
         return ChenResponse(message='获取成功', data=data_list)
+
+    # 设计需求-替换接口
+    @route.post("/designDemand/replace/", url_name='design-replace')
+    @transaction.atomic
+    def replace_content(self, payload: ReplaceDesignContentSchema):
+        # 1.首先查询项目
+        project_obj: Project = get_object_or_404(Project, id=payload.project_id)
+        # 2.查询[所有轮次]的selectRows的id
+        design_qs = project_obj.psField.filter(id__in=payload.selectRows, round__key=payload.round_key)
+        # 3.批量替换里面文本
+        replace_kwargs = {
+            field_name: Replace(F(field_name), Value(payload.originText), Value(payload.replaceText))
+            for field_name in payload.selectColumn
+        }
+        # 4.提交更新
+        replace_count = design_qs.update(**replace_kwargs)
+        return {'count': replace_count}

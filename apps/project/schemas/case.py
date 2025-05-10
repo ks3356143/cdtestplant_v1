@@ -5,6 +5,7 @@ from typing import List, Union, Optional
 from datetime import date
 # 关联问题单
 from apps.project.schemas.problem import ProblemModelOutSchema
+from apps.project.schemas.testDemand import TestDemandModelOutSchemaOrigin
 
 # 删除schema
 class DeleteSchema(Schema):
@@ -32,11 +33,24 @@ class CaseModelOutSchemaWithoutProblem(ModelSchema):
         model_exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
 
 # 输出case：关联问题单
+class CaseModelOutSchemaOrigin(ModelSchema):
+    testStep: List[CaseStepSchema]
+    testType: str  # 用例额外字段，用于测试类型FT的标识给前端
+    # 新增：关联的问题单
+    problem: Optional[ProblemModelOutSchema] = None
+
+    class Config:
+        model = Case
+        model_exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
+
+# 输出case：关联问题单
 class CaseModelOutSchema(ModelSchema):
     testStep: List[CaseStepSchema]
     testType: str  # 用例额外字段，用于测试类型FT的标识给前端
     # 新增：关联的问题单
     problem: Optional[ProblemModelOutSchema] = None
+    # 2025年5月10日新增上级字段
+    test: Optional[TestDemandModelOutSchemaOrigin] = None
 
     class Config:
         model = Case
@@ -119,3 +133,24 @@ class DemandNodeSchema(Schema):
     isLeaf: bool = False
     key: str = Field(None, alias='nodekey')
     title: str = Field(None)
+
+# 替换文本输入Schema
+class ReplaceCaseSchema(Schema):
+    project_id: int
+    round_key: str
+    originText: str
+    replaceText: str
+    selectRows: List[int]
+    selectColumn: List[str]
+
+# 人员替换Schema
+class PersonReplaceSchema(Schema):
+    selectRows: List[int] = None
+    designPerson: str
+    testPerson: str
+    monitorPerson: str
+
+# 事件替换Schema
+class ExetimeReplaceSchema(Schema):
+    selectRows: List[int] = None
+    exetime: str

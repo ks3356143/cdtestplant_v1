@@ -735,3 +735,2598 @@ Traceback (most recent call last):
                     f'is not JSON serializable')
 TypeError: Object of type bytes is not JSON serializable
 [ERROR][2025-04-30 14:54:39,513][log.py:248]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-05-03 14:58:41,676][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-03 14:58:41,748][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-03 14:58:50,087][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-06 13:33:41,215][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-06 13:33:41,274][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-06 13:33:47,949][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-06 16:02:15,792][operation.py:133]"GET - RoundController[get_round_tree] /api/project/getRoundInfo/undefined" ("Field 'id' expected a number but got 'undefined'.",)
+[ERROR][2025-05-06 16:02:15,793][errors.py:131]Field 'id' expected a number but got 'undefined'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'undefined'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 16, in get_round_tree
+    qs = Round.objects.filter(project__id=project_id).order_by('key')
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got 'undefined'.
+[ERROR][2025-05-06 16:02:15,874][log.py:248]Internal Server Error: /api/project/getRoundInfo/undefined
+[WARNING][2025-05-06 16:02:24,312][operation.py:133]"GET - RoundController[get_round_tree] /api/project/getRoundInfo/undefined" ("Field 'id' expected a number but got 'undefined'.",)
+[ERROR][2025-05-06 16:02:24,312][errors.py:131]Field 'id' expected a number but got 'undefined'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'undefined'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 16, in get_round_tree
+    qs = Round.objects.filter(project__id=project_id).order_by('key')
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got 'undefined'.
+[ERROR][2025-05-06 16:02:24,316][log.py:248]Internal Server Error: /api/project/getRoundInfo/undefined
+[WARNING][2025-05-06 16:03:25,742][operation.py:133]"GET - RoundController[get_round_tree] /api/project/getRoundInfo/undefined" ("Field 'id' expected a number but got 'undefined'.",)
+[ERROR][2025-05-06 16:03:25,742][errors.py:131]Field 'id' expected a number but got 'undefined'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'undefined'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 16, in get_round_tree
+    qs = Round.objects.filter(project__id=project_id).order_by('key')
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got 'undefined'.
+[ERROR][2025-05-06 16:03:25,756][log.py:248]Internal Server Error: /api/project/getRoundInfo/undefined
+[WARNING][2025-05-06 16:04:23,165][operation.py:133]"GET - RoundController[get_round_tree] /api/project/getRoundInfo/undefined" ("Field 'id' expected a number but got 'undefined'.",)
+[ERROR][2025-05-06 16:04:23,166][errors.py:131]Field 'id' expected a number but got 'undefined'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: 'undefined'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 16, in get_round_tree
+    qs = Round.objects.filter(project__id=project_id).order_by('key')
+         ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got 'undefined'.
+[ERROR][2025-05-06 16:04:23,170][log.py:248]Internal Server Error: /api/project/getRoundInfo/undefined
+[WARNING][2025-05-07 08:18:25,348][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-07 08:18:25,429][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-07 08:18:50,242][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-07 09:31:56,318][log.py:248]Not Found: /
+[WARNING][2025-05-07 09:31:56,445][log.py:248]Not Found: /favicon.ico
+[WARNING][2025-05-07 09:52:10,698][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:52:10,698][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:52:10,729][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:52:10,745][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:52:10,745][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:52:10,749][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:52:10,761][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:52:10,762][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:52:10,764][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:52:17,191][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:52:17,191][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[WARNING][2025-05-07 09:52:17,195][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:52:17,203][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[WARNING][2025-05-07 09:52:17,212][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:52:17,213][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[ERROR][2025-05-07 09:52:17,215][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:52:17,229][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[ERROR][2025-05-07 09:52:17,249][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:53:21,559][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:53:21,559][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:53:21,563][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:53:21,740][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:53:21,741][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:53:21,744][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:53:23,427][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:53:23,429][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:53:23,431][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:53:23,988][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:53:23,989][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:53:23,993][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:53:47,322][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:53:47,323][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:53:47,324][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:53:58,390][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:53:58,390][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:53:58,391][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:55:52,748][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:55:52,748][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:55:52,753][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:55:55,868][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:55:55,870][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:55:55,874][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 09:56:02,966][operation.py:133]"GET - DutController[get_dut_type] /api/project/dut/dut_type" ("'NoneType' object has no attribute 'type'",)
+[ERROR][2025-05-07 09:56:02,966][errors.py:131]'NoneType' object has no attribute 'type'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 202, in get_dut_type
+    return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
+                                                                ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'type'
+[ERROR][2025-05-07 09:56:02,968][log.py:248]Internal Server Error: /api/project/dut/dut_type
+[WARNING][2025-05-07 10:40:45,425][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:40:45,425][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:40:45,515][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:41:03,136][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-07 10:41:03,892][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:41:03,892][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:41:03,907][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:41:04,923][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:41:04,924][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:41:04,927][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:41:06,942][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:41:06,942][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:41:06,949][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:41:08,185][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:41:08,186][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:41:08,211][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:41:09,236][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:41:09,236][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:41:09,243][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:41:11,255][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:41:11,256][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:41:11,263][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:42:09,637][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:42:09,637][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:42:09,644][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:42:10,978][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:42:10,979][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 28, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:42:10,987][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:43:11,516][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:43:11,516][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:43:11,523][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:43:13,537][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:43:13,537][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:43:13,541][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:43:14,722][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:43:14,722][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:43:14,732][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:43:15,752][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:43:15,752][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:43:15,766][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:43:54,656][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:43:54,656][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:43:54,672][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:43:58,694][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:43:58,694][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:43:58,702][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:44:10,283][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:44:10,283][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:44:10,300][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:44:11,311][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:44:11,311][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:44:11,324][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:44:15,269][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:44:15,269][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:44:15,279][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:44:19,303][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:44:19,303][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:44:19,318][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:45:08,818][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:45:08,818][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:45:08,822][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:45:09,957][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:45:09,957][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:45:09,962][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 10:45:10,976][operation.py:133]"GET - DesignController[get_design_list] /api/project/getDesignDemandList" ("Field 'id' expected a number but got ''.",)
+[ERROR][2025-05-07 10:45:10,976][errors.py:131]Field 'id' expected a number but got ''.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2128, in get_prep_value
+    return int(value)
+ValueError: invalid literal for int() with base 10: ''
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 250, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 29, in get_design_list
+    qs = Design.objects.filter(project__id=datafilter.project_id, dut__key=dut_key,
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               ident__icontains=datafilter.ident,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               name__icontains=datafilter.name,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               demandType__contains=datafilter.demandType,
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                               chapter__icontains=datafilter.chapter).order_by('id')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1481, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1499, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1506, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1643, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1675, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1585, in build_filter
+    condition = self.build_lookup(lookups, col, value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1412, in build_lookup
+    lookup = lookup_class(lhs, rhs)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 38, in __init__
+    self.rhs = self.get_prep_lookup()
+               ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 410, in get_prep_lookup
+    return super().get_prep_lookup()
+           ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\lookups.py", line 96, in get_prep_lookup
+    return self.lhs.output_field.get_prep_value(self.rhs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 2130, in get_prep_value
+    raise e.__class__(
+        "Field '%s' expected a number but got %r." % (self.name, value),
+    ) from e
+ValueError: Field 'id' expected a number but got ''.
+[ERROR][2025-05-07 10:45:10,984][log.py:248]Internal Server Error: /api/project/getDesignDemandList
+[WARNING][2025-05-07 16:13:06,500][log.py:248]Not Found: /api/project/getDesignOne/
+[WARNING][2025-05-07 16:13:43,229][log.py:248]Not Found: /api/project/getDesignOne/
+[WARNING][2025-05-07 16:13:48,127][log.py:248]Not Found: /api/project/getDesignOne/
+[WARNING][2025-05-07 16:14:16,225][log.py:248]Not Found: /api/project/getDesignOneById/
+[WARNING][2025-05-07 16:14:19,648][log.py:248]Not Found: /api/project/getDesignOneById/
+[WARNING][2025-05-07 16:14:49,096][operation.py:133]"GET - DesignController[get_one_by_id] /api/project/getDesignOneById" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:14:49,104][log.py:248]Unprocessable Content: /api/project/getDesignOneById
+[WARNING][2025-05-07 16:14:51,607][operation.py:133]"GET - DesignController[get_one_by_id] /api/project/getDesignOneById" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:14:51,615][log.py:248]Unprocessable Content: /api/project/getDesignOneById
+[WARNING][2025-05-07 16:15:37,031][operation.py:133]"GET - DesignController[get_one_by_id] /api/project/getDesignOneById" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:15:37,042][log.py:248]Unprocessable Content: /api/project/getDesignOneById
+[WARNING][2025-05-07 16:16:34,955][operation.py:133]"GET - DesignController[get_one_by_id] /api/project/getDesignOneById" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:16:34,965][log.py:248]Unprocessable Content: /api/project/getDesignOneById
+[WARNING][2025-05-07 16:16:40,964][operation.py:133]"GET - DesignController[get_one_by_id] /api/project/getDesignOneById" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:16:40,974][log.py:248]Unprocessable Content: /api/project/getDesignOneById
+[WARNING][2025-05-07 16:17:41,825][log.py:248]Not Found: /api/project/getDesignOneById/
+[WARNING][2025-05-07 16:17:45,267][log.py:248]Not Found: /api/project/getDesignOneById/
+[WARNING][2025-05-07 16:39:33,136][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/37" ([{'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'dut'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:39:33,143][log.py:248]Unprocessable Content: /api/project/editDesignDemand/37
+[WARNING][2025-05-07 16:40:10,302][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/37" ([{'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'dut'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:40:10,311][log.py:248]Unprocessable Content: /api/project/editDesignDemand/37
+[WARNING][2025-05-07 16:41:28,050][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/37" ([{'type': 'missing', 'loc': ('body', 'payload', 'round'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'dut'), 'msg': 'Field required'}],)
+[WARNING][2025-05-07 16:41:28,057][log.py:248]Unprocessable Content: /api/project/editDesignDemand/37
+[WARNING][2025-05-07 16:43:33,756][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/37" ('Design matching query does not exist.',)
+[ERROR][2025-05-07 16:43:33,756][errors.py:131]Design matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 122, in update_design
+    design_qs = Design.objects.get(id=id)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 633, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.project.models.Design.DoesNotExist: Design matching query does not exist.
+[ERROR][2025-05-07 16:43:33,786][log.py:248]Internal Server Error: /api/project/editDesignDemand/37
+[WARNING][2025-05-07 19:40:06,745][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3785" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:40:06,755][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3785
+[WARNING][2025-05-07 19:40:11,148][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3786" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:40:11,157][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3786
+[WARNING][2025-05-07 19:40:14,499][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3787" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:40:14,509][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3787
+[WARNING][2025-05-07 19:40:19,211][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3786" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:40:19,223][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3786
+[WARNING][2025-05-07 19:40:42,463][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3785" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:40:42,473][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3785
+[WARNING][2025-05-07 19:42:17,215][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3785" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:42:17,223][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3785
+[WARNING][2025-05-07 19:55:56,930][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3785" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:55:56,937][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3785
+[WARNING][2025-05-07 19:56:20,666][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3785" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:56:20,676][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3785
+[WARNING][2025-05-07 19:57:24,262][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3785" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-07 19:57:24,272][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3785
+[WARNING][2025-05-08 09:04:45,795][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-08 09:04:45,865][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-08 09:04:53,523][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-08 19:02:43,430][log.py:248]Not Found: /api/project/designDemand/replace/
+[WARNING][2025-05-08 19:21:09,059][operation.py:133]"POST - DesignController[replace_content] /api/project/designDemand/replace/" ("'ReplaceDesignContentSchema' object has no attribute 'id'",)
+[ERROR][2025-05-08 19:21:09,059][errors.py:131]'ReplaceDesignContentSchema' object has no attribute 'id'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 179, in replace_content
+    project_obj = get_object_or_404(Project, id=payload.id)
+                                                ^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 994, in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+AttributeError: 'ReplaceDesignContentSchema' object has no attribute 'id'
+[ERROR][2025-05-08 19:21:09,096][log.py:248]Internal Server Error: /api/project/designDemand/replace/
+[WARNING][2025-05-08 19:32:22,476][operation.py:133]"POST - DesignController[replace_content] /api/project/designDemand/replace/" ("Cannot resolve keyword '依据相关' into field. Choices are: chapter, create_datetime, dcQuery, demandType, description, dtQuery, dut, dut_id, id, ident, key, level, name, odQuery, project, project_id, protocal, remark, round, round_id, sort, source, title, to, type, update_datetime",)
+[ERROR][2025-05-08 19:32:22,476][errors.py:131]Cannot resolve keyword '依据相关' into field. Choices are: chapter, create_datetime, dcQuery, demandType, description, dtQuery, dut, dut_id, id, ident, key, level, name, odQuery, project, project_id, protocal, remark, round, round_id, sort, source, title, to, type, update_datetime
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 189, in replace_content
+    design_qs.update(**replace_kwargs)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1233, in update
+    query.add_update_values(kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\subqueries.py", line 106, in add_update_values
+    return self.add_update_fields(values_seq)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\subqueries.py", line 120, in add_update_fields
+    val = val.resolve_expression(self, allow_joins=False, for_save=True)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\expressions.py", line 300, in resolve_expression
+    expr.resolve_expression(query, allow_joins, reuse, summarize)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\expressions.py", line 902, in resolve_expression
+    return query.resolve_ref(self.name, allow_joins, reuse, summarize)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 2046, in resolve_ref
+    join_info = self.setup_joins(
+        field_list, self.get_meta(), self.get_initial_alias(), can_reuse=reuse
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1897, in setup_joins
+    path, final_field, targets, rest = self.names_to_path(
+                                       ~~~~~~~~~~~~~~~~~~^
+        names[:pivot],
+        ^^^^^^^^^^^^^^
+    ...<2 lines>...
+        fail_on_missing=True,
+        ^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1802, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword '依据相关' into field. Choices are: chapter, create_datetime, dcQuery, demandType, description, dtQuery, dut, dut_id, id, ident, key, level, name, odQuery, project, project_id, protocal, remark, round, round_id, sort, source, title, to, type, update_datetime
+[ERROR][2025-05-08 19:32:22,516][log.py:248]Internal Server Error: /api/project/designDemand/replace/
+[WARNING][2025-05-09 09:33:16,083][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-09 09:33:16,194][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-09 09:33:27,023][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-09 14:09:52,149][operation.py:133]"GET - DictController[get_dict] /api/system/dataDict/list" ([{'type': 'missing', 'loc': ('query', 'code'), 'msg': 'Field required'}],)
+[WARNING][2025-05-09 14:09:52,149][log.py:248]Unprocessable Content: /api/system/dataDict/list
+[WARNING][2025-05-09 14:09:55,442][operation.py:133]"GET - DictController[get_dict] /api/system/dataDict/list" ([{'type': 'missing', 'loc': ('query', 'code'), 'msg': 'Field required'}],)
+[WARNING][2025-05-09 14:09:55,445][log.py:248]Unprocessable Content: /api/system/dataDict/list
+[WARNING][2025-05-09 18:07:30,266][operation.py:133]"PUT - TestDemandController[update_testDemand] /api/project/testDemand/update/538" ([{'type': 'missing', 'loc': ('body', 'payload', 'designDemand'), 'msg': 'Field required'}],)
+[WARNING][2025-05-09 18:07:30,274][log.py:248]Unprocessable Content: /api/project/testDemand/update/538
+[WARNING][2025-05-09 19:04:22,972][operation.py:133]"GET - TestDemandController[get_test_demand_list] /api/project/getTestDemandList" ()
+[ERROR][2025-05-09 19:04:22,972][errors.py:131]1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 216, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 703, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj, strict=strict, from_attributes=from_attributes, context=context, by_alias=by_alias, by_name=by_name
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+[ERROR][2025-05-09 19:04:23,013][log.py:248]Internal Server Error: /api/project/getTestDemandList
+[WARNING][2025-05-09 19:04:34,284][operation.py:133]"GET - TestDemandController[get_test_demand_list] /api/project/getTestDemandList" ()
+[ERROR][2025-05-09 19:04:34,284][errors.py:131]1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 216, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 703, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj, strict=strict, from_attributes=from_attributes, context=context, by_alias=by_alias, by_name=by_name
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+[ERROR][2025-05-09 19:04:34,285][log.py:248]Internal Server Error: /api/project/getTestDemandList
+[WARNING][2025-05-09 19:04:44,649][operation.py:133]"GET - TestDemandController[get_test_demand_list] /api/project/getTestDemandList" ()
+[ERROR][2025-05-09 19:04:44,649][errors.py:131]1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 216, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 703, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj, strict=strict, from_attributes=from_attributes, context=context, by_alias=by_alias, by_name=by_name
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+[ERROR][2025-05-09 19:04:44,650][log.py:248]Internal Server Error: /api/project/getTestDemandList
+[WARNING][2025-05-09 19:05:27,213][operation.py:133]"GET - TestDemandController[get_test_demand_list] /api/project/getTestDemandList" ()
+[ERROR][2025-05-09 19:05:27,213][errors.py:131]1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 216, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 703, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj, strict=strict, from_attributes=from_attributes, context=context, by_alias=by_alias, by_name=by_name
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.items.0.design
+  Input should be a valid list [type=list_type, input_value=<Design: 设计需求:探测显示功能>, input_type=Design]
+    For further information visit https://errors.pydantic.dev/2.11/v/list_type
+[ERROR][2025-05-09 19:05:27,214][log.py:248]Internal Server Error: /api/project/getTestDemandList
+[WARNING][2025-05-09 19:09:10,143][operation.py:133]"GET - DutController[get_one_by_id] /api/project/getDutOneById" (500, '未找到相应的数据')
+[ERROR][2025-05-09 19:09:10,151][log.py:248]Internal Server Error: /api/project/getDutOneById
+[WARNING][2025-05-09 19:13:20,485][operation.py:133]"GET - DutController[get_one_by_id] /api/project/getDutOneById" (500, '未找到相应的数据')
+[ERROR][2025-05-09 19:13:20,494][log.py:248]Internal Server Error: /api/project/getDutOneById
+[WARNING][2025-05-09 19:40:10,785][operation.py:133]"GET - DutController[get_one_by_id] /api/project/getDutOneById" (500, '未找到相应的数据')
+[ERROR][2025-05-09 19:40:10,794][log.py:248]Internal Server Error: /api/project/getDutOneById
+[WARNING][2025-05-09 19:40:24,209][operation.py:133]"GET - DutController[get_one_by_id] /api/project/getDutOneById" (500, '未找到相应的数据')
+[ERROR][2025-05-09 19:40:24,218][log.py:248]Internal Server Error: /api/project/getDutOneById
+[WARNING][2025-05-09 19:42:25,677][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3788" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-09 19:42:25,687][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3788
+[WARNING][2025-05-09 19:43:26,061][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3788" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-09 19:43:26,073][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3788
+[WARNING][2025-05-09 19:44:03,771][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3788" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-09 19:44:03,781][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3788
+[WARNING][2025-05-09 19:44:30,349][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3788" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-09 19:44:30,361][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3788
+[WARNING][2025-05-09 19:44:49,491][operation.py:133]"PUT - DesignController[update_design] /api/project/editDesignDemand/3788" ([{'type': 'string_type', 'loc': ('body', 'payload', 'dut'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-05-09 19:44:49,502][log.py:248]Unprocessable Content: /api/project/editDesignDemand/3788
+[WARNING][2025-05-09 19:55:19,627][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-10 11:17:01,022][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-10 11:17:01,096][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-10 11:17:11,230][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-10 14:31:08,098][log.py:248]Not Found: /api/project/getCaseOne
+[WARNING][2025-05-10 14:31:16,258][log.py:248]Not Found: /api/project/getCaseOne
+[WARNING][2025-05-10 14:31:22,405][log.py:248]Not Found: /api/project/getCaseOne
+[WARNING][2025-05-10 14:31:29,196][log.py:248]Not Found: /api/project/getCaseOne
+[WARNING][2025-05-10 14:31:45,267][log.py:248]Not Found: /api/project/getCaseOne
+[WARNING][2025-05-10 14:31:53,078][log.py:248]Not Found: /api/project/getCaseOne
+[WARNING][2025-05-10 14:59:08,824][operation.py:133]"GET - CaseController[get_case_list] /api/project/getCaseList" ()
+[ERROR][2025-05-10 14:59:08,825][errors.py:131]9 validation errors for NinjaResponseSchema
+response.items.0.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.1.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:代码审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.2.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:文档审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.3.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.4.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.5.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.6.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.7.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...据储存时间性能>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.8.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...号处理软件接口>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 216, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 703, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj, strict=strict, from_attributes=from_attributes, context=context, by_alias=by_alias, by_name=by_name
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 9 validation errors for NinjaResponseSchema
+response.items.0.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.1.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:代码审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.2.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:文档审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.3.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.4.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.5.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.6.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.7.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...据储存时间性能>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.8.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...号处理软件接口>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+[ERROR][2025-05-10 14:59:08,890][log.py:248]Internal Server Error: /api/project/getCaseList
+[WARNING][2025-05-10 15:01:11,027][operation.py:133]"GET - CaseController[get_case_list] /api/project/getCaseList" ()
+[ERROR][2025-05-10 15:01:11,027][errors.py:131]9 validation errors for NinjaResponseSchema
+response.items.0.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.1.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:代码审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.2.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:文档审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.3.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.4.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.5.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.6.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.7.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...据储存时间性能>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.8.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...号处理软件接口>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 216, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 703, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj, strict=strict, from_attributes=from_attributes, context=context, by_alias=by_alias, by_name=by_name
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 9 validation errors for NinjaResponseSchema
+response.items.0.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:静态分析>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.1.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:代码审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.2.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测试项:文档审查>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.3.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.4.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...测显示功能测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.5.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.6.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...统误差摸底测试>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.7.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...据储存时间性能>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+response.items.8.test.testContent
+  Field required [type=missing, input_value=<DjangoGetter: <TestDeman...号处理软件接口>>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.11/v/missing
+[ERROR][2025-05-10 15:01:11,055][log.py:248]Internal Server Error: /api/project/getCaseList
+[WARNING][2025-05-10 15:09:34,732][operation.py:133]"PUT - TestDemandController[update_testDemand] /api/project/testDemand/update/538" ([{'type': 'missing', 'loc': ('body', 'payload', 'designDemand'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 15:09:34,749][log.py:248]Unprocessable Content: /api/project/testDemand/update/538
+[WARNING][2025-05-10 18:38:58,880][log.py:248]Not Found: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:39:30,827][log.py:248]Not Found: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:40:42,444][log.py:248]Method Not Allowed: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:43:09,517][operation.py:133]"GET - CaseController[bulk_replace_person] /api/project/case/personReplace/" ([{'type': 'missing', 'loc': ('body', 'selectRows'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 18:43:09,526][log.py:248]Unprocessable Content: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:45:03,555][operation.py:133]"GET - CaseController[bulk_replace_person] /api/project/case/personReplace/" ([{'type': 'missing', 'loc': ('body', 'selectRows'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 18:45:03,563][log.py:248]Unprocessable Content: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:45:32,259][operation.py:133]"GET - CaseController[bulk_replace_person] /api/project/case/personReplace/" ([{'type': 'missing', 'loc': ('body', 'selectRows'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 18:45:32,269][log.py:248]Unprocessable Content: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:45:35,891][operation.py:133]"GET - CaseController[bulk_replace_person] /api/project/case/personReplace/" ([{'type': 'missing', 'loc': ('body', 'selectRows'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 18:45:35,901][log.py:248]Unprocessable Content: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:47:11,820][operation.py:133]"GET - CaseController[bulk_replace_person] /api/project/case/personReplace/" ([{'type': 'missing', 'loc': ('body', 'selectRows'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 18:47:11,830][log.py:248]Unprocessable Content: /api/project/case/personReplace/
+[WARNING][2025-05-10 18:47:59,564][operation.py:133]"GET - CaseController[bulk_replace_person] /api/project/case/personReplace/" ([{'type': 'missing', 'loc': ('body', 'selectRows'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 18:47:59,579][log.py:248]Unprocessable Content: /api/project/case/personReplace/
+[WARNING][2025-05-10 19:15:32,945][operation.py:133]"POST - CaseController[bulk_replace_person] /api/project/case/personReplace/" ([{'type': 'missing', 'loc': ('body', 'payload', 'designPerson'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'testPerson'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'monitorPerson'), 'msg': 'Field required'}],)
+[WARNING][2025-05-10 19:15:32,955][log.py:248]Unprocessable Content: /api/project/case/personReplace/

@@ -6,6 +6,8 @@ from ninja.pagination import paginate
 from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
 from django.db import transaction
+from django.db.models.functions import Replace
+from django.db.models import Q, F, Value
 from django.shortcuts import get_object_or_404
 from typing import List
 from utils.chen_response import ChenResponse
@@ -13,7 +15,8 @@ from utils.chen_crud import multi_delete_testDemand
 from utils.codes import HTTP_INDEX_ERROR
 from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
-    TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, TestDemandCreateInputSchema, \
+    TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, \
+    TestDemandCreateInputSchema, ReplaceDemandContentSchema, \
     TestDemandRelatedSchema, TestDemandExistRelatedSchema, DemandCopyToDesignSchema
 # 导入ORM
 from apps.project.models import Project
@@ -30,12 +33,29 @@ class TestDemandController(ControllerBase):
     @paginate(MyPagination)
     def get_test_demand_list(self, datafilter: TestDemandFilterSchema = Query(...)):
         conditionNoneToBlank(datafilter)
-        design_key = "".join([datafilter.round_id, '-', datafilter.dut_id, '-', datafilter.design_id])
-        qs = TestDemand.objects.filter(project__id=datafilter.project_id, design__key=design_key,
-                                       ident__icontains=datafilter.ident,
-                                       name__icontains=datafilter.name,
-                                       testType__contains=datafilter.testType,
-                                       priority__icontains=datafilter.priority).order_by("key")
+        query_params = {
+            'project__id': datafilter.project_id,
+            'ident__icontains': datafilter.ident,
+            'name__icontains': datafilter.name,
+            'testType__contains': datafilter.testType,
+            'priority__icontains': datafilter.priority
+        }
+        # 如果没有传递多个key则认为是“那个轮次汇总界面”
+        if datafilter.dut_id and datafilter.design_id:
+            design_key = "".join([datafilter.round_id, '-', datafilter.dut_id, '-', datafilter.design_id])
+            query_params['design__key'] = design_key
+        else:
+            # 轮次汇总界面要查round__key
+            query_params['round__key'] = datafilter.round_id
+        # 判断是否存在testDesciption有则表示是大表查询
+        if datafilter.testDesciption:
+            query_params['testDesciption__icontains'] = datafilter.testDesciption
+        qs = TestDemand.objects.filter(**query_params).order_by("key")
+        # 判断是否存在testContent有则表示是大表查询，这里需要查询子字段
+        if datafilter.testContent:
+            qs = qs.filter(Q(testQField__subName__icontains=datafilter.testContent) |
+                           Q(testQField__testStepField__operation__icontains=datafilter.testContent) |
+                           Q(testQField__testStepField__expect__icontains=datafilter.testContent))
         # 由于有嵌套query_set存在，把每个测试需求的schema加上一个字段
         query_list = []
         for query_single in qs:
@@ -52,6 +72,20 @@ class TestDemandController(ControllerBase):
     @transaction.atomic
     def get_test_demand_one(self, project_id: int, key: str):
         demand_qs = TestDemand.objects.filter(project_id=project_id, key=key).first()
+        if demand_qs:
+            sub_list = []
+            for step_obj in demand_qs.testQField.all():
+                setattr(step_obj, "subStep", step_obj.testStepField.all().values())
+                sub_list.append(step_obj)
+            setattr(demand_qs, "testContent", sub_list)
+            return demand_qs
+        raise HttpError(500, "未找到相应的数据")
+
+    # 根据id直接查询
+    @route.get("/getTestDemandOneById", response=TestDemandModelOutSchema, url_name='testDemand-one-by-id')
+    @transaction.atomic
+    def get_demand_by_id(self, id: int):
+        demand_qs = TestDemand.objects.filter(id=id).first()
         if demand_qs:
             sub_list = []
             for step_obj in demand_qs.testQField.all():
@@ -78,11 +112,13 @@ class TestDemandController(ControllerBase):
         if payload.ident and project_qs:
             exists = project_qs.ptField.filter(ident=payload.ident).exists()
             if exists:
-                return ChenResponse(code=500, status=500, message='测试项标识和其他测试项重复，请更换测试项标识!!!')
+                return ChenResponse(code=500, status=500,
+                                    message='测试项标识和其他测试项重复，请更换测试项标识!!!')
         # 构造design_key
         design_key = "".join([payload.round_key, "-", payload.dut_key, '-', payload.design_key])
         # 查询当前key应该为多少
-        test_demand_count = TestDemand.objects.filter(project__id=payload.project_id, design__key=design_key).count()
+        test_demand_count = TestDemand.objects.filter(project__id=payload.project_id,
+                                                      design__key=design_key).count()
         key_string = ''.join([design_key, "-", str(test_demand_count)])
         # 查询当前各个前面节点的instance
         round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
@@ -90,8 +126,9 @@ class TestDemandController(ControllerBase):
                                        key="".join([payload.round_key, "-", payload.dut_key]))
         design_instance = Design.objects.get(project__id=payload.project_id, key="".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key]))
-        asert_dict.update({'key': key_string, 'round': round_instance, 'dut': dut_instance, 'design': design_instance,
-                           'title': payload.name})
+        asert_dict.update(
+            {'key': key_string, 'round': round_instance, 'dut': dut_instance, 'design': design_instance,
+             'title': payload.name})
         asert_dict.pop("round_key")
         asert_dict.pop("dut_key")
         asert_dict.pop("design_key")
@@ -153,11 +190,13 @@ class TestDemandController(ControllerBase):
                             )
                             for step in item["subStep"]
                         ])
+            setattr(testDemand_qs, attr, value)
         # ~~~2024年5月9日：测试项更新标识后还要更新下面用例的标识~~~
         if testDemand_qs.ident != old_ident:
             for case in testDemand_qs.tcField.all():
                 case.ident = testDemand_qs.ident
                 case.save()
+        testDemand_qs.save()
         return testDemand_qs
 
     # 删除测试项
@@ -179,7 +218,7 @@ class TestDemandController(ControllerBase):
             single_qs.key = test_demand_key
             index = index + 1
             single_qs.save()
-            demand_delete_sub_node_key(single_qs) # 删除后需重排子节点
+            demand_delete_sub_node_key(single_qs)  # 删除后需重排子节点
         return ChenResponse(message="测试需求删除成功！")
 
     # 查询一个项目的所有测试项
@@ -215,7 +254,8 @@ class TestDemandController(ControllerBase):
                     if ti.pk == test_id:
                         non_exist_ids.remove(test_id)
             if len(non_exist_ids) <= 0 < len(test_item_ids):
-                return ChenResponse(status=400, code=200, message='选择的测试项全部存在于当前设计需求中，请重新选择...')
+                return ChenResponse(status=400, code=200,
+                                    message='选择的测试项全部存在于当前设计需求中，请重新选择...')
             # 先查询现在有的关联测试项
             for item in design_item.odField.values('id'):
                 item_id = item.get('id', None)
@@ -251,3 +291,32 @@ class TestDemandController(ControllerBase):
         """前端测试项右键复制到某个设计需求下面"""
         new_demand_key = demand_copy_to_design(data.project_id, data.demand_key, data.design_id, data.depth)
         return ChenResponse(data={'key': new_demand_key})
+
+    # 测试项-替换接口
+    @route.post("/testDemand/replace/", url_name='testDemand-replace')
+    @transaction.atomic
+    def replace_demand_content(self, payload: ReplaceDemandContentSchema):
+        # 1.首先查询项目
+        project_obj: Project = get_object_or_404(Project, id=payload.project_id)
+        # 2.查询[所有轮次]的selectRows的id
+        demand_qs = project_obj.ptField.filter(id__in=payload.selectRows, round__key=payload.round_key)
+        # 3.批量替换里面文本（解构不影响老数组）
+        selectColumn = [x for x in payload.selectColumn if x != 'testContent']
+        replace_kwargs = {
+            field_name: Replace(F(field_name), Value(payload.originText), Value(payload.replaceText))
+            for field_name in selectColumn
+        }
+        # 4.单独处理testContentStep的操作、预期-查询所有
+        # 4.1.获取所有关联的TestDemandContentStep
+        step_count = 0
+        if 'testContent' in payload.selectColumn:
+            test_demand_contents = TestDemandContent.objects.filter(testDemand__in=demand_qs)
+            test_steps = TestDemandContentStep.objects.filter(testDemandContent__in=test_demand_contents)
+            # 批量更新 operation 和 expect
+            step_count = test_steps.update(
+                operation=Replace(F('operation'), Value(payload.originText), Value(payload.replaceText)),
+                expect=Replace(F('expect'), Value(payload.originText), Value(payload.replaceText))
+            )
+        # 5.提交更新
+        replace_count = demand_qs.update(**replace_kwargs)
+        return {'count': replace_count + step_count}
