@@ -10,6 +10,7 @@ def create_list_1():
     return ['1']
 
 class Project(CoreModel):
+    objects = models.Manager()
     ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="项目标识",
                              help_text="项目标识", unique=True)  # 唯一
     name = models.CharField(max_length=100, blank=True, null=True, verbose_name="项目名称", help_text="项目名称")

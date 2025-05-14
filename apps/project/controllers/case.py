@@ -320,7 +320,7 @@ class CaseController(ControllerBase):
         if payload.monitorPerson != '不替换' and payload.monitorPerson != '':
             case_qs.update(monitorPerson=payload.monitorPerson)
 
-    # 批量替换事件
+    # 批量替换时间
     @route.post("/case/timeReplace/", url_name='case-time-replace')
     @transaction.atomic
     def bulk_replace_time(self, payload: ExetimeReplaceSchema):

@@ -267,9 +267,9 @@ class TestDemandController(ControllerBase):
                 if len(test_items) <= 0:
                     # 查询testDemand
                     design_item.odField.add(TestDemand.objects.filter(id=test_item_id).first())
+            return ChenResponse(status=200, code=200, message='添加关联测试项成功...')
         else:
             return ChenResponse(status=400, code=400, message='设计需求不存在，请检查...')
-        return ChenResponse(status=200, code=200, message='添加关联测试项成功...')
 
     # 找出已关联的测试项给前端的cascader
     @route.post('/testDemand/getExistRelatedTestDemand', url_name="testDemand-getExistRelatedTestDemand")
