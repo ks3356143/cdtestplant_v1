@@ -7,3 +7,6 @@
 [ERROR][2025-05-14 19:24:30,076][log.py:248]Internal Server Error: /api/project/getDutOne
 [WARNING][2025-05-14 19:24:57,399][operation.py:133]"GET - DutController[get_dut] /api/project/getDutOne" (500, '未找到相应的数据')
 [ERROR][2025-05-14 19:24:57,408][log.py:248]Internal Server Error: /api/project/getDutOne
+[WARNING][2025-05-15 09:45:13,826][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-15 09:45:13,861][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-15 09:45:22,540][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
