@@ -10,3 +10,20 @@
 [WARNING][2025-05-15 09:45:13,826][log.py:248]Unauthorized: /api/system/getInfo
 [WARNING][2025-05-15 09:45:13,861][log.py:248]Unauthorized: /api/system/logout
 [WARNING][2025-05-15 09:45:22,540][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-16 11:09:33,252][log.py:248]Not Found: /
+[WARNING][2025-05-16 11:09:33,373][log.py:248]Not Found: /favicon.ico
+[WARNING][2025-05-16 11:10:30,333][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:11:26,109][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:11:30,126][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:13:43,191][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:14:21,613][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:15:31,766][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:24:10,664][log.py:248]Not Found: /
+[WARNING][2025-05-16 11:24:20,924][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:24:46,734][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:26:57,439][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 11:27:21,961][log.py:248]Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[WARNING][2025-05-16 13:28:36,074][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-17 15:36:12,935][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-17 15:36:13,000][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-17 15:36:20,760][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
