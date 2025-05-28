@@ -283,6 +283,7 @@ class CaseController(ControllerBase):
     @route.post("/case/replace/", url_name='case-replace')
     @transaction.atomic
     def replace_case_step_content(self, payload: ReplaceCaseSchema):
+        print(payload)
         # 1.首先查询项目
         project_obj: Project = get_object_or_404(Project, id=payload.project_id)
         # 2.查询[所有轮次]的selectRows的id
@@ -301,7 +302,8 @@ class CaseController(ControllerBase):
             # 批量更新 operation 和 expect
             step_count = caseStep_qs.update(
                 operation=Replace(F('operation'), Value(payload.originText), Value(payload.replaceText)),
-                expect=Replace(F('expect'), Value(payload.originText), Value(payload.replaceText))
+                expect=Replace(F('expect'), Value(payload.originText), Value(payload.replaceText)),
+                result=Replace(F('result'), Value(payload.originText), Value(payload.replaceText))
             )
         # 5.提交更新
         replace_count = case_qs.update(**replace_kwargs)

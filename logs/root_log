@@ -27,3 +27,19 @@
 [WARNING][2025-05-17 15:36:12,935][log.py:248]Unauthorized: /api/system/getInfo
 [WARNING][2025-05-17 15:36:13,000][log.py:248]Unauthorized: /api/system/logout
 [WARNING][2025-05-17 15:36:20,760][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-23 10:36:33,307][log.py:248]Not Found: /
+[WARNING][2025-05-23 10:36:33,430][log.py:248]Not Found: /favicon.ico
+[WARNING][2025-05-26 15:15:24,703][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-26 15:19:25,390][log.py:248]Not Found: /
+[WARNING][2025-05-26 15:19:25,513][log.py:248]Not Found: /favicon.ico
+[WARNING][2025-05-27 09:11:32,138][log.py:248]Not Found: /
+[WARNING][2025-05-27 09:11:32,616][log.py:248]Not Found: /favicon.ico
+[WARNING][2025-05-27 09:13:04,921][log.py:248]Not Found: /
+[WARNING][2025-05-27 09:50:50,827][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-27 09:50:50,894][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-27 09:50:59,888][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-28 09:24:15,443][log.py:248]Unauthorized: /api/system/getInfo
+[WARNING][2025-05-28 09:24:15,480][log.py:248]Unauthorized: /api/system/logout
+[WARNING][2025-05-28 09:24:26,068][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-05-28 18:35:30,083][log.py:248]Not Found: /api/project/testDemand/priorityReplace/
+[WARNING][2025-05-28 18:35:42,929][log.py:248]Not Found: /api/project/testDemand/priorityReplace/

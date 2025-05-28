@@ -125,3 +125,8 @@ class ReplaceDemandContentSchema(Schema):
     replaceText: str
     selectRows: List[int]
     selectColumn: List[str]
+
+# 优先级替换Schema
+class PriorityReplaceSchema(Schema):
+    selectRows: List[int] = None
+    priority: str

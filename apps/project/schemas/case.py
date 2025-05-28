@@ -150,7 +150,7 @@ class PersonReplaceSchema(Schema):
     testPerson: str
     monitorPerson: str
 
-# 事件替换Schema
+# 时间替换Schema
 class ExetimeReplaceSchema(Schema):
     selectRows: List[int] = None
     exetime: str

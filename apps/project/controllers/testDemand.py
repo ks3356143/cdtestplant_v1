@@ -16,7 +16,7 @@ from utils.codes import HTTP_INDEX_ERROR
 from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
     TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, \
-    TestDemandCreateInputSchema, ReplaceDemandContentSchema, \
+    TestDemandCreateInputSchema, ReplaceDemandContentSchema, PriorityReplaceSchema, \
     TestDemandRelatedSchema, TestDemandExistRelatedSchema, DemandCopyToDesignSchema
 # 导入ORM
 from apps.project.models import Project
@@ -320,3 +320,11 @@ class TestDemandController(ControllerBase):
         # 5.提交更新
         replace_count = demand_qs.update(**replace_kwargs)
         return {'count': replace_count + step_count}
+
+    # 批量替换优先级-priority
+    @route.post("/testDemand/priorityReplace/", url_name='demand-priority-replace')
+    @transaction.atomic
+    def multiple_modify_demand_priority(self, payload: PriorityReplaceSchema):
+        # 替换优先级
+        demand_qs = TestDemand.objects.filter(id__in=payload.selectRows)
+        demand_qs.update(priority=payload.priority)
