@@ -3,7 +3,7 @@ from pathlib import Path
 from ninja_extra import api_controller, ControllerBase, route
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from docxtpl import DocxTemplate
 from typing import Optional
 from docx import Document
@@ -16,7 +16,8 @@ from apps.createDocument.extensions import util
 from utils.chen_response import ChenResponse
 from apps.createDocument.extensions.util import create_bg_docx, get_round1_problem
 from utils.util import get_str_dict, get_list_dict, create_problem_grade_str, create_str_testType_list, \
-    create_demand_summary, create_problem_type_str, create_problem_table, create_problem_type_table, get_str_abbr
+    create_demand_summary, create_problem_type_str, create_problem_table, create_problem_type_table, \
+    get_str_abbr
 # 根据轮次生成测评内容文档context
 from apps.createDocument.extensions.content_result_tool import create_round_context
 from apps.createDocument.extensions.zhui import create_bg_round1_zhui
@@ -62,9 +63,11 @@ class GenerateControllerBG(ControllerBase):
                    'publish_date': timer.dg_cover_time, 'source': project_obj.test_unit}
         std_documents.append(dg_duty)
         # 需要添加说明、记录
-        sm_duty = {'doc_name': f'{project_obj.name}软件测试说明', 'ident_version': f'PT-{project_obj.ident}-TD-1.00',
+        sm_duty = {'doc_name': f'{project_obj.name}软件测试说明',
+                   'ident_version': f'PT-{project_obj.ident}-TD-1.00',
                    'publish_date': timer.sm_cover_time, 'source': project_obj.test_unit}
-        jl_duty = {'doc_name': f'{project_obj.name}软件测试记录', 'ident_version': f'PT-{project_obj.ident}-TN',
+        jl_duty = {'doc_name': f'{project_obj.name}软件测试记录',
+                   'ident_version': f'PT-{project_obj.ident}-TN',
                    'publish_date': timer.jl_cover_time, 'source': project_obj.test_unit}
         # 循环所有轮次，除了第一轮
         std_documents.extend([sm_duty, jl_duty])
@@ -144,7 +147,8 @@ class GenerateControllerBG(ControllerBase):
         for case in round1_case_qs:
             demand: TestDemand = case.test
             test_type_set.add(demand.testType)
-        round1_testType_list = list(map(lambda x: x['ident_version'], get_list_dict('testType', list(test_type_set))))
+        round1_testType_list = list(
+            map(lambda x: x['ident_version'], get_list_dict('testType', list(test_type_set))))
         # 这里找出第一轮，源代码被测件，并获取版本
         so_dut = round1.rdField.filter(type='SO').first()
         so_dut_verson = "$请添加第一轮的源代码信息$"
@@ -158,7 +162,8 @@ class GenerateControllerBG(ControllerBase):
             # 找所属dut的so-dut
             so_dut = r.rdField.filter(type='SO').first()
             # 找出上一轮dut的so-dut
-            last_problem_count = Problem.objects.filter(case__round__key=str(int(r.key) - 1)).distinct().count()
+            last_problem_count = Problem.objects.filter(
+                case__round__key=str(int(r.key) - 1)).distinct().count()
             current_round_problem_count = Problem.objects.filter(case__round__key=r.key).distinct().count()
             if current_round_problem_count > 0:
                 current_round_description = f'引入新问题{current_round_problem_count}个'
@@ -294,14 +299,16 @@ class GenerateControllerBG(ControllerBase):
         static_problems = problems_r1.filter(case__test__testType='15')
 
         # 6.第一轮动态测试用例个数(动态测试-非静态分析、文档审查、代码审查、代码走查4个)
-        case_r1_qs = round1.rcField.filter(~Q(test__testType='2'), ~Q(test__testType='3'), ~Q(test__testType='8'),
+        case_r1_qs = round1.rcField.filter(~Q(test__testType='2'), ~Q(test__testType='3'),
+                                           ~Q(test__testType='8'),
                                            ~Q(test__testType='15'),
                                            round__key='0')  # !warning:中变量-第一轮动态测试用例qs
         testType_list, testType_count = create_str_testType_list(case_r1_qs)
         ## 动态测试(第一轮)各个类型测试用例执行表/各个测试需求表
         demand_r1_dynamic_qs = round1.rtField.filter(~Q(testType='2'), ~Q(testType='3'), ~Q(testType='8'),
                                                      ~Q(testType='15'))  # !warning:中变量:第一轮动态测试的测试项
-        summary_r1_demand_info, summry_r1_demandType_info = create_demand_summary(demand_r1_dynamic_qs, project_ident)
+        summary_r1_demand_info, summry_r1_demandType_info = create_demand_summary(demand_r1_dynamic_qs,
+                                                                                  project_ident)
 
         # N.第一轮所有动态问题统计
         problems_dynamic_r1 = problems_r1.filter(~Q(case__test__testType='2'), ~Q(case__test__testType='3'),
@@ -450,7 +457,8 @@ class GenerateControllerBG(ControllerBase):
             for design in round1_design_yz_qs:
                 rich_parser2 = RichParser(design.description)
                 p_list = rich_parser2.get_final_p_list()
-                design_dict = {'yz_des': "".join([design.chapter, '章节：', design.name, '\a', '\a'.join(p_list)])}
+                design_dict = {
+                    'yz_des': "".join([design.chapter, '章节：', design.name, '\a', '\a'.join(p_list)])}
                 # 找出其中所有demand
                 demand_qs = design.dtField.all()
                 if not demand_qs.exists():
@@ -545,7 +553,7 @@ class GenerateControllerBG(ControllerBase):
                 last_dut_so = dut_so
                 break
         # 找出所有被测件协议（XY）、需求规格说明（XQ）、设计说明（SJ）
-        duties_qs: list[Dut] = project_obj.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY'))
+        duties_qs = project_obj.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY'))
         # ***Inspect-start***
         if not last_dut_so:
             self.logger.model = '测评报告'

@@ -110,8 +110,9 @@ class TestDemandController(ControllerBase):
         # ident判重
         project_qs = Project.objects.filter(id=payload.project_id).first()
         if payload.ident and project_qs:
-            exists = project_qs.ptField.filter(ident=payload.ident).exists()
-            if exists:
+            old_obj = project_qs.ptField.filter(ident=payload.ident).first()
+            # 2025/06/24修改，现在运行不同测试类型有相同的标识
+            if old_obj and old_obj.testType == payload.testType:
                 return ChenResponse(code=500, status=500,
                                     message='测试项标识和其他测试项重复，请更换测试项标识!!!')
         # 构造design_key
@@ -161,9 +162,11 @@ class TestDemandController(ControllerBase):
         for attr, value in payload.dict().items():
             # 判重复
             if attr == 'ident':
-                if testDemand_qs.ident != value:  # 如果ident不和原来相等，则要判重复
-                    exists = project_qs.ptField.filter(ident=payload.ident).exists()
-                    if exists:
+                # 先判断是否和原标识一样，且测试类型改变
+                if payload.dict()['testType'] != testDemand_qs.testType and value == old_ident:
+                    old_obj = project_qs.ptField.filter(ident=payload.ident).first()
+                    # 2025/06/24修改不同类型可以相同
+                    if old_obj and old_obj.testType == payload.dict()['testType']:
                         return ChenResponse(code=500, status=500, message='更换的标识和其他测试项重复')
             if attr == 'project_id' or attr == 'round_key' or attr == 'dut_key' or attr == 'design_key':
                 continue  # 如果发现是key则不处理

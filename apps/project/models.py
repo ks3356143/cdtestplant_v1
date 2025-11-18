@@ -258,7 +258,6 @@ class TestDemandContent(CoreModel):
 # 4月17日新增：因为测试项需要测试子项step
 class TestDemandContentStep(CoreModel):
     objects = models.Manager()
-    id = ShortUUIDField(primary_key=True, help_text="Id", verbose_name="Id")
     operation = models.CharField(max_length=3072, blank=True, null=True, verbose_name='测试子项操作')
     expect = models.CharField(max_length=1024, blank=True, null=True, verbose_name='期望')
     testDemandContent = models.ForeignKey(to="TestDemandContent", db_constraint=False, related_name="testStepField",

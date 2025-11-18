@@ -14,7 +14,8 @@ from ninja_jwt.controller import TokenObtainPairController
 from ninja_jwt import schema
 from typing import List
 from utils.chen_response import ChenResponse
-from apps.user.schema import UserInfoOutSchema, CreateUserSchema, CreateUserOutSchema, UserRetrieveInputSchema, \
+from apps.user.schema import UserInfoOutSchema, CreateUserSchema, CreateUserOutSchema, \
+    UserRetrieveInputSchema, \
     UserRetrieveOutSchema, UpdateDeleteUserSchema, UpdateDeleteUserOutSchema, DeleteUserSchema, LogOutSchema, \
     LogInputSchema, LogDeleteInSchema, AdminModifyPasswordSchema
 from apps.user.models import TableOperationLog, Users as UserClass
@@ -102,7 +103,8 @@ class UserManageController(ControllerBase):
                                   create_datetime__range=date_list).order_by('-create_datetime')
         return qs
 
-    @route.put("/update/{user_id}", response=UpdateDeleteUserOutSchema, permissions=[IsAuthenticated, IsAdminUser],
+    @route.put("/update/{user_id}", response=UpdateDeleteUserOutSchema,
+               permissions=[IsAuthenticated, IsAdminUser],
                url_name="user-update")
     def update_user(self, user_id: int, payload: UpdateDeleteUserSchema):
         if payload.username == "superAdmin":
@@ -122,7 +124,8 @@ class UserManageController(ControllerBase):
         return ChenResponse(code=200, status=200, message="删除成功")
 
     # 管理员改变用户状态是否停用/启用
-    @route.get('/change_status', auth=JWTAuth(), permissions=[IsAuthenticated, IsAdminUser], url_name='user-change')
+    @route.get('/change_status', auth=JWTAuth(), permissions=[IsAuthenticated, IsAdminUser],
+               url_name='user-change')
     def change_user_status(self, user_status: str, userId: int):
         user = Users.objects.filter(id=userId).first()
         if not user:
@@ -144,6 +147,7 @@ class UserManageController(ControllerBase):
             user.set_password(payload.newPassword)
             user.save()
             return ChenResponse(status=200, code=200, message='管理员修改密码成功')
+        return None
 
     # 用户登录后动态读取LDAP用户录入数据
     @route.get("/ldap", url_name='user-ldap')
@@ -171,7 +175,8 @@ class LogController(ControllerBase):
         logs = logs.filter(user__username__icontains=data.user, create_datetime__range=data.create_datetime)
         return logs
 
-    @route.get('/operation_delete', url_name='log_delete', permissions=[IsAuthenticated, IsAdminUser], auth=JWTAuth())
+    @route.get('/operation_delete', url_name='log_delete', permissions=[IsAuthenticated, IsAdminUser],
+               auth=JWTAuth())
     def log_delete(self, data: LogDeleteInSchema = Query(...)):
         time = datetime.now() - timedelta(days=data.day)
         log_qs = TableOperationLog.objects.filter(create_datetime__lt=time)

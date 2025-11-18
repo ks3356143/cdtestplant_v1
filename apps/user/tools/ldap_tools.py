@@ -1,7 +1,15 @@
 import ldap
 from django.contrib.auth import get_user_model
+import environ
 
-def load_ldap_users(url='ldap://dns.paisat.cn:389',
+# 1. 环境变量读取
+env = environ.Env()
+
+# 2. LDAP服务器host和port
+server_uri = env('AUTH_LDAP_SERVER_URI', default='ldap://dns.paisat.cn:389')
+
+# 3. 连接LDAP服务器进行操作
+def load_ldap_users(url=server_uri,
                     dn="CN=Administrator,CN=Users,DC=sstc,DC=ctu",
                     pwd="WXWX2019!!!!!!",
                     search_dn="OU=ALL,DC=sstc,DC=ctu",
