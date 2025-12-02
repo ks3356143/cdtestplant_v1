@@ -332,3 +332,17 @@ AttributeError: 'str' object has no attribute 'testType'
 [WARNING][2025-11-17 16:45:54,859][log.py:253]Unauthorized: /api/system/getInfo
 [WARNING][2025-11-17 16:45:54,926][log.py:253]Unauthorized: /api/system/logout
 [WARNING][2025-11-17 16:46:10,800][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-11-18 15:07:15,118][log.py:253]Unauthorized: /api/system/getInfo
+[WARNING][2025-11-18 15:07:15,177][log.py:253]Unauthorized: /api/system/logout
+[WARNING][2025-11-26 14:01:13,585][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-11-26 14:01:13,879][operation.py:131]"POST - UserTokenController[obtain_token] /api/system/login" 401
+[WARNING][2025-11-26 14:01:13,881][log.py:253]Unauthorized: /api/system/login
+[WARNING][2025-11-26 14:01:18,695][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-11-28 13:08:56,051][log.py:253]Not Found: /api/user/admin
+[WARNING][2025-11-28 13:09:03,236][log.py:253]Not Found: /api/user/admin
+[WARNING][2025-11-28 13:09:15,425][log.py:253]Not Found: /api/user/admin
+[WARNING][2025-12-01 09:14:00,800][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-02 09:12:28,085][log.py:253]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-02 09:12:28,124][log.py:253]Unauthorized: /api/system/logout
+[WARNING][2025-12-02 09:12:36,217][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-02 15:56:55,439][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})

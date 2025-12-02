@@ -5,9 +5,9 @@ from datetime import date
 from pydantic import AliasChoices
 
 class DutModelOutSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Dut
-        model_exclude = ['project', 'round', 'remark', 'sort']
+        exclude = ['project', 'round', 'remark', 'sort']
 
 class DutFilterSchema(Schema):
     project_id: int = Field(None, alias='projectId')
@@ -56,9 +56,9 @@ class DutCreateOutSchema(ModelSchema):
     effective_lines: Optional[Union[str, int]] = None
     comment_lines: Optional[Union[str, int]] = None
 
-    class Config:
+    class Meta:
         model = Dut
-        model_exclude = ['remark', 'sort', 'project', 'round']
+        exclude = ['remark', 'sort', 'project', 'round']
 
 # 删除schema
 class DeleteSchema(Schema):

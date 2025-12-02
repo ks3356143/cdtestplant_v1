@@ -23,17 +23,17 @@ class DesignFilterSchema(Schema):
 
 # 2025年改为2个输出，因为下级需要上级，原始不再嵌套上级
 class DesignModelOutSchemaOrigin(ModelSchema):
-    class Config:
+    class Meta:
         model = Design
-        model_exclude = ['project', 'round', 'dut', 'remark', 'sort']
+        exclude = ['project', 'round', 'dut', 'remark', 'sort']
 
 class DesignModelOutSchema(ModelSchema):
     # 新增字段 - 上级的dut对象
     dut: Optional[DutModelOutSchema] = None
 
-    class Config:
+    class Meta:
         model = Design
-        model_exclude = ['project', 'round', 'dut', 'remark', 'sort']
+        exclude = ['project', 'round', 'dut', 'remark', 'sort']
 
 # 处理树状结构的schema
 class DesignTreeReturnSchema(Schema):

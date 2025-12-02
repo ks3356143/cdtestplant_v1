@@ -7,9 +7,9 @@ from typing import List, Optional
 window_file_str = ['\\', '/', ':', '*', '?', '"', '<', '>', "|"]
 
 class ProjectRetrieveSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Project
-        model_exclude = ['update_datetime', 'create_datetime', 'remark']
+        exclude = ['update_datetime', 'create_datetime', 'remark']
 
 class ProjectFilterSchema(Schema):
     ident: Optional[str] = None
@@ -26,9 +26,9 @@ class ProjectFilterSchema(Schema):
 class ProjectCreateInput(ModelSchema):
     ident: str
 
-    class Config:
+    class Meta:
         model = Project
-        model_exclude = ['remark', 'update_datetime', 'create_datetime', 'sort', 'id']
+        exclude = ['remark', 'update_datetime', 'create_datetime', 'sort', 'id']
 
     @field_validator('ident')
     @staticmethod

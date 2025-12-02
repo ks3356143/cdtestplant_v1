@@ -13,9 +13,9 @@ class DeleteSchema(Schema):
 
 # 测试步骤输出schema
 class CaseStepSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = CaseStep
-        model_fields = ["operation", 'expect', 'result', 'passed', 'case', 'id']
+        fields = ["operation", 'expect', 'result', 'passed', 'case', 'id']
 
 # 测试用例的步骤输出schema，输出isPassed和isExe转换后的
 class CaseStepWithTransitionSchema(ModelSchema):
@@ -28,9 +28,9 @@ class CaseModelOutSchemaWithoutProblem(ModelSchema):
     testStep: List[CaseStepWithTransitionSchema]
     testType: str  # 用例额外字段，用于测试类型FT的标识给前端
 
-    class Config:
+    class Meta:
         model = Case
-        model_exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
+        exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
 
 # 输出case：关联问题单
 class CaseModelOutSchemaOrigin(ModelSchema):
@@ -39,9 +39,9 @@ class CaseModelOutSchemaOrigin(ModelSchema):
     # 新增：关联的问题单
     problem: Optional[ProblemModelOutSchema] = None
 
-    class Config:
+    class Meta:
         model = Case
-        model_exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
+        exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
 
 # 输出case：关联问题单
 class CaseModelOutSchema(ModelSchema):
@@ -52,9 +52,9 @@ class CaseModelOutSchema(ModelSchema):
     # 2025年5月10日新增上级字段
     test: Optional[TestDemandModelOutSchemaOrigin] = None
 
-    class Config:
+    class Meta:
         model = Case
-        model_exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
+        exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
 
 # 查询测试项
 class CaseFilterSchema(Schema):
@@ -93,9 +93,9 @@ class CaseTreeInputSchema(Schema):
 class CaseCreateOutSchema(ModelSchema):
     level: Union[str, int]
 
-    class Config:
+    class Meta:
         model = Case
-        model_exclude = ['remark', 'sort', 'project', 'round', 'dut', 'design']
+        exclude = ['remark', 'sort', 'project', 'round', 'dut', 'design']
 
 # 新增接口schema
 class CaseInputSchema(Schema):

@@ -11,9 +11,9 @@ class ProblemModelOutSchema(ModelSchema):
     related: Optional[bool] = Field(False)  # 给前端反应是否为关联的问题单
     hang: bool = Field(False)  # 给前端反应是否是悬挂状态（即没有关联case）
 
-    class Config:
+    class Meta:
         model = Problem
-        model_exclude = ['case', 'remark', 'sort']
+        exclude = ['case', 'remark', 'sort']
 
 # 查询问题单
 class ProblemFilterSchema(Schema):
@@ -53,9 +53,9 @@ class ProblemTreeInputSchema(Schema):
 
 # 增加问题单
 class ProblemCreateOutSchema(ModelSchema):
-    class Config:
+    class Meta:
         model = Problem
-        model_exclude = ['remark', 'sort', 'case']
+        exclude = ['remark', 'sort', 'case']
 
 # 更新，新增schema
 class ProblemCreateInputSchema(Schema):

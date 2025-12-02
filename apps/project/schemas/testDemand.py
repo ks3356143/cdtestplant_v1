@@ -69,9 +69,9 @@ class TestDemandTreeInputSchema(Schema):
 class TestDemandCreateOutSchema(ModelSchema):
     level: Union[str, int]
 
-    class Config:
+    class Meta:
         model = TestDemand
-        model_exclude = ['remark', 'sort', 'project', 'round', 'dut', 'design']
+        exclude = ['remark', 'sort', 'project', 'round', 'dut', 'design']
 
 # 新增测试子项，单个子项的Schema
 class TestContentInputSchema(Schema):
