@@ -346,3 +346,96 @@ AttributeError: 'str' object has no attribute 'testType'
 [WARNING][2025-12-02 09:12:28,124][log.py:253]Unauthorized: /api/system/logout
 [WARNING][2025-12-02 09:12:36,217][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
 [WARNING][2025-12-02 15:56:55,439][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-02 21:18:59,902][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-02 21:19:00,236][operation.py:131]"POST - UserTokenController[obtain_token] /api/system/login" 401
+[WARNING][2025-12-02 21:19:00,238][log.py:253]Unauthorized: /api/system/login
+[WARNING][2025-12-02 21:24:22,073][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-03 15:13:23,183][log.py:253]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-03 15:13:23,373][log.py:253]Unauthorized: /api/system/logout
+[WARNING][2025-12-03 15:17:42,724][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-03 15:30:54,106][log.py:253]Not Found: /
+[WARNING][2025-12-03 15:30:54,221][log.py:253]Not Found: /favicon.ico
+[WARNING][2025-12-03 15:31:06,398][operation.py:131]"POST - AITestController[ai_return] /api/local_doc_qa/testing_item" ('Type is not JSON serializable: AIPostSchema',)
+[ERROR][2025-12-03 15:31:06,398][errors.py:131]Type is not JSON serializable: AIPostSchema
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 270, in _result_to_response
+    return self.api.create_response(
+           ~~~~~~~~~~~~~~~~~~~~~~~~^
+        request, result, temporal_response=temporal_response
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_ninja.py", line 41, in create_response
+    content = self.renderer.render(request, std_data, response_status=status)
+  File "E:\pycharmProjects\cdtestplant_v1\cdtestplant_v1\renderer.py", line 11, in render
+    return orjson.dumps(data)
+           ~~~~~~~~~~~~^^^^^^
+TypeError: Type is not JSON serializable: AIPostSchema
+[ERROR][2025-12-03 15:31:06,400][log.py:253]Internal Server Error: /api/local_doc_qa/testing_item
+[WARNING][2025-12-03 15:32:42,222][operation.py:131]"POST - AITestController[ai_return] /api/local_doc_qa/testing_item" ('Object of type AIPostSchema is not JSON serializable',)
+[ERROR][2025-12-03 15:32:42,222][errors.py:131]Object of type AIPostSchema is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\common.py", line 23, in ai_return
+    return ChenResponse(data=item)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 24, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\python13\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\python13\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\python13\Lib\json\encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\python13\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type AIPostSchema is not JSON serializable
+[ERROR][2025-12-03 15:32:42,229][log.py:253]Internal Server Error: /api/local_doc_qa/testing_item
+[WARNING][2025-12-03 15:33:12,683][operation.py:131]"POST - AITestController[ai_return] /api/local_doc_qa/testing_item" ('Object of type AIPostSchema is not JSON serializable',)
+[ERROR][2025-12-03 15:33:12,683][errors.py:131]Object of type AIPostSchema is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\common.py", line 26, in ai_return
+    return ChenResponse(data=item)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 24, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\python13\Lib\json\__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\python13\Lib\json\encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\python13\Lib\json\encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\python13\Lib\json\encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type AIPostSchema is not JSON serializable
+[ERROR][2025-12-03 15:33:12,703][log.py:253]Internal Server Error: /api/local_doc_qa/testing_item
+[WARNING][2025-12-03 15:49:10,317][log.py:253]Not Found: /api/api/local_doc_qa/testing_item
+[ERROR][2025-12-03 17:38:54,536][log.py:253]Internal Server Error: /api/project/testDemand/save
+[ERROR][2025-12-03 17:45:58,931][log.py:253]Internal Server Error: /api/project/testDemand/save
+[WARNING][2025-12-04 09:54:24,808][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[ERROR][2025-12-04 09:55:44,899][log.py:253]Internal Server Error: /api/project/testDemand/save
+[ERROR][2025-12-04 09:57:37,563][log.py:253]Internal Server Error: /api/project/testDemand/save
+[ERROR][2025-12-04 09:58:39,189][log.py:253]Internal Server Error: /api/project/testDemand/save
