@@ -146,7 +146,7 @@ class GenerateControllerJL(ControllerBase):
         output_list = sorted(output_list, key=(lambda x: x["sort"]))
         context["data"] = output_list
 
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path_str / "output_dir/jl" / "测试用例记录.docx")
             return ChenResponse(status=200, code=200, message="文档生成成功！")

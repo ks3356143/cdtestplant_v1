@@ -103,7 +103,7 @@ class GenerateControllerHSM(ControllerBase):
             context_round['version_info'] = version_info
             # 开始渲染每个轮次的二级文档
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮被测软件基本信息.docx"
-            doc.render(context=context_round)
+            doc.render(context=context_round, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -141,7 +141,7 @@ class GenerateControllerHSM(ControllerBase):
             round_context['last_version'] = so_dut_last.version
             round_context['round_chinese'] = cname
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮文档概述.docx"
-            doc.render(context=round_context)
+            doc.render(context=round_context, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -171,9 +171,11 @@ class GenerateControllerHSM(ControllerBase):
                    'publish_date': timer.dg_cover_time, 'source': project_obj.test_unit}
         std_documents.append(dg_duty)
         # 需要添加说明、记录
-        sm_duty = {'doc_name': f'{project_obj.name}软件测试说明', 'ident_version': f'PT-{project_obj.ident}-TD-1.00',
+        sm_duty = {'doc_name': f'{project_obj.name}软件测试说明',
+                   'ident_version': f'PT-{project_obj.ident}-TD-1.00',
                    'publish_date': timer.sm_cover_time, 'source': project_obj.test_unit}
-        jl_duty = {'doc_name': f'{project_obj.name}软件测试记录', 'ident_version': f'PT-{project_obj.ident}-TN',
+        jl_duty = {'doc_name': f'{project_obj.name}软件测试记录',
+                   'ident_version': f'PT-{project_obj.ident}-TN',
                    'publish_date': timer.jl_cover_time, 'source': project_obj.test_unit}
         std_documents.extend([sm_duty, jl_duty])
 
@@ -196,7 +198,7 @@ class GenerateControllerHSM(ControllerBase):
                 'std_documents': std_documents_round
             }
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮技术依据文件.docx"
-            doc.render(context=context)
+            doc.render(context=context, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -254,7 +256,7 @@ class GenerateControllerHSM(ControllerBase):
 
             context_round['so_str'] = f"被测软件代码{now_dm_version}版本和{last_dm_version}版本"
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮软件更改部分.docx"
-            doc.render(context_round)
+            doc.render(context_round, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -346,7 +348,7 @@ class GenerateControllerHSM(ControllerBase):
             output_list = sorted(output_list, key=(lambda x: x["sort"]))
             context["data"] = output_list
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮回归测试需求.docx"
-            doc.render(context)
+            doc.render(context, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -403,7 +405,7 @@ class GenerateControllerHSM(ControllerBase):
             output_list = sorted(output_list, key=(lambda x: x["sort"]))
             context["data"] = output_list
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮回归测试用例概述.docx"
-            doc.render(context=context)
+            doc.render(context=context, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -494,7 +496,7 @@ class GenerateControllerHSM(ControllerBase):
             context["data"] = output_list
             context["round_han"] = cname
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮测试用例.docx"
-            doc.render(context=context)
+            doc.render(context=context, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -585,7 +587,7 @@ class GenerateControllerHSM(ControllerBase):
             temporary_file = Path.cwd() / 'media' / project_path_str / 'form_template' / 'hsm' / 'temporary' / f'第{cname}轮用例追踪_temp.docx'
             out_put_file = Path.cwd() / 'media' / project_path_str / 'output_dir' / 'hsm' / f'第{cname}轮用例追踪.docx'
             doc = DocxTemplate(input_file)
-            doc.render(context)
+            doc.render(context, autoescape=True)
             doc.save(temporary_file)
             # 通过docx合并单元格
             if temporary_file.is_file():

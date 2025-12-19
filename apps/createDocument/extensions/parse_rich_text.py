@@ -85,11 +85,15 @@ class RichParser:
             if oneline.startswith("data:image/png;base64"):
                 base64_bytes = base64.b64decode(oneline.replace("data:image/png;base64,", ""))
                 # ~~~设置了固定宽度、高度~~~
-                final_list.append(InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(img_size), height=Mm(height)))
+                final_list.append(
+                    InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(img_size), height=Mm(height)))
             else:
                 final_list.append(oneline)
         if len(final_list) <= 0:
             final_list.append("")
+        # 针对tinymce中，粘贴表格最后一行显示句号问题，这里统一删除
+        if final_list[-1] == '\xa0':
+            final_list.pop()
         return final_list
 
     # 4.2.最终方法，在上面方法基础上，增加格式，例如<p>增加缩进，图片居中，<p>包含“图x”则居中

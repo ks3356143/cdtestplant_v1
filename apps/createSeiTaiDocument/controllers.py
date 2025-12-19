@@ -52,7 +52,7 @@ class GenerateSeitaiController(ControllerBase):
                                 'project_ident': self.project_obj.ident,
                                 'project_name': self.project_obj.name,
                                 'test_purpose': "装备鉴定和列装定型" if is_jd else "软件交付和使用",
-                                'sec_title': sec_title,
+                                'sec_title': '密级：' + sec_title,
                                 'sec': sec_title,
                                 'duty_person': duty_person,
                                 'member': self.project_obj.member[0] if len(
@@ -64,7 +64,8 @@ class GenerateSeitaiController(ControllerBase):
         self.get_xq_doc_informations()
         result = generate_temp_doc('dg', payload.id, frag_list=payload.frag)
         if isinstance(result, dict):
-            return ChenResponse(status=400, code=400, message=result.get('msg', 'dg未报出错误原因，反正在生成文档出错'))
+            return ChenResponse(status=400, code=400,
+                                message=result.get('msg', 'dg未报出错误原因，反正在生成文档出错'))
         dg_replace_path, dg_seitai_final_path = result
         # ~~~~start：2025/04/19-新增渲染单个字段（可能封装为函数-对temp文件下的jinja字段处理）~~~~
         # 现在已经把alias和stdContent对应起来了
@@ -122,7 +123,8 @@ class GenerateSeitaiController(ControllerBase):
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
         is_jd = True if self.project_obj.report_type == '9' else False
-        member = self.project_obj.member[0] if len(self.project_obj.member) > 0 else self.project_obj.duty_person
+        member = self.project_obj.member[0] if len(
+            self.project_obj.member) > 0 else self.project_obj.duty_person
         self.temp_context = {
                                 'project_name': self.project_obj.name,
                                 'project_ident': self.project_obj.ident,
@@ -164,7 +166,8 @@ class GenerateSeitaiController(ControllerBase):
             # 将cname存入一个list，以便后续拼接给下载函数
             cname_list.append(cname)
             is_jd = True if self.project_obj.report_type == '9' else False
-            member = self.project_obj.member[0] if len(self.project_obj.member) > 0 else self.project_obj.duty_person
+            member = self.project_obj.member[0] if len(
+                self.project_obj.member) > 0 else self.project_obj.duty_person
             # 回归轮次的标识和版本
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
@@ -216,7 +219,8 @@ class GenerateSeitaiController(ControllerBase):
             # 取出当前轮次key减1就是上一轮次
             cname = self.chinese_round_name[int(hround.key)]  # 输出二、三...
             cname_list.append(cname)
-            member = self.project_obj.member[0] if len(self.project_obj.member) > 0 else self.project_obj.duty_person
+            member = self.project_obj.member[0] if len(
+                self.project_obj.member) > 0 else self.project_obj.duty_person
             is_jd = True if self.project_obj.report_type == '9' else False
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
@@ -260,7 +264,8 @@ class GenerateSeitaiController(ControllerBase):
         """生成最后的问题单"""
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
-        member = self.project_obj.member[0] if len(self.project_obj.member) > 0 else self.project_obj.duty_person
+        member = self.project_obj.member[0] if len(
+            self.project_obj.member) > 0 else self.project_obj.duty_person
         is_jd = True if self.project_obj.report_type == '9' else False
         self.temp_context = {
                                 "project_name": self.project_obj.name,
@@ -272,7 +277,8 @@ class GenerateSeitaiController(ControllerBase):
                             } | DocTime(payload.id).wtd_final_time()
         result = generate_temp_doc('wtd', payload.id, frag_list=payload.frag)
         if isinstance(result, dict):
-            return ChenResponse(status=400, code=400, message=result.get('msg', 'wtd未报出错误原因，反正在生成文档出错'))
+            return ChenResponse(status=400, code=400,
+                                message=result.get('msg', 'wtd未报出错误原因，反正在生成文档出错'))
         wtd_replace_path, wtd_seitai_final_path = result
         text_frag_name_list, doc_docx = get_jinja_stdContent_element(wtd_replace_path)
         # 文本片段操作
@@ -290,7 +296,8 @@ class GenerateSeitaiController(ControllerBase):
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
         ## 1.判断是否为JD
-        member = self.project_obj.member[0] if len(self.project_obj.member) > 0 else self.project_obj.duty_person
+        member = self.project_obj.member[0] if len(
+            self.project_obj.member) > 0 else self.project_obj.duty_person
         is_jd = True if self.project_obj.report_type == '9' else False
         self.temp_context = {
                                 'project_name': self.project_obj.name,
@@ -306,7 +313,8 @@ class GenerateSeitaiController(ControllerBase):
                             } | DocTime(payload.id).bg_final_time()
         result = generate_temp_doc('bg', payload.id, frag_list=payload.frag)
         if isinstance(result, dict):
-            return ChenResponse(status=400, code=400, message=result.get('msg', 'bg未报出错误原因，反正在生成文档出错'))
+            return ChenResponse(status=400, code=400,
+                                message=result.get('msg', 'bg未报出错误原因，反正在生成文档出错'))
         bg_replace_path, bg_seitai_final_path = result
         text_frag_name_list, doc_docx = get_jinja_stdContent_element(bg_replace_path)
         # 文本片段操作
@@ -375,14 +383,16 @@ class CreateFragmentController(ControllerBase):
         frags = self.get_fragment_name_by_document_name(id, documentType)
         # 如果没有文档片段-说明没有生成二段文档
         if not frags:
-            return ChenResponse(status=500, code=500, message='文档片段还未生成，请关闭后再打开/或者先下载基础文档')
+            return ChenResponse(status=500, code=500,
+                                message='文档片段还未生成，请关闭后再打开/或者先下载基础文档')
         # 到这里说fragments_files数组有值，返回文件名数组
         return ChenResponse(data=[fragment for fragment in frags], message='返回文档片段成功')
 
     @staticmethod
     def get_fragment_name_by_document_name(id: int, document_name: str):
         # 1.找到模版的路径 - 不用异常肯定存在
-        document_path = main_download_path / project_path(id) / 'form_template' / 'products' / f"{document_name}.docx"
+        document_path = main_download_path / project_path(
+            id) / 'form_template' / 'products' / f"{document_name}.docx"
         # 2.识别其中的文档片段
         frag_list = get_frag_from_document(document_path)
         # 3.这里处理报告里第十轮次前端展示问题
@@ -402,7 +412,8 @@ class CreateFragmentController(ControllerBase):
             filter_frags = list(filter(lambda x: '测试内容和结果' not in x['frag_name'], frag_list))
             # 再找到白名单的“测试内容和结果_”的片段
             content_and_result_frags = list(
-                filter(lambda x: '测试内容和结果' in x['frag_name'] and x['frag_name'] in white_list_frag, frag_list))
+                filter(lambda x: '测试内容和结果' in x['frag_name'] and x['frag_name'] in white_list_frag,
+                       frag_list))
             # 再组合起来返回
             filter_frags.extend(content_and_result_frags)
             return filter_frags

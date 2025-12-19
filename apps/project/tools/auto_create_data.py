@@ -10,6 +10,9 @@ from apps.project.models import (
     CaseStep
 )
 
+# 导入人机交互界面固定数据
+from apps.project.tools.rj_data_cont import rj_data
+
 def auto_create_jt_and_dm(user_name: str, dut_qs: Dut, project_obj: Project):
     """传入源代码dut以及测试人员名称username，自动在dut下面生成静态分析和代码审查设计需求、测试项、用例"""
     # 先查询dut_qs下面有多少design，以便写里面的key
@@ -188,20 +191,22 @@ def auto_create_wd(user_name: str, dut_qs: Dut, project_obj: Project):
         'testMethod': ["3"],
         'title': '文档审查',
         'testDesciption': '本次文档审查包括的内容如下：\a'
-                          '1）软件研制总结报告\a'
-                          '2）软件开发计划\a'
-                          '3）软件运行方案说明\a'
-                          '4）软件接口需求规格说明\a'
-                          '5）软件系统设计说明\a'
-                          '6）软件接口设计说明\a'
-                          '7）软件需求规格说明\a'
-                          '8）软件配置项设计说明\a'
-                          '9）软件测试说明\a'
-                          '10）软件测试报告\a'
-                          '11）产品规格说明\a'
-                          '12）软件版本说明\a'
-                          '13）软件用户手册\a'
-                          '14）固件保障手册',
+                          '1）软件需求规格说明\a'
+                          '2）软件详细设计说明\a'
+                          '3）软件开发计划\a'
+                          '4）软件配置管理计划\a'
+                          '5）软件质量保证计划\a'
+                          '6）软件单元测试计划\a'
+                          '7）软件单元测试说明\a'
+                          '8）软件单元测试报告\a'
+                          '9）配置项测试计划\a'
+                          '10）配置项测试说明\a'
+                          '11）配置项测试报告\a'
+                          '12）软件用户手册\a'
+                          '13）软件研制总结报告\a'
+                          '14）软件版本说明\a'
+                          '15）软件产品规格说明\a'
+                          '16）固件保障手册',
         'key': ''.join([new_wd_design_obj.key, '-', '0']),
         'level': '3',
         'project': project_obj,
@@ -216,7 +221,10 @@ def auto_create_wd(user_name: str, dut_qs: Dut, project_obj: Project):
         operation='根据文档审查表人工逐项检查，检查此项目文档的齐套性、完整性、规范性：\a'
                   '1）使用人工审查方法，按照附录A中文档齐套性审查单检查需求类、设计类、用户类、测试类文档是否齐套；\a'
                   '2）使用人工审查方法，按照附录A中需求规格说明审查单对软件需求规格说明逐项检查；\a'
-                  '3）使用人工审查方法，按照附录A中软件设计文档审查单逐项检查。'
+                  '3）使用人工审查方法，按照附录A中软件设计文档审查单逐项检查。',
+        expect='被测软件文档种类齐全，内容完整，描述准确，格式规范；\a'
+               '2）需求文档内容完整，描述准确，格式规范，文档文文一致、文实相符；\a'
+               '3）设计说明文档内容完整，描述准确，格式规范，文档文文一致、文实相符。',
     )
     new_wd_case_obj = Case.objects.create(
         ident='WDSC',
@@ -247,3 +255,74 @@ def auto_create_wd(user_name: str, dut_qs: Dut, project_obj: Project):
                             expect='文档满足完整性、准确性、规范性和一致性的要求',
                             result='文档检查单全部审查通过，文档内容完整、文档描述准确、'
                                    '文档格式规范、文档文文一致', )
+
+def auto_create_renji(user_name: str, dut_qs: Dut, project_obj: Project):
+    """传入用户名、在dut下创建、项目对象，自动创建人机交互界面的设计需求、测试项、测试用例"""
+    # 先查询dut_qs下有多少desgin，用于设置key
+    design_index = dut_qs.rsField.count()
+    for item in rj_data:
+        # 创建设计需求
+        rj_design_create_dict = {
+            'ident': item['ident'],
+            'name': item['desgin_name'],
+            'demandType': '6',
+            'description': item['xq_desc'],
+            'title': item['desgin_name'],
+            'key': ''.join([dut_qs.key, '-', str(design_index)]),
+            'level': '2',
+            'chapter': '/',
+            'project': project_obj,
+            'round': dut_qs.round,
+            'dut': dut_qs
+        }
+        design_index += 1
+        new_design_rj: Design = Design.objects.create(**rj_design_create_dict)
+        # 创建测试项
+        rj_demand_create_dict = {
+            'ident': item['ident'],
+            'name': item['test_item_name'],
+            'adequacy': item['chongfen'],
+            'priority': '2',
+            'testType': '12',
+            'testMethod': ["4"],
+            'testDesciption': '在界面进行观察与操作，对照需求规格说明的功能需求进行比对，对照用户手册进行比对',
+            'title': item['test_item_name'],
+            'key': ''.join([new_design_rj.key, '-', '0']),
+            'level': '3',
+            'project': project_obj,
+            'round': new_design_rj.round,
+            'dut': new_design_rj.dut,
+            'design': new_design_rj,
+        }
+        new_demand_rj = TestDemand.objects.create(**rj_demand_create_dict)
+        new_demand_content_obj = TestDemandContent.objects.create(testDemand=new_demand_rj,
+                                                                  subName=item['test_item_name'])
+        for operation in item['test_method']:
+            TestDemandContentStep.objects.create(testDemandContent=new_demand_content_obj,
+                                                 operation=operation['caozuo']
+                                                 , expect=operation['yuqi'])
+        # 创建测试用例
+        new_case_rj = Case.objects.create(
+            ident=item['ident'],
+            name=item['test_item_name'],
+            initialization='已获取被测件的用户手册',
+            premise='软件可正常运行，界面初始化完成',
+            summarize=item['xq_desc'],
+            designPerson=user_name,
+            testPerson=user_name,
+            monitorPerson=user_name,
+            project=project_obj,
+            isLeaf=True,
+            round=new_demand_rj.round,
+            dut=new_demand_rj.dut,
+            design=new_demand_rj.design,
+            test=new_demand_rj,
+            title=item['test_item_name'],
+            key=''.join([new_demand_rj.key, '-', '0']),
+            level='4'
+        )
+        for operation in item['test_method']:
+            CaseStep.objects.create(case=new_case_rj,
+                                    operation=operation['caozuo'],
+                                    expect=operation['yuqi'],
+                                    result='界面操作结果符合预期', )

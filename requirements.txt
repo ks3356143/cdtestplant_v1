@@ -1,20 +1,20 @@
-Django~=5.2.9
+Django~=6.0
 django-auth-ldap~=5.2.0
 asgiref~=3.11.0
 sqlparse~=0.5.4
 # 基础包
 mysqlclient~=2.2.7
-orjson~=3.11.4
+orjson~=3.11.5
 lxml~=6.0.2
 typing_extensions~=4.15.0
 # 必须whl安装的包
 python-ldap~=3.4.4
 # 项目包
 django-environ~=0.12.0
-django-ninja~=1.5.0
+django-ninja~=1.5.1
 pydantic~=2.12.5
 pydantic-core~=2.41.5
-django-ninja-extra~=0.30.6
+django-ninja-extra~=0.30.8
 django-ninja-jwt~=5.4.2
 django-tinymce~=5.0.0
 PyJWT~=2.10.1

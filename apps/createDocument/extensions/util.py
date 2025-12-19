@@ -18,7 +18,7 @@ def merge_all_cell(table: Table) -> None:
                 temp_text = cell.text
             else:
                 if cell.text == temp_text:
-                    if cell.text == '': # 不知道什么原因必须这样判断下
+                    if cell.text == '':  # 不知道什么原因必须这样判断下
                         cell.text = '/'
                     text_temp = cell.text
                     ce = cell.merge(col_right.cells[index - 1])
@@ -31,7 +31,7 @@ def create_sm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终说明文档工具函数"""
     input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'sm' / template_name
     doc = DocxTemplate(input_path)
-    doc.render(context)
+    doc.render(context, autoescape=True)
     try:
         doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/sm" / template_name)
         return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -42,7 +42,7 @@ def create_dg_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终大纲文档工具函数"""
     input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / template_name
     doc = DocxTemplate(input_path)
-    doc.render(context)
+    doc.render(context, autoescape=True)
     try:
         doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / template_name)
         return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -53,7 +53,7 @@ def create_bg_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终报告文档工具函数"""
     input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'bg' / template_name
     doc = DocxTemplate(input_path)
-    doc.render(context)
+    doc.render(context, autoescape=True)
     try:
         doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/bg" / template_name)
         return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -64,7 +64,7 @@ def create_wtd_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终问题单文档工具函数"""
     input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'wtd' / template_name
     doc = DocxTemplate(input_path)
-    doc.render(context)
+    doc.render(context, autoescape=True)
     try:
         doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/wtd" / template_name)
         return ChenResponse(status=200, code=200, message="文档生成成功！")

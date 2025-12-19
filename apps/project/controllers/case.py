@@ -8,8 +8,9 @@ from utils.chen_pagination import MyPagination
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models.functions import Replace
-from django.db.models import Q, F, Value
+from django.db.models import F, Value
 from typing import List
+from django.utils import timezone
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_case
 from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, Project, Problem
@@ -20,8 +21,9 @@ from utils.util import get_testType
 from utils.codes import HTTP_INDEX_ERROR, HTTP_EXISTS_CASES
 from apps.project.tools.copyCase import case_move_to_test, case_copy_to_test, case_to_case_copy_or_move
 from utils.smallTools.interfaceTools import conditionNoneToBlank
+from apps.project.tool.batchTools import parse_case_content_string
 # 导入case的schema
-from apps.project.schemas.case import CaseModelOutSchemaWithoutProblem
+from apps.project.schemas.case import CaseModelOutSchemaWithoutProblem, BatchCreateCaseInputSchema
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试用例接口'])
 class CaseController(ControllerBase):
@@ -120,7 +122,7 @@ class CaseController(ControllerBase):
     @transaction.atomic
     def create_case(self, payload: CaseCreateInputSchema):
         asert_dict = payload.dict(exclude_none=True)
-        # 构造design_key
+        # 构造demand_key
         test_whole_key = "".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key])
         # 查询当前key应该为多少
@@ -156,6 +158,52 @@ class CaseController(ControllerBase):
             data_list.append(CaseStep(**item))
         CaseStep.objects.bulk_create(data_list)  # type:ignore
         return qs
+
+    # 批量新增用例
+    @route.post("/case/multi_save", url_name="case-batch-create")
+    @transaction.atomic
+    def multi_case_save(self, payload: BatchCreateCaseInputSchema):
+        project_obj = get_object_or_404(Project, id=payload.project_id)
+        user_name = self.context.request.user.name
+        keys = []
+        demands = project_obj.ptField.all()  # 当前项目所有测试项
+        for case_data in payload.cases:
+            # 解析放在前面防止出错
+            stepsOrErrorResponse = parse_case_content_string(case_data.test_step)
+            if isinstance(stepsOrErrorResponse, ChenResponse):
+                return stepsOrErrorResponse
+            # 查询当前测试项下case数量，以设置case的key
+            demand_key = case_data.parent_key
+            demand_obj = demands.filter(key=demand_key).first()
+            case_count = demand_obj.tcField.count()
+            key_string = ''.join([demand_key, "-", str(case_count)])
+            keys.append(key_string)
+            case_dict = {
+                "ident": demand_obj.ident,
+                "name": case_data.name,
+                "key": key_string,
+                "initialization": case_data.initialization,
+                "premise": case_data.premise,
+                "summarize": case_data.summarize,
+                "designPerson": user_name,
+                "testPerson": user_name,
+                "monitorPerson": user_name,
+                "project": project_obj,
+                "round": demand_obj.round,
+                "dut": demand_obj.dut,
+                "design": demand_obj.design,
+                "test": demand_obj,
+                "exe_time": timezone.now(),
+                "timing_diagram": case_data.sequence,
+                "title": case_data.name
+            }
+            case_new_obj = Case.objects.create(**case_dict)
+            case_step_list = []
+            for step in stepsOrErrorResponse:
+                case_step_list.append(CaseStep(**{"case": case_new_obj, "operation": step['operation'],
+                                                  "expect": step['expect']}))
+            CaseStep.objects.bulk_create(case_step_list)
+        return ChenResponse(code=60000, status=200, data=keys, message='成功录入用例')
 
     # 更新测试用例
     @route.put("/case/update/{id}", response=CaseCreateOutSchema, url_name="case-update")
@@ -283,7 +331,6 @@ class CaseController(ControllerBase):
     @route.post("/case/replace/", url_name='case-replace')
     @transaction.atomic
     def replace_case_step_content(self, payload: ReplaceCaseSchema):
-        print(payload)
         # 1.首先查询项目
         project_obj: Project = get_object_or_404(Project, id=payload.project_id)
         # 2.查询[所有轮次]的selectRows的id

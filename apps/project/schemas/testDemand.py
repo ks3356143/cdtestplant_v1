@@ -15,6 +15,7 @@ class TestContentStepSchema(ModelSchema):
         fields = ['operation', 'expect']
 
 class TestContentSchema(ModelSchema):
+    subDescription: Optional[str] = ""
     subStep: List[TestContentStepSchema] = []  # 可能为空
 
     class Meta:
@@ -76,6 +77,8 @@ class TestDemandCreateOutSchema(ModelSchema):
 # 新增测试子项，单个子项的Schema
 class TestContentInputSchema(Schema):
     subName: str = None
+    # 2025/12/15-对CPU增加测试子项描述
+    subDescription: Optional[str] = ""  # 未提供时为空字符串
     subStep: Optional[List[TestContentStepSchema]] = []
 
 # 新增/更新测试项Schema
@@ -94,6 +97,22 @@ class TestDemandCreateInputSchema(Schema):
     testMethod: List[str] = []
     testType: str = Field(None, alias="testType")
     testDesciption: str = Field("", alias='testDesciption')
+
+# 批量新增测试项Schema-2个Schema
+class TestDemandOneInput(Schema):
+    parent_key: str  # 直接给设计需求的key，前端去组装
+    ident: str
+    name: str
+    priority: str = "1"
+    adequacy: str
+    testContent: str # 注意这个在接口里面分情况判断
+    testMethod: List[str] = []
+    testType: str
+    testDesciption: Optional[str] = ""
+
+class TestDemandMultiCreateInputSchema(Schema):
+    project_id: int
+    demands: List[TestDemandOneInput]
 
 # 处理前端请求-设计需求关联测试需求（测试项）
 class TestDemandRelatedSchema(Schema):

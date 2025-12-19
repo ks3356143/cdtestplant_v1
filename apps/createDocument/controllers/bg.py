@@ -357,7 +357,7 @@ class GenerateControllerBG(ControllerBase):
             context = create_round_context(project_obj, round_str)
             template_path = Path.cwd() / 'media' / project_path_str / 'form_template' / 'bg' / '测试内容和结果_第二轮次.docx'
             doc = DocxTemplate(template_path)
-            doc.render(context)
+            doc.render(context, autoescape=True)
             try:
                 doc.save(
                     Path.cwd() / "media" / project_path_str / "output_dir/bg" / f"测试内容和结果_第{context['round_id']}轮次.docx")
@@ -629,7 +629,7 @@ class GenerateControllerBG(ControllerBase):
         temporary_file = Path.cwd() / 'media' / project_path_str / 'form_template' / 'bg' / 'temporary' / '研总需归追踪_temp.docx'
         out_put_file = Path.cwd() / 'media' / project_path_str / 'output_dir' / 'bg' / '研总需归追踪.docx'
         doc = DocxTemplate(input_file)
-        doc.render(context)
+        doc.render(context, autoescape=True)
         doc.save(temporary_file)
         # 通过docx合并单元格
         if temporary_file.is_file():
@@ -686,7 +686,7 @@ class GenerateControllerBG(ControllerBase):
             'data_list': data_list
         }
 
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/bg" / "问题汇总表.docx")
             return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -724,7 +724,7 @@ class GenerateControllerBG(ControllerBase):
         context = {
             'modi_list': modi_list,
         }
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/bg" / "摸底清单.docx")
             return ChenResponse(status=200, code=200, message="文档生成成功！")

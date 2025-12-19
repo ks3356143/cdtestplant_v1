@@ -20,6 +20,7 @@ from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, Design
     ReplaceDesignContentSchema
 from apps.project.tools.delete_change_key import design_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
+from apps.project.tools.auto_create_data import auto_create_renji
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['设计需求数据'])
 class DesignController(ControllerBase):
@@ -162,7 +163,7 @@ class DesignController(ControllerBase):
             design_delete_sub_node_key(single_qs)
         return ChenResponse(message="设计需求删除成功！")
 
-    # 给复制功能级联选择器查询所有的设计需求
+    # 给复制功能级联选择器查询所有的设计需求【这是查项目所有的设计需求】
     @route.get("/designDemand/getRelatedDesign", url_name='dut-relatedDesign')
     def getRelatedDesign(self, id: int):
         project_qs = get_object_or_404(Project, id=id)
@@ -196,3 +197,15 @@ class DesignController(ControllerBase):
         # 4.提交更新
         replace_count = design_qs.update(**replace_kwargs)
         return {'count': replace_count}
+
+    # 点击生成人机交互界面测试-注意必须要有界面的软件
+    @route.get("/create_renji/", url_name='renji')
+    @transaction.atomic
+    def create_rj(self, round_id: int, project_id: int):
+        user_name = self.context.request.user.name  # 获取当前用户名
+        project_obj: Project = get_object_or_404(Project, id=project_id)
+        dut_qs = Dut.objects.filter(round__key=round_id, project=project_obj, type='XQ').first()
+        if dut_qs:
+            auto_create_renji(user_name, dut_qs, project_obj)
+            return ChenResponse(status=200, message='自动生成人机界面交互测试成功!', data=dut_qs.key)
+        return ChenResponse(status=402, message='您还未录入需求规格说明文档，请录入后再试')

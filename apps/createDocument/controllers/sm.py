@@ -135,7 +135,7 @@ class GenerateControllerSM(ControllerBase):
         # 排序
         output_list = sorted(output_list, key=(lambda x: x["sort"]))
         context["data"] = output_list
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path_str / "output_dir/sm" / "测试用例.docx")
             return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -265,7 +265,7 @@ class GenerateControllerSM(ControllerBase):
         temporary_file = Path.cwd() / 'media' / project_path_str / 'form_template' / 'sm' / 'temporary' / '说明追踪_temp.docx'
         out_put_file = Path.cwd() / 'media' / project_path_str / 'output_dir' / 'sm' / '说明追踪.docx'
         doc = DocxTemplate(input_file)
-        doc.render(context)
+        doc.render(context, autoescape=True)
         doc.save(temporary_file)
         # 通过docx合并单元格
         if temporary_file.is_file():

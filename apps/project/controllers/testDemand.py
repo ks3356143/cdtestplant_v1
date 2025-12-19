@@ -1,3 +1,5 @@
+from multiprocessing.spawn import old_main_modules
+
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
 from ninja_jwt.authentication import JWTAuth
@@ -17,13 +19,15 @@ from apps.project.models import Design, Dut, Round, TestDemand, TestDemandConten
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
     TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, \
     TestDemandCreateInputSchema, ReplaceDemandContentSchema, PriorityReplaceSchema, \
-    TestDemandRelatedSchema, TestDemandExistRelatedSchema, DemandCopyToDesignSchema
+    TestDemandRelatedSchema, TestDemandExistRelatedSchema, DemandCopyToDesignSchema, \
+    TestDemandMultiCreateInputSchema
 # 导入ORM
 from apps.project.models import Project
 # 导入工具
 from apps.project.tools.copyDemand import demand_copy_to_design
 from apps.project.tools.delete_change_key import demand_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
+from apps.project.tool.batchTools import parse_test_content_string
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试项接口'])
 class TestDemandController(ControllerBase):
@@ -134,13 +138,13 @@ class TestDemandController(ControllerBase):
         asert_dict.pop("dut_key")
         asert_dict.pop("design_key")
         asert_dict.pop("testContent")
-        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         # 创建测试项 - 以及子项/子项步骤
         qs = TestDemand.objects.create(**asert_dict)
         for item in payload.dict()['testContent']:
             content_obj = TestDemandContent.objects.create(
                 testDemand=qs,
-                subName=item['subName']
+                subName=item['subName'],
+                subDescription=item['subDescription']
             )
             TestDemandContentStep.objects.bulk_create([
                 TestDemandContentStep(
@@ -150,6 +154,69 @@ class TestDemandController(ControllerBase):
                 for step in item['subStep']
             ])
         return qs
+
+    # 批量新增测试项
+    @route.post("/testDemand/multi_save", url_name="testDemand-multi-create")
+    @transaction.atomic
+    def create_multi_test_demand(self, payload: TestDemandMultiCreateInputSchema):
+        # 1.首先判断测试项标识是否重复
+        project_qs = Project.objects.filter(id=payload.project_id).first()
+        designs = project_qs.psField.all()
+        ## 给返回response的data数据以便前端更新树状目录
+        keys = []
+        ## 遍历payload.demands数组
+        for index, demandOne in enumerate(payload.demands):
+            if demandOne.ident and project_qs:
+                old_obj = project_qs.ptField.filter(ident=demandOne.ident).first()
+                if old_obj and old_obj.testType == demandOne.testType:
+                    message_temp = f"第{index}个测试项标识重复，请修改"
+                    return ChenResponse(status=200, code=500101, data=index, message=message_temp)
+        # 标识不重复就开始录入了
+        for index, demand in enumerate(payload.demands):
+            create_sub_demands = parse_test_content_string(demand.testContent)
+            if isinstance(create_sub_demands, ChenResponse):
+                return create_sub_demands
+            else:
+                # 这说明解析成功了
+                # 首先查询所属design、dut、round，方便新增
+                design_obj: Design = designs.filter(key=demand.parent_key).first()  # 因为前端限制必然有
+                dut_obj = design_obj.dut
+                round_obj = design_obj.round
+                test_demand_count = TestDemand.objects.filter(project=project_qs,
+                                                              design=design_obj).count()
+                key_string = ''.join([design_obj.key, "-", str(test_demand_count)])
+                keys.append(key_string)
+                create_demand_dict = {
+                    'ident': demand.ident,
+                    'name': demand.name,
+                    'adequacy': demand.adequacy,
+                    'priority': demand.priority,
+                    'testType': demand.testType,
+                    'testMethod': demand.testMethod,
+                    'title': demand.name,
+                    'key': key_string,
+                    'project': project_qs,
+                    'round': round_obj,
+                    'dut': dut_obj,
+                    'design': design_obj,
+                    'testDesciption': demand.testDesciption
+                }
+                demand_created = TestDemand.objects.create(**create_demand_dict)
+                # 录入测试子项
+                for sub in create_sub_demands:
+                    content_obj = TestDemandContent.objects.create(
+                        testDemand=demand_created,
+                        subName=sub['subName'],
+                        subDescription=sub['subDescription']
+                    )
+                    TestDemandContentStep.objects.bulk_create([
+                        TestDemandContentStep(
+                            testDemandContent=content_obj,
+                            **step.dict() if not isinstance(step, dict) else step
+                        )
+                        for step in sub['subStep']
+                    ])
+        return ChenResponse(code=200991, status=200, data=keys, message='成功录入')
 
     # 更新测试项
     @route.put("/testDemand/update/{id}", response=TestDemandCreateOutSchema, url_name="testDemand-update")
@@ -184,7 +251,8 @@ class TestDemandController(ControllerBase):
                     if item['subName']:
                         content_obj = TestDemandContent.objects.create(
                             testDemand=testDemand_qs,
-                            subName=item["subName"]
+                            subName=item["subName"],
+                            subDescription=item["subDescription"]
                         )
                         TestDemandContentStep.objects.bulk_create([
                             TestDemandContentStep(
@@ -224,7 +292,7 @@ class TestDemandController(ControllerBase):
             demand_delete_sub_node_key(single_qs)  # 删除后需重排子节点
         return ChenResponse(message="测试需求删除成功！")
 
-    # 查询一个项目的所有测试项
+    # 查询一个项目的所有测试项【当前轮次】
     @route.get("/testDemand/getRelatedTestDemand", url_name="testDemand-getRelatedTestDemand")
     @transaction.atomic
     def getRelatedTestDemand(self, id: int, round: str):
@@ -236,7 +304,7 @@ class TestDemandController(ControllerBase):
         for design in designs:
             design_dict = {'label': design.name, 'value': design.id, 'children': []}
             for test_item in design.dtField.all():
-                test_item_dict = {'label': test_item.name, 'value': test_item.id}
+                test_item_dict = {'label': test_item.name, 'value': test_item.id, 'key': test_item.key}
                 design_dict['children'].append(test_item_dict)
             data_list.append(design_dict)
         return ChenResponse(message='获取成功', data=data_list)

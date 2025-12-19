@@ -147,7 +147,7 @@ class GenerateControllerWtd(ControllerBase):
             'project_ident': project_obj.ident,
             'problem_list': data_list,
         }
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path_str / "output_dir/wtd" / '问题详情表.docx')
             return ChenResponse(status=200, code=200, message="文档生成成功！")

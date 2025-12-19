@@ -87,7 +87,7 @@ class GenerateControllerHJL(ControllerBase):
             context_round['version_info'] = version_info
             # 开始渲染每个轮次的二级文档
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hjl' / f"第{cname}轮被测软件基本信息.docx"
-            doc.render(context=context_round)
+            doc.render(context=context_round, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:
@@ -204,7 +204,7 @@ class GenerateControllerHJL(ControllerBase):
             context["data"] = output_list
             # 最后渲染
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hjl' / f"第{cname}轮测试用例记录.docx"
-            doc.render(context)
+            doc.render(context, autoescape=True)
             try:
                 doc.save(save_path)
             except PermissionError:

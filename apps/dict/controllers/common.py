@@ -31,6 +31,7 @@ class AITestController(ControllerBase):
                 "children": [
                     {
                         "name": "外部32MHz时钟布线到HCLKBUF级冲测试",
+                        "subDescription": "验证外部32MH布线的测试子项描述",
                         "subStep": [
                             {
                                 "operation": "配置FPGA逻辑，将外部32MHz晶振输入连接到HCLKBUF缓冲器。",
@@ -45,6 +46,7 @@ class AITestController(ControllerBase):
                         ]
                     }, {
                         "name": "内部10KHz时钟布线到CLKINT缓冲测试",
+                        "subDescription": "验证内部10KHz时钟布线到CLKINT缓冲的测试子项描述",
                         "subStep": [
                             {
                                 "operation": "在FPGA中启用内部10KHz时钟源并将其连接至CLKINT缓冲器。",
@@ -59,6 +61,7 @@ class AITestController(ControllerBase):
                         ]
                     }, {
                         "name": "异常情况下的时钟处理测试",
+                        "subDescription": "验证异常情况下的时钟处理测试的测试子项描述",
                         "subStep": [
                             {
                                 "operation": "断开外部32MHz晶振输入后尝试进行HCLKBUF配置。",
@@ -76,7 +79,7 @@ class AITestController(ControllerBase):
             }
         ]
         return {
-            "history":[["我是没有用的",json.dumps(res)]]
+            "history": [["我是没有用的", json.dumps(res)]]
         }
 
 # 这是其他common内容接口

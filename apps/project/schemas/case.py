@@ -126,6 +126,20 @@ class CaseCreateInputSchema(Schema):
     # 新增时序图字段
     timing_diagram: str = Field("", alias="timing_diagram")
 
+# 批量新增测试用例
+class OneCaseBatchCreateSchema(Schema):
+    parent_key: str
+    name: str
+    summarize: Optional[str] = ""
+    initialization: Optional[str] = ""
+    premise: Optional[str] = ""
+    sequence: Optional[str] = ""  # 时序图
+    test_step: str
+
+class BatchCreateCaseInputSchema(Schema):
+    project_id: int = Field(..., validation_alias=AliasChoices('project_id', 'projectId'))
+    cases: List[OneCaseBatchCreateSchema] = []
+
 # 由demand创建case的输入Schema
 class DemandNodeSchema(Schema):
     project_id: int

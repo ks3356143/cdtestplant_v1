@@ -439,3 +439,1110 @@ TypeError: Object of type AIPostSchema is not JSON serializable
 [ERROR][2025-12-04 09:55:44,899][log.py:253]Internal Server Error: /api/project/testDemand/save
 [ERROR][2025-12-04 09:57:37,563][log.py:253]Internal Server Error: /api/project/testDemand/save
 [ERROR][2025-12-04 09:58:39,189][log.py:253]Internal Server Error: /api/project/testDemand/save
+[WARNING][2025-12-07 15:05:08,442][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-07 15:05:08,500][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-07 15:05:12,874][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-08 10:22:48,387][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-08 10:22:48,442][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-08 10:22:51,885][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[ERROR][2025-12-08 10:53:52,530][log.py:249]Internal Server Error: /api/project/testDemand/update/554
+[WARNING][2025-12-08 13:13:15,058][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:13:15,064][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:13:23,194][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:13:23,204][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:14:49,599][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:14:49,612][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:14:53,939][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:14:53,948][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:14:56,401][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:14:56,410][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:15:48,359][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:15:48,369][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:16:33,358][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-08 13:16:37,452][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:16:37,464][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:16:45,773][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:16:45,783][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:18:22,383][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:18:22,450][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-08 13:20:09,088][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-08 13:20:09,097][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:15:55,519][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-09 11:15:55,577][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-09 11:22:22,834][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-09 11:22:42,163][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:22:42,172][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:22:58,464][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:22:58,475][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:23:50,507][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:23:50,521][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:23:59,282][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:23:59,304][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:24:57,850][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:24:57,859][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:25:51,958][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:25:51,966][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:26:57,165][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:26:57,174][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:27:30,335][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:27:30,343][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:31:36,330][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:31:36,339][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:31:44,440][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:31:44,450][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:31:47,092][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:31:47,100][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 11:31:49,949][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 11:31:49,961][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:04:14,799][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:04:14,810][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:06:28,392][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:06:28,403][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:06:42,226][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:06:42,235][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:06:56,591][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:06:56,601][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:06:58,810][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:06:58,821][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:07:21,387][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:07:21,400][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:07:24,132][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:07:24,142][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:07:33,878][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:07:33,889][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:07:46,630][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:07:46,644][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:09:00,690][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:09:00,702][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:09:19,001][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:09:19,012][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:09:25,655][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:09:25,665][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:10:51,324][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:10:51,336][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:10:54,125][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:10:54,134][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:11:12,004][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:11:12,013][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:11:14,178][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:11:14,190][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:11:27,295][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:11:27,307][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:11:30,159][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:11:30,172][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:11:53,931][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:11:53,940][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:12:25,181][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:12:25,189][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:12:29,393][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:12:29,404][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:12:31,547][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:12:31,558][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-09 13:12:40,911][operation.py:131]"GET - DesignController[get_dut] /api/project/getDesignOne" (500, '未找到相应的数据')
+[ERROR][2025-12-09 13:12:40,922][log.py:249]Internal Server Error: /api/project/getDesignOne
+[WARNING][2025-12-10 09:30:38,754][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-10 09:30:38,767][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-10 09:30:42,017][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-10 13:32:02,742][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-10 13:32:02,858][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-10 13:35:24,533][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-11 13:58:06,698][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-11 13:58:06,755][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-11 13:58:12,066][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-12 09:13:42,453][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-12 09:13:42,494][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-12 09:14:05,727][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-12 10:11:40,953][operation.py:131]"POST - GenerateSeitaiController[create_dgDocument] /api/create/dgDocument" (500, '第一轮次被测件：需求规格说明可能未创建，生成文档失败')
+[ERROR][2025-12-12 10:11:40,953][log.py:249]Internal Server Error: /api/create/dgDocument
+[WARNING][2025-12-12 10:16:22,201][log.py:249]Bad Request: /api/project/round/delete
+[WARNING][2025-12-12 16:13:07,886][log.py:249]Not Found: /api/project/create_renji/
+[WARNING][2025-12-12 16:13:14,697][log.py:249]Not Found: /api/project/create_renji/
+[WARNING][2025-12-12 16:13:29,436][log.py:249]Not Found: /api/project/create_renji/
+[WARNING][2025-12-12 16:21:44,243][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-12 16:22:09,411][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-12 16:23:07,595][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-12 16:23:10,268][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-12 16:23:24,260][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-12 16:23:27,898][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-12 16:24:00,791][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-15 09:05:32,300][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-15 09:05:32,334][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-15 09:05:37,471][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-15 09:33:41,980][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-15 09:33:41,992][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-15 09:57:02,672][operation.py:131]"GET - TestDemandController[get_test_demand_list] /api/project/getTestDemandList" (1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+[ERROR][2025-12-15 09:57:02,672][errors.py:131](1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.OperationalError: (1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\testDemand.py", line 64, in get_test_demand_list
+    for step_obj in query_single.testQField.all():
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 390, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: (1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+[ERROR][2025-12-15 09:57:02,696][log.py:249]Internal Server Error: /api/project/getTestDemandList
+[WARNING][2025-12-15 09:57:03,692][operation.py:131]"GET - TestDemandController[get_test_demand_one] /api/project/getTestDemandOne" (1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+[ERROR][2025-12-15 09:57:03,692][errors.py:131](1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.OperationalError: (1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\testDemand.py", line 77, in get_test_demand_one
+    for step_obj in demand_qs.testQField.all():
+                    ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 390, in __iter__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 2000, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 95, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.OperationalError: (1054, "Unknown column 'project_testdemandcontent.subDescription' in 'field list'")
+[ERROR][2025-12-15 09:57:03,785][log.py:249]Internal Server Error: /api/project/getTestDemandOne
+[WARNING][2025-12-15 15:17:50,036][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ("'<' not supported between instances of 'tuple' and 'float'",)
+[ERROR][2025-12-15 15:17:50,037][errors.py:131]'<' not supported between instances of 'tuple' and 'float'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 746, in create_xqComparison
+    print(sorted(design_list, key=chapter_key))
+          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'tuple' and 'float'
+[ERROR][2025-12-15 15:17:50,041][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-15 15:21:57,918][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ("'<' not supported between instances of 'tuple' and 'int'",)
+[ERROR][2025-12-15 15:21:57,918][errors.py:131]'<' not supported between instances of 'tuple' and 'int'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 746, in create_xqComparison
+    print(sorted(design_list, key=chapter_key))
+          ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: '<' not supported between instances of 'tuple' and 'int'
+[ERROR][2025-12-15 15:21:57,921][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-15 15:54:44,559][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ("'<' not supported between instances of 'tuple' and 'int'",)
+[ERROR][2025-12-15 15:54:44,560][errors.py:131]'<' not supported between instances of 'tuple' and 'int'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 747, in create_xqComparison
+    design_list = sorted(design_list, key=chapter_key)
+TypeError: '<' not supported between instances of 'tuple' and 'int'
+[ERROR][2025-12-15 15:54:44,626][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-15 15:55:42,690][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ('can only concatenate tuple (not "int") to tuple',)
+[ERROR][2025-12-15 15:55:42,690][errors.py:131]can only concatenate tuple (not "int") to tuple
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 747, in create_xqComparison
+    design_list = sorted(design_list, key=chapter_key)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 842, in chapter_key
+    big_num += 1
+TypeError: can only concatenate tuple (not "int") to tuple
+[ERROR][2025-12-15 15:55:42,696][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-15 15:56:03,422][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ('can only concatenate tuple (not "int") to tuple',)
+[ERROR][2025-12-15 15:56:03,422][errors.py:131]can only concatenate tuple (not "int") to tuple
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 747, in create_xqComparison
+    design_list = sorted(design_list, key=chapter_key)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 842, in chapter_key
+    big_num += 1
+TypeError: can only concatenate tuple (not "int") to tuple
+[ERROR][2025-12-15 15:56:03,427][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-15 15:59:24,732][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ("'<' not supported between instances of 'tuple' and 'int'",)
+[ERROR][2025-12-15 15:59:24,738][errors.py:131]'<' not supported between instances of 'tuple' and 'int'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 747, in create_xqComparison
+    design_list = sorted(design_list, key=chapter_key)
+TypeError: '<' not supported between instances of 'tuple' and 'int'
+[ERROR][2025-12-15 15:59:24,744][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-15 16:02:18,376][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ("'<' not supported between instances of 'list' and 'int'",)
+[ERROR][2025-12-15 16:02:18,379][errors.py:131]'<' not supported between instances of 'list' and 'int'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 747, in create_xqComparison
+    design_list = sorted(design_list, key=chapter_key)
+TypeError: '<' not supported between instances of 'list' and 'int'
+[ERROR][2025-12-15 16:02:18,384][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-15 16:04:13,121][operation.py:131]"GET - GenerateControllerDG[create_xqComparison] /api/generate/create/xqComparison" ("'<' not supported between instances of 'str' and 'int'",)
+[ERROR][2025-12-15 16:04:13,121][errors.py:131]'<' not supported between instances of 'str' and 'int'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 747, in create_xqComparison
+    design_list = sorted(design_list, key=chapter_key)
+TypeError: '<' not supported between instances of 'str' and 'int'
+[ERROR][2025-12-15 16:04:13,127][log.py:249]Internal Server Error: /api/generate/create/xqComparison
+[WARNING][2025-12-16 09:45:10,579][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-16 10:39:22,476][operation.py:131]"GET - ProjectController[document_time_show] /api/testmanage/project/document_time_show" (500, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
+[ERROR][2025-12-16 10:39:22,481][log.py:249]Internal Server Error: /api/testmanage/project/document_time_show
+[WARNING][2025-12-16 10:39:38,412][operation.py:131]"GET - ProjectController[document_time_show] /api/testmanage/project/document_time_show" (500, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
+[ERROR][2025-12-16 10:39:38,420][log.py:249]Internal Server Error: /api/testmanage/project/document_time_show
+[WARNING][2025-12-17 09:16:51,222][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-17 09:16:51,240][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-17 09:17:00,834][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-17 13:17:55,763][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-17 13:48:07,048][operation.py:131]"POST - DesignController[multi_create_design] /api/project/designDemand/multi_save" ([{'type': 'missing', 'loc': ('body', 'payload', 'projectId'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'key'), 'msg': 'Field required'}],)
+[WARNING][2025-12-17 13:48:07,059][log.py:249]Unprocessable Content: /api/project/designDemand/multi_save
+[WARNING][2025-12-17 13:58:05,302][operation.py:131]"GET - DesignController[get_design_tree] /api/project/getDesignDemandInfo" ()
+[ERROR][2025-12-17 13:58:05,303][errors.py:131]1 validation error for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-17 13:58:05,307][log.py:249]Internal Server Error: /api/project/getDesignDemandInfo
+[WARNING][2025-12-17 14:01:35,405][operation.py:131]"GET - DesignController[get_design_tree] /api/project/getDesignDemandInfo" ()
+[ERROR][2025-12-17 14:01:35,405][errors.py:131]1 validation error for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-17 14:01:35,406][log.py:249]Internal Server Error: /api/project/getDesignDemandInfo
+[WARNING][2025-12-17 14:03:00,327][operation.py:131]"GET - DesignController[get_design_tree] /api/project/getDesignDemandInfo" ()
+[ERROR][2025-12-17 14:03:00,327][errors.py:131]2 validation errors for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.25.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.25.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-17 14:03:00,327][log.py:249]Internal Server Error: /api/project/getDesignDemandInfo
+[WARNING][2025-12-17 14:07:29,691][operation.py:131]"POST - DesignController[multi_create_design] /api/project/designDemand/multi_save" (1048, "Column 'chapter' cannot be null")
+[ERROR][2025-12-17 14:07:29,691][errors.py:131](1048, "Column 'chapter' cannot be null")
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.IntegrityError: (1048, "Column 'chapter' cannot be null")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 121, in multi_create_design
+    Design.objects.bulk_create(bulk_list)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 833, in bulk_create
+    returned_columns = self._batched_insert(
+        objs_without_pk,
+    ...<4 lines>...
+        unique_fields=unique_fields,
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1956, in _batched_insert
+    self._insert(
+    ~~~~~~~~~~~~^
+        item,
+        ^^^^^
+    ...<5 lines>...
+        returning_fields=returning_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.IntegrityError: (1048, "Column 'chapter' cannot be null")
+[ERROR][2025-12-17 14:07:29,713][log.py:249]Internal Server Error: /api/project/designDemand/multi_save
+[WARNING][2025-12-17 14:07:35,712][operation.py:131]"POST - DesignController[multi_create_design] /api/project/designDemand/multi_save" (1048, "Column 'chapter' cannot be null")
+[ERROR][2025-12-17 14:07:35,712][errors.py:131](1048, "Column 'chapter' cannot be null")
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.IntegrityError: (1048, "Column 'chapter' cannot be null")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 121, in multi_create_design
+    Design.objects.bulk_create(bulk_list)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 833, in bulk_create
+    returned_columns = self._batched_insert(
+        objs_without_pk,
+    ...<4 lines>...
+        unique_fields=unique_fields,
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1956, in _batched_insert
+    self._insert(
+    ~~~~~~~~~~~~^
+        item,
+        ^^^^^
+    ...<5 lines>...
+        returning_fields=returning_fields,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1918, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1925, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.IntegrityError: (1048, "Column 'chapter' cannot be null")
+[ERROR][2025-12-17 14:07:35,723][log.py:249]Internal Server Error: /api/project/designDemand/multi_save
+[WARNING][2025-12-17 14:08:02,886][operation.py:131]"GET - DesignController[get_design_tree] /api/project/getDesignDemandInfo" ()
+[ERROR][2025-12-17 14:08:02,887][errors.py:131]2 validation errors for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.25.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.25.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-17 14:08:02,888][log.py:249]Internal Server Error: /api/project/getDesignDemandInfo
+[WARNING][2025-12-17 14:08:21,974][operation.py:131]"GET - DesignController[get_design_tree] /api/project/getDesignDemandInfo" ()
+[ERROR][2025-12-17 14:08:21,974][errors.py:131]2 validation errors for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.25.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for NinjaResponseSchema
+response.24.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.25.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-17 14:08:21,976][log.py:249]Internal Server Error: /api/project/getDesignDemandInfo
+[WARNING][2025-12-18 09:04:40,200][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-18 09:04:40,243][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-18 09:04:52,816][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-18 15:36:58,848][operation.py:131]"POST - TestDemandController[create_multi_test_demand] /api/project/testDemand/multi_save" ([{'type': 'list_type', 'loc': ('body', 'payload', 'demands', 0, 'testContent'), 'msg': 'Input should be a valid list'}],)
+[WARNING][2025-12-18 15:36:58,856][log.py:249]Unprocessable Content: /api/project/testDemand/multi_save
+[WARNING][2025-12-18 17:18:11,818][operation.py:131]"POST - TestDemandController[create_multi_test_demand] /api/project/testDemand/multi_save" ("'ChenResponse' object has no attribute 'message'",)
+[ERROR][2025-12-18 17:18:11,818][errors.py:131]'ChenResponse' object has no attribute 'message'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 99, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\testDemand.py", line 176, in create_multi_test_demand
+    print(create_demands.message)
+          ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ChenResponse' object has no attribute 'message'
+[ERROR][2025-12-18 17:18:11,823][log.py:249]Internal Server Error: /api/project/testDemand/multi_save
+[WARNING][2025-12-19 09:27:18,974][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-19 09:27:19,003][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-19 09:27:23,808][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-19 11:18:04,195][log.py:249]Not Found: /api/project/getRelatedTestDemand
+[WARNING][2025-12-19 11:19:38,080][log.py:249]Not Found: /api/project/getRelatedTestDemand
+[WARNING][2025-12-19 11:19:42,169][log.py:249]Not Found: /api/project/getRelatedTestDemand
+[WARNING][2025-12-19 14:25:44,668][log.py:249]Not Found: /api/project/case/multi_save
+[WARNING][2025-12-19 14:26:17,046][operation.py:131]"POST - CaseController[multi_case_save] /api/project/case/multi_save" ([{'type': 'missing', 'loc': ('body', 'payload', 'cases', 0, 'test_step'), 'msg': 'Field required'}],)
+[WARNING][2025-12-19 14:26:17,055][log.py:249]Unprocessable Content: /api/project/case/multi_save
+[WARNING][2025-12-19 14:26:19,771][operation.py:131]"POST - CaseController[multi_case_save] /api/project/case/multi_save" ([{'type': 'missing', 'loc': ('body', 'payload', 'cases', 0, 'test_step'), 'msg': 'Field required'}],)
+[WARNING][2025-12-19 14:26:19,781][log.py:249]Unprocessable Content: /api/project/case/multi_save
+[WARNING][2025-12-19 15:36:39,268][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:36:39,268][errors.py:131]2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:36:39,275][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:37:25,844][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:37:25,844][errors.py:131]2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:37:25,846][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:37:26,553][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:37:26,553][errors.py:131]2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:37:26,555][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:37:28,948][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:37:28,948][errors.py:131]2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 2 validation errors for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+response.1.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:37:28,949][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:44:55,327][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:44:55,327][errors.py:131]1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:44:55,329][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:45:56,389][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:45:56,389][errors.py:131]1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:45:56,391][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:45:57,948][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:45:57,948][errors.py:131]1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:45:57,950][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[ERROR][2025-12-19 15:46:29,253][log.py:249]Internal Server Error: /api/project/case/create_by_demand
+[WARNING][2025-12-19 15:47:41,071][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:47:41,071][errors.py:131]1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:47:41,073][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:47:50,358][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:47:50,358][errors.py:131]1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:47:50,359][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:48:19,534][operation.py:131]"GET - CaseController[get_case_tree] /api/project/getCaseInfo" ()
+[ERROR][2025-12-19 15:48:19,534][errors.py:131]1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for NinjaResponseSchema
+response.0.title
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.12/v/string_type
+[ERROR][2025-12-19 15:48:19,536][log.py:249]Internal Server Error: /api/project/getCaseInfo
+[WARNING][2025-12-19 15:53:11,960][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-19 15:53:12,023][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-19 15:53:16,809][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})

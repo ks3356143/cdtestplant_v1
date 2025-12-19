@@ -1,3 +1,4 @@
+from datetime import datetime
 from ninja.errors import HttpError
 from ninja_extra import ControllerBase, api_controller, route
 from ninja_extra.permissions import IsAuthenticated
@@ -34,7 +35,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @transaction.atomic
     def create_testdemand(self, id: int):  # type:ignore
         """目前生成第一轮测试项"""
-        tplTestDemandGenerate_path = Path.cwd() / "media" / project_path(id) / "form_template" / "dg" / "测试项及方法.docx"
+        tplTestDemandGenerate_path = Path.cwd() / "media" / project_path(
+            id) / "form_template" / "dg" / "测试项及方法.docx"
         doc = DocxTemplate(tplTestDemandGenerate_path)
         # 获取指定的项目对象
         project_qs = get_object_or_404(Project, id=id)
@@ -57,6 +59,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                     "index": index + 1,
                     "rindex": str(index + 1).rjust(2, '0'),
                     "subName": content.subName,
+                    "subDescription": content.subDescription,
                     # 修改遍历content下面的step，content变量是TestDemandContent表
                     "subStep": [
                         {'index': index + 1, 'operation': step_obj.operation, 'expect': step_obj.expect}
@@ -78,7 +81,6 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             # ***Inspect-end***
             html_parser = RichParser(single_qs.design.description)
             desc_list = html_parser.get_final_list(doc)
-
             # 查询关联design以及普通design
             doc_list = [{'dut_name': single_qs.dut.name, 'design_chapter': single_qs.design.chapter,
                          'design_name': single_qs.design.name}]
@@ -88,6 +90,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 doc_list.append(ddict)
 
             # 组装单个测试项
+            ## 打印本项目是FPGA还是CPU
             testdemand_dict = {
                 "name": single_qs.name,
                 "key": single_qs.key,
@@ -96,16 +99,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 "doc_list": doc_list,
                 "design_description": desc_list,
                 "test_demand_content": content_list,
-                "testMethod": testmethod_str,
+                "testMethod": testmethod_str.strip(),
                 "adequacy": single_qs.adequacy.replace("\n", "\a"),
-                "testDesciption": single_qs.testDesciption.replace("\n", "\a")  # 测试项描述
+                "testDesciption": single_qs.testDesciption.replace("\n", "\a"),  # 测试项描述
+                "testType": get_testType(single_qs.testType, 'testType'),
             }
             list_list[type_index].append(testdemand_dict)
 
-        # 定义渲染context字典
-        context = {
-            "project_name": project_qs.name
-        }
         output_list = []
 
         for (index, li) in enumerate(list_list):
@@ -122,8 +122,15 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 排序1：测试类型排序
         output_list = sorted(output_list, key=(lambda x: x["sort"]))
 
-        context["data"] = output_list
-        doc.render(context)
+        # 定义渲染context字典
+        context = {
+            "project_name": project_qs.name,
+            "is_JD": True if project_qs.report_type == '9' else False,
+            "data": output_list,
+            "isFPGA": '1' in project_qs.plant_type
+        }
+
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / "测试项及方法.docx")
             return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -148,7 +155,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 找出所属项目
         project_qs = get_object_or_404(Project, id=id)
         # 根据项目找出被测件-只找第一轮次
-        duties_qs = project_qs.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY') | Q(type='YZ')).filter(
+        duties_qs = project_qs.pdField.filter(
+            Q(type='XQ') | Q(type='SJ') | Q(type='XY') | Q(type='YZ')).filter(
             round__key='0')
         # 先定义个字典
         std_documents = []
@@ -169,7 +177,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 先找出所属项目
         project_qs = get_object_or_404(Project, id=id)
         contact_dict = model_to_dict(project_qs,
-                                     fields=['entrust_unit', 'entrust_contact', 'entrust_contact_phone', 'dev_unit',
+                                     fields=['entrust_unit', 'entrust_contact', 'entrust_contact_phone',
+                                             'dev_unit',
                                              'dev_contact', 'dev_contact_phone', 'test_unit', 'test_contact',
                                              'test_contact_phone'])
         # 根据entrust_unit、dev_unit、test_unit查找Contact中地址信息
@@ -190,7 +199,17 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     def create_timeaddress(self, id: int):
         doc_timer = DocTime(id)
         context = doc_timer.dg_address_time()
+        context = self.change_time_to_another(context, ['beginTime_strf', 'dgCompileStart', 'dgCompileEnd',
+                                                        'designStart', 'designEnd'])
         return create_dg_docx('测评时间和地点.docx', context, id)
+
+    # 2025/12/11：将20250417格式改为2025年04月17日 - 封装函数，传入字典和键值，修改对应键值信息
+    def change_time_to_another(self, context: dict, key_list: list[str]):
+        for key in key_list:
+            time_val = context.get(key, None)
+            if time_val:
+                context[key] = datetime.strptime(time_val, "%Y%m%d").strftime("%Y年%m月%d日")
+        return context
 
     # 生成【主要功能和性能指标】文档片段
     @route.get('/create/indicators', url_name='create-indicators')
@@ -255,7 +274,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             'md_demand_list': md_demand_list,
             'is_has_modi': is_has_modi
         }
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '主要功能和性能指标.docx')
             return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -273,7 +292,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             "replace": replace,  # 指定是否由数据库文档片段进行生成
             "user_content": frag and rich_text_list
         }
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '测评对象.docx')
             return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -344,7 +363,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             "replace": replace,  # 指定是否由数据库文档片段进行生成
             "user_content": frag and rich_text_list
         }
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '静态测试环境说明.docx')
             return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -378,14 +397,16 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 动态测评环境说明
     @route.get('/create/dynamic_env', url_name='create-dynamic_env')
     def create_dynamic_env(self, id: int):
+        project_obj: Project = get_object_or_404(Project, id=id)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态测试环境说明.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '动态测试环境说明')
         context = {
+            'project_name': project_obj.name,
             "replace": replace,
             "user_content": frag and rich_text_list
         }
-        doc.render(context)
+        doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '动态测试环境说明.docx')
             return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -395,10 +416,12 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 动态软件项
     @route.get('/create/dynamic_soft', url_name='create-dynamic_soft')
     def create_dynamic_soft(self, id: int):
+        project_obj: Project = get_object_or_404(Project, id=id)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态软件项.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '动态软件项')
         context = {
+            'project_name': project_obj.name,
             "replace": replace,
             "user_content": frag and rich_text_list
         }
@@ -462,6 +485,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 渲染上下文
         context = {
             'project_name': project_qs.name,
+            'is_JD': True if project_qs.report_type == '9' else False,
             'security_level': security,
             'language': "\a".join(language_list),
             'version': version,
@@ -492,7 +516,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             # 获取所有已录入测试类型
             test_types = project_qs.ptField.values("testType").distinct()
             # 通过测试类型查询字典中的中文
-            type_name_list = list(map(lambda qs_item: get_str_dict(qs_item['testType'], 'testType'), test_types))
+            type_name_list = list(
+                map(lambda qs_item: get_str_dict(qs_item['testType'], 'testType'), test_types))
             # 定义测试类型一览的顺序，注意word里面也要一样
             word_types = ['文档审查', '静态分析', '代码审查', '逻辑测试', '功能测试', '性能测试', '边界测试',
                           '恢复性测试', '安装性测试', '数据处理测试', '余量测试', '强度测试', '接口测试',
@@ -503,6 +528,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                     if exist_type == test_type:
                         type_index.append(str(index))
             context = {
+                "security_level": get_str_dict(project_qs.security_level, 'security_level'),
                 "testTypes": "、".join(type_name_list),
                 "project_name": project_qs.name,
                 "type_index": type_index
@@ -526,15 +552,24 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             # 根据关键等级检查是否有代码审查
             security = project_qs.security_level
             isDmsc = True if int(security) <= 2 else False
+            # 获取第一轮所有测试项QuerySet
+            project_round_one = project_qs.pField.filter(key=0).first()
+            testDemand_qs = project_round_one.rtField.all()
+            # grouped_data的键是测试类型名称，值为测试项名称数组
+            grouped_data = {}
+            for item in testDemand_qs:
+                grouped_data.setdefault(get_str_dict(item.testType, 'testType'), []).append(item.name)
             # 获取当前测试项的测试类型
-            test_types = project_qs.ptField.values("testType").distinct()
-            type_name_list = list(map(lambda qs_item: get_str_dict(qs_item['testType'], 'testType'), test_types))
+            test_types = testDemand_qs.values("testType").distinct()
+            type_name_list = list(
+                map(lambda qs_item: get_str_dict(qs_item['testType'], 'testType'), test_types))
             context = {
                 "project_name": project_qs.name,
                 # 查询关键等级-类似“关键”输出
                 "security_level_str": get_str_abbr(security, 'security_level'),
                 "isDmsc": isDmsc,
-                "test_types": type_name_list
+                "test_types": type_name_list,
+                "grouped_data": grouped_data,
             }
         return create_dg_docx("测试策略.docx", context, id)
 
@@ -563,6 +598,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             type_str_list.append(f"{key}{value}项")
         context = {
             'project_name': project_qs.name,
+            'test_item_count': testDemands.count(),
             'length': length,
             'type_str': "、".join(type_str_list),
         }
@@ -614,30 +650,39 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 形成一个数组['1','2','3','4','9']后面用来判断测试项的章节号
         project_qs = get_object_or_404(Project, id=id)
         design_list = []  # 先按照design的思路进行追踪
-        # 判断是否为鉴定测评，有则生成该表
-        if project_qs.report_type == '9':
-            project_round_one = project_qs.pField.filter(key=0).first()
-            testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one)
-            # 找出第一轮的研总
-            yz_dut = project_round_one.rdField.filter(type='YZ').first()
-            if yz_dut:
-                # 查询出验证所有design
-                yz_designs = yz_dut.rsField.all()
-                # 遍历所有研总的design
-                for design in yz_designs:
-                    design_dict = {'name': design.name, 'chapter': design.chapter, 'test_demand': []}
-                    # 获取一个design的所有测试项
-                    test_items = design.dtField.all()
-                    for test_item in test_items:
-                        reveal_ident = "_".join(
-                            ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
-                        # 查字典方式确认章节号最后一位
-                        test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                        test_chapter = ".".join([test_item_prefix, str(testType_list.index(test_item.testType) + 1),
-                                                 str(test_item_last_chapter)])
-                        test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident}
-                        design_dict['test_demand'].append(test_item_dict)
-                    design_list.append(design_dict)
+        # 查询第一轮次
+        project_round_one = project_qs.pField.filter(key=0).first()
+        testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one)
+        # 找出第一轮的研总
+        yz_dut = project_round_one.rdField.filter(type='YZ').first()
+        if yz_dut:
+            # 查询出验证所有design
+            yz_designs = yz_dut.rsField.all()
+            # 遍历所有研总的design
+            for design in yz_designs:
+                design_dict = {'name': design.name, 'chapter': design.chapter, 'test_demand': []}
+                # 获取一个design的所有测试项
+                test_items = design.dtField.all()
+                # 连接两个QuerySet，默认去重
+                test_items = test_items.union(design.odField.all())
+                print('ok:', test_items)
+                for test_item in test_items:
+                    reveal_ident = "_".join(
+                        ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                    # 查字典方式确认章节号最后一位
+                    test_item_last_chapter = last_chapter_items[test_item.testType].index(
+                        test_item.key) + 1
+                    test_chapter = ".".join(
+                        [test_item_prefix, str(testType_list.index(test_item.testType) + 1),
+                         str(test_item_last_chapter)])
+                    test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
+                                      'ident': reveal_ident}
+                    design_dict['test_demand'].append(test_item_dict)
+                design_list.append(design_dict)
+        try:
+            design_list = sorted(design_list, key=chapter_key)
+        except Exception as e:
+            print("研总的追踪排序报错，错误原因：", e)
         context = {
             'design_list': design_list
         }
@@ -671,10 +716,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                             reveal_ident = "_".join(
                                 ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
                             # 查字典方式确认章节号最后一位
-                            test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                            test_chapter = ".".join([test_item_prefix, str(testType_list.index(test_item.testType) + 1),
-                                                     str(test_item_last_chapter)])
-                            test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident}
+                            test_item_last_chapter = last_chapter_items[test_item.testType].index(
+                                test_item.key) + 1
+                            test_chapter = ".".join(
+                                [test_item_prefix, str(testType_list.index(test_item.testType) + 1),
+                                 str(test_item_last_chapter)])
+                            test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
+                                              'ident': reveal_ident}
                             design_dict['test_demand'].append(test_item_dict)
                     design_list.append(design_dict)
 
@@ -691,13 +739,21 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                         reveal_ident = "_".join(
                             ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
                         # 查字典方式确认章节号最后一位
-                        test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                        test_chapter = ".".join([test_item_prefix, str(testType_list.index(test_item.testType) + 1),
-                                                 str(test_item_last_chapter)])
-                        test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident}
+                        test_item_last_chapter = last_chapter_items[test_item.testType].index(
+                            test_item.key) + 1
+                        test_chapter = ".".join(
+                            [test_item_prefix, str(testType_list.index(test_item.testType) + 1),
+                             str(test_item_last_chapter)])
+                        test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
+                                          'ident': reveal_ident}
                         design_dict['test_demand'].append(test_item_dict)
 
                     design_list.append(design_dict)
+            # 根据design的chapter排序-为防止报错崩溃使用try-但难排查
+            try:
+                design_list = sorted(design_list, key=chapter_key)
+            except Exception as e:
+                print("追踪排序报错，错误原因：", e)
             context = {
                 'design_list': design_list
             }
@@ -719,8 +775,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         items_list = []
         for test_item in test_items:
             # 第二个处理被测件为"XQ"，第二个处理被测件为'SO'，并且为测试项testType为['8', '15', '3', '2']的
-            if test_item.dut.type == 'XQ' or (test_item.dut.type == 'SO' and test_item.testType in ['8', '15', '3',
-                                                                                                    '2']):
+            if test_item.dut.type == 'XQ' or (
+                    test_item.dut.type == 'SO' and test_item.testType in ['8', '15', '3',
+                                                                          '2']):
                 reveal_ident = "_".join(
                     ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
                 # 查字典方式确认章节号最后一位
@@ -782,3 +839,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             else:
                 return ChenResponse(message='未找到源代码被测件', code=400)
         return create_dg_docx('代码质量度量分析表.docx', context, id)
+
+# 工具方法-给sorted排序使用-知识点：python里面可以元组排序
+def chapter_key(item):
+    big_num = [5000, 5000, 5000, 5000]
+    if "." in item['chapter']:
+        # 如果是有章节号的则排序
+        return [int(part) for part in item['chapter'].split(".")]
+    if item['test_demand'][0]['name'] in ['文档审查', '静态分析', '代码审查', '代码走查']:
+        return [0, 0, 0, 0]
+    return big_num
