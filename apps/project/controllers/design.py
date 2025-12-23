@@ -1,3 +1,5 @@
+import re
+from copy import deepcopy
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
 from ninja_jwt.authentication import JWTAuth
@@ -209,3 +211,33 @@ class DesignController(ControllerBase):
             auto_create_renji(user_name, dut_qs, project_obj)
             return ChenResponse(status=200, message='自动生成人机界面交互测试成功!', data=dut_qs.key)
         return ChenResponse(status=402, message='您还未录入需求规格说明文档，请录入后再试')
+
+    # 复制design到当前dut下面接口
+    @route.get("/copy_current", url_name='copy-design-current')
+    @transaction.atomic
+    def copy_current(self, dut_id: int, design_id: int):
+        dut_obj = get_object_or_404(Dut, id=dut_id)
+        design_obj = get_object_or_404(Design, id=design_id)
+        # 首先查询该dut下design个数，设置为新增设计需求的key末尾
+        key_index = dut_obj.rsField.count()
+        new_design_obj = deepcopy(design_obj)
+        # 修改新design内容
+        new_design_obj.pk = None
+        new_design_obj.key = "".join([dut_obj.key, "-", str(key_index)])
+        new_design_obj.title = "".join([design_obj.title, "(复制)"])
+        new_design_obj.name = "".join([design_obj.name, "(复制)"])
+        # ident容错，查询是否有拼接的
+        current_ident = "".join([new_design_obj.ident, "1"])
+        project_obj = dut_obj.project
+        exit_ident = project_obj.psField.filter(ident=current_ident).exists()
+        if exit_ident:
+            match = re.search(r'(\d+)$', current_ident)
+            if match:
+                num = int(match.group(1)) + 1
+                current_ident = re.sub(r'\d+$', str(num), current_ident)
+            else:
+                current_ident = current_ident + "1"
+        new_design_obj.ident = current_ident
+        # 最后记得save
+        new_design_obj.save()
+        return ChenResponse(status=200, code=200, message='复制当前设计需求成功', data="")

@@ -1,3 +1,5 @@
+from pydantic import AliasChoices
+
 from apps.project.models import Problem
 from ninja import Field, Schema, ModelSchema
 from typing import List, Optional
@@ -59,7 +61,7 @@ class ProblemCreateOutSchema(ModelSchema):
 
 # 更新，新增schema
 class ProblemCreateInputSchema(Schema):
-    project_id: int = Field(..., alias="projectId")
+    project_id: int = Field(..., validation_alias=AliasChoices('project_id', 'projectId'))
     round_key: str = Field(None, alias="round")
     dut_key: str = Field(None, alias="dut")
     design_key: str = Field(None, alias="designDemand")

@@ -35,19 +35,25 @@ class ProblemController(ControllerBase):
     def get_problem_list(self, data: ProblemFilterSchema = Query(...)):
         project_id = data.project_id
         conditionNoneToBlank(data)
-        case_key = "".join([data.round_id, '-', data.dut_id, '-', data.design_id, '-', data.test_id, '-', data.case_id])
-        # 先查询出对应的case
-        case_obj = Case.objects.filter(project_id=project_id, key=case_key).first()
-        # 然后进行过滤
-        qs = case_obj.caseField.filter(project__id=data.project_id,
-                                       ident__icontains=data.ident,
-                                       name__icontains=data.name,
-                                       status__icontains=data.status,
-                                       type__icontains=data.type,
-                                       grade__icontains=data.grade,
-                                       operation__icontains=data.operation,
-                                       postPerson__icontains=data.postPerson,
-                                       ).order_by("id")
+        # 组装查询条件
+        query_params = {
+            "project__id":data.project_id,
+            "ident__icontains":data.ident,
+            "name__icontains":data.name,
+            "status__icontains":data.status,
+            "type__icontains":data.type,
+            "grade__icontains":data.grade,
+            "operation__icontains":data.operation,
+            "postPerson__icontains":data.postPerson
+        }
+        # 如果没有多个key传递则是汇总界面
+        if data.dut_id and data.design_id and data.test_id and data.case_id:
+            case_key = "".join(
+                [data.round_id, '-', data.dut_id, '-', data.design_id, '-', data.test_id, '-', data.case_id])
+            query_params['case__key'] = case_key
+        else:
+            query_params['case__round__key'] = data.round_id
+        qs = Problem.objects.filter(**query_params).order_by("id")
 
         # 遍历通过代码不通过ORM查询闭环方式-巧妙使用numpy中array对象的in方法来判断
         closeMethod1 = self.context.request.GET.get("closeMethod[0]")
@@ -73,9 +79,7 @@ class ProblemController(ControllerBase):
     @paginate(MyPagination)
     def get_all_problems(self, round_key: Optional[str] = False, data: ProblemFilterWithHangSchema = Query(...)):
         project_id = data.project_id
-        for attr, value in data.__dict__.items():
-            if getattr(data, attr) is None:
-                setattr(data, attr, '')
+        conditionNoneToBlank(data)
         # 先查询当前项目
         qs = Problem.objects.filter(project__id=data.project_id,
                                     ident__icontains=data.ident,

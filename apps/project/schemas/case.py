@@ -167,4 +167,4 @@ class PersonReplaceSchema(Schema):
 # 时间替换Schema
 class ExetimeReplaceSchema(Schema):
     selectRows: List[int] = None
-    exetime: str
+    exetime: List[str]

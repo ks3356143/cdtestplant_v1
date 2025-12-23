@@ -1546,3 +1546,663 @@ response.0.title
 [WARNING][2025-12-19 15:53:11,960][log.py:249]Unauthorized: /api/system/getInfo
 [WARNING][2025-12-19 15:53:12,023][log.py:249]Unauthorized: /api/system/logout
 [WARNING][2025-12-19 15:53:16,809][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-22 09:12:02,397][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-22 09:12:02,620][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-22 09:12:41,059][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-22 09:18:31,339][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ([{'type': 'string_type', 'loc': ('body', 'payload', 'exetime'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-12-22 09:18:31,348][log.py:249]Unprocessable Content: /api/project/case/timeReplace/
+[WARNING][2025-12-22 09:19:30,015][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ([{'type': 'string_type', 'loc': ('body', 'payload', 'exetime'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-12-22 09:19:30,026][log.py:249]Unprocessable Content: /api/project/case/timeReplace/
+[WARNING][2025-12-22 09:19:42,128][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ([{'type': 'string_type', 'loc': ('body', 'payload', 'exetime'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-12-22 09:19:42,138][log.py:249]Unprocessable Content: /api/project/case/timeReplace/
+[WARNING][2025-12-22 09:19:47,040][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ([{'type': 'string_type', 'loc': ('body', 'payload', 'exetime'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-12-22 09:19:47,048][log.py:249]Unprocessable Content: /api/project/case/timeReplace/
+[WARNING][2025-12-22 09:20:16,492][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ([{'type': 'string_type', 'loc': ('body', 'payload', 'exetime'), 'msg': 'Input should be a valid string'}],)
+[WARNING][2025-12-22 09:20:16,501][log.py:249]Unprocessable Content: /api/project/case/timeReplace/
+[WARNING][2025-12-22 09:32:38,897][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ('fromisoformat: argument must be str',)
+[ERROR][2025-12-22 09:32:38,897][errors.py:131]fromisoformat: argument must be str
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\case.py", line 379, in bulk_replace_time
+    case_qs.update(exe_time=payload.exetime)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1300, in update
+    rows = query.get_compiler(self.db).execute_sql(ROW_COUNT)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 2111, in execute_sql
+    row_count = super().execute_sql(result_type)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1611, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\compiler.py", line 49, in as_sql
+    update_query, update_params = super().as_sql()
+                                  ~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 2065, in as_sql
+    val = field.get_db_prep_save(val, connection=self.connection)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1011, in get_db_prep_save
+    return self.get_db_prep_value(value, connection=connection, prepared=False)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1541, in get_db_prep_value
+    value = self.get_prep_value(value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1536, in get_prep_value
+    return self.to_python(value)
+           ~~~~~~~~~~~~~~^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1492, in to_python
+    parsed = parse_date(value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\utils\dateparse.py", line 74, in parse_date
+    return datetime.date.fromisoformat(value)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+TypeError: fromisoformat: argument must be str
+[ERROR][2025-12-22 09:32:38,922][log.py:249]Internal Server Error: /api/project/case/timeReplace/
+[WARNING][2025-12-22 09:46:58,701][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ('fromisoformat: argument must be str',)
+[ERROR][2025-12-22 09:46:58,701][errors.py:131]fromisoformat: argument must be str
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\case.py", line 379, in bulk_replace_time
+    case_qs.update(exe_time=payload.exetime)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1300, in update
+    rows = query.get_compiler(self.db).execute_sql(ROW_COUNT)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 2111, in execute_sql
+    row_count = super().execute_sql(result_type)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1611, in execute_sql
+    sql, params = self.as_sql()
+                  ~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\compiler.py", line 49, in as_sql
+    update_query, update_params = super().as_sql()
+                                  ~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 2065, in as_sql
+    val = field.get_db_prep_save(val, connection=self.connection)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1011, in get_db_prep_save
+    return self.get_db_prep_value(value, connection=connection, prepared=False)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1541, in get_db_prep_value
+    value = self.get_prep_value(value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1536, in get_prep_value
+    return self.to_python(value)
+           ~~~~~~~~~~~~~~^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\__init__.py", line 1492, in to_python
+    parsed = parse_date(value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\utils\dateparse.py", line 74, in parse_date
+    return datetime.date.fromisoformat(value)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+TypeError: fromisoformat: argument must be str
+[ERROR][2025-12-22 09:46:58,711][log.py:249]Internal Server Error: /api/project/case/timeReplace/
+[WARNING][2025-12-22 09:48:59,424][operation.py:131]"POST - CaseController[bulk_replace_time] /api/project/case/timeReplace/" ("Can't parse date string `2025-11-25`",)
+[ERROR][2025-12-22 09:48:59,424][errors.py:131]Can't parse date string `2025-11-25`
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\case.py", line 380, in bulk_replace_time
+    print(faker.date_between_dates(date_start='2025-11-25',date_end='2025-12-25'))
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\faker\providers\date_time\__init__.py", line 2241, in date_between_dates
+    return self.date_time_between_dates(date_start, date_end).date()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\faker\providers\date_time\__init__.py", line 2205, in date_time_between_dates
+    else self._parse_date_time(datetime_start)
+         ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\faker\providers\date_time\__init__.py", line 2063, in _parse_date_time
+    time_params = cls._parse_date_string(value)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\faker\providers\date_time\__init__.py", line 2039, in _parse_date_string
+    raise ParseError(f"Can't parse date string `{value}`")
+faker.providers.date_time.ParseError: Can't parse date string `2025-11-25`
+[ERROR][2025-12-22 09:48:59,427][log.py:249]Internal Server Error: /api/project/case/timeReplace/
+[WARNING][2025-12-22 10:51:49,526][log.py:249]Not Found: /api/project/copy_current/
+[WARNING][2025-12-22 10:52:17,936][log.py:249]Not Found: /api/project/copy_current
+[WARNING][2025-12-22 10:52:20,219][log.py:249]Not Found: /api/project/copy_current
+[WARNING][2025-12-22 11:27:08,058][operation.py:131]"GET - DesignController[copy_current] /api/project/copy_current" ('sequence item 2: expected str instance, int found',)
+[ERROR][2025-12-22 11:27:08,059][errors.py:131]sequence item 2: expected str instance, int found
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 226, in copy_current
+    new_design_obj.key = "".join([dut_obj.key, "-", key_index])
+                         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: sequence item 2: expected str instance, int found
+[ERROR][2025-12-22 11:27:08,061][log.py:249]Internal Server Error: /api/project/copy_current
+[WARNING][2025-12-22 11:27:19,118][operation.py:131]"GET - DesignController[copy_current] /api/project/copy_current" ('sequence item 2: expected str instance, int found',)
+[ERROR][2025-12-22 11:27:19,118][errors.py:131]sequence item 2: expected str instance, int found
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 226, in copy_current
+    new_design_obj.key = "".join([dut_obj.key, "-", key_index])
+                         ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: sequence item 2: expected str instance, int found
+[ERROR][2025-12-22 11:27:19,120][log.py:249]Internal Server Error: /api/project/copy_current
+[WARNING][2025-12-22 14:03:12,179][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'NoneType' object has no attribute 'caseField'",)
+[ERROR][2025-12-22 14:03:12,180][errors.py:131]'NoneType' object has no attribute 'caseField'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 42, in get_problem_list
+    qs = case_obj.caseField.filter(project__id=data.project_id,
+         ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'caseField'
+[ERROR][2025-12-22 14:03:12,190][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 14:04:39,819][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'NoneType' object has no attribute 'caseField'",)
+[ERROR][2025-12-22 14:04:39,820][errors.py:131]'NoneType' object has no attribute 'caseField'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 42, in get_problem_list
+    qs = case_obj.caseField.filter(project__id=data.project_id,
+         ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'caseField'
+[ERROR][2025-12-22 14:04:39,822][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 14:11:08,612][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'NoneType' object has no attribute 'caseField'",)
+[ERROR][2025-12-22 14:11:08,612][errors.py:131]'NoneType' object has no attribute 'caseField'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 42, in get_problem_list
+    qs = case_obj.caseField.filter(project__id=data.project_id,
+         ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'caseField'
+[ERROR][2025-12-22 14:11:08,614][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 14:11:11,516][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'NoneType' object has no attribute 'caseField'",)
+[ERROR][2025-12-22 14:11:11,516][errors.py:131]'NoneType' object has no attribute 'caseField'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 42, in get_problem_list
+    qs = case_obj.caseField.filter(project__id=data.project_id,
+         ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'caseField'
+[ERROR][2025-12-22 14:11:11,518][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 14:11:27,159][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'NoneType' object has no attribute 'caseField'",)
+[ERROR][2025-12-22 14:11:27,159][errors.py:131]'NoneType' object has no attribute 'caseField'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 43, in get_problem_list
+    qs = case_obj.caseField.filter(project__id=data.project_id,
+         ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'caseField'
+[ERROR][2025-12-22 14:11:27,163][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 14:16:24,304][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'NoneType' object has no attribute 'caseField'",)
+[ERROR][2025-12-22 14:16:24,304][errors.py:131]'NoneType' object has no attribute 'caseField'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 43, in get_problem_list
+    "status__icontains":data.status,
+     ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'caseField'
+[ERROR][2025-12-22 14:16:24,306][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 14:16:40,628][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("'NoneType' object has no attribute 'caseField'",)
+[ERROR][2025-12-22 14:16:40,628][errors.py:131]'NoneType' object has no attribute 'caseField'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 43, in get_problem_list
+    "status__icontains":data.status,
+     ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'caseField'
+[ERROR][2025-12-22 14:16:40,629][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 14:22:16,503][operation.py:131]"GET - ProblemController[get_problem_list] /api/project/getProblemList" ("Cannot resolve keyword 'round' into field. Choices are: analysis, case, closeMethod, create_datetime, designDate, designerPerson, effect_scope, grade, id, ident, name, operation, postDate, postPerson, project, project_id, remark, result, solve, sort, status, type, update_datetime, verifyDate, verifyPerson, verify_result",)
+[ERROR][2025-12-22 14:22:16,507][errors.py:131]Cannot resolve keyword 'round' into field. Choices are: analysis, case, closeMethod, create_datetime, designDate, designerPerson, effect_scope, grade, id, ident, name, operation, postDate, postPerson, project, project_id, remark, result, solve, sort, status, type, update_datetime, verifyDate, verifyPerson, verify_result
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\python13\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\pagination.py", line 270, in view_with_pagination
+    items = func(request, **kwargs)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\problem.py", line 57, in get_problem_list
+    qs = Problem.objects.filter(**query_params).order_by("id")
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1542, in filter
+    return self._filter_or_exclude(False, args, kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1560, in _filter_or_exclude
+    clone._filter_or_exclude_inplace(negate, args, kwargs)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1570, in _filter_or_exclude_inplace
+    self._query.add_q(Q(*args, **kwargs))
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1671, in add_q
+    clause, _ = self._add_q(q_object, can_reuse)
+                ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1703, in _add_q
+    child_clause, needed_inner = self.build_filter(
+                                 ~~~~~~~~~~~~~~~~~^
+        child,
+        ^^^^^^
+    ...<7 lines>...
+        update_join_types=update_join_types,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1551, in build_filter
+    lookups, parts, reffed_expression = self.solve_lookup_type(arg, summarize)
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1358, in solve_lookup_type
+    _, field, _, lookup_parts = self.names_to_path(lookup_splitted, self.get_meta())
+                                ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 1832, in names_to_path
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: Cannot resolve keyword 'round' into field. Choices are: analysis, case, closeMethod, create_datetime, designDate, designerPerson, effect_scope, grade, id, ident, name, operation, postDate, postPerson, project, project_id, remark, result, solve, sort, status, type, update_datetime, verifyDate, verifyPerson, verify_result
+[ERROR][2025-12-22 14:22:16,567][log.py:249]Internal Server Error: /api/project/getProblemList
+[WARNING][2025-12-22 18:54:25,516][operation.py:131]"PUT - ProblemController[update_problem] /api/project/problem/update/110" ([{'type': 'missing', 'loc': ('body', 'payload', 'projectId'), 'msg': 'Field required'}],)
+[WARNING][2025-12-22 18:54:25,524][log.py:249]Unprocessable Content: /api/project/problem/update/110
+[WARNING][2025-12-23 09:10:01,937][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-23 09:10:01,993][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-23 09:10:05,307][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-23 10:30:39,952][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:30:39,953][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:30:39,965][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:31:04,888][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:31:04,889][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:31:04,892][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:31:15,083][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:31:15,085][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[WARNING][2025-12-23 10:31:15,086][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:31:15,087][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:31:15,087][log.py:249]Internal Server Error: /api/system/dataDict/list
+[ERROR][2025-12-23 10:31:15,089][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:33:01,200][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:33:01,200][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[WARNING][2025-12-23 10:33:01,202][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:33:01,203][log.py:249]Internal Server Error: /api/system/dataDict/list
+[ERROR][2025-12-23 10:33:01,204][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:33:01,209][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:33:28,003][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[WARNING][2025-12-23 10:33:28,004][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:33:28,005][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:33:28,005][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:33:28,007][log.py:249]Internal Server Error: /api/system/dataDict/list
+[ERROR][2025-12-23 10:33:28,013][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:33:55,898][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:33:55,899][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:33:55,903][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:33:55,909][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:33:55,909][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:33:55,913][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:34:10,829][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:34:10,829][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:34:10,831][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:34:10,838][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:34:10,838][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:34:10,840][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:34:22,122][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:34:22,122][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:34:22,123][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:34:22,139][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:34:22,139][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:34:22,141][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-23 10:34:37,398][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:34:37,399][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[WARNING][2025-12-23 10:34:37,400][operation.py:131]"GET - DictController[get_dict] /api/system/dataDict/list" ('Dict matching query does not exist.',)
+[ERROR][2025-12-23 10:34:37,401][errors.py:131]Dict matching query does not exist.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\dict\controllers\dict.py", line 22, in get_dict
+    dict_qs = Dict.objects.get(code=code)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 639, in get
+    raise self.model.DoesNotExist(
+        "%s matching query does not exist." % self.model._meta.object_name
+    )
+apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
+[ERROR][2025-12-23 10:34:37,402][log.py:249]Internal Server Error: /api/system/dataDict/list
+[ERROR][2025-12-23 10:34:37,412][log.py:249]Internal Server Error: /api/system/dataDict/list

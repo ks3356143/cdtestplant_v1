@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404
 from django.db.models.functions import Replace
 from django.db.models import F, Value
 from typing import List
+from faker import Faker
+from datetime import datetime
 from django.utils import timezone
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_case
@@ -373,6 +375,24 @@ class CaseController(ControllerBase):
     @route.post("/case/timeReplace/", url_name='case-time-replace')
     @transaction.atomic
     def bulk_replace_time(self, payload: ExetimeReplaceSchema):
+        selected_case_ids = payload.selectRows
+        if not selected_case_ids:
+            return ChenResponse(status=500, code=50999, message='未选择行!', data="")
+        # 随机日期
+        start, end = payload.exetime
+        start_date = datetime.strptime(start, "%Y-%m-%d").date()
+        end_date = datetime.strptime(end, "%Y-%m-%d").date()
+        # 更新的case的id列表
+        updated_cases = []
         # 替换设计人员
         case_qs = Case.objects.filter(id__in=payload.selectRows)
-        case_qs.update(exe_time=payload.exetime)
+        faker = Faker()
+        # 逐个更新
+        for case in case_qs:
+            random_date = faker.date_between(start_date=start_date, end_date=end_date)
+            formatted_date = random_date.strftime("%Y-%m-%d")
+            case.exe_time = formatted_date
+            updated_cases.append(case)
+        Case.objects.bulk_update(updated_cases, ['exe_time'])
+        return ChenResponse(status=200, code=200, data=len(updated_cases),
+                            message=f"成功更新{len(updated_cases)}个用例执行时间")

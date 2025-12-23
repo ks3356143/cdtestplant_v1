@@ -1,12 +1,13 @@
 Django~=6.0
 django-auth-ldap~=5.2.0
 asgiref~=3.11.0
-sqlparse~=0.5.4
+sqlparse~=0.5.5
 # 基础包
 mysqlclient~=2.2.7
 orjson~=3.11.5
 lxml~=6.0.2
 typing_extensions~=4.15.0
+faker~=39.0.0
 # 必须whl安装的包
 python-ldap~=3.4.4
 # 项目包
