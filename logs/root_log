@@ -2206,3 +2206,8 @@ Traceback (most recent call last):
 apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
 [ERROR][2025-12-23 10:34:37,402][log.py:249]Internal Server Error: /api/system/dataDict/list
 [ERROR][2025-12-23 10:34:37,412][log.py:249]Internal Server Error: /api/system/dataDict/list
+[WARNING][2025-12-24 16:37:55,823][log.py:249]Not Found: /
+[WARNING][2025-12-24 16:37:55,938][log.py:249]Not Found: /favicon.ico
+[WARNING][2025-12-24 16:39:23,788][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-24 16:39:23,853][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-24 16:39:28,506][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
