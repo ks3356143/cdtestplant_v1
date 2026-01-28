@@ -7,12 +7,16 @@ env = environ.Env()
 
 # 2. LDAP服务器host和port
 server_uri = env('AUTH_LDAP_SERVER_URI', default='ldap://dns.paisat.cn:389')
+dn = env('AUTH_LDAP_BIND_DN',default='CN=Administrator,CN=Users,DC=sstc,DC=ctu')
+password = env('AUTH_LDAP_BIND_PASSWORD',default='WXWX2019!!!!!!')
+base_dn = env('BASE_DN',default='OU=all,DC=sstc,DC=ctu')
+filter_str = env('FILTER_STR',default='(sAMAccountName=%(user)s)')
 
 # 3. 连接LDAP服务器进行操作
 def load_ldap_users(url=server_uri,
-                    dn="CN=Administrator,CN=Users,DC=sstc,DC=ctu",
-                    pwd="WXWX2019!!!!!!",
-                    search_dn="OU=ALL,DC=sstc,DC=ctu",
+                    dn=dn,
+                    pwd=password,
+                    search_dn=base_dn,
                     search_filter='(&(sAMAccountName=*))'):
     Users = get_user_model()
 
@@ -50,6 +54,7 @@ def load_ldap_users(url=server_uri,
                 c_user.email = user_dict['email']
                 update_flag = True
             if update_flag:
+                c_user.set_password('wxwx2018!!!')
                 c_user.save()
         else:
             user_dict['remark'] = '自动同步LDAP数据用户'

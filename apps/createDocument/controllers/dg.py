@@ -1,8 +1,6 @@
 from datetime import datetime
 from ninja.errors import HttpError
 from ninja_extra import ControllerBase, api_controller, route
-from ninja_extra.permissions import IsAuthenticated
-from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.db.models import Q
 from docxtpl import DocxTemplate
@@ -14,7 +12,6 @@ from apps.dict.models import Dict
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
-from utils.util import MyHTMLParser_p
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from apps.createDocument.extensions.util import create_dg_docx
@@ -25,6 +22,8 @@ from utils.path_utils import project_path
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入mixins-处理文档片段
 from apps.createDocument.extensions.mixins import FragementToolsMixin
+# 导入工具
+from apps.createDocument.extensions.tools import demand_sort_by_designKey
 
 # @api_controller("/generate", tags=['生成大纲文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generate", tags=['生成大纲文档'])
@@ -47,10 +46,12 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
         # 查出第一轮所有testdemand
         project_round_one = project_qs.pField.filter(key=0).first()
-        testDemand_qs = project_round_one.rtField.all()
+        testDemand_qs = project_round_one.rtField.all().select_related('design')
+        # 按照自己key排序，这样可以按照design的key排序
+        sorted_demand_qs = sorted(testDemand_qs, key=demand_sort_by_designKey)
 
         # 遍历第一轮测试项：默认是ID排序
-        for single_qs in testDemand_qs:
+        for single_qs in sorted_demand_qs:
             type_index = type_number_list.index(int(single_qs.testType))
             # 先查询其testDemandContent信息
             content_list = []
@@ -665,7 +666,6 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 test_items = design.dtField.all()
                 # 连接两个QuerySet，默认去重
                 test_items = test_items.union(design.odField.all())
-                print('ok:', test_items)
                 for test_item in test_items:
                     reveal_ident = "_".join(
                         ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])

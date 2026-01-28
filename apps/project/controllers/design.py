@@ -23,6 +23,7 @@ from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, Design
 from apps.project.tools.delete_change_key import design_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tools.auto_create_data import auto_create_renji
+from apps.project.tool.dragAndDrop import DesignDrapAtoB
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['设计需求数据'])
 class DesignController(ControllerBase):
@@ -66,7 +67,10 @@ class DesignController(ControllerBase):
     # 处理树状数据
     @route.get("/getDesignDemandInfo", response=List[DesignTreeReturnSchema], url_name="design-info")
     def get_design_tree(self, payload: DesignTreeInputSchema = Query(...)):
-        qs = Design.objects.filter(project__id=payload.project_id, dut__key=payload.key).order_by('id')
+        qs = Design.objects.filter(
+            project__id=payload.project_id,
+            dut__key=payload.key
+        ).select_related('project', 'dut')
         return qs
 
     # 添加设计需求
@@ -241,3 +245,24 @@ class DesignController(ControllerBase):
         # 最后记得save
         new_design_obj.save()
         return ChenResponse(status=200, code=200, message='复制当前设计需求成功', data="")
+
+    # 拖拽更变desing的key，同dut下其他design也变动
+    @route.get("/switch_position", url_name='design-switch-position')
+    @transaction.atomic
+    def switch_position(self, from_key: str, to_key: str, pos: int, project_id: int):
+        from_key_list = from_key.split("-")
+        to_key_list = to_key.split("-")
+        # 如果两个设计需求被测件或轮次不一样则报错
+        if from_key_list[:-1] != to_key_list[:-1]:
+            return ChenResponse(status=422, code=40022, message="无法交换不同父节点的设计需求")
+        # 先查询两个design
+        from_design_obj: Design = Design.objects.filter(key=from_key, project_id=project_id).first()
+        to_design_obj: Design = Design.objects.filter(key=to_key, project_id=project_id).first()
+        if not from_design_obj or not to_design_obj:
+            return ChenResponse(status=404, code=40004, message="设计需求不存在")
+        # 获取父节点下所有design
+        parant_dut = from_design_obj.dut
+        design_qs = parant_dut.rsField.all()
+        # 根据pos将from排到后面
+        return_key = DesignDrapAtoB(from_design_obj, to_design_obj, design_qs, pos)
+        return ChenResponse(status=200, data=return_key)

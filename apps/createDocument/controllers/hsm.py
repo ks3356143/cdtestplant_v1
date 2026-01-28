@@ -1,23 +1,17 @@
-import base64
-import io
 from pathlib import Path
 from copy import deepcopy
 from typing import Union
 from ninja_extra import api_controller, ControllerBase, route
-from ninja_extra.permissions import IsAuthenticated
-from ninja_jwt.authentication import JWTAuth
-from ninja.errors import HttpError
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import QuerySet, Q
-from docxtpl import DocxTemplate, RichText, InlineImage
-from docx.shared import Mm
+from docxtpl import DocxTemplate
 from docx import Document
 # 导入模型
 from apps.project.models import Project, Round, Dut
-from apps.dict.models import Dict, DictItem
+from apps.dict.models import Dict
 # 导入项目工具
-from utils.util import get_list_dict, get_str_dict, MyHTMLParser, get_ident, get_case_ident, get_testType
+from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, get_testType
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from utils.chen_response import ChenResponse
 from apps.createDocument.extensions import util
@@ -27,6 +21,8 @@ from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
+# 导入排序
+from apps.createDocument.extensions.tools import demand_sort_by_designKey
 
 chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
@@ -266,9 +262,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/hdemand", url_name="create-hdemand")
     @transaction.atomic
     def create_hdemand(self, id: int):
-        """
-            生成非第一轮的多个测试需求
-        """
+        """生成非第一轮的多个测试需求"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '回归测试需求.docx'
         doc = DocxTemplate(tpl_path)
@@ -284,9 +278,13 @@ class GenerateControllerHSM(ControllerBase):
             test_type_len = Dict.objects.get(code='testType').dictItem.count()
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
+
             # 获得本轮次所有testDemand
-            testDemand_qs = hround.rtField.all()
-            for demand in testDemand_qs:
+            testDemand_qs = hround.rtField.all().select_related('design')
+            # 根据自己key排序
+            sorted_demand_qs = sorted(testDemand_qs, key=demand_sort_by_designKey)
+
+            for demand in sorted_demand_qs:
                 type_index = type_number_list.index(int(demand.testType))
                 content_list = []
                 for (index, content) in enumerate(demand.testQField.all()):
@@ -324,7 +322,7 @@ class GenerateControllerHSM(ControllerBase):
                     "doc_list": doc_list,
                     "design_description": parser.get_final_list(doc),
                     "test_demand_content": content_list,
-                    "testMethod": testmethod_str,
+                    "testMethod": testmethod_str.strip(),
                     "adequacy": demand.adequacy.replace("\n", "\a"),
                     "testDesciption": demand.testDesciption.replace("\n", "\a")  # 测试项描述
                 }

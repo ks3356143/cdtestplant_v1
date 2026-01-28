@@ -155,6 +155,7 @@ API_OPERATION_EXCLUDE_START = [
     '/api/system/abbreviation/index',
     '/api/project/dut/soExist',
     '/api/system/log/',
+    '/api/system/dict/'
 ]
 
 # 配置单次请求最大字节数（base64图片和上传需求文档适用）

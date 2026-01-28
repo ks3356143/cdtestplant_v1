@@ -2211,3 +2211,282 @@ apps.dict.models.Dict.DoesNotExist: Dict matching query does not exist.
 [WARNING][2025-12-24 16:39:23,788][log.py:249]Unauthorized: /api/system/getInfo
 [WARNING][2025-12-24 16:39:23,853][log.py:249]Unauthorized: /api/system/logout
 [WARNING][2025-12-24 16:39:28,506][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-29 15:33:48,008][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2025-12-29 15:43:37,401][log.py:249]Payment Required: /api/project/create_renji/
+[WARNING][2025-12-29 15:47:52,855][operation.py:131]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ("file 'C:\\Users\\31429\\AppData\\Local\\Temp\\tmpcpy143v1\\21352标校软件需求规格说明V1.01（公开）.doc' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.themeManager+xml'",)
+[ERROR][2025-12-29 15:47:52,855][errors.py:131]file 'C:\Users\31429\AppData\Local\Temp\tmpcpy143v1\21352标校软件需求规格说明V1.01（公开）.doc' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.themeManager+xml'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 252, in upload_xq_docx
+    extracter = DocxChapterExtractor(docx_path)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 18, in __init__
+    self.doc = docx.Document(docx_path)  # 解析文档
+               ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\api.py", line 30, in Document
+    raise ValueError(tmpl % (docx, document_part.content_type))
+ValueError: file 'C:\Users\31429\AppData\Local\Temp\tmpcpy143v1\21352标校软件需求规格说明V1.01（公开）.doc' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.themeManager+xml'
+[ERROR][2025-12-29 15:47:52,858][log.py:249]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-12-29 15:48:14,809][operation.py:131]"POST - UploadController[upload_xq_docx] /api/dut_upload/upload_xq_docx/" ("file 'C:\\Users\\31429\\AppData\\Local\\Temp\\tmp_n55usen\\21352标校软件需求规格说明V1.01（公开）.doc' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.themeManager+xml'",)
+[ERROR][2025-12-29 15:48:14,810][errors.py:131]file 'C:\Users\31429\AppData\Local\Temp\tmp_n55usen\21352标校软件需求规格说明V1.01（公开）.doc' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.themeManager+xml'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\dut.py", line 252, in upload_xq_docx
+    extracter = DocxChapterExtractor(docx_path)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\xq_parse.py", line 18, in __init__
+    self.doc = docx.Document(docx_path)  # 解析文档
+               ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\api.py", line 30, in Document
+    raise ValueError(tmpl % (docx, document_part.content_type))
+ValueError: file 'C:\Users\31429\AppData\Local\Temp\tmp_n55usen\21352标校软件需求规格说明V1.01（公开）.doc' is not a Word file, content type is 'application/vnd.openxmlformats-officedocument.themeManager+xml'
+[ERROR][2025-12-29 15:48:14,811][log.py:249]Internal Server Error: /api/dut_upload/upload_xq_docx/
+[WARNING][2025-12-29 16:07:51,156][log.py:249]Bad Request: /api/project/testDemand/solveRelatedTestDemand
+[WARNING][2025-12-30 09:08:25,722][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2025-12-30 09:08:25,816][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2025-12-30 09:09:35,244][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-05 15:36:48,015][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 09:53:36,139][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-01-12 09:53:36,226][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-01-12 09:53:40,193][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:22:18,307][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:22:27,314][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:22:30,857][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:23:39,227][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:23:39,511][operation.py:131]"POST - UserTokenController[obtain_token] /api/system/login" ()
+[ERROR][2026-01-12 10:23:39,511][errors.py:131]3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000024934E6AEE0>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000024934E6AEE0>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000024934E6AEE0>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000024934E6AEE0>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000024934E6AEE0>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000024934E6AEE0>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+[ERROR][2026-01-12 10:23:39,522][log.py:249]Internal Server Error: /api/system/login
+[WARNING][2026-01-12 10:24:08,914][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:24:09,211][operation.py:131]"POST - UserTokenController[obtain_token] /api/system/login" ()
+[ERROR][2026-01-12 10:24:09,211][errors.py:131]3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E7203AA30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E7203AA30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E7203AA30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E7203AA30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E7203AA30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E7203AA30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+[ERROR][2026-01-12 10:24:09,213][log.py:249]Internal Server Error: /api/system/login
+[WARNING][2026-01-12 10:24:09,825][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:24:10,314][operation.py:131]"POST - UserTokenController[obtain_token] /api/system/login" ()
+[ERROR][2026-01-12 10:24:10,314][errors.py:131]3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+[ERROR][2026-01-12 10:24:10,315][log.py:249]Internal Server Error: /api/system/login
+[WARNING][2026-01-12 10:24:14,108][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:24:14,620][operation.py:131]"POST - UserTokenController[obtain_token] /api/system/login" ()
+[ERROR][2026-01-12 10:24:14,620][errors.py:131]3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 214, in run
+    _processed_results = self._result_to_response(
+        request, result, ctx.response
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja\operation.py", line 280, in _result_to_response
+    validated_object = response_model.model_validate(
+        resp_object, context={"request": request, "response_status": status}
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\pydantic\main.py", line 716, in model_validate
+    return cls.__pydantic_validator__.validate_python(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        obj,
+        ^^^^
+    ...<5 lines>...
+        by_name=by_name,
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+pydantic_core._pydantic_core.ValidationError: 3 validation errors for NinjaResponseSchema
+response.token
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.refresh
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+response.token_exp_data
+  Field required [type=missing, input_value=<ninja_schema.orm.getters...t at 0x0000028E73052A30>, input_type=DjangoGetter]
+    For further information visit https://errors.pydantic.dev/2.12/v/missing
+[ERROR][2026-01-12 10:24:14,630][log.py:249]Internal Server Error: /api/system/login
+[WARNING][2026-01-12 10:25:39,666][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-12 10:25:52,819][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-20 15:35:49,614][log.py:249]Not Found: /
+[WARNING][2026-01-20 15:35:49,619][log.py:249]Not Found: /
+[WARNING][2026-01-20 15:35:49,623][log.py:249]Not Found: /
+[WARNING][2026-01-20 15:35:49,627][log.py:249]Not Found: /
+[WARNING][2026-01-20 15:35:49,756][log.py:249]Not Found: /favicon.ico
+[WARNING][2026-01-20 15:35:49,811][log.py:249]Not Found: /favicon.ico
+[WARNING][2026-01-20 15:35:49,847][log.py:249]Not Found: /favicon.ico
+[WARNING][2026-01-20 15:35:49,887][log.py:249]Not Found: /favicon.ico
+[WARNING][2026-01-20 15:36:36,008][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-20 16:34:34,986][logger.py:25][回归测试说明模块][当前文档全部片段]片段:该项目没有创建轮次
+[WARNING][2026-01-20 16:34:34,987][log.py:249]Bad Request: /api/generateHSM/create/basicInformation
+[WARNING][2026-01-21 09:08:12,013][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-21 09:20:15,753][log.py:249]Unprocessable Content: /api/project/switch_position
+[WARNING][2026-01-21 09:20:20,719][log.py:249]Unprocessable Content: /api/project/switch_position
+[WARNING][2026-01-21 09:59:44,017][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-21 10:11:27,647][operation.py:131]"GET - DesignController[switch_position] /api/project/switch_position" ('str.join() takes exactly one argument (2 given)',)
+[ERROR][2026-01-21 10:11:27,647][errors.py:131]str.join() takes exactly one argument (2 given)
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 268, in switch_position
+    return_key = DesignDrapAtoB(from_design_obj, to_design_obj, design_qs, pos)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\dragAndDrop.py", line 20, in DesignDrapAtoB
+    prefix = "".join(a.dut.key, "-")
+TypeError: str.join() takes exactly one argument (2 given)
+[ERROR][2026-01-21 10:11:27,651][log.py:249]Internal Server Error: /api/project/switch_position
+[WARNING][2026-01-21 10:13:50,072][operation.py:131]"GET - DesignController[switch_position] /api/project/switch_position" ('cannot unpack non-iterable Design object',)
+[ERROR][2026-01-21 10:13:50,073][errors.py:131]cannot unpack non-iterable Design object
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\design.py", line 268, in switch_position
+    return_key = DesignDrapAtoB(from_design_obj, to_design_obj, design_qs, pos)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\tool\dragAndDrop.py", line 21, in DesignDrapAtoB
+    for index, obj in list_qs:
+        ^^^^^^^^^^
+TypeError: cannot unpack non-iterable Design object
+[ERROR][2026-01-21 10:13:50,075][log.py:249]Internal Server Error: /api/project/switch_position
+[WARNING][2026-01-26 09:29:52,516][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-01-26 09:29:52,614][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-01-26 09:34:15,617][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-26 10:18:20,468][log.py:249]Unprocessable Content: /api/project/switch_position
+[ERROR][2026-01-26 10:43:44,242][log.py:249]Internal Server Error: /api/project/case/create_by_demand
+[WARNING][2026-01-26 10:55:06,736][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-27 13:17:05,789][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-01-27 13:17:05,892][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-01-27 13:18:15,840][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-28 12:13:49,105][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})

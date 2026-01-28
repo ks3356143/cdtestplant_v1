@@ -3,9 +3,13 @@ from django.contrib.auth.models import Group
 from ninja_schema import ModelSchema, model_validator, Schema
 from ninja_extra.exceptions import APIException
 from ninja_extra import status
-from datetime import datetime
-from typing import List
+from datetime import datetime, timezone
+from typing import List, Type, Dict
 from ninja import Field
+from ninja.errors import HttpError
+from ninja_jwt.schema import TokenObtainInputSchemaBase
+from ninja_jwt.tokens import RefreshToken
+from utils.log_util.request_util import save_login_log
 
 UserModel = Users
 
@@ -113,3 +117,34 @@ class AdminModifyPasswordSchema(Schema):
     newPassword: str
     newPassword_confirmation: str
     oldPassword: str
+
+# ~~~~~~~~~~~~~~~~~~~~JWT~~~~~~~~~~~~~~~~~~~~
+# 定义输出的内容，修改了输出access变为token，新增token_exp_data字段
+class MyTokenObtainPairOutSchema(Schema):
+    token: str
+    refresh: str
+    token_exp_data: datetime
+
+class MyTokenObtainPairInputSchema(TokenObtainInputSchemaBase):
+    @classmethod
+    def get_response_schema(cls) -> Type[Schema]:
+        """修改默认的返回Schema"""
+        return MyTokenObtainPairOutSchema
+
+    @classmethod
+    def get_token(cls, user) -> Dict:
+        """因为输出Schema修改，这里修改输出的token字典字段"""
+        values = {}
+        refresh = RefreshToken.for_user(user)
+        token = refresh.access_token
+        values["token"] = str(token)  # 修改在这里 # type:ignore
+        values['refresh'] = str(refresh)
+        values["token_exp_data"] = datetime.fromtimestamp(token["exp"], tz=timezone.utc)
+        return values
+
+    def authenticate(self, request, credentials: Dict):
+        super().authenticate(request, credentials)
+        if self._user:
+            save_login_log(request, self._user)
+            if self._user.status == '2':  # type:ignore
+                raise HttpError(401, "账号已被禁用，请联系管理员...")

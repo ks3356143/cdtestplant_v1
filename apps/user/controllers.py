@@ -8,7 +8,6 @@ from ninja import Query
 from django.db import transaction
 from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
-from ninja_jwt.tokens import RefreshToken
 from ninja_jwt.authentication import JWTAuth
 from ninja_jwt.controller import TokenObtainPairController
 from ninja_jwt import schema
@@ -17,37 +16,25 @@ from utils.chen_response import ChenResponse
 from apps.user.schema import UserInfoOutSchema, CreateUserSchema, CreateUserOutSchema, \
     UserRetrieveInputSchema, \
     UserRetrieveOutSchema, UpdateDeleteUserSchema, UpdateDeleteUserOutSchema, DeleteUserSchema, LogOutSchema, \
-    LogInputSchema, LogDeleteInSchema, AdminModifyPasswordSchema
+    LogInputSchema, LogDeleteInSchema, AdminModifyPasswordSchema, MyTokenObtainPairOutSchema, \
+    MyTokenObtainPairInputSchema
 from apps.user.models import TableOperationLog, Users as UserClass
 from apps.project.models import Project
 # 工具函数
 from utils.chen_crud import update, multi_delete
 from apps.user.tools.ldap_tools import load_ldap_users
-# 导入登录日志函数
-from utils.log_util.request_util import save_login_log
 
-Users: UserClass = get_user_model()  # type:ignore
+Users = get_user_model()
 
 # 定义用户登录接口，包含token刷新和生成
 @api_controller("/system", tags=['用户token控制和登录接口'])
 class UserTokenController(TokenObtainPairController):
     auto_import = True
 
-    @route.post("/login", url_name='login')
-    def obtain_token(self, user_token: schema.TokenObtainPairSerializer):
-        """新版本有特性，后期修改"""
-        # 注意TokenObtainPairSerializer是老版本，所以兼容，本质是TokenObtainPairInputSchema
-        user: UserClass = user_token._user
-        if user:
-            # 判断是否为启用状态
-            if user.status == '2':
-                return ChenResponse(status=500, code=500, message='账号已被禁用，请联系管理员...')
-            save_login_log(request=self.context.request, user=user)  # 保存登录日志
-        refresh = RefreshToken.for_user(user)
-        token = refresh.access_token  # type:ignore
-        return ChenResponse(code=200,
-                            data={'token': str(token), 'refresh': str(refresh),
-                                  'token_exp_data': datetime.fromtimestamp(token["exp"], tz=timezone.utc)})
+    @route.post("/login", response=MyTokenObtainPairOutSchema, url_name='login')
+    def obtain_token(self, user_token: MyTokenObtainPairInputSchema):
+        user_token.check_user_authentication_rule()
+        return user_token.to_response_schema()
 
     @route.get("/getInfo", response=UserInfoOutSchema, url_name="get_info", auth=JWTAuth())
     def get_user_info(self):
