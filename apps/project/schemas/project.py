@@ -1,5 +1,7 @@
 from ninja.errors import HttpError
-from apps.project.models import Project
+from pyasn1_modules.rfc2315 import Data
+
+from apps.project.models import Project, StuctSortData
 from ninja import Schema, ModelSchema
 from pydantic import field_validator
 from typing import List, Optional
@@ -39,3 +41,14 @@ class ProjectCreateInput(ModelSchema):
 
 class DeleteSchema(Schema):
     ids: List[int]
+
+# ~~~软件概述~~~
+class DataSchema(Schema):
+    type: Optional[str] = "text"
+    fontnote: Optional[str] = ""
+    content: str | list[list[str]]
+
+## 输入
+class SoftSummarySchema(Schema):
+    id: int
+    data: list[DataSchema]

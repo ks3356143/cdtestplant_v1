@@ -2,6 +2,8 @@ from pathlib import Path
 from datetime import date
 from typing import List
 from shutil import copytree, rmtree
+
+from IPython.core import payload
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from ninja_extra import api_controller, ControllerBase, route
@@ -13,8 +15,9 @@ from ninja.pagination import paginate
 from ninja import Query
 from utils.chen_response import ChenResponse
 from utils.chen_crud import create, multi_delete_project
-from apps.project.models import Project, Round
-from apps.project.schemas.project import ProjectRetrieveSchema, ProjectFilterSchema, ProjectCreateInput, DeleteSchema
+from apps.project.models import Project, Round, ProjectSoftSummary, StuctSortData
+from apps.project.schemas.project import ProjectRetrieveSchema, ProjectFilterSchema, ProjectCreateInput, \
+    DeleteSchema, SoftSummarySchema, DataSchema
 from utils.util import get_str_dict
 # 时间处理模块
 from apps.project.tool.timeList import time_return_to
@@ -89,7 +92,8 @@ class ProjectController(ControllerBase):
             try:
                 copytree(src_dir, dist_dir)  # shutil模块直接是复制并命名，如果命名文件存在则抛出FileExists异常
             except PermissionError:
-                return ChenResponse(code=500, status=500, message="错误，检查是否打开了服务器的conf中的文档，关闭后重试")
+                return ChenResponse(code=500, status=500,
+                                    message="错误，检查是否打开了服务器的conf中的文档，关闭后重试")
             except FileExistsError:
                 return ChenResponse(code=500, status=500, message='文件标识已存在或输入为空格，请修改')
             except FileNotFoundError:
@@ -183,8 +187,8 @@ class ProjectController(ControllerBase):
         # 7.将时间提取 todo:后续将计算的事件放入该页面
         timers = {'round_time': []}
         rounds = project_obj.pField.all()
-        timers['start_time'] = project_obj.beginTime
-        timers['end_time'] = project_obj.endTime
+        timers['start_time'] = project_obj.beginTime  # type:ignore
+        timers['end_time'] = project_obj.endTime  # type:ignore
         for round in rounds:
             round_number = int(round.key) + 1
             timers['round_time'].append({
@@ -197,7 +201,8 @@ class ProjectController(ControllerBase):
         # 9.提取测试类型下面测试项数量、用例数量
         data_list = []
         for round in rounds:
-            round_dict = {'name': f'第{int(round.key) + 1}轮次', 'desings': [], 'method_demand': {}, 'method_case': {}}
+            round_dict = {'name': f'第{int(round.key) + 1}轮次', 'desings': [], 'method_demand': {},
+                          'method_case': {}}
             designs = round.dsField.all()
             for design in designs:
                 design_dict = {
@@ -264,3 +269,54 @@ class ProjectController(ControllerBase):
     def document_time_show(self, id: int):
         time = time_return_to(id)
         return time
+
+    # 项目级信息前端告警数据获取
+
+    @classmethod
+    def bulk_create_data_schemas(cls, summary_obj: ProjectSoftSummary, data: list[DataSchema]):
+        """提取后面2个函数的公共新增dataschemas方法"""
+        data_list = []
+        for data in data:
+            data_list.append(
+                StuctSortData(
+                    soft_summary=summary_obj,
+                    type=data.type,
+                    fontnote=data.fontnote,
+                    content=data.content,
+                )
+            )
+        StuctSortData.objects.bulk_create(data_list)
+
+    # ~~~软件概述-新增和修改~~~
+    @route.post('/soft_summary/')
+    @transaction.atomic
+    def soft_summary(self, payload: SoftSummarySchema):
+        project_obj = self.get_project_by_id(payload.id)
+        # 安全获取-软件概述
+        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
+        if soft_summary_qs.exists():
+            soft_summary = soft_summary_qs.first()
+            # 如果存在则修改：先删除然后创建
+            soft_summary.data_schemas.all().delete()
+            self.bulk_create_data_schemas(soft_summary, payload.data)
+        else:
+            # 不存在软件概述则创建
+            soft_summary_obj = ProjectSoftSummary.objects.create(project=project_obj)
+            self.bulk_create_data_schemas(soft_summary_obj, payload.data)
+
+    # ~~~软件概述-新增和修改~~~
+    @route.get("/get_soft_summary/", response=list[DataSchema])
+    @transaction.atomic
+    def get_soft_summary(self, id: int):
+        project_obj = self.get_project_by_id(id)
+        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
+        if soft_summary_qs.exists():
+            # 如果存在则返回数据
+            soft_summary = soft_summary_qs.first()
+            dataSchem_qs = soft_summary.data_schemas.all()
+            return ChenResponse(status=200, code=25001, data=[{
+                "type": item.type,
+                "content": item.content,
+                "fontnote": item.fontnote,
+            } for item in dataSchem_qs])
+        return ChenResponse(status=200, code=25002, data=None)

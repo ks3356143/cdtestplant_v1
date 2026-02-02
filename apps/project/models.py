@@ -478,3 +478,53 @@ class Abbreviation(models.Model):
         db_table = 'project_abbreviation'
         verbose_name = '缩略语和行业词汇'
         verbose_name_plural = '缩略语和行业词汇'
+
+# 一对一项目model：软件概述
+class ProjectSoftSummary(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="projSoftSummary", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+
+    class Meta:
+        db_table = 'project_soft_summary'
+        verbose_name = "软件概述表"
+        verbose_name_plural = verbose_name
+
+def default_json_value():
+    return ""
+
+# 结构化排序数据
+class StuctSortData(CoreModel):
+    """
+        数据模式模型，对应 DataSchema。
+        通过外键与 SoftSummary 关联，形成一对多关系（数据模式对应多个项目的一对一字段）。
+    """
+    soft_summary = models.ForeignKey(ProjectSoftSummary, db_constraint=False, related_name="data_schemas", verbose_name="所属软件概述",
+                                     on_delete=models.CASCADE)
+    type = models.CharField(
+        max_length=20,
+        choices=(('text', '文本'), ('table', '表格'), ('image', '图片')),
+        default='text',
+        verbose_name="数据类型",
+    )
+    # 题注字段
+    fontnote = models.CharField(
+        max_length=256,
+        blank=True,
+        default="",
+        verbose_name="题注",
+        help_text="数据的题注说明"
+    )
+    # 内容字段 - 存储字符串、列表、字典
+    content = models.JSONField(
+        verbose_name="内容",
+        help_text="存储文本内容或二维表格数据或图片数据",
+        default=default_json_value
+    )
+
+    class Meta:
+        db_table = 'data_schemas'
+        verbose_name = "结构排序化数据"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return f"{self.soft_summary} - 结构排序化数据：({self.pk})"

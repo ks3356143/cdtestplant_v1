@@ -2490,3 +2490,271 @@ TypeError: cannot unpack non-iterable Design object
 [WARNING][2026-01-27 13:17:05,892][log.py:249]Unauthorized: /api/system/logout
 [WARNING][2026-01-27 13:18:15,840][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
 [WARNING][2026-01-28 12:13:49,105][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-30 09:38:46,690][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-01-30 09:38:46,748][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-01-30 09:38:52,507][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-01-31 14:49:39,238][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-01-31 14:49:39,293][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-01-31 14:49:43,799][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-02-02 09:26:08,505][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-02-02 09:26:08,571][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-02-02 09:26:12,729][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-02-02 13:30:55,793][log.py:249]Not Found: /api/project/soft_summary
+[WARNING][2026-02-02 13:31:22,516][log.py:249]Not Found: /api/project/soft_summary
+[WARNING][2026-02-02 13:31:41,506][log.py:249]Not Found: /api/project/soft_summary
+[WARNING][2026-02-02 13:32:10,831][log.py:249]Not Found: /api/testmanage/project/soft_summary
+[WARNING][2026-02-02 13:32:29,763][log.py:249]Not Found: /api/testmanage/project/soft_summary
+[WARNING][2026-02-02 13:32:55,155][log.py:249]Not Found: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-02 14:12:31,293][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'id'), 'msg': 'Field required'}],)
+[WARNING][2026-02-02 14:12:31,303][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-02 14:14:38,024][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ("ControllerBase.get_object_or_exception() missing 1 required positional argument: 'klass'",)
+[ERROR][2026-02-02 14:14:38,024][errors.py:131]ControllerBase.get_object_or_exception() missing 1 required positional argument: 'klass': Did you fail to use functools.wraps() in a decorator?
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 275, in soft_summary
+    project_obj = self.get_object_or_exception(error_message="项目未找到", id=payload.id)
+                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: ControllerBase.get_object_or_exception() missing 1 required positional argument: 'klass': Did you fail to use functools.wraps() in a decorator?
+[ERROR][2026-02-02 14:14:38,026][log.py:249]Internal Server Error: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-02 14:19:07,911][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'data', 'content'), 'msg': 'Field required'}],)
+[WARNING][2026-02-02 14:19:07,941][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-02 14:20:14,692][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'data', 'content'), 'msg': 'Field required'}],)
+[WARNING][2026-02-02 14:20:14,711][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-02 15:01:43,771][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ('Project has no projSoftSummary.',)
+[ERROR][2026-02-02 15:01:43,771][errors.py:131]Project has no projSoftSummary.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 277, in soft_summary
+    print(project_obj.projSoftSummary)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Project.projSoftSummary.RelatedObjectDoesNotExist: Project has no projSoftSummary.
+[ERROR][2026-02-02 15:01:43,774][log.py:249]Internal Server Error: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-02 16:15:49,995][log.py:249]Method Not Allowed: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-02 16:20:32,438][operation.py:131]"GET - ProjectController[get_soft_summary] /api/testmanage/project/get_soft_summary/" ('Object of type ProjectSoftSummary is not JSON serializable',)
+[ERROR][2026-02-02 16:20:32,438][errors.py:131]Object of type ProjectSoftSummary is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 307, in get_soft_summary
+    return ChenResponse(status=200, code=25001, data=soft_summary_qs.first())
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type ProjectSoftSummary is not JSON serializable
+[ERROR][2026-02-02 16:20:32,442][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
+[WARNING][2026-02-02 16:21:07,379][operation.py:131]"GET - ProjectController[get_soft_summary] /api/testmanage/project/get_soft_summary/" ('Object of type ProjectSoftSummary is not JSON serializable',)
+[ERROR][2026-02-02 16:21:07,379][errors.py:131]Object of type ProjectSoftSummary is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 309, in get_soft_summary
+    return ChenResponse(status=200, code=25001, data=soft_summary_qs.first())
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type ProjectSoftSummary is not JSON serializable
+[ERROR][2026-02-02 16:21:07,393][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
+[WARNING][2026-02-02 16:26:31,853][operation.py:131]"GET - ProjectController[get_soft_summary] /api/testmanage/project/get_soft_summary/" ('Object of type ProjectSoftSummary is not JSON serializable',)
+[ERROR][2026-02-02 16:26:31,853][errors.py:131]Object of type ProjectSoftSummary is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 309, in get_soft_summary
+    return ChenResponse(status=200, code=25001, data=soft_summary_qs.first())
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type ProjectSoftSummary is not JSON serializable
+[ERROR][2026-02-02 16:26:31,859][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
+[WARNING][2026-02-02 16:26:54,834][operation.py:131]"GET - ProjectController[get_soft_summary] /api/testmanage/project/get_soft_summary/" ('Object of type QuerySet is not JSON serializable',)
+[ERROR][2026-02-02 16:26:54,835][errors.py:131]Object of type QuerySet is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 308, in get_soft_summary
+    return ChenResponse(status=200, code=25001, data=soft_summary.data_schemas.all())
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type QuerySet is not JSON serializable
+[ERROR][2026-02-02 16:26:54,848][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
+[WARNING][2026-02-02 16:27:38,867][operation.py:131]"GET - ProjectController[get_soft_summary] /api/testmanage/project/get_soft_summary/" ('Object of type StuctSortData is not JSON serializable',)
+[ERROR][2026-02-02 16:27:38,867][errors.py:131]Object of type StuctSortData is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 308, in get_soft_summary
+    return ChenResponse(status=200, code=25001, data=list(soft_summary.data_schemas.all()))
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type StuctSortData is not JSON serializable
+[ERROR][2026-02-02 16:27:38,875][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
+[WARNING][2026-02-02 16:29:47,390][operation.py:131]"GET - ProjectController[get_soft_summary] /api/testmanage/project/get_soft_summary/" ('Object of type QuerySet is not JSON serializable',)
+[ERROR][2026-02-02 16:29:47,390][errors.py:131]Object of type QuerySet is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 308, in get_soft_summary
+    return ChenResponse(status=200, code=25001, data=soft_summary.data_schemas.all())
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type QuerySet is not JSON serializable
+[ERROR][2026-02-02 16:29:47,399][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
+[WARNING][2026-02-02 16:30:12,679][operation.py:131]"GET - ProjectController[get_soft_summary] /api/testmanage/project/get_soft_summary/" ('Object of type StuctSortData is not JSON serializable',)
+[ERROR][2026-02-02 16:30:12,679][errors.py:131]Object of type StuctSortData is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 308, in get_soft_summary
+    return ChenResponse(status=200, code=25001, data=list(soft_summary.data_schemas.all()))
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type StuctSortData is not JSON serializable
+[ERROR][2026-02-02 16:30:12,684][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
