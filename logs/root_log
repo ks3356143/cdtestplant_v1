@@ -2758,3 +2758,493 @@ Traceback (most recent call last):
                     f'is not JSON serializable')
 TypeError: Object of type StuctSortData is not JSON serializable
 [ERROR][2026-02-02 16:30:12,684][log.py:249]Internal Server Error: /api/testmanage/project/get_soft_summary/
+[WARNING][2026-02-03 09:38:03,966][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-02-03 09:38:04,044][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-02-03 09:38:09,074][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-02-03 10:37:41,293][log.py:249]Not Found: /api/testmanage/project/project_info_status/
+[WARNING][2026-02-03 10:37:48,403][log.py:249]Not Found: /api/testmanage/project/project_info_status/
+[WARNING][2026-02-03 10:38:19,591][log.py:249]Not Found: /api/testmanage/project/project_info_status/
+[WARNING][2026-02-03 10:38:23,503][log.py:249]Not Found: /api/testmanage/project/project_info_status/
+[WARNING][2026-02-03 10:38:26,111][log.py:249]Not Found: /api/testmanage/project/project_info_status/
+[WARNING][2026-02-03 13:54:28,018][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" (2, 'No such file or directory')
+[ERROR][2026-02-03 13:54:28,018][errors.py:131][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R25999\\form_template\\dg\\测评对象_2.docx'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 316, in create_softComposition
+    doc.render(context, autoescape=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 480, in render
+    self.render_init()
+    ~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 60, in render_init
+    self.init_docx()
+    ~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 56, in init_docx
+    self.docx = Document(self.template_file)
+                ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\api.py", line 27, in Document
+    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
+                                         ~~~~~~~~~~~~^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\opc\package.py", line 126, in open
+    pkg_reader = PackageReader.from_file(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
+    phys_reader = PhysPkgReader(pkg_file)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
+    self._zipf = ZipFile(pkg_file, "r")
+                 ~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\zipfile\__init__.py", line 1383, in __init__
+    self.fp = io.open(file, filemode)
+              ~~~~~~~^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R25999\\form_template\\dg\\测评对象_2.docx'
+[ERROR][2026-02-03 13:54:28,061][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 14:26:54,530][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Encountered unknown tag 'endfor'.",)
+[ERROR][2026-02-03 14:26:54,532][errors.py:131]Encountered unknown tag 'endfor'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 315, in create_softComposition
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 7, in template
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'.
+[ERROR][2026-02-03 14:26:54,580][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 14:27:08,046][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Encountered unknown tag 'endfor'.",)
+[ERROR][2026-02-03 14:27:08,046][errors.py:131]Encountered unknown tag 'endfor'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 315, in create_softComposition
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 7, in template
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'.
+[ERROR][2026-02-03 14:27:08,053][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 14:27:29,619][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Encountered unknown tag 'endfor'.",)
+[ERROR][2026-02-03 14:27:29,619][errors.py:131]Encountered unknown tag 'endfor'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 315, in create_softComposition
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 7, in template
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'.
+[ERROR][2026-02-03 14:27:29,634][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 14:27:42,348][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Encountered unknown tag 'endfor'.",)
+[ERROR][2026-02-03 14:27:42,349][errors.py:131]Encountered unknown tag 'endfor'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 315, in create_softComposition
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 7, in template
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'.
+[ERROR][2026-02-03 14:27:42,368][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 14:28:06,158][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Encountered unknown tag 'endfor'.",)
+[ERROR][2026-02-03 14:28:06,159][errors.py:131]Encountered unknown tag 'endfor'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 315, in create_softComposition
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 7, in template
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'.
+[ERROR][2026-02-03 14:28:06,177][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 14:28:12,615][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Encountered unknown tag 'endfor'.",)
+[ERROR][2026-02-03 14:28:12,615][errors.py:131]Encountered unknown tag 'endfor'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 315, in create_softComposition
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 7, in template
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'endfor'.
+[ERROR][2026-02-03 14:28:12,636][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 14:36:12,071][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Encountered unknown tag 'tr'. Jinja was looking for the following tags: 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.",)
+[ERROR][2026-02-03 14:36:12,071][errors.py:131]Encountered unknown tag 'tr'. Jinja was looking for the following tags: 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 315, in create_softComposition
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 4, in template
+jinja2.exceptions.TemplateSyntaxError: Encountered unknown tag 'tr'. Jinja was looking for the following tags: 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'.
+[ERROR][2026-02-03 14:36:12,117][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 15:01:08,760][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("No module named 'docxcompose'",)
+[ERROR][2026-02-03 15:01:08,761][errors.py:131]No module named 'docxcompose'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 308, in create_softComposition
+    subdoc = doc.new_subdoc()
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
+    from .subdoc import Subdoc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
+    from docxcompose.properties import CustomProperties
+ModuleNotFoundError: No module named 'docxcompose'
+[ERROR][2026-02-03 15:01:08,764][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 15:15:47,401][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("no style with name 'outertable'",)
+[ERROR][2026-02-03 15:15:47,401][errors.py:131]"no style with name 'outertable'"
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 314, in create_softComposition
+    table = subdoc.add_table(rows=rows, cols=cols, style='outertable')
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\document.py", line 157, in add_table
+    table.style = style
+    ^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 137, in style
+    style_id = self.part.get_style_id(style_or_name, WD_STYLE_TYPE.TABLE)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\document.py", line 87, in get_style_id
+    return self.styles.get_style_id(style_or_name, style_type)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 98, in get_style_id
+    return self._get_style_id_from_name(style_or_name, style_type)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 125, in _get_style_id_from_name
+    return self._get_style_id_from_style(self[style_name], style_type)
+                                         ~~~~^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 47, in __getitem__
+    raise KeyError("no style with name '%s'" % key)
+KeyError: "no style with name 'outertable'"
+[ERROR][2026-02-03 15:15:47,430][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 15:32:08,488][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("Table.cell() got an unexpected keyword argument 'row'",)
+[ERROR][2026-02-03 15:32:08,488][errors.py:131]Table.cell() got an unexpected keyword argument 'row'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 319, in create_softComposition
+    cell = table.cell(row=row, column=col)
+TypeError: Table.cell() got an unexpected keyword argument 'row'
+[ERROR][2026-02-03 15:32:08,493][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 15:55:25,723][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("int() argument must be a string, a bytes-like object or a real number, not 'NoneType'",)
+[ERROR][2026-02-03 15:55:25,723][errors.py:131]int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 327, in create_softComposition
+    cell.width = None
+    ^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 311, in width
+    self._tc.width = value
+    ^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\oxml\table.py", line 565, in width
+    tcPr.width = value
+    ^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\oxml\table.py", line 889, in width
+    tcW.width = value
+    ^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\oxml\table.py", line 418, in width
+    self.w = Emu(value).twips
+             ~~~^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\shared.py", line 94, in __new__
+    return Length.__new__(cls, int(emu))
+                               ~~~^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+[ERROR][2026-02-03 15:55:25,751][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 16:01:04,826][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("'Table' object has no attribute 'allow_autofit'",)
+[ERROR][2026-02-03 16:01:04,826][errors.py:131]'Table' object has no attribute 'allow_autofit'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 327, in create_softComposition
+    print(table.allow_autofit)
+          ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Table' object has no attribute 'allow_autofit'
+[ERROR][2026-02-03 16:01:04,871][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 16:08:40,814][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("'_Cell' object has no attribute 'font'",)
+[ERROR][2026-02-03 16:08:40,815][errors.py:131]'_Cell' object has no attribute 'font'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 325, in create_softComposition
+    cell.font.bold = True
+    ^^^^^^^^^
+AttributeError: '_Cell' object has no attribute 'font'
+[ERROR][2026-02-03 16:08:40,818][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 16:10:37,247][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("'_Cell' object has no attribute 'font'",)
+[ERROR][2026-02-03 16:10:37,248][errors.py:131]'_Cell' object has no attribute 'font'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 325, in create_softComposition
+    cell.font.bold = True
+    ^^^^^^^^^
+AttributeError: '_Cell' object has no attribute 'font'
+[ERROR][2026-02-03 16:10:37,250][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 16:10:57,505][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("'_Cell' object has no attribute 'font'",)
+[ERROR][2026-02-03 16:10:57,505][errors.py:131]'_Cell' object has no attribute 'font'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 325, in create_softComposition
+    cell.font.bold = True
+    ^^^^^^^^^
+AttributeError: '_Cell' object has no attribute 'font'
+[ERROR][2026-02-03 16:10:57,509][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 16:12:30,953][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("'_Cell' object has no attribute 'font'",)
+[ERROR][2026-02-03 16:12:30,954][errors.py:131]'_Cell' object has no attribute 'font'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 325, in create_softComposition
+    cell.font.bold = True
+    ^^^^^^^^^
+AttributeError: '_Cell' object has no attribute 'font'
+[ERROR][2026-02-03 16:12:30,959][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-03 16:18:12,617][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("'_Cell' object has no attribute 'font'",)
+[ERROR][2026-02-03 16:18:12,618][errors.py:131]'_Cell' object has no attribute 'font'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 325, in create_softComposition
+    cell.font.bold = True
+    ^^^^^^^^^
+AttributeError: '_Cell' object has no attribute 'font'
+[ERROR][2026-02-03 16:18:12,624][log.py:249]Internal Server Error: /api/generate/create/softComposition

@@ -271,6 +271,21 @@ class ProjectController(ControllerBase):
         return time
 
     # 项目级信息前端告警数据获取
+    @route.get("/project_info_status/")
+    @transaction.atomic
+    def project_info_status(self, id: int):
+        # 全部状态
+        all_status = {
+            "soft_summary": False
+        }
+        # 1.查看软件概述是否填写
+        project_obj = self.get_project_by_id(id)
+        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
+        if soft_summary_qs.exists():
+            # 存在还要判断是否有子项
+            if soft_summary_qs.first().data_schemas.exists():
+                all_status['soft_summary'] = True
+        return ChenResponse(status=200, code=20000, data=all_status, message='查询成功')
 
     @classmethod
     def bulk_create_data_schemas(cls, summary_obj: ProjectSoftSummary, data: list[DataSchema]):

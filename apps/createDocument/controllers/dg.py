@@ -1,13 +1,19 @@
+import base64
+import io
+from typing import Any
 from datetime import datetime
+from docx.shared import Mm
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.oxml.ns import qn
 from ninja.errors import HttpError
 from ninja_extra import ControllerBase, api_controller, route
 from django.db import transaction
 from django.db.models import Q
-from docxtpl import DocxTemplate
+from docxtpl import DocxTemplate, InlineImage
 from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
-from apps.project.models import Project, Contact, Abbreviation
+from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary
 from apps.dict.models import Dict
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
@@ -23,7 +29,7 @@ from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入mixins-处理文档片段
 from apps.createDocument.extensions.mixins import FragementToolsMixin
 # 导入工具
-from apps.createDocument.extensions.tools import demand_sort_by_designKey
+from apps.createDocument.extensions.tools import demand_sort_by_designKey, set_table_border
 
 # @api_controller("/generate", tags=['生成大纲文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generate", tags=['生成大纲文档'])
@@ -286,6 +292,62 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get('/create/softComposition', url_name='create-softComposition')
     @transaction.atomic
     def create_softComposition(self, id: int):
+        # 首先判断是否包含 - 项目信息-软件概述
+        project_obj = get_object_or_404(Project, id=id)
+        input_path_2 = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评对象_2.docx'
+        doc = DocxTemplate(input_path_2)
+        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
+        if soft_summary_qs.exists():
+            data_qs = soft_summary_qs.first().data_schemas
+            if data_qs.exists():
+                # 如果存在则渲染此处
+                data_list = []
+                for data_obj in data_qs.all():
+                    item_context: dict[str, Any] = {"fontnote": data_obj.fontnote, 'type': data_obj.type}
+                    # 根据数据类型处理content字段
+                    if data_obj.type == 'text':
+                        item_context['content'] = data_obj.content
+                    elif data_obj.type == 'table':
+                        # 使用subdoc
+                        subdoc = doc.new_subdoc()
+                        rows = len(data_obj.content)
+                        cols = len(data_obj.content[0])
+                        table = subdoc.add_table(rows=rows, cols=cols, style='Table Grid')
+                        # 设置边框
+                        set_table_border(table)
+                        # 单元格处理
+                        for row in range(rows):
+                            for col in range(cols):
+                                cell = table.cell(row, col)
+                                cell.text = data_obj.content[row][col]
+                                # 第一行设置居中
+                                if row == 0:
+                                    # 黑体设置
+                                    cell.text = ""
+                                    pa = cell.paragraphs[0]
+                                    run = pa.add_run(str(data_obj.content[row][col]))
+                                    run.font.name = '黑体'
+                                    run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
+                                    run.font.bold = False
+                                    pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                        # 表格居中
+                        table.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                        item_context['content'] = subdoc
+                    elif data_obj.type == 'image':
+                        base64_bytes = base64.b64decode(data_obj.content.replace("data:image/png;base64,", ""))
+                        item_context['content'] = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(120))
+                    data_list.append(item_context)
+                context = {
+                    "datas": data_list,
+                }
+                doc.render(context)
+                try:
+                    doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '测评对象.docx')
+                    return ChenResponse(status=200, code=200, message="文档生成成功！")
+                except PermissionError as e:
+                    return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+
+        # 原来文档片段或者初始内容
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评对象.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '测评对象')
