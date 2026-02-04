@@ -495,11 +495,14 @@ def default_json_value():
 # 结构化排序数据
 class StuctSortData(CoreModel):
     """
-        数据模式模型，对应 DataSchema。
-        通过外键与 SoftSummary 关联，形成一对多关系（数据模式对应多个项目的一对一字段）。
+        与其他项目信息的多对一关系
     """
+    # 软件概述内容
     soft_summary = models.ForeignKey(ProjectSoftSummary, db_constraint=False, related_name="data_schemas", verbose_name="所属软件概述",
-                                     on_delete=models.CASCADE)
+                                     on_delete=models.CASCADE, null=True, blank=True)
+    # 接口图
+    project = models.OneToOneField(Project, db_constraint=False, related_name="data_schemas", on_delete=models.CASCADE, null=True, blank=True,
+                                verbose_name="该接口图所属的项目")
     type = models.CharField(
         max_length=20,
         choices=(('text', '文本'), ('table', '表格'), ('image', '图片')),

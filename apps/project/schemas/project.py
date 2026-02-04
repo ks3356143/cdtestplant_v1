@@ -52,3 +52,6 @@ class DataSchema(Schema):
 class SoftSummarySchema(Schema):
     id: int
     data: list[DataSchema]
+
+# ~~~软件接口图~~~
+## 复用DataSchema

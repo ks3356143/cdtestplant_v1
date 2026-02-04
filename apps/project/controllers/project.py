@@ -2,8 +2,6 @@ from pathlib import Path
 from datetime import date
 from typing import List
 from shutil import copytree, rmtree
-
-from IPython.core import payload
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from ninja_extra import api_controller, ControllerBase, route
@@ -12,6 +10,7 @@ from ninja_jwt.authentication import JWTAuth
 from apps.user.models import Users
 from utils.chen_pagination import MyPagination
 from ninja.pagination import paginate
+from ninja.errors import HttpError
 from ninja import Query
 from utils.chen_response import ChenResponse
 from utils.chen_crud import create, multi_delete_project
@@ -276,7 +275,8 @@ class ProjectController(ControllerBase):
     def project_info_status(self, id: int):
         # 全部状态
         all_status = {
-            "soft_summary": False
+            "soft_summary": False,
+            "interface_image": False,
         }
         # 1.查看软件概述是否填写
         project_obj = self.get_project_by_id(id)
@@ -285,21 +285,38 @@ class ProjectController(ControllerBase):
             # 存在还要判断是否有子项
             if soft_summary_qs.first().data_schemas.exists():
                 all_status['soft_summary'] = True
+        # 2.查看接口图是否填写
+        image_qs = StuctSortData.objects.filter(project=project_obj)
+        if image_qs.exists():
+            all_status['interface_image'] = True
         return ChenResponse(status=200, code=20000, data=all_status, message='查询成功')
 
     @classmethod
-    def bulk_create_data_schemas(cls, summary_obj: ProjectSoftSummary, data: list[DataSchema]):
-        """提取后面2个函数的公共新增dataschemas方法"""
+    def bulk_create_data_schemas(cls, parent_obj, datas: list[DataSchema]):
+        """
+            批量创建结构化排序数据 (自动类型推断)
+            Args:
+                parent_obj: 父级对象，可以是 ProjectSoftSummary 或 Project 的实例
+                datas (list[DataSchema]): 数据模式对象列表
+        """
+        # 动态确定所属父model
+        field_name = None
+        if isinstance(parent_obj, ProjectSoftSummary):
+            field_name = 'soft_summary'
+        elif isinstance(parent_obj, Project):
+            field_name = 'project'
+        else:
+            raise HttpError(400, "添加的数据未在系统内，请联系管理员")
+
         data_list = []
-        for data in data:
-            data_list.append(
-                StuctSortData(
-                    soft_summary=summary_obj,
-                    type=data.type,
-                    fontnote=data.fontnote,
-                    content=data.content,
-                )
+        for data in datas:
+            new_data = StuctSortData(
+                type=data.type,
+                fontnote=data.fontnote,
+                content=data.content,
             )
+            setattr(new_data, field_name, parent_obj)
+            data_list.append(new_data)
         StuctSortData.objects.bulk_create(data_list)
 
     # ~~~软件概述-新增和修改~~~
@@ -319,7 +336,7 @@ class ProjectController(ControllerBase):
             soft_summary_obj = ProjectSoftSummary.objects.create(project=project_obj)
             self.bulk_create_data_schemas(soft_summary_obj, payload.data)
 
-    # ~~~软件概述-新增和修改~~~
+    # ~~~软件概述-获取到前端展示~~~
     @route.get("/get_soft_summary/", response=list[DataSchema])
     @transaction.atomic
     def get_soft_summary(self, id: int):
@@ -334,4 +351,32 @@ class ProjectController(ControllerBase):
                 "content": item.content,
                 "fontnote": item.fontnote,
             } for item in dataSchem_qs])
+        return ChenResponse(status=200, code=25002, data=None)
+
+    # ~~~接口图新增或修改~~~
+    @route.post("/interface_image/")
+    @transaction.atomic
+    def post_interface_image(self, id: int, dataSchema: DataSchema):
+        project_obj = self.get_project_by_id(id)
+        image_qs = StuctSortData.objects.filter(project=project_obj)
+        if image_qs.exists():
+            image_qs.delete()
+            self.bulk_create_data_schemas(project_obj, [dataSchema])
+        else:
+            self.bulk_create_data_schemas(project_obj, [dataSchema])
+
+    # ~~~接口图-获取数据~~~
+    @route.get("/get_interface_image/", response=DataSchema)
+    @transaction.atomic
+    def get_interface_image(self, id: int):
+        project_obj = self.get_project_by_id(id)
+        image_qs = StuctSortData.objects.filter(project=project_obj)
+        if image_qs.exists():
+            # 如果存在则返回数据
+            image_obj = image_qs.first()
+            return ChenResponse(status=200, code=25001, data={
+                "type": image_obj.type,
+                "content": image_obj.content,
+                "fontnote": image_obj.fontnote,
+            })
         return ChenResponse(status=200, code=25002, data=None)

@@ -3248,3 +3248,85 @@ Traceback (most recent call last):
     ^^^^^^^^^
 AttributeError: '_Cell' object has no attribute 'font'
 [ERROR][2026-02-03 16:18:12,624][log.py:249]Internal Server Error: /api/generate/create/softComposition
+[WARNING][2026-02-04 09:41:30,642][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-02-04 09:41:30,660][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-02-04 09:41:34,553][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-02-04 10:19:25,435][log.py:249]Not Found: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:19:29,221][log.py:249]Not Found: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:19:33,110][log.py:249]Not Found: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:20:00,798][log.py:249]Not Found: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:20:18,071][log.py:249]Not Found: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:20:56,170][operation.py:131]"POST - ProjectController[post_interface_image] /api/testmanage/project/interface_image/" ([{'type': 'missing', 'loc': ('body', 'dataSchema', 'content'), 'msg': 'Field required'}],)
+[WARNING][2026-02-04 10:20:56,188][log.py:249]Unprocessable Content: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:21:58,126][operation.py:131]"POST - ProjectController[post_interface_image] /api/testmanage/project/interface_image/" ([{'type': 'missing', 'loc': ('body', 'dataSchema', 'content'), 'msg': 'Field required'}],)
+[WARNING][2026-02-04 10:21:58,138][log.py:249]Unprocessable Content: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:32:05,597][operation.py:131]"POST - ProjectController[post_interface_image] /api/testmanage/project/interface_image/" ('Project has no data_schemas.',)
+[ERROR][2026-02-04 10:32:05,597][errors.py:131]Project has no data_schemas.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 344, in post_interface_image
+    image_qs = project_obj.data_schemas
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Project.data_schemas.RelatedObjectDoesNotExist: Project has no data_schemas.
+[ERROR][2026-02-04 10:32:05,606][log.py:249]Internal Server Error: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 10:32:48,393][operation.py:131]"POST - ProjectController[post_interface_image] /api/testmanage/project/interface_image/" ('Project has no data_schemas.',)
+[ERROR][2026-02-04 10:32:48,393][errors.py:131]Project has no data_schemas.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 344, in post_interface_image
+    image_qs = project_obj.data_schemas
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Project.data_schemas.RelatedObjectDoesNotExist: Project has no data_schemas.
+[ERROR][2026-02-04 10:32:48,397][log.py:249]Internal Server Error: /api/testmanage/project/interface_image/
+[WARNING][2026-02-04 11:11:57,422][operation.py:131]"GET - ProjectController[get_interface_image] /api/testmanage/project/get_interface_image/" ('Object of type StuctSortData is not JSON serializable',)
+[ERROR][2026-02-04 11:11:57,423][errors.py:131]Object of type StuctSortData is not JSON serializable
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 372, in get_interface_image
+    return ChenResponse(status=200, code=25001, data=image_obj)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 25, in __init__
+    data = json.dumps(std_data, cls=DateEncoder)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\__init__.py", line 242, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 202, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 263, in iterencode
+    return _iterencode(o, 0)
+  File "E:\pycharmProjects\cdtestplant_v1\utils\chen_response.py", line 11, in default
+    return json.JSONEncoder.default(self, obj)
+           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\json\encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type StuctSortData is not JSON serializable
+[ERROR][2026-02-04 11:11:57,431][log.py:249]Internal Server Error: /api/testmanage/project/get_interface_image/
