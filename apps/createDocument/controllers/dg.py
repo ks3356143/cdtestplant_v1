@@ -13,7 +13,7 @@ from docxtpl import DocxTemplate, InlineImage
 from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
-from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary
+from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData
 from apps.dict.models import Dict
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
@@ -365,6 +365,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成被测软件接口章节
     @route.get('/create/interface', url_name='create-interface')
     def create_interface(self, id: int):
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '被测软件接口.docx'
+        doc = DocxTemplate(input_path)
         project_qs = get_object_or_404(Project, id=id)
         project_name = project_qs.name
         interfaceNameList = []
@@ -389,12 +391,28 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 'protocal': interface.protocal,
             }
             interface_list.append(interface_dict)
+        # 项目接口图处理 - 2026/2/4
+        image_obj = StuctSortData.objects.filter(project=project_qs)
+        ## 判断是否存在
+        image_render = None
+        fontnote = None
+        if image_obj.exists():
+            base64_bytes = base64.b64decode(image_obj.first().content.replace("data:image/png;base64,", ""))
+            image_render = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(120))
+            fontnote = image_obj.first().fontnote
         context = {
             'project_name': project_name,
             'iters': interfaceNameList,
             'iter_list': interface_list,
+            'image_render': image_render if image_render else "",
+            'fontnote': fontnote if fontnote else "".join([project_name, '接口示意图'])
         }
-        return create_dg_docx('被测软件接口.docx', context, id)
+        doc.render(context, autoescape=True)
+        try:
+            doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '被测软件接口.docx')
+            return ChenResponse(status=200, code=200, message="文档生成成功！")
+        except PermissionError as e:
+            return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
     # 生成顶层技术文件
     @route.get('/create/top_file', url_name='create-performance')

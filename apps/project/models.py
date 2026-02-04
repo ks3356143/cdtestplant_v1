@@ -530,4 +530,4 @@ class StuctSortData(CoreModel):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        return f"{self.soft_summary} - 结构排序化数据：({self.pk})"
+        return f"结构排序化数据：({self.pk})"
