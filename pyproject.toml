@@ -29,6 +29,7 @@ dependencies = [
     "python-ldap",
     "ua-parser-builtins>=202601",
     "user-agents>=2.2.0",
+    "waitress>=3.0.2",
 ]
 
 [tool.uv.sources]

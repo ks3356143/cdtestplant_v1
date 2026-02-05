@@ -4,16 +4,18 @@ from typing import Any
 from datetime import datetime
 from docx.shared import Mm
 from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.oxml.ns import qn
 from ninja.errors import HttpError
 from ninja_extra import ControllerBase, api_controller, route
 from django.db import transaction
 from django.db.models import Q
-from docxtpl import DocxTemplate, InlineImage
+from docxtpl import DocxTemplate, InlineImage, Subdoc
 from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
-from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData
+from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, \
+    DynamicSoftTable, DynamicHardwareTable
 from apps.dict.models import Dict
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
@@ -29,7 +31,7 @@ from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入mixins-处理文档片段
 from apps.createDocument.extensions.mixins import FragementToolsMixin
 # 导入工具
-from apps.createDocument.extensions.tools import demand_sort_by_designKey, set_table_border
+from apps.createDocument.extensions.tools import demand_sort_by_designKey, set_table_border_by_cell_position, set_cell_margins
 
 # @api_controller("/generate", tags=['生成大纲文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generate", tags=['生成大纲文档'])
@@ -312,9 +314,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                         subdoc = doc.new_subdoc()
                         rows = len(data_obj.content)
                         cols = len(data_obj.content[0])
-                        table = subdoc.add_table(rows=rows, cols=cols, style='Table Grid')
-                        # 设置边框
-                        set_table_border(table)
+                        table = subdoc.add_table(rows=rows, cols=cols)
                         # 单元格处理
                         for row in range(rows):
                             for col in range(cols):
@@ -330,8 +330,12 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                                     run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
                                     run.font.bold = False
                                     pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                                    # 垂直居中
+                                    cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
                         # 表格居中
                         table.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                        # 设置边框
+                        set_table_border_by_cell_position(table)
                         item_context['content'] = subdoc
                     elif data_obj.type == 'image':
                         base64_bytes = base64.b64decode(data_obj.content.replace("data:image/png;base64,", ""))
@@ -451,9 +455,85 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
+    # 通用生成静态软件项、静态硬件项、动态软件项、动态硬件信息的context，包含fontnote和table
+    @classmethod
+    def create_table_context(cls, table_data: list[list[str]], doc: DocxTemplate) -> Subdoc:
+        """注意：该函数会增加一列序号列"""
+        subdoc = doc.new_subdoc()
+        rows = len(table_data)
+        cols = len(table_data[0]) + 1  # 多渲染序号列
+        table = subdoc.add_table(rows=rows, cols=cols)
+        # 单元格处理
+        for row in range(rows):
+            for col in range(cols):
+                cell = table.cell(row, col)  # 单元格数据
+                # 设置边距 - 所有单元格
+                set_cell_margins(cell, left=100, right=100, top=100, bottom=100)
+                pa = cell.paragraphs[0]
+                # 处理第一列 - 要居中
+                if col == 0:
+                    if row == 0:
+                        cell.text = "序号"
+                    else:
+                        cell.text = str(row)
+                    pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                # 处理非第一列
+                else:
+                    cell.text = table_data[row][col - 1]
+        # 单独处理第一行
+        for col in range(cols):
+            cell = table.cell(0, col)
+            cell.text = ""
+            pa = cell.paragraphs[0]
+            if col == 0:
+                run = pa.add_run("序号")
+            else:
+                run = pa.add_run(str(table_data[0][col - 1]))
+            run.font.name = '黑体'
+            run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
+            run.font.bold = False
+            pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        # 设置序号列宽度 - 先自动调整为False然后设置True
+        for cell in table.columns[0].cells:
+            cell.width = Mm(15)
+            pa = cell.paragraphs[0]
+            pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        # 表格居中
+        table.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        # 最后设置表格外边框
+        set_table_border_by_cell_position(table)
+        return subdoc
+
+    # 统一静态软件项、静态硬件项、动态软件项、动态硬件信息的word生成 - 模版模式
+    @classmethod
+    def uniform_static_dynamic_response(cls, id: int, filename: str, r_filename: str, model) -> ChenResponse | None:
+        project_obj = get_object_or_404(Project, id=id)
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / filename
+        doc = DocxTemplate(input_path)
+        qs = model.objects.filter(project=project_obj)
+        if qs.exists():
+            obj = qs.first()
+            table_data = obj.table
+            subdoc = cls.create_table_context(table_data, doc)
+            context = {
+                'fontnote': obj.fontnote,
+                'table': subdoc,
+            }
+            doc.render(context, autoescape=True)
+            try:
+                doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / r_filename)
+                return ChenResponse(status=200, code=200, message="文档生成成功！")
+            except PermissionError as e:
+                return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+        return None
+
     # 静态软件项
     @route.get('/create/static_soft', url_name='create-static_soft')
     def create_static_soft(self, id: int):
+        res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
+        if res is not None:
+            return res
+
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '静态软件项.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '静态软件项')
@@ -466,6 +546,10 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 静态硬件和固件项
     @route.get('/create/static_hard', url_name='create-static_hard')
     def create_static_hard(self, id: int):
+        res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
+        if res is not None:
+            return res
+
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '静态硬件和固件项.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '静态硬件和固件项')
@@ -497,6 +581,10 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 动态软件项
     @route.get('/create/dynamic_soft', url_name='create-dynamic_soft')
     def create_dynamic_soft(self, id: int):
+        res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
+        if res is not None:
+            return res
+
         project_obj: Project = get_object_or_404(Project, id=id)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态软件项.docx'
         doc = DocxTemplate(input_path)
@@ -508,9 +596,14 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         }
         return create_dg_docx("动态软件项.docx", context, id)
 
-    # 动态软件项
+    # 动态硬件项
     @route.get('/create/dynamic_hard', url_name='create-dynamic_hard')
     def create_dynamic_hard(self, id: int):
+        res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
+                                                   '动态硬件和固件项.docx', DynamicHardwareTable)
+        if res is not None:
+            return res
+
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态硬件和固件项.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '动态硬件和固件项')

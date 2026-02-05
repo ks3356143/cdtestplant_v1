@@ -466,6 +466,9 @@ class Contact(CoreModel):
         ordering = ('create_datetime',)
 
 # ~~~~~2024年2月27日新增~~~~~
+def default_json_value():
+    return ""
+
 class Abbreviation(models.Model):
     objects = models.Manager()
     title = models.CharField(max_length=64, verbose_name="缩略语", help_text="缩略语")
@@ -489,8 +492,64 @@ class ProjectSoftSummary(models.Model):
         verbose_name = "软件概述表"
         verbose_name_plural = verbose_name
 
-def default_json_value():
-    return ""
+# 一对一项目model：动态测试环境描述
+class ProjectDynamicDescription(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="dynamic_des", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+
+    class Meta:
+        db_table = 'project_dynamic_description'
+        verbose_name = "动态环境描述"
+        verbose_name_plural = verbose_name
+
+# 一对一项目model：静态软件项表
+class StaticSoftItem(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="static_soft_item", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+    table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
+    fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+
+    class Meta:
+        db_table = 'project_static_soft_item'
+        verbose_name = "静态软件项表"
+        verbose_name_plural = verbose_name
+
+# 一对一项目model：静态硬件项表
+class StaticSoftHardware(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="static_hardware", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+    table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
+    fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+
+    class Meta:
+        db_table = 'project_static_hardware'
+        verbose_name = "静态硬件项表"
+        verbose_name_plural = verbose_name
+
+# 一对一项目model：动态软件项表
+class DynamicSoftTable(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="dynamic_soft_item", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+    table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
+    fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+
+    class Meta:
+        db_table = 'project_dynamic_soft_item'
+        verbose_name = "动态软件项表"
+        verbose_name_plural = verbose_name
+
+# 一对一项目model：动态硬件项
+class DynamicHardwareTable(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="dynamic_hardware", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+
+    table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
+    fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+
+    class Meta:
+        db_table = 'project_dynamic_hardware'
+        verbose_name = "动态硬件项表"
+        verbose_name_plural = verbose_name
 
 # 结构化排序数据
 class StuctSortData(CoreModel):
@@ -502,7 +561,12 @@ class StuctSortData(CoreModel):
                                      on_delete=models.CASCADE, null=True, blank=True)
     # 接口图
     project = models.OneToOneField(Project, db_constraint=False, related_name="data_schemas", on_delete=models.CASCADE, null=True, blank=True,
-                                verbose_name="该接口图所属的项目")
+                                   verbose_name="该接口图所属的项目")
+    # 动态环境描述
+    dynamic_description = models.ForeignKey(ProjectDynamicDescription, db_constraint=False, related_name="data_schemas",
+                                            verbose_name="所属动态环境描述",
+                                            on_delete=models.CASCADE, null=True, blank=True)
+
     type = models.CharField(
         max_length=20,
         choices=(('text', '文本'), ('table', '表格'), ('image', '图片')),

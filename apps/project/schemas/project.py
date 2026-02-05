@@ -55,3 +55,10 @@ class SoftSummarySchema(Schema):
 
 # ~~~软件接口图~~~
 ## 复用DataSchema
+
+# ~~~静态软件项、静态硬件项、动态软件项、动态硬件项~~~
+class StaticDynamicData(Schema):
+    id: int
+    category: str
+    table: list[list[str]]
+    fontnote: Optional[str] = ""

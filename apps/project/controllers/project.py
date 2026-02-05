@@ -14,9 +14,10 @@ from ninja.errors import HttpError
 from ninja import Query
 from utils.chen_response import ChenResponse
 from utils.chen_crud import create, multi_delete_project
-from apps.project.models import Project, Round, ProjectSoftSummary, StuctSortData
+from apps.project.models import Project, Round, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, DynamicSoftTable, \
+    DynamicHardwareTable
 from apps.project.schemas.project import ProjectRetrieveSchema, ProjectFilterSchema, ProjectCreateInput, \
-    DeleteSchema, SoftSummarySchema, DataSchema
+    DeleteSchema, SoftSummarySchema, DataSchema, StaticDynamicData
 from utils.util import get_str_dict
 # 时间处理模块
 from apps.project.tool.timeList import time_return_to
@@ -277,6 +278,10 @@ class ProjectController(ControllerBase):
         all_status = {
             "soft_summary": False,
             "interface_image": False,
+            "static_soft_item": False,
+            "static_soft_hardware": False,
+            "dynamic_soft_item": False,
+            "dynamic_soft_hardware": False,
         }
         # 1.查看软件概述是否填写
         project_obj = self.get_project_by_id(id)
@@ -289,6 +294,22 @@ class ProjectController(ControllerBase):
         image_qs = StuctSortData.objects.filter(project=project_obj)
         if image_qs.exists():
             all_status['interface_image'] = True
+        # 3.查看静态软件项是否填写
+        static_item_qs = StaticSoftItem.objects.filter(project=project_obj)
+        if static_item_qs.exists():
+            all_status['static_soft_item'] = True
+        # 4.静态硬件项
+        static_hardware_qs = StaticSoftHardware.objects.filter(project=project_obj)
+        if static_hardware_qs.exists():
+            all_status['static_soft_hardware'] = True
+        # 5.动态软件项
+        dynamic_soft_item_qs = DynamicSoftTable.objects.filter(project=project_obj)
+        if dynamic_soft_item_qs.exists():
+            all_status['dynamic_soft_item'] = True
+        # 5.动态软件项
+        dynamic_hardware_qs = DynamicHardwareTable.objects.filter(project=project_obj)
+        if dynamic_hardware_qs.exists():
+            all_status['dynamic_soft_hardware'] = True
         return ChenResponse(status=200, code=20000, data=all_status, message='查询成功')
 
     @classmethod
@@ -351,7 +372,7 @@ class ProjectController(ControllerBase):
                 "content": item.content,
                 "fontnote": item.fontnote,
             } for item in dataSchem_qs])
-        return ChenResponse(status=200, code=25002, data=None)
+        return ChenResponse(status=200, code=25002, data=[])
 
     # ~~~接口图新增或修改~~~
     @route.post("/interface_image/")
@@ -361,9 +382,7 @@ class ProjectController(ControllerBase):
         image_qs = StuctSortData.objects.filter(project=project_obj)
         if image_qs.exists():
             image_qs.delete()
-            self.bulk_create_data_schemas(project_obj, [dataSchema])
-        else:
-            self.bulk_create_data_schemas(project_obj, [dataSchema])
+        self.bulk_create_data_schemas(project_obj, [dataSchema])
 
     # ~~~接口图-获取数据~~~
     @route.get("/get_interface_image/", response=DataSchema)
@@ -380,3 +399,36 @@ class ProjectController(ControllerBase):
                 "fontnote": image_obj.fontnote,
             })
         return ChenResponse(status=200, code=25002, data=None)
+
+    @classmethod
+    def get_model_from_category(cls, category: str):
+        mapDict = {
+            '静态软件项': StaticSoftItem,
+            '静态硬件项': StaticSoftHardware,
+            '动态软件项': DynamicSoftTable,
+            '动态硬件项': DynamicHardwareTable
+        }
+        return mapDict[category]
+
+    # ~~~静态软件项、静态硬件项、动态软件项、动态硬件项 - 获取~~~
+    @route.get("/get_static_dynamic_items/")
+    def get_static_dynamic_items(self, id: int, category: str):
+        project_obj = self.get_project_by_id(id)
+        item_qs = self.get_model_from_category(category).objects.filter(project=project_obj)
+        if item_qs.exists():
+            item_obj = item_qs.first()
+            return ChenResponse(status=200, code=25001, data={"table": item_obj.table, "fontnote": item_obj.fontnote})
+        return ChenResponse(status=200, code=25002, data=None)
+
+    # ~~~静态软件项、静态硬件项、动态软件项、动态硬件项 - 新增或修改~~~
+    @route.post("/post_static_dynamic_item/")
+    @transaction.atomic
+    def post_static_dynamic_item(self, data: StaticDynamicData):
+        print(data)
+        project_obj = self.get_project_by_id(data.id)
+        model = self.get_model_from_category(data.category)
+        item_qs = model.objects.filter(project=project_obj)
+        if item_qs.exists():
+            # 如果存在则修改
+            item_qs.delete()
+        model.objects.create(project=project_obj, table=data.table, fontnote=data.fontnote)

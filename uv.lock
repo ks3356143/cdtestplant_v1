@@ -94,6 +94,7 @@ dependencies = [
     { name = "python-ldap" },
     { name = "ua-parser-builtins" },
     { name = "user-agents" },
+    { name = "waitress" },
 ]
 
 [package.metadata]
@@ -122,6 +123,7 @@ requires-dist = [
     { name = "python-ldap", path = "python_ldap-3.4.5-cp313-cp313-win_amd64.whl" },
     { name = "ua-parser-builtins", specifier = ">=202601" },
     { name = "user-agents", specifier = ">=2.2.0" },
+    { name = "waitress", specifier = ">=3.0.2" },
 ]
 
 [[package]]
@@ -1194,6 +1196,15 @@ dependencies = [
 sdist = { url = "https://mirrors.aliyun.com/pypi/packages/e3/e1/63c5bfb485a945010c8cbc7a52f85573561737648d36b30394248730a7bc/user-agents-2.2.0.tar.gz", hash = "sha256:d36d25178db65308d1458c5fa4ab39c9b2619377010130329f3955e7626ead26" }
 wheels = [
     { url = "https://mirrors.aliyun.com/pypi/packages/8f/1c/20bb3d7b2bad56d881e3704131ddedbb16eb787101306887dff349064662/user_agents-2.2.0-py3-none-any.whl", hash = "sha256:a98c4dc72ecbc64812c4534108806fb0a0b3a11ec3fd1eafe807cee5b0a942e7" },
+]
+
+[[package]]
+name = "waitress"
+version = "3.0.2"
+source = { registry = "https://mirrors.aliyun.com/pypi/simple" }
+sdist = { url = "https://mirrors.aliyun.com/pypi/packages/bf/cb/04ddb054f45faa306a230769e868c28b8065ea196891f09004ebace5b184/waitress-3.0.2.tar.gz", hash = "sha256:682aaaf2af0c44ada4abfb70ded36393f0e307f4ab9456a215ce0020baefc31f" }
+wheels = [
+    { url = "https://mirrors.aliyun.com/pypi/packages/8d/57/a27182528c90ef38d82b636a11f606b0cbb0e17588ed205435f8affe3368/waitress-3.0.2-py3-none-any.whl", hash = "sha256:c56d67fd6e87c2ee598b76abdd4e96cfad1f24cacdea5078d382b1f9d7b5ed2e" },
 ]
 
 [[package]]
