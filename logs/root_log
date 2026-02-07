@@ -292,3 +292,307 @@ FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cd
 [WARNING][2026-02-05 18:19:31,559][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
 [WARNING][2026-02-05 18:20:01,886][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'data'), 'msg': 'Field required'}],)
 [WARNING][2026-02-05 18:20:01,896][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
+[WARNING][2026-02-06 09:19:08,011][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-02-06 09:19:08,068][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-02-06 09:19:17,445][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-02-06 09:32:51,032][log.py:249]Not Found: /api/testmanage/project/dynamic_des/
+[WARNING][2026-02-06 09:32:57,510][log.py:249]Not Found: /api/testmanage/project/dynamic_des/
+[WARNING][2026-02-06 09:33:05,303][log.py:249]Method Not Allowed: /api/testmanage/project/dynamic_des/
+[WARNING][2026-02-06 10:01:55,025][operation.py:131]"POST - ProjectController[dynamic_description] /api/testmanage/project/dynamic_description/" (400, '添加的数据未在系统内，请联系管理员')
+[WARNING][2026-02-06 10:01:55,034][log.py:249]Bad Request: /api/testmanage/project/dynamic_description/
+[WARNING][2026-02-06 10:02:03,145][operation.py:131]"POST - ProjectController[dynamic_description] /api/testmanage/project/dynamic_description/" (400, '添加的数据未在系统内，请联系管理员')
+[WARNING][2026-02-06 10:02:03,155][log.py:249]Bad Request: /api/testmanage/project/dynamic_description/
+[WARNING][2026-02-06 10:02:43,130][operation.py:131]"POST - ProjectController[dynamic_description] /api/testmanage/project/dynamic_description/" (400, '添加的数据未在系统内，请联系管理员')
+[WARNING][2026-02-06 10:02:43,141][log.py:249]Bad Request: /api/testmanage/project/dynamic_description/
+[WARNING][2026-02-06 10:39:53,890][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("expected token 'end of statement block', got 'table'",)
+[ERROR][2026-02-06 10:39:53,891][errors.py:131]expected token 'end of statement block', got 'table'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 578, in create_dynamic_env
+    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 351, in uniform_res_from_mul_data_schemas
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 4, in template
+jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got 'table'
+[ERROR][2026-02-06 10:39:53,923][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
+[WARNING][2026-02-06 10:40:33,124][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ('unexpected char "\'" at 5156',)
+[ERROR][2026-02-06 10:40:33,127][errors.py:131]unexpected char "'" at 5156
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 578, in create_dynamic_env
+    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 351, in uniform_res_from_mul_data_schemas
+    doc.render(context)
+    ~~~~~~~~~~^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
+    template = Template(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
+    return env.from_string(source, template_class=cls)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 4, in template
+jinja2.exceptions.TemplateSyntaxError: unexpected char "'" at 5156
+[ERROR][2026-02-06 10:40:33,143][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
+[WARNING][2026-02-06 10:52:55,927][operation.py:131]"GET - ProjectController[get_static_dynamic_items] /api/testmanage/project/get_static_dynamic_items/" ('测评数据',)
+[ERROR][2026-02-06 10:52:55,927][errors.py:131]'测评数据'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 454, in get_static_dynamic_items
+    item_qs = self.get_model_from_category(category).objects.filter(project=project_obj)
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 448, in get_model_from_category
+    return mapDict[category]
+           ~~~~~~~^^^^^^^^^^
+KeyError: '测评数据'
+[ERROR][2026-02-06 10:52:55,929][log.py:249]Internal Server Error: /api/testmanage/project/get_static_dynamic_items/
+[WARNING][2026-02-06 13:56:16,158][operation.py:131]"GET - ProjectController[get_env_analysis] /api/testmanage/project/get_env_analysis/" (1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
+[ERROR][2026-02-06 13:56:16,158][errors.py:131](1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+MySQLdb.ProgrammingError: (1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 485, in get_env_analysis
+    if qs.exists():
+       ~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1337, in exists
+    return self.query.has_results(using=self.db)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 686, in has_results
+    return compiler.has_results()
+           ~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1592, in has_results
+    return bool(self.execute_sql(SINGLE))
+                ~~~~~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
+    return self.cursor.execute(query, args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
+    res = self._query(mogrified_query)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
+    db.query(q)
+    ~~~~~~~~^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
+    _mysql.connection.query(self, query)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+django.db.utils.ProgrammingError: (1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
+[ERROR][2026-02-06 13:56:16,179][log.py:249]Internal Server Error: /api/testmanage/project/get_env_analysis/
+[WARNING][2026-02-06 14:05:16,384][operation.py:131]"GET - ProjectController[get_env_analysis] /api/testmanage/project/get_env_analysis/" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2026-02-06 14:05:16,392][log.py:249]Unprocessable Content: /api/testmanage/project/get_env_analysis/
+[WARNING][2026-02-06 14:05:45,945][operation.py:131]"GET - ProjectController[get_env_analysis] /api/testmanage/project/get_env_analysis/" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
+[WARNING][2026-02-06 14:05:45,955][log.py:249]Unprocessable Content: /api/testmanage/project/get_env_analysis/
+[WARNING][2026-02-06 14:07:06,442][log.py:249]Method Not Allowed: /api/testmanage/project/post_env_analysis/
+[WARNING][2026-02-06 17:54:26,693][log.py:249]Not Found: /api/project/case/getRelatedCase/
+[WARNING][2026-02-06 17:55:19,893][log.py:249]Not Found: /api/project/case/getRelatedCase/
+[WARNING][2026-02-06 17:55:54,935][log.py:249]Not Found: /api/project/case/getRelatedCase/
+[WARNING][2026-02-06 17:55:57,677][log.py:249]Not Found: /api/project/case/getRelatedCase/
+[WARNING][2026-02-06 17:56:36,885][log.py:249]Not Found: /api/project/case/getRelatedCase/
+[WARNING][2026-02-06 17:56:39,905][log.py:249]Not Found: /api/project/case/getRelatedCase/
+[WARNING][2026-02-07 12:50:41,012][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-02-07 12:50:41,075][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-02-07 12:50:44,998][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-02-07 13:37:04,069][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ("'QuerySet' object has no attribute 'influence'",)
+[ERROR][2026-02-07 13:37:04,069][errors.py:131]'QuerySet' object has no attribute 'influence'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
+    influence_qs = round_qs.influence.all()
+                   ^^^^^^^^^^^^^^^^^^
+AttributeError: 'QuerySet' object has no attribute 'influence'
+[ERROR][2026-02-07 13:37:04,071][log.py:249]Internal Server Error: /api/project/round/get_influence
+[WARNING][2026-02-07 13:37:39,505][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ('Round has no influence.',)
+[ERROR][2026-02-07 13:37:39,505][errors.py:131]Round has no influence.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
+    influence_qs = round_qs.first().influence.all()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Round.influence.RelatedObjectDoesNotExist: Round has no influence.
+[ERROR][2026-02-07 13:37:39,508][log.py:249]Internal Server Error: /api/project/round/get_influence
+[WARNING][2026-02-07 13:38:15,267][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ('Round has no influence.',)
+[ERROR][2026-02-07 13:38:15,267][errors.py:131]Round has no influence.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
+    influence_qs = round_qs.first().influence.all()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Round.influence.RelatedObjectDoesNotExist: Round has no influence.
+[ERROR][2026-02-07 13:38:15,269][log.py:249]Internal Server Error: /api/project/round/get_influence
+[WARNING][2026-02-07 13:39:10,565][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ('Round has no influence.',)
+[ERROR][2026-02-07 13:39:10,565][errors.py:131]Round has no influence.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
+    influence_qs = round_qs.first().influence.all()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
+    raise self.RelatedObjectDoesNotExist(
+    ...<2 lines>...
+    )
+apps.project.models.Round.influence.RelatedObjectDoesNotExist: Round has no influence.
+[ERROR][2026-02-07 13:39:10,568][log.py:249]Internal Server Error: /api/project/round/get_influence
+[WARNING][2026-02-07 14:25:27,963][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'missing', 'loc': ('body', 'data', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'round_key'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'item_list'), 'msg': 'Field required'}],)
+[WARNING][2026-02-07 14:25:27,972][log.py:249]Unprocessable Content: /api/project/round/create_influence
+[WARNING][2026-02-07 14:25:49,141][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'missing', 'loc': ('body', 'data', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'round_key'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'item_list'), 'msg': 'Field required'}],)
+[WARNING][2026-02-07 14:25:49,154][log.py:249]Unprocessable Content: /api/project/round/create_influence
+[WARNING][2026-02-07 15:01:21,250][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ('Cannot assign "<QuerySet [<InfluenceArea: InfluenceArea object (195)>]>": "InfluenceItem.influence" must be a "InfluenceArea" instance.',)
+[ERROR][2026-02-07 15:01:21,250][errors.py:131]Cannot assign "<QuerySet [<InfluenceArea: InfluenceArea object (195)>]>": "InfluenceItem.influence" must be a "InfluenceArea" instance.
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 110, in post_influence
+    new_item = InfluenceItem(influence=influence_area_qs,
+                             change_type=item.change_type,
+                             change_des=item.change_des,
+                             effect_cases=item.effect_cases)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\base.py", line 566, in __init__
+    _setattr(self, field.name, rel_obj)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 287, in __set__
+    raise ValueError(
+    ...<7 lines>...
+    )
+ValueError: Cannot assign "<QuerySet [<InfluenceArea: InfluenceArea object (195)>]>": "InfluenceItem.influence" must be a "InfluenceArea" instance.
+[ERROR][2026-02-07 15:01:21,258][log.py:249]Internal Server Error: /api/project/round/create_influence
+[WARNING][2026-02-07 15:19:38,249][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}],)
+[WARNING][2026-02-07 15:19:38,257][log.py:249]Unprocessable Content: /api/project/round/create_influence
+[WARNING][2026-02-07 15:19:43,626][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}],)
+[WARNING][2026-02-07 15:19:43,635][log.py:249]Unprocessable Content: /api/project/round/create_influence
+[WARNING][2026-02-07 15:20:44,492][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}],)
+[WARNING][2026-02-07 15:20:44,503][log.py:249]Unprocessable Content: /api/project/round/create_influence
+[WARNING][2026-02-07 15:21:39,506][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 2), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 3), 'msg': 'Input should be a valid string'}],)
+[WARNING][2026-02-07 15:21:39,515][log.py:249]Unprocessable Content: /api/project/round/create_influence

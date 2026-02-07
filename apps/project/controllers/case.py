@@ -396,3 +396,21 @@ class CaseController(ControllerBase):
         Case.objects.bulk_update(updated_cases, ['exe_time'])
         return ChenResponse(status=200, code=200, data=len(updated_cases),
                             message=f"成功更新{len(updated_cases)}个用例执行时间")
+
+    # 给级联选择器数据 -> 上一轮次所有用例
+    @route.get("/case/getRelatedCase", url_name='case-related-case')
+    def get_cases_related_case(self, id: int, round_key: str):
+        project_obj = get_object_or_404(Project, id=id)
+        previous_round_obj = project_obj.pField.filter(key=int(round_key) - 1).first()
+        # dut -> design
+        data_list = []
+        for dut in previous_round_obj.rdField.all():
+            dut_dict = {'label': dut.name, 'value': dut.id, 'children': []}
+            for design in dut.rsField.all():
+                design_dict = {'label': design.name, 'value': design.id, 'key': design.key, 'children': []}
+                for case in design.dcField.all():
+                    case_dict = {'label': case.name, 'value': case.id, 'key': case.key}
+                    design_dict['children'].append(case_dict)
+                dut_dict['children'].append(design_dict)
+            data_list.append(dut_dict)
+        return ChenResponse(message='获取成功', data=data_list)

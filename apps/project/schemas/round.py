@@ -1,7 +1,7 @@
 from typing import Optional
 from ninja import Schema, ModelSchema
 from pydantic import Field
-from apps.project.models import Round
+from apps.project.models import Round, InfluenceItem
 
 # 输出树状信息的schema
 class TreeReturnRound(Schema):
@@ -55,3 +55,21 @@ class CreateRoundInputSchema(ModelSchema):
         fields_optional = ['best_condition_tem', 'best_condition_voltage',
                            'low_condition_tem', 'low_condition_voltage', 'typical_condition_tem',
                            'typical_condition_voltage' 'grade']
+
+# influence_item return
+class InfluenceItemOutSchema(ModelSchema):
+    class Meta:
+        model = InfluenceItem
+        fields = ['id', 'change_type', 'change_des', 'effect_cases', 'change_influ']
+
+# influence input
+class OneItemInputSchema(Schema):
+    change_type: str
+    change_des: Optional[str] = ""
+    effect_cases: Optional[list[str]] = []
+    change_influ: Optional[str] = ""
+
+class InfluenceInputSchema(Schema):
+    id: int
+    round_key: str
+    item_list: list[OneItemInputSchema]

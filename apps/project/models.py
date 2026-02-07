@@ -542,13 +542,38 @@ class DynamicSoftTable(models.Model):
 class DynamicHardwareTable(models.Model):
     project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="dynamic_hardware", on_delete=models.CASCADE,
                                    verbose_name="关联项目", help_text="关联项目")
-
     table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
     fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
 
     class Meta:
         db_table = 'project_dynamic_hardware'
         verbose_name = "动态硬件项表"
+        verbose_name_plural = verbose_name
+
+# 一对一项目model：动态环境 - 测评数据
+class EvaluateData(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False, related_name="evaluate_data", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+    table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
+    fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+
+    class Meta:
+        db_table = 'project_evaluate_data'
+        verbose_name = "测评数据"
+        verbose_name_plural = verbose_name
+
+# 一对一项目model：环境差异性分析
+class EnvAnalysis(models.Model):
+    project = models.OneToOneField(to="Project", primary_key=True, db_constraint=False,
+                                   related_name="env_analysis", on_delete=models.CASCADE,
+                                   verbose_name="关联项目", help_text="关联项目")
+    table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
+    fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+    description = models.CharField(max_length=1024, null=True, default="", verbose_name="差异性分析文字")
+
+    class Meta:
+        db_table = 'project_env_analysis'
+        verbose_name = "环境差异性分析表"
         verbose_name_plural = verbose_name
 
 # 结构化排序数据
@@ -582,11 +607,7 @@ class StuctSortData(CoreModel):
         help_text="数据的题注说明"
     )
     # 内容字段 - 存储字符串、列表、字典
-    content = models.JSONField(
-        verbose_name="内容",
-        help_text="存储文本内容或二维表格数据或图片数据",
-        default=default_json_value
-    )
+    content = models.JSONField(verbose_name="内容", help_text="存储文本内容或二维表格数据或图片数据", default=default_json_value)
 
     class Meta:
         db_table = 'data_schemas'
@@ -595,3 +616,28 @@ class StuctSortData(CoreModel):
 
     def __str__(self):
         return f"结构排序化数据：({self.pk})"
+
+# 影响域分析 - 隶属：轮次（不能是第一轮次）
+class InfluenceArea(models.Model):
+    round = models.OneToOneField(to="Round", primary_key=True, db_constraint=False,
+                                 related_name="influence", on_delete=models.CASCADE,
+                                 verbose_name="关联项目", help_text="关联项目")
+
+    class Meta:
+        db_table = 'round_influence_area'
+        verbose_name = "影响域分析"
+        verbose_name_plural = verbose_name
+
+class InfluenceItem(CoreModel):
+    # 外键：影响域分析
+    influence = models.ForeignKey(InfluenceArea, db_constraint=False, related_name="influence_items", verbose_name="所属影响域分析",
+                                  on_delete=models.CASCADE, null=True, blank=True)
+    change_type = models.CharField(max_length=256, null=True, default="", verbose_name="更改类型", help_text="更改类型")
+    change_influ = models.TextField(max_length=2048, null=True, default="", verbose_name="影响域分析", help_text="影响域分析")
+    change_des = HTMLField(blank=True, null=True, verbose_name="更改内容描述")
+    effect_cases = models.JSONField(default=create_list, verbose_name="影响的用例key数组")
+
+    class Meta:
+        db_table = 'influence_item'
+        verbose_name = "影响域分析 - 行数据"
+        verbose_name_plural = verbose_name

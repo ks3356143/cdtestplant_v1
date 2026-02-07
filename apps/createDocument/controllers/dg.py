@@ -15,7 +15,7 @@ from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
 from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, \
-    DynamicSoftTable, DynamicHardwareTable
+    DynamicSoftTable, DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis
 from apps.dict.models import Dict
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
@@ -290,67 +290,80 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
+    # 生成dataSchemas的context - 服务于 1、测评对象 2、动态环境描述
+    @classmethod
+    def create_data_schema_list_context(cls, data_qs, doc: DocxTemplate):
+        if data_qs.exists():
+            data_list = []
+            for data_obj in data_qs.all():
+                item_context: dict[str, Any] = {"fontnote": data_obj.fontnote, 'type': data_obj.type}
+                # 根据数据类型处理content字段
+                if data_obj.type == 'text':
+                    item_context['content'] = data_obj.content
+                elif data_obj.type == 'table':
+                    # 使用subdoc
+                    subdoc = doc.new_subdoc()
+                    rows = len(data_obj.content)
+                    cols = len(data_obj.content[0])
+                    table = subdoc.add_table(rows=rows, cols=cols)
+                    # 单元格处理
+                    for row in range(rows):
+                        for col in range(cols):
+                            cell = table.cell(row, col)
+                            cell.text = data_obj.content[row][col]
+                            # 第一行设置居中
+                            if row == 0:
+                                # 黑体设置
+                                cell.text = ""
+                                pa = cell.paragraphs[0]
+                                run = pa.add_run(str(data_obj.content[row][col]))
+                                run.font.name = '黑体'
+                                run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
+                                run.font.bold = False
+                                pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                                # 垂直居中
+                                cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+                    # 表格居中
+                    table.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    # 设置边框
+                    set_table_border_by_cell_position(table)
+                    item_context['content'] = subdoc
+                elif data_obj.type == 'image':
+                    base64_bytes = base64.b64decode(data_obj.content.replace("data:image/png;base64,", ""))
+                    item_context['content'] = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(120))
+                data_list.append(item_context)
+            context = {
+                "datas": data_list,
+            }
+            return context
+        return None
+
+    # 统将需要多个DataSchemas的一对一项目字段生成响应
+    @classmethod
+    def uniform_res_from_mul_data_schemas(cls, id: int, filename: str, r_filename: str, model) -> ChenResponse | None:
+        project_obj = get_object_or_404(Project, id=id)
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / filename
+        doc = DocxTemplate(input_path)
+        qs = model.objects.filter(project=project_obj)
+        if qs.exists():
+            data_qs = qs.first().data_schemas
+            context = cls.create_data_schema_list_context(data_qs, doc)
+            doc.render(context)
+            try:
+                doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / r_filename)
+                return ChenResponse(status=200, code=200, message="文档生成成功！")
+            except PermissionError as e:
+                return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+        return None
+
     # 生成测评对象 - 包括大纲、说明、回归说明和报告
     @route.get('/create/softComposition', url_name='create-softComposition')
     @transaction.atomic
     def create_softComposition(self, id: int):
         # 首先判断是否包含 - 项目信息-软件概述
-        project_obj = get_object_or_404(Project, id=id)
-        input_path_2 = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评对象_2.docx'
-        doc = DocxTemplate(input_path_2)
-        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
-        if soft_summary_qs.exists():
-            data_qs = soft_summary_qs.first().data_schemas
-            if data_qs.exists():
-                # 如果存在则渲染此处
-                data_list = []
-                for data_obj in data_qs.all():
-                    item_context: dict[str, Any] = {"fontnote": data_obj.fontnote, 'type': data_obj.type}
-                    # 根据数据类型处理content字段
-                    if data_obj.type == 'text':
-                        item_context['content'] = data_obj.content
-                    elif data_obj.type == 'table':
-                        # 使用subdoc
-                        subdoc = doc.new_subdoc()
-                        rows = len(data_obj.content)
-                        cols = len(data_obj.content[0])
-                        table = subdoc.add_table(rows=rows, cols=cols)
-                        # 单元格处理
-                        for row in range(rows):
-                            for col in range(cols):
-                                cell = table.cell(row, col)
-                                cell.text = data_obj.content[row][col]
-                                # 第一行设置居中
-                                if row == 0:
-                                    # 黑体设置
-                                    cell.text = ""
-                                    pa = cell.paragraphs[0]
-                                    run = pa.add_run(str(data_obj.content[row][col]))
-                                    run.font.name = '黑体'
-                                    run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
-                                    run.font.bold = False
-                                    pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                                    # 垂直居中
-                                    cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-                        # 表格居中
-                        table.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                        # 设置边框
-                        set_table_border_by_cell_position(table)
-                        item_context['content'] = subdoc
-                    elif data_obj.type == 'image':
-                        base64_bytes = base64.b64decode(data_obj.content.replace("data:image/png;base64,", ""))
-                        item_context['content'] = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(120))
-                    data_list.append(item_context)
-                context = {
-                    "datas": data_list,
-                }
-                doc.render(context)
-                try:
-                    doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '测评对象.docx')
-                    return ChenResponse(status=200, code=200, message="文档生成成功！")
-                except PermissionError as e:
-                    return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
-
+        res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
+        if res is not None:
+            return res
         # 原来文档片段或者初始内容
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评对象.docx'
         doc = DocxTemplate(input_path)
@@ -480,6 +493,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 # 处理非第一列
                 else:
                     cell.text = table_data[row][col - 1]
+                # 垂直居中
+                cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
         # 单独处理第一行
         for col in range(cols):
             cell = table.cell(0, col)
@@ -559,9 +574,14 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         }
         return create_dg_docx("静态硬件和固件项.docx", context, id)
 
-    # 动态测评环境说明
+    # 动态测评环境说明 - 多dataSchemas格式
     @route.get('/create/dynamic_env', url_name='create-dynamic_env')
     def create_dynamic_env(self, id: int):
+        res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
+                                                     '动态测试环境说明.docx', ProjectDynamicDescription)
+        if res is not None:
+            return res
+        # 老内容
         project_obj: Project = get_object_or_404(Project, id=id)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '动态测试环境说明.docx'
         doc = DocxTemplate(input_path)
@@ -616,6 +636,11 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 测试数据
     @route.get('/create/test_data', url_name='create-test_data')
     def create_test_data(self, id: int):
+        res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
+                                                   '测评数据.docx', EvaluateData)
+        if res is not None:
+            return res
+        # 老内容
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测评数据.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '测评数据')
@@ -628,6 +653,27 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 环境差异性分析
     @route.get('/create/env_diff', url_name='create-env_diff')
     def create_env_diff(self, id: int):
+        project_obj: Project = get_object_or_404(Project, id=id)
+        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '环境差异性分析_2.docx'
+        doc = DocxTemplate(input_path)
+        qs = EnvAnalysis.objects.filter(project=project_obj)
+        if qs.exists():
+            obj = qs.first()
+            table_data = obj.table
+            subdoc = self.create_table_context(table_data, doc)
+            context = {
+                "description": obj.description,
+                "table": subdoc,
+                "fontnote": obj.fontnote,
+            }
+            doc.render(context, autoescape=True)
+            try:
+                doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / '环境差异性分析.docx')
+                return ChenResponse(status=200, code=200, message="文档生成成功！")
+            except PermissionError as e:
+                return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+
+        # 老内容
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '环境差异性分析.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '环境差异性分析')

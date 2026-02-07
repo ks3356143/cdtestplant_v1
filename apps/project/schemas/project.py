@@ -62,3 +62,10 @@ class StaticDynamicData(Schema):
     category: str
     table: list[list[str]]
     fontnote: Optional[str] = ""
+
+# ~~~环境差异性分析~~~
+class EnvAnalysisSchema(Schema):
+    id: int
+    table: list[list[str]]
+    fontnote: Optional[str] = ""
+    description: Optional[str] = ""

@@ -15,9 +15,9 @@ from ninja import Query
 from utils.chen_response import ChenResponse
 from utils.chen_crud import create, multi_delete_project
 from apps.project.models import Project, Round, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, DynamicSoftTable, \
-    DynamicHardwareTable
+    DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis
 from apps.project.schemas.project import ProjectRetrieveSchema, ProjectFilterSchema, ProjectCreateInput, \
-    DeleteSchema, SoftSummarySchema, DataSchema, StaticDynamicData
+    DeleteSchema, SoftSummarySchema, DataSchema, StaticDynamicData, EnvAnalysisSchema
 from utils.util import get_str_dict
 # 时间处理模块
 from apps.project.tool.timeList import time_return_to
@@ -99,6 +99,7 @@ class ProjectController(ControllerBase):
             except FileNotFoundError:
                 return ChenResponse(code=500, status=500, message='文件不存在，请检查')
             return ChenResponse(code=200, status=200, message="添加项目成功，并添加第一轮测试")
+        return ChenResponse(code=400, status=400, message="未添加任何项目")
 
     @route.put("/update/{project_id}")
     @transaction.atomic
@@ -139,7 +140,7 @@ class ProjectController(ControllerBase):
             project_media_path = media_path / ident
             try:
                 rmtree(project_media_path)
-            except FileNotFoundError as e:
+            except FileNotFoundError:
                 return ChenResponse(status=400, code=400, message='项目模版目录可能不存在，可能之前已删除')
         return ChenResponse(message="删除成功！")
 
@@ -270,48 +271,59 @@ class ProjectController(ControllerBase):
         time = time_return_to(id)
         return time
 
-    # 项目级信息前端告警数据获取
+    # [变] 项目级信息前端告警数据获取
     @route.get("/project_info_status/")
     @transaction.atomic
     def project_info_status(self, id: int):
-        # 全部状态
-        all_status = {
-            "soft_summary": False,
-            "interface_image": False,
-            "static_soft_item": False,
-            "static_soft_hardware": False,
-            "dynamic_soft_item": False,
-            "dynamic_soft_hardware": False,
-        }
-        # 1.查看软件概述是否填写
         project_obj = self.get_project_by_id(id)
-        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
-        if soft_summary_qs.exists():
-            # 存在还要判断是否有子项
-            if soft_summary_qs.first().data_schemas.exists():
-                all_status['soft_summary'] = True
-        # 2.查看接口图是否填写
-        image_qs = StuctSortData.objects.filter(project=project_obj)
-        if image_qs.exists():
-            all_status['interface_image'] = True
-        # 3.查看静态软件项是否填写
-        static_item_qs = StaticSoftItem.objects.filter(project=project_obj)
-        if static_item_qs.exists():
-            all_status['static_soft_item'] = True
-        # 4.静态硬件项
-        static_hardware_qs = StaticSoftHardware.objects.filter(project=project_obj)
-        if static_hardware_qs.exists():
-            all_status['static_soft_hardware'] = True
-        # 5.动态软件项
-        dynamic_soft_item_qs = DynamicSoftTable.objects.filter(project=project_obj)
-        if dynamic_soft_item_qs.exists():
-            all_status['dynamic_soft_item'] = True
-        # 5.动态软件项
-        dynamic_hardware_qs = DynamicHardwareTable.objects.filter(project=project_obj)
-        if dynamic_hardware_qs.exists():
-            all_status['dynamic_soft_hardware'] = True
+
+        # 统一配置每个状态的检查逻辑
+        status_configs = {
+            "soft_summary": {
+                "model": ProjectSoftSummary,
+                "check": lambda qs: qs.exists() and qs.first().data_schemas.exists()
+            },
+            "interface_image": {
+                "model": StuctSortData,
+                "check": lambda qs: qs.exists()
+            },
+            "static_soft_item": {
+                "model": StaticSoftItem,
+                "check": lambda qs: qs.exists()
+            },
+            "static_soft_hardware": {
+                "model": StaticSoftHardware,
+                "check": lambda qs: qs.exists()
+            },
+            "dynamic_soft_item": {
+                "model": DynamicSoftTable,
+                "check": lambda qs: qs.exists()
+            },
+            "dynamic_soft_hardware": {
+                "model": DynamicHardwareTable,
+                "check": lambda qs: qs.exists()
+            },
+            "dynamic_des": {
+                "model": ProjectDynamicDescription,
+                "check": lambda qs: qs.exists() and qs.first().data_schemas.exists()
+            },
+            "evaluate_data": {
+                "model": EvaluateData,
+                "check": lambda qs: qs.exists()
+            },
+            "env_analysis": {
+                "model": EnvAnalysis,
+                "check": lambda qs: qs.exists()
+            }
+        }
+
+        all_status = {}
+        for status_key, config in status_configs.items():
+            qs = config["model"].objects.filter(project=project_obj)
+            all_status[status_key] = config["check"](qs)
         return ChenResponse(status=200, code=20000, data=all_status, message='查询成功')
 
+    # [变] 封装结构化数据新增-修改（针对project - OneToOne - DataSchemas形式）
     @classmethod
     def bulk_create_data_schemas(cls, parent_obj, datas: list[DataSchema]):
         """
@@ -321,11 +333,13 @@ class ProjectController(ControllerBase):
                 datas (list[DataSchema]): 数据模式对象列表
         """
         # 动态确定所属父model
-        field_name = None
+        field_name = None  # type:ignore
         if isinstance(parent_obj, ProjectSoftSummary):
             field_name = 'soft_summary'
         elif isinstance(parent_obj, Project):
             field_name = 'project'
+        elif isinstance(parent_obj, ProjectDynamicDescription):
+            field_name = 'dynamic_description'
         else:
             raise HttpError(400, "添加的数据未在系统内，请联系管理员")
 
@@ -340,39 +354,66 @@ class ProjectController(ControllerBase):
             data_list.append(new_data)
         StuctSortData.objects.bulk_create(data_list)
 
+    # 封装只有model不同 -修改和新增dataSchemas（针对project - OneToOne - DataSchemas形式）
+    @classmethod
+    def create_or_modify_data_schemas(cls, id: int, model, data):
+        project_obj = get_object_or_404(Project, pk=id)
+        qs = model.objects.filter(project=project_obj)
+        if qs.exists():
+            obj = qs.first()
+            # 如果存在则修改：先删除再创建
+            obj.data_schemas.all().delete()
+            cls.bulk_create_data_schemas(obj, data)
+        else:
+            parent_obj = model.objects.create(project=project_obj)
+            cls.bulk_create_data_schemas(parent_obj, data)
+
     # ~~~软件概述-新增和修改~~~
     @route.post('/soft_summary/')
     @transaction.atomic
     def soft_summary(self, payload: SoftSummarySchema):
-        project_obj = self.get_project_by_id(payload.id)
-        # 安全获取-软件概述
-        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
-        if soft_summary_qs.exists():
-            soft_summary = soft_summary_qs.first()
-            # 如果存在则修改：先删除然后创建
-            soft_summary.data_schemas.all().delete()
-            self.bulk_create_data_schemas(soft_summary, payload.data)
-        else:
-            # 不存在软件概述则创建
-            soft_summary_obj = ProjectSoftSummary.objects.create(project=project_obj)
-            self.bulk_create_data_schemas(soft_summary_obj, payload.data)
+        self.create_or_modify_data_schemas(payload.id, ProjectSoftSummary, payload.data)
+
+    # ~~~动态环境描述-新增和修改~~~
+    @route.post('/dynamic_description/')
+    @transaction.atomic
+    def dynamic_description(self, payload: SoftSummarySchema):
+        self.create_or_modify_data_schemas(payload.id, ProjectDynamicDescription, payload.data)
+
+    @classmethod
+    def get_res_from_info(cls, project_obj: Project, model) -> list[dict] | None:
+        """model: 当前一对一模型，直接获取结构化数据信息数组返回"""
+        qs = model.objects.filter(project=project_obj)
+        if qs.exists():
+            obj = qs.first()
+            ds_qs = obj.data_schemas.all()
+            data_list = [{
+                "type": item.type,
+                "content": item.content,
+                "fontnote": item.fontnote,
+            } for item in ds_qs]
+            return data_list
+        return None
 
     # ~~~软件概述-获取到前端展示~~~
     @route.get("/get_soft_summary/", response=list[DataSchema])
     @transaction.atomic
     def get_soft_summary(self, id: int):
         project_obj = self.get_project_by_id(id)
-        soft_summary_qs = ProjectSoftSummary.objects.filter(project=project_obj)
-        if soft_summary_qs.exists():
-            # 如果存在则返回数据
-            soft_summary = soft_summary_qs.first()
-            dataSchem_qs = soft_summary.data_schemas.all()
-            return ChenResponse(status=200, code=25001, data=[{
-                "type": item.type,
-                "content": item.content,
-                "fontnote": item.fontnote,
-            } for item in dataSchem_qs])
-        return ChenResponse(status=200, code=25002, data=[])
+        data_list = self.get_res_from_info(project_obj, ProjectSoftSummary)
+        if data_list:
+            return ChenResponse(status=200, code=20000, data=data_list)
+        return ChenResponse(status=200, code=20000, data=[])
+
+    # ~~~动态环境描述 - 获取展示~~~
+    @route.get("/dynamic_des/", response=list[DataSchema])
+    @transaction.atomic
+    def get_dynamic_des(self, id: int):
+        project_obj = self.get_project_by_id(id)
+        data_list = self.get_res_from_info(project_obj, ProjectDynamicDescription)
+        if data_list:
+            return ChenResponse(status=200, code=20000, data=data_list)
+        return ChenResponse(status=200, code=20000, data=[])
 
     # ~~~接口图新增或修改~~~
     @route.post("/interface_image/")
@@ -400,13 +441,15 @@ class ProjectController(ControllerBase):
             })
         return ChenResponse(status=200, code=25002, data=None)
 
+    # 动态返回是哪个模型
     @classmethod
     def get_model_from_category(cls, category: str):
         mapDict = {
             '静态软件项': StaticSoftItem,
             '静态硬件项': StaticSoftHardware,
             '动态软件项': DynamicSoftTable,
-            '动态硬件项': DynamicHardwareTable
+            '动态硬件项': DynamicHardwareTable,
+            '测评数据': EvaluateData
         }
         return mapDict[category]
 
@@ -424,7 +467,6 @@ class ProjectController(ControllerBase):
     @route.post("/post_static_dynamic_item/")
     @transaction.atomic
     def post_static_dynamic_item(self, data: StaticDynamicData):
-        print(data)
         project_obj = self.get_project_by_id(data.id)
         model = self.get_model_from_category(data.category)
         item_qs = model.objects.filter(project=project_obj)
@@ -432,3 +474,24 @@ class ProjectController(ControllerBase):
             # 如果存在则修改
             item_qs.delete()
         model.objects.create(project=project_obj, table=data.table, fontnote=data.fontnote)
+
+    # ~~~环境差异性分析 - 获取~~~
+    @route.get("/get_env_analysis/")
+    @transaction.atomic
+    def get_env_analysis(self, id: int):
+        project_obj = self.get_project_by_id(id)
+        qs = EnvAnalysis.objects.filter(project=project_obj)
+        if qs.exists():
+            obj = qs.first()
+            return ChenResponse(status=200, code=25001, data={"table": obj.table, "fontnote": obj.fontnote, "description": obj.description})
+        return ChenResponse(status=200, code=25002, data=None)
+
+    # ~~~环境差异性分析 - 新增和修改~~~
+    @route.post("/post_env_analysis/")
+    @transaction.atomic
+    def post_env_analysis(self, data: EnvAnalysisSchema):
+        project_obj = self.get_project_by_id(data.id)
+        qs = EnvAnalysis.objects.filter(project=project_obj)
+        if qs.exists():
+            qs.delete()
+        EnvAnalysis.objects.create(project=project_obj, table=data.table, fontnote=data.fontnote, description=data.description)

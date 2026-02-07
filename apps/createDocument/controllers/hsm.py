@@ -8,7 +8,7 @@ from django.db.models import QuerySet, Q
 from docxtpl import DocxTemplate
 from docx import Document
 # 导入模型
-from apps.project.models import Project, Round, Dut
+from apps.project.models import Project, Round, Dut, InfluenceArea
 from apps.dict.models import Dict
 # 导入项目工具
 from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, get_testType
@@ -19,6 +19,7 @@ from utils.path_utils import project_path
 from apps.createDocument.extensions.util import delete_dir_files
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
+from utils.util import get_str_abbr
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入排序
@@ -235,6 +236,30 @@ class GenerateControllerHSM(ControllerBase):
                                     message=f'您第{chinese_round_name[int(hround.key)]}轮次中缺少源代码版本信息，请添加')
             last_dm_version = last_round_so_dut.version
             now_dm_version = so_dut.version
+            # 这里插入影响域分析部分
+            ## 先查找是否有影响域分析填写
+            area_qs = InfluenceArea.objects.filter(round=hround)
+            ## 如果存在则查询items
+            if area_qs.exists():
+                area_obj = area_qs.first()
+                items_qs = area_obj.influence_items.all()
+                if items_qs.exists():
+                    # 遍历items
+                    item_render_list = []
+                    for item in items_qs:
+                        # 1.处理关联case - 找第一轮cases
+                        case_str_list = []
+                        for case in project_obj.pcField.filter(key__in=item.effect_cases):
+                            case_ident_index = str(int(case.key.split("-")[-1]) + 1).zfill(3)
+                            case_str_list.append("_".join(["YL", get_str_abbr(case.test.testType, "testType"), case.ident, case_ident_index]))
+                        item_dict = {
+                            "change_type": item.change_type,
+                            "change_influ": item.change_influ,
+                            "case_str_list": case_str_list,
+                            "change_des": item.change_des, # 富文本未处理
+                        }
+                        item_render_list.append(item_dict)
+
             # 如果存在这个轮次的需求文档，则查询上个版本
             last_xq_version = ""
             if xq_dut:

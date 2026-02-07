@@ -2,9 +2,9 @@ from ninja_extra import api_controller, ControllerBase, route
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from django.db import transaction
-from apps.project.models import Round
+from apps.project.models import Round, InfluenceArea, InfluenceItem
 from apps.project.schemas.round import TreeReturnRound, RoundInfoOutSchema, EditSchemaIn, DeleteSchema, \
-    CreateRoundOutSchema, CreateRoundInputSchema
+    CreateRoundOutSchema, CreateRoundInputSchema, InfluenceItemOutSchema, InfluenceInputSchema
 from typing import List
 from utils.chen_response import ChenResponse
 from apps.project.tools.delete_change_key import round_delete_sub_node_key
@@ -81,3 +81,63 @@ class RoundController(ControllerBase):
                     return ChenResponse(code=400, status=400, message='标识和其他重复')
         Round.objects.create(**asert_dict)
         return ChenResponse(message="新增轮次成功")
+
+    # ~~~影响域分析 - 获取数据和状态~~~
+    @route.get("/round/get_influence", response=List[InfluenceItemOutSchema], url_name="round-get-influence-items")
+    @transaction.atomic
+    def get_influence(self, id: int, round_key: str):
+        round_qs = Round.objects.filter(project__id=id, key=round_key)
+        round_obj = round_qs.first()
+        influence_qs = InfluenceArea.objects.filter(round=round_obj)
+        if influence_qs.exists():
+            influence = influence_qs.first()
+            items_qs = influence.influence_items.all()
+            if items_qs.exists():
+                return items_qs
+        return ChenResponse(status=200, code=25002, data=[])
+
+    # ~~~影响域分析是否有值~~~
+    @route.get("/round/get_status_influence", url_name="round-get-status-influence")
+    @transaction.atomic
+    def get_status_influence(self, id: int, round_key: str):
+        round_qs = Round.objects.filter(project__id=id, key=round_key)
+        round_obj = round_qs.first()
+        influence_qs = InfluenceArea.objects.filter(round=round_obj)
+        if influence_qs.exists():
+            influence = influence_qs.first()
+            items_qs = influence.influence_items.all()
+            if items_qs.exists():
+                return ChenResponse(status=200, code=25005, data=True)
+        return ChenResponse(status=200, code=25006, data=False)
+
+    # ~~~影响域分析 - 修改或新增~~~
+    @route.post("/round/create_influence", url_name="round-influence-create")
+    @transaction.atomic
+    def post_influence(self, data: InfluenceInputSchema):
+        print(data)
+        round_obj = Round.objects.filter(project_id=data.id, key=data.round_key).first()
+        influence_area_qs = InfluenceArea.objects.filter(round=round_obj)
+        if influence_area_qs.exists():
+            influence_area_obj = influence_area_qs.first()
+            influence_area_obj.influence_items.all().delete()
+            # 先删除再创建
+            data_list = []
+            for item in data.item_list:
+                new_item = InfluenceItem(influence=influence_area_obj,
+                                         change_type=item.change_type,
+                                         change_influ=item.change_influ,
+                                         change_des=item.change_des,
+                                         effect_cases=item.effect_cases)
+                data_list.append(new_item)
+            InfluenceItem.objects.bulk_create(data_list)
+        else:
+            parent_obj = InfluenceArea.objects.create(round=round_obj)
+            data_list = []
+            for item in data.item_list:
+                new_item = InfluenceItem(influence=parent_obj,
+                                         change_type=item.change_type,
+                                         change_influ=item.change_influ,
+                                         change_des=item.change_des,
+                                         effect_cases=item.effect_cases)
+                data_list.append(new_item)
+            InfluenceItem.objects.bulk_create(data_list)
