@@ -405,7 +405,7 @@ class CaseController(ControllerBase):
         # dut -> design
         data_list = []
         for dut in previous_round_obj.rdField.all():
-            dut_dict = {'label': dut.name, 'value': dut.id, 'children': []}
+            dut_dict = {'label': dut.name, 'value': dut.id, 'key': dut.key, 'children': []}
             for design in dut.rsField.all():
                 design_dict = {'label': design.name, 'value': design.id, 'key': design.key, 'children': []}
                 for case in design.dcField.all():

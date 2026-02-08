@@ -7,7 +7,7 @@ from bs4.element import Tag, NavigableString
 import base64
 import io
 from docxtpl import InlineImage
-from docx.shared import Mm, Cm
+from docx.shared import Mm
 import re
 
 # text.replace('\xa0', ' '))
@@ -82,11 +82,12 @@ class RichParser:
             if isinstance(oneline, list):
                 final_list.append({'isTable': True, 'data': oneline})
                 continue
-            if oneline.startswith("data:image/png;base64"):
+            if oneline.startswith("data:image/png;base64") or oneline.startswith("data:image/jpeg;base64,") or oneline.startswith(
+                    "data:image/jpg;base64,"):
                 base64_bytes = base64.b64decode(oneline.replace("data:image/png;base64,", ""))
                 # ~~~设置了固定宽度、高度~~~
-                final_list.append(
-                    InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(img_size), height=Mm(height)))
+                inline_image = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(img_size), height=Mm(height))
+                final_list.append(inline_image)
             else:
                 final_list.append(oneline)
         if len(final_list) <= 0:

@@ -111,8 +111,8 @@ requires-dist = [
     { name = "django-tinymce", specifier = ">=5.0.0" },
     { name = "docxcompose" },
     { name = "docxtpl", specifier = ">=0.20.2" },
-    { name = "faker", specifier = "==40.1.2" },
-    { name = "ipykernel", specifier = ">=7.1.0" },
+    { name = "faker", specifier = ">=40.4.0" },
+    { name = "ipykernel", specifier = ">=7.2.0" },
     { name = "lizard", specifier = ">=1.21.0" },
     { name = "mysqlclient", specifier = ">=2.2.7" },
     { name = "ninja-schema", specifier = ">=0.14.3" },
@@ -413,14 +413,14 @@ wheels = [
 
 [[package]]
 name = "faker"
-version = "40.1.2"
+version = "40.4.0"
 source = { registry = "https://mirrors.aliyun.com/pypi/simple" }
 dependencies = [
     { name = "tzdata", marker = "sys_platform == 'win32'" },
 ]
-sdist = { url = "https://mirrors.aliyun.com/pypi/packages/5e/77/1c3ff07b6739b9a1d23ca01ec0a90a309a33b78e345a3eb52f9ce9240e36/faker-40.1.2.tar.gz", hash = "sha256:b76a68163aa5f171d260fc24827a8349bc1db672f6a665359e8d0095e8135d30" }
+sdist = { url = "https://mirrors.aliyun.com/pypi/packages/fc/7e/dccb7013c9f3d66f2e379383600629fec75e4da2698548bdbf2041ea4b51/faker-40.4.0.tar.gz", hash = "sha256:76f8e74a3df28c3e2ec2caafa956e19e37a132fdc7ea067bc41783affcfee364" }
 wheels = [
-    { url = "https://mirrors.aliyun.com/pypi/packages/46/ec/91a434c8a53d40c3598966621dea9c50512bec6ce8e76fa1751015e74cef/faker-40.1.2-py3-none-any.whl", hash = "sha256:93503165c165d330260e4379fd6dc07c94da90c611ed3191a0174d2ab9966a42" },
+    { url = "https://mirrors.aliyun.com/pypi/packages/ac/63/58efa67c10fb27810d34351b7a10f85f109a7f7e2a07dc3773952459c47b/faker-40.4.0-py3-none-any.whl", hash = "sha256:486d43c67ebbb136bc932406418744f9a0bdf2c07f77703ea78b58b77e9aa443" },
 ]
 
 [[package]]
@@ -443,7 +443,7 @@ wheels = [
 
 [[package]]
 name = "ipykernel"
-version = "7.1.0"
+version = "7.2.0"
 source = { registry = "https://mirrors.aliyun.com/pypi/simple" }
 dependencies = [
     { name = "appnope", marker = "sys_platform == 'darwin'" },
@@ -460,9 +460,9 @@ dependencies = [
     { name = "tornado" },
     { name = "traitlets" },
 ]
-sdist = { url = "https://mirrors.aliyun.com/pypi/packages/b9/a4/4948be6eb88628505b83a1f2f40d90254cab66abf2043b3c40fa07dfce0f/ipykernel-7.1.0.tar.gz", hash = "sha256:58a3fc88533d5930c3546dc7eac66c6d288acde4f801e2001e65edc5dc9cf0db" }
+sdist = { url = "https://mirrors.aliyun.com/pypi/packages/ca/8d/b68b728e2d06b9e0051019640a40a9eb7a88fcd82c2e1b5ce70bef5ff044/ipykernel-7.2.0.tar.gz", hash = "sha256:18ed160b6dee2cbb16e5f3575858bc19d8f1fe6046a9a680c708494ce31d909e" }
 wheels = [
-    { url = "https://mirrors.aliyun.com/pypi/packages/a3/17/20c2552266728ceba271967b87919664ecc0e33efca29c3efc6baf88c5f9/ipykernel-7.1.0-py3-none-any.whl", hash = "sha256:763b5ec6c5b7776f6a8d7ce09b267693b4e5ce75cb50ae696aaefb3c85e1ea4c" },
+    { url = "https://mirrors.aliyun.com/pypi/packages/82/b9/e73d5d9f405cba7706c539aa8b311b49d4c2f3d698d9c12f815231169c71/ipykernel-7.2.0-py3-none-any.whl", hash = "sha256:3bbd4420d2b3cc105cbdf3756bfc04500b1e52f090a90716851f3916c62e1661" },
 ]
 
 [[package]]

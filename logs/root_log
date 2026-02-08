@@ -596,3 +596,88 @@ ValueError: Cannot assign "<QuerySet [<InfluenceArea: InfluenceArea object (195)
 [WARNING][2026-02-07 15:20:44,503][log.py:249]Unprocessable Content: /api/project/round/create_influence
 [WARNING][2026-02-07 15:21:39,506][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 2), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 3), 'msg': 'Input should be a valid string'}],)
 [WARNING][2026-02-07 15:21:39,515][log.py:249]Unprocessable Content: /api/project/round/create_influence
+[WARNING][2026-02-08 13:53:10,479][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-02-08 13:53:10,577][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-02-08 13:53:14,760][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-02-08 13:53:32,251][operation.py:131]"GET - GenerateControllerHSM[create_changePart] /api/generateHSM/create/changePart" ("RichParser.get_final_list() missing 1 required positional argument: 'doc'",)
+[ERROR][2026-02-08 13:53:32,252][errors.py:131]RichParser.get_final_list() missing 1 required positional argument: 'doc': Did you fail to use functools.wraps() in a decorator?
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\hsm.py", line 257, in create_changePart
+    print(parser.get_final_list())
+          ~~~~~~~~~~~~~~~~~~~~~^^
+TypeError: RichParser.get_final_list() missing 1 required positional argument: 'doc': Did you fail to use functools.wraps() in a decorator?
+[ERROR][2026-02-08 13:53:32,259][log.py:249]Internal Server Error: /api/generateHSM/create/changePart
+[WARNING][2026-02-08 15:04:43,157][operation.py:131]"GET - GenerateControllerHSM[create_changePart] /api/generateHSM/create/changePart" ("Expected an expression, got 'end of print statement'",)
+[ERROR][2026-02-08 15:04:43,157][errors.py:131]Expected an expression, got 'end of print statement'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\hsm.py", line 285, in create_changePart
+    doc.render(context_round, autoescape=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 310, in render_xml_part
+    template = jinja_env.from_string(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 16, in template
+jinja2.exceptions.TemplateSyntaxError: Expected an expression, got 'end of print statement'
+[ERROR][2026-02-08 15:04:43,182][log.py:249]Internal Server Error: /api/generateHSM/create/changePart
+[WARNING][2026-02-08 15:05:05,418][operation.py:131]"GET - GenerateControllerHSM[create_changePart] /api/generateHSM/create/changePart" ("Expected an expression, got 'end of print statement'",)
+[ERROR][2026-02-08 15:05:05,419][errors.py:131]Expected an expression, got 'end of print statement'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\hsm.py", line 285, in create_changePart
+    doc.render(context_round, autoescape=True)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
+    xml_src = self.build_xml(context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
+    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
+    raise exc
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 310, in render_xml_part
+    template = jinja_env.from_string(src_xml)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
+    return cls.from_code(self, self.compile(source), gs, None)
+                               ~~~~~~~~~~~~^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
+    self.handle_exception(source=source_hint)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "<unknown>", line 16, in template
+jinja2.exceptions.TemplateSyntaxError: Expected an expression, got 'end of print statement'
+[ERROR][2026-02-08 15:05:05,438][log.py:249]Internal Server Error: /api/generateHSM/create/changePart

@@ -1,6 +1,6 @@
 from pathlib import Path
 from copy import deepcopy
-from typing import Union
+from typing import Union, TypedDict, Optional
 from ninja_extra import api_controller, ControllerBase, route
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -240,26 +240,31 @@ class GenerateControllerHSM(ControllerBase):
             ## 先查找是否有影响域分析填写
             area_qs = InfluenceArea.objects.filter(round=hround)
             ## 如果存在则查询items
+            item_render_list = []
             if area_qs.exists():
                 area_obj = area_qs.first()
                 items_qs = area_obj.influence_items.all()
                 if items_qs.exists():
-                    # 遍历items
-                    item_render_list = []
+                    index = 1
                     for item in items_qs:
                         # 1.处理关联case - 找第一轮cases
                         case_str_list = []
                         for case in project_obj.pcField.filter(key__in=item.effect_cases):
                             case_ident_index = str(int(case.key.split("-")[-1]) + 1).zfill(3)
                             case_str_list.append("_".join(["YL", get_str_abbr(case.test.testType, "testType"), case.ident, case_ident_index]))
+                        # 2.处理富文本框
+                        parser = RichParser(item.change_des)
                         item_dict = {
                             "change_type": item.change_type,
                             "change_influ": item.change_influ,
                             "case_str_list": case_str_list,
-                            "change_des": item.change_des, # 富文本未处理
+                            "change_des": parser.get_final_list(doc, img_size=40, height=30),  # 富文本未处理
+                            "index": str(index),
                         }
+                        index = index + 1
                         item_render_list.append(item_dict)
-
+            # 将影响域分析加入context
+            context_round['influence'] = item_render_list  # noqa
             # 如果存在这个轮次的需求文档，则查询上个版本
             last_xq_version = ""
             if xq_dut:

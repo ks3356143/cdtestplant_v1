@@ -114,7 +114,6 @@ class RoundController(ControllerBase):
     @route.post("/round/create_influence", url_name="round-influence-create")
     @transaction.atomic
     def post_influence(self, data: InfluenceInputSchema):
-        print(data)
         round_obj = Round.objects.filter(project_id=data.id, key=data.round_key).first()
         influence_area_qs = InfluenceArea.objects.filter(round=round_obj)
         if influence_area_qs.exists():
