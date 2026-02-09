@@ -22,6 +22,8 @@ class RichParser:
         # 最终的解析后的列表
         self.data_list = []
         self.line_parse()
+        # 匹配“表1-3”或“表1”等字符的正则
+        self.biao_pattern = re.compile(r"表\d+(?:-\d+)?")
 
     # 1.函数：将self.bs.contents去掉\n，获取每行数据
     def remove_n_in_contents(self):
@@ -127,6 +129,13 @@ class RichParser:
         for oneline in self.data_list:
             if isinstance(oneline, list) or oneline.startswith("data:image/png;base64"):
                 continue
-            else:
-                final_list.append(oneline)
+            cleaned_line = oneline
+            cleaned_line = re.sub(r'\s+', '', cleaned_line)
+            cleaned_line = cleaned_line.replace(')', '）')
+            cleaned_line = cleaned_line.strip()
+            # 去掉以“表3”的行
+            if self.biao_pattern.search(cleaned_line):
+                continue
+            if cleaned_line:
+                final_list.append(cleaned_line)
         return final_list

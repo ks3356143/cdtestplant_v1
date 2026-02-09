@@ -81,7 +81,7 @@ dependencies = [
     { name = "django-shortuuidfield" },
     { name = "django-tinymce" },
     { name = "docxcompose" },
-    { name = "docxtpl" },
+    { name = "docxtpl", extra = ["subdoc"] },
     { name = "faker" },
     { name = "ipykernel" },
     { name = "lizard" },
@@ -92,6 +92,7 @@ dependencies = [
     { name = "pandas" },
     { name = "python-docx" },
     { name = "python-ldap" },
+    { name = "setuptools" },
     { name = "ua-parser-builtins" },
     { name = "user-agents" },
     { name = "waitress" },
@@ -110,7 +111,7 @@ requires-dist = [
     { name = "django-shortuuidfield", specifier = ">=0.1.3" },
     { name = "django-tinymce", specifier = ">=5.0.0" },
     { name = "docxcompose" },
-    { name = "docxtpl", specifier = ">=0.20.2" },
+    { name = "docxtpl", extras = ["subdoc"], specifier = ">=0.20.2" },
     { name = "faker", specifier = ">=40.4.0" },
     { name = "ipykernel", specifier = ">=7.2.0" },
     { name = "lizard", specifier = ">=1.21.0" },
@@ -121,6 +122,7 @@ requires-dist = [
     { name = "pandas", specifier = ">=3.0.0" },
     { name = "python-docx", specifier = ">=1.2.0" },
     { name = "python-ldap", path = "python_ldap-3.4.5-cp313-cp313-win_amd64.whl" },
+    { name = "setuptools", specifier = "<=81.0.0" },
     { name = "ua-parser-builtins", specifier = ">=202601" },
     { name = "user-agents", specifier = ">=2.2.0" },
     { name = "waitress", specifier = ">=3.0.2" },
@@ -387,6 +389,11 @@ dependencies = [
 sdist = { url = "https://mirrors.aliyun.com/pypi/packages/b2/b4/4435f3fcb1357ec441079c4af1dda3ea926fad6dcead4aed2d93b369944e/docxtpl-0.20.2.tar.gz", hash = "sha256:eddf3350d70b4d123208e801d585bcb313d21044a377a14f75a66d0965841de1" }
 wheels = [
     { url = "https://mirrors.aliyun.com/pypi/packages/a4/ad/e07939d8e020e513d3860400413ba1e0e06102c469639b440d921337efef/docxtpl-0.20.2-py3-none-any.whl", hash = "sha256:626d5c570a46a62b2ca73b4d08f1c240fa031a5bc45371e1466a4fe184923d10" },
+]
+
+[package.optional-dependencies]
+subdoc = [
+    { name = "docxcompose" },
 ]
 
 [[package]]
@@ -1051,11 +1058,11 @@ wheels = [
 
 [[package]]
 name = "setuptools"
-version = "80.10.2"
+version = "81.0.0"
 source = { registry = "https://mirrors.aliyun.com/pypi/simple" }
-sdist = { url = "https://mirrors.aliyun.com/pypi/packages/76/95/faf61eb8363f26aa7e1d762267a8d602a1b26d4f3a1e758e92cb3cb8b054/setuptools-80.10.2.tar.gz", hash = "sha256:8b0e9d10c784bf7d262c4e5ec5d4ec94127ce206e8738f29a437945fbc219b70" }
+sdist = { url = "https://mirrors.aliyun.com/pypi/packages/0d/1c/73e719955c59b8e424d015ab450f51c0af856ae46ea2da83eba51cc88de1/setuptools-81.0.0.tar.gz", hash = "sha256:487b53915f52501f0a79ccfd0c02c165ffe06631443a886740b91af4b7a5845a" }
 wheels = [
-    { url = "https://mirrors.aliyun.com/pypi/packages/94/b8/f1f62a5e3c0ad2ff1d189590bfa4c46b4f3b6e49cef6f26c6ee4e575394d/setuptools-80.10.2-py3-none-any.whl", hash = "sha256:95b30ddfb717250edb492926c92b5221f7ef3fbcc2b07579bcd4a27da21d0173" },
+    { url = "https://mirrors.aliyun.com/pypi/packages/e1/e3/c164c88b2e5ce7b24d667b9bd83589cf4f3520d97cad01534cd3c4f55fdb/setuptools-81.0.0-py3-none-any.whl", hash = "sha256:fdd925d5c5d9f62e4b74b30d6dd7828ce236fd6ed998a08d81de62ce5a6310d6" },
 ]
 
 [[package]]
@@ -1209,9 +1216,9 @@ wheels = [
 
 [[package]]
 name = "wcwidth"
-version = "0.5.3"
+version = "0.6.0"
 source = { registry = "https://mirrors.aliyun.com/pypi/simple" }
-sdist = { url = "https://mirrors.aliyun.com/pypi/packages/c2/62/a7c072fbfefb2980a00f99ca994279cb9ecf310cb2e6b2a4d2a28fe192b3/wcwidth-0.5.3.tar.gz", hash = "sha256:53123b7af053c74e9fe2e92ac810301f6139e64379031f7124574212fb3b4091" }
+sdist = { url = "https://mirrors.aliyun.com/pypi/packages/35/a2/8e3becb46433538a38726c948d3399905a4c7cabd0df578ede5dc51f0ec2/wcwidth-0.6.0.tar.gz", hash = "sha256:cdc4e4262d6ef9a1a57e018384cbeb1208d8abbc64176027e2c2455c81313159" }
 wheels = [
-    { url = "https://mirrors.aliyun.com/pypi/packages/3c/c1/d73f12f8cdb1891334a2ccf7389eed244d3941e74d80dd220badb937f3fb/wcwidth-0.5.3-py3-none-any.whl", hash = "sha256:d584eff31cd4753e1e5ff6c12e1edfdb324c995713f75d26c29807bb84bf649e" },
+    { url = "https://mirrors.aliyun.com/pypi/packages/68/5a/199c59e0a824a3db2b89c5d2dade7ab5f9624dbf6448dc291b46d5ec94d3/wcwidth-0.6.0-py3-none-any.whl", hash = "sha256:1a3a1e510b553315f8e146c54764f4fb6264ffad731b3d78088cdb1478ffbdad" },
 ]

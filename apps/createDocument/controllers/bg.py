@@ -19,7 +19,7 @@ from utils.util import get_str_dict, get_list_dict, create_problem_grade_str, cr
     create_demand_summary, create_problem_type_str, create_problem_table, create_problem_type_table, \
     get_str_abbr
 # 根据轮次生成测评内容文档context
-from apps.createDocument.extensions.content_result_tool import create_round_context
+from apps.createDocument.extensions.content_result_tool import create_round_context, create_influence_context
 from apps.createDocument.extensions.zhui import create_bg_round1_zhui
 from apps.createDocument.extensions.solve_problem import create_one_problem_dit
 from utils.path_utils import project_path
@@ -354,9 +354,11 @@ class GenerateControllerBG(ControllerBase):
         # 每个轮次都需要生成一个测试内容和标题
         project_path_str = project_path(id)
         for round_str in round_str_list:
-            context = create_round_context(project_obj, round_str)
+            context, round_obj = create_round_context(project_obj, round_str)
             template_path = Path.cwd() / 'media' / project_path_str / 'form_template' / 'bg' / '测试内容和结果_第二轮次.docx'
             doc = DocxTemplate(template_path)
+            # ~~~额外添加：除第一轮次的影响域分析~~~
+            context['influence'] = create_influence_context(doc, round_obj, project_obj)
             doc.render(context, autoescape=True)
             try:
                 doc.save(
@@ -442,7 +444,7 @@ class GenerateControllerBG(ControllerBase):
                 design_dict['demands'] = '\a'.join(demand_list)
             # 通过还是未通过
             design_dict['pass'] = '通过'
-            design_dict['index'] = design_index
+            design_dict['index'] = design_index  # noqa
             data_list.append(design_dict)
             design_index += 1
 

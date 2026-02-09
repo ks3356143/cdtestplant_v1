@@ -95,3 +95,4 @@ def delete_dir_files(path: Path) -> Any:
         for file in path.iterdir():
             if file.is_file():
                 file.unlink()
+

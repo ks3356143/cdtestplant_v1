@@ -182,6 +182,8 @@ def auto_create_wd(user_name: str, dut_qs: Dut, project_obj: Project):
     }
     new_wd_design_obj: Design = Design.objects.create(**wd_design_create_dict)
     # 1.1.1.自动创建demand文档审查
+    is_JD = (project_obj.report_type == '9')
+    test_des = "本次三方文档审查内容包括软件需求规格说明、软件设计说明等"
     wd_demand_create_dict = {
         'ident': 'WDSC',
         'name': '文档审查',
@@ -206,7 +208,7 @@ def auto_create_wd(user_name: str, dut_qs: Dut, project_obj: Project):
                           '13）软件研制总结报告\a'
                           '14）软件版本说明\a'
                           '15）软件产品规格说明\a'
-                          '16）固件保障手册',
+                          '16）固件保障手册' if is_JD else test_des,
         'key': ''.join([new_wd_design_obj.key, '-', '0']),
         'level': '3',
         'project': project_obj,

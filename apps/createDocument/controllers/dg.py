@@ -10,7 +10,7 @@ from ninja.errors import HttpError
 from ninja_extra import ControllerBase, api_controller, route
 from django.db import transaction
 from django.db.models import Q
-from docxtpl import DocxTemplate, InlineImage, Subdoc
+from docxtpl import DocxTemplate, InlineImage
 from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
@@ -82,12 +82,12 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 for tm_item in single_qs.testMethod:
                     if tm_item == dict_item_qs.key:
                         testmethod_str += dict_item_qs.title + " "
-            # 富文本解析
             # ***Inspect-start：检查设计需求的描述是否为空***
             if single_qs.design.description == '':
                 design_info = single_qs.design.ident + '-' + single_qs.design.name
                 self.logger.write_warning_log('测试项', f'设计需求中的描述为空，请检查 -> {design_info}')
             # ***Inspect-end***
+            # 富文本解析
             html_parser = RichParser(single_qs.design.description)
             desc_list = html_parser.get_final_list(doc)
             # 查询关联design以及普通design
@@ -110,7 +110,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 "test_demand_content": content_list,
                 "testMethod": testmethod_str.strip(),
                 "adequacy": single_qs.adequacy.replace("\n", "\a"),
-                "testDesciption": single_qs.testDesciption.replace("\n", "\a"),  # 测试项描述
+                # 测试项描述FPGA或'静态分析'、'文档审查'、'代码审查'
+                "testDesciption": single_qs.testDesciption.replace("\n", "\a"),
                 "testType": get_testType(single_qs.testType, 'testType'),
             }
             list_list[type_index].append(testdemand_dict)
@@ -470,11 +471,11 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
     # 通用生成静态软件项、静态硬件项、动态软件项、动态硬件信息的context，包含fontnote和table
     @classmethod
-    def create_table_context(cls, table_data: list[list[str]], doc: DocxTemplate) -> Subdoc:
+    def create_table_context(cls, table_data: list[list[str]], doc: DocxTemplate):
         """注意：该函数会增加一列序号列"""
         subdoc = doc.new_subdoc()
         rows = len(table_data)
-        cols = len(table_data[0]) + 1  # 多渲染序号列
+        cols = len(table_data[0]) + 1  # 多渲染一个序号列
         table = subdoc.add_table(rows=rows, cols=cols)
         # 单元格处理
         for row in range(rows):

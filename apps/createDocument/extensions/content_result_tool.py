@@ -1,7 +1,9 @@
-from apps.project.models import Project
+from apps.project.models import Project, Round, InfluenceArea
+from docxtpl import DocxTemplate
 from utils.util import *
 from utils.chen_response import ChenResponse
 from django.db.models import Q
+from apps.createDocument.extensions.parse_rich_text import RichParser
 
 def create_round_context(project_obj: Project, round_id: str):
     """根据轮次，生成测评报告中的测评结果"""
@@ -77,4 +79,37 @@ def create_round_context(project_obj: Project, round_id: str):
         'r2_dynamic_str': r2_dynamic_str,
         'round_id': round_chinese[round_id],
     }
-    return context
+    return context, round_obj
+
+# ~~~影响域分析：内容返回influence的render_list~~~
+def create_influence_context(doc: DocxTemplate, round_obj: Round, project_obj: Project) -> None | list:
+    area_qs = InfluenceArea.objects.filter(round=round_obj)
+    item_render_list = []
+    ## 如果存在则查询items
+    if area_qs.exists():
+        area_obj = area_qs.first()
+        items_qs = area_obj.influence_items.all()
+        if items_qs.exists():
+            index = 1
+            for item in items_qs:
+                # 1.处理关联case - 找第一轮cases
+                case_str_list = []
+                for case in project_obj.pcField.filter(key__in=item.effect_cases):
+                    case_ident_index = str(int(case.key.split("-")[-1]) + 1).zfill(3)
+                    case_str_list.append("_".join(["YL", get_str_abbr(case.test.testType, "testType"), case.ident, case_ident_index]))
+                # 2.处理富文本框
+                parser = RichParser(item.change_des)
+                item_dict = {
+                    "change_type": item.change_type,
+                    "change_influ": item.change_influ,
+                    "case_str_list": case_str_list,
+                    "change_des": parser.get_final_list(doc, img_size=40, height=30),  # 富文本未处理
+                    "index": str(index),
+                }
+                index = index + 1
+                item_render_list.append(item_dict)
+
+    if len(item_render_list) > 0:
+        return item_render_list
+    else:
+        return None
