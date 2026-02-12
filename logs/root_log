@@ -1832,3 +1832,4 @@ ModuleNotFoundError: No module named 'pkg_resources'
 [ERROR][2026-02-09 09:41:52,848][log.py:249]Internal Server Error: /api/generate/create/env_diff
 [WARNING][2026-02-09 14:48:19,415][operation.py:131]"POST - GenerateSeitaiController[create_bgDocument] /api/create/bgDocument" (500, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
 [ERROR][2026-02-09 14:48:19,417][log.py:249]Internal Server Error: /api/create/bgDocument
+[WARNING][2026-02-12 13:21:58,600][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
