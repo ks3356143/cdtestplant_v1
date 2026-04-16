@@ -1,3 +1,6 @@
+from io import BytesIO
+import copy
+from docx.parts.image import ImagePart
 from pathlib import Path
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
@@ -468,21 +471,52 @@ class UploadDocumentController(ControllerBase):
             fs.save(f"第{digit_to_chinese(round_num)}轮{documentType}.docx", self.upload_file)
         return ChenResponse(status=200, code=200, message=f'上传{documentType}成功！')
 
-    # 主功能函数：将所有大纲的片段储存在reuse下面，以便其他文件使用
     def get_dg_to_reuse_dir(self, reuse_dir_path: Path):
-        """将大纲的文档片段储存在/reuse文件夹下面"""
-        doc = Document(self.upload_file)
-        frag_list = self.get_document_frag_list(doc)
+        """将大纲的文档片段储存在/reuse文件夹下面（保留图片）"""
+        src_doc = Document(self.upload_file)
+        frag_list = self.get_document_frag_list(src_doc)
+
         for frag_item in frag_list:
-            # 目的是格式明确按照“测评大纲.docx”进行，后续文档一样必须按照这样
+            if frag_item['content'] is None:
+                continue
+
+            # 1. 创建目标文档（基于 basic_doc.docx 模板）
             new_doc = Document((reuse_dir_path / 'basic_doc.docx').as_posix())
-            if frag_item['content'] is not None:
-                # XML元素可以直接append
-                new_doc.element.body.clear_content()
-                for frag_child in frag_item['content'].iterchildren():
-                    new_doc.element.body.append(frag_child)
+            new_doc.element.body.clear_content()
+
+            # 2. 逐元素复制 XML，并修复图片引用
+            for child in frag_item['content'].iterchildren():
+                self._copy_element_with_images(child, src_doc, new_doc)
+
+            # 3. 保存片段文件
             filename = f"{frag_item['alias']}.docx"
             new_doc.save((reuse_dir_path / filename).as_posix())
+
+    def _copy_element_with_images(self, element, src_doc, dst_doc):
+        """
+        复制 lxml 元素及其子树，将源文档中的图片关系迁移至目标文档。
+        """
+        # 1. 深拷贝元素
+        new_element = copy.deepcopy(element)
+        # 2. 使用本地名称匹配查找图片节点（完全避免命名空间前缀参数）
+        pic_nodes = new_element.xpath('.//*[local-name()="pic"]')
+        for pic in pic_nodes:
+            blip_nodes = pic.xpath('.//*[local-name()="blip"]')
+            for blip in blip_nodes:
+                embed_attr = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}embed'
+                old_rId = blip.get(embed_attr)
+                if not old_rId:
+                    continue
+                src_image_part = src_doc.part.related_parts.get(old_rId)
+                if src_image_part is None or not isinstance(src_image_part, ImagePart):
+                    continue
+                # 添加图片到目标文档，获取新 rId
+                image_stream = BytesIO(src_image_part.blob)
+                new_rId, _ = dst_doc.part.get_or_add_image(image_stream)
+                # 更新属性
+                blip.set(embed_attr, new_rId)
+        # 3. 追加到目标文档 body
+        dst_doc.element.body.append(new_element)
 
     # 辅助函数：将上传文件的文档片段以列表形式返回
     def get_document_frag_list(self, doc: Document):

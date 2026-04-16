@@ -196,7 +196,11 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
                                 # 根据节点找到图片的关联id
                                 embed = img.xpath('.//a:blip/@r:embed')[0]
                                 # 这里得到ImagePart -> 马上要给新文档添加
-                                related_part: ImagePart = doc_copied.part.related_parts[embed]
+                                related_part: ImagePart = doc_copied.part.related_parts.get(embed)
+                                if related_part is None:
+                                    # 可选：记录警告日志，便于排查哪些文档片段有问题
+                                    print(f"警告: 文档片段 '{area_pop_name}' 中的图片引用 {embed} 未找到，已跳过!!!!")
+                                    continue
                                 # doc_copied.part.related_parts是一个字典
                                 image_part_list.append({'name': area_pop_name, 'img': related_part})
 

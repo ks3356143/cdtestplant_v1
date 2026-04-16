@@ -1,1835 +1,324 @@
-[WARNING][2026-02-05 13:29:09,957][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("no style with name 'Table Grid'",)
-[ERROR][2026-02-05 13:29:09,966][errors.py:131]"no style with name 'Table Grid'"
+[WARNING][2026-03-14 10:35:20,046][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-03-14 10:35:20,146][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-03-14 10:35:24,335][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-04-07 09:27:09,901][log.py:249]Not Found: /
+[WARNING][2026-04-07 09:27:10,065][log.py:249]Not Found: /favicon.ico
+[WARNING][2026-04-07 18:03:09,337][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-04-15 18:38:48,504][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-04-15 18:38:48,566][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-04-15 18:38:55,114][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-04-16 09:18:04,544][log.py:249]Unauthorized: /api/system/getInfo
+[WARNING][2026-04-16 09:18:04,605][log.py:249]Unauthorized: /api/system/logout
+[WARNING][2026-04-16 09:18:08,604][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-04-16 09:27:24,231][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-04-16 09:36:04,828][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[ERROR][2026-04-16 10:57:10,857][log.py:249]Internal Server Error: /api/project/testDemand/save
+[WARNING][2026-04-16 13:38:39,790][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[ERROR][2026-04-16 14:05:52,897][log.py:249]Internal Server Error: /api/project/testDemand/save
+[WARNING][2026-04-16 14:28:36,656][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 14:28:36,656][errors.py:131]'rId15'
 Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
     result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
   File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
     result = self.route.view_func(
         ctx.controller_instance, *args, **ctx.view_func_kwargs
     )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 469, in create_static_soft
-    table = subdoc.add_table(rows=rows, cols=cols, style='Table Grid')
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\document.py", line 157, in add_table
-    table.style = style
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 199, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 14:28:36,662][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 14:30:45,351][operation.py:136]"POST - GenerateSeitaiController[create_hsmDocument] /api/create/hsmDocument" ('rId15',)
+[ERROR][2026-04-16 14:30:45,351][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 190, in create_hsmDocument
+    result = generate_temp_doc('hsm', payload.id, round_num=cname, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 199, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 14:30:45,352][log.py:249]Internal Server Error: /api/create/hsmDocument
+[WARNING][2026-04-16 14:31:17,977][operation.py:136]"POST - GenerateSeitaiController[create_bgDocument] /api/create/bgDocument" ('rId15',)
+[ERROR][2026-04-16 14:31:17,977][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 314, in create_bgDocument
+    result = generate_temp_doc('bg', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 199, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 14:31:17,978][log.py:249]Internal Server Error: /api/create/bgDocument
+[WARNING][2026-04-16 15:42:36,466][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 15:42:36,466][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 199, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 15:42:36,470][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 15:53:58,706][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 15:53:58,706][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 199, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 15:53:58,707][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 15:56:20,961][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 15:56:20,961][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 200, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 15:56:20,964][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 15:56:53,464][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 15:56:53,464][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 201, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 15:56:53,497][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 16:20:18,046][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 16:20:18,046][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 199, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 16:20:18,050][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 16:23:25,686][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 16:23:25,686][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 200, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 16:23:25,824][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 16:29:41,449][operation.py:136]"POST - GenerateSeitaiController[create_smDocument] /api/create/smDocument" ('rId15',)
+[ERROR][2026-04-16 16:29:41,449][errors.py:131]'rId15'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
+    return func(*args, **kwds)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 105, in create_smDocument
+    result = generate_temp_doc('sm', payload.id, frag_list=payload.frag)
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\docXmlUtils.py", line 200, in generate_temp_doc
+    related_part: ImagePart = doc_copied.part.related_parts[embed]
+                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^
+KeyError: 'rId15'
+[ERROR][2026-04-16 16:29:41,452][log.py:249]Internal Server Error: /api/create/smDocument
+[WARNING][2026-04-16 17:14:40,599][operation.py:136]"POST - UploadDocumentController[upload_file] /api/documentUpload/file" ("'DocumentPart' object has no attribute 'get_or_add_image_part'",)
+[ERROR][2026-04-16 17:14:40,600][errors.py:131]'DocumentPart' object has no attribute 'get_or_add_image_part'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 459, in upload_file
+    self.get_dg_to_reuse_dir(target_dir.parent.parent / 'reuse')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 486, in get_dg_to_reuse_dir
+    self._copy_element_with_images(child, src_doc, new_doc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 515, in _copy_element_with_images
+    new_image_part = dst_doc.part.get_or_add_image_part(image_blob)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DocumentPart' object has no attribute 'get_or_add_image_part'. Did you mean: 'get_or_add_image'?
+[ERROR][2026-04-16 17:14:40,603][log.py:249]Internal Server Error: /api/documentUpload/file
+[WARNING][2026-04-16 17:15:14,670][operation.py:136]"POST - UploadDocumentController[upload_file] /api/documentUpload/file" ("'bytes' object has no attribute 'seek'",)
+[ERROR][2026-04-16 17:15:14,671][errors.py:131]'bytes' object has no attribute 'seek'
+Traceback (most recent call last):
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
+    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
+    result = self.route.view_func(
+        ctx.controller_instance, *args, **ctx.view_func_kwargs
+    )
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 459, in upload_file
+    self.get_dg_to_reuse_dir(target_dir.parent.parent / 'reuse')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 486, in get_dg_to_reuse_dir
+    self._copy_element_with_images(child, src_doc, new_doc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 515, in _copy_element_with_images
+    new_image_part = dst_doc.part.get_or_add_image(image_blob)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\story.py", line 37, in get_or_add_image
+    image_part = package.get_or_add_image_part(image_descriptor)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\package.py", line 31, in get_or_add_image_part
+    return self.image_parts.get_or_add_image_part(image_descriptor)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\package.py", line 74, in get_or_add_image_part
+    image = Image.from_file(image_descriptor)
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\image\image.py", line 47, in from_file
+    stream.seek(0)
     ^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 137, in style
-    style_id = self.part.get_style_id(style_or_name, WD_STYLE_TYPE.TABLE)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\document.py", line 87, in get_style_id
-    return self.styles.get_style_id(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 98, in get_style_id
-    return self._get_style_id_from_name(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 125, in _get_style_id_from_name
-    return self._get_style_id_from_style(self[style_name], style_type)
-                                         ~~~~^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 47, in __getitem__
-    raise KeyError("no style with name '%s'" % key)
-KeyError: "no style with name 'Table Grid'"
-[ERROR][2026-02-05 13:29:10,011][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 13:29:57,869][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ('list index out of range',)
-[ERROR][2026-02-05 13:29:57,869][errors.py:131]list index out of range
+AttributeError: 'bytes' object has no attribute 'seek'
+[ERROR][2026-04-16 17:15:14,679][log.py:249]Internal Server Error: /api/documentUpload/file
+[WARNING][2026-04-16 17:15:34,677][operation.py:136]"POST - UploadDocumentController[upload_file] /api/documentUpload/file" ("'DocumentPart' object has no attribute 'get_or_add_image_part'",)
+[ERROR][2026-04-16 17:15:34,677][errors.py:131]'DocumentPart' object has no attribute 'get_or_add_image_part'
 Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
     result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
   File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
     result = self.route.view_func(
         ctx.controller_instance, *args, **ctx.view_func_kwargs
     )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 491, in create_static_soft
-    run = pa.add_run(str(table_data[row][col]))
-                         ~~~~~~~~~~~~~~~^^^^^
-IndexError: list index out of range
-[ERROR][2026-02-05 13:29:57,897][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 13:37:42,624][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("no style with name 'Table Grid'",)
-[ERROR][2026-02-05 13:37:42,624][errors.py:131]"no style with name 'Table Grid'"
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 459, in upload_file
+    self.get_dg_to_reuse_dir(target_dir.parent.parent / 'reuse')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 486, in get_dg_to_reuse_dir
+    self._copy_element_with_images(child, src_doc, new_doc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 515, in _copy_element_with_images
+    new_image_part = dst_doc.part.get_or_add_image_part(image_blob)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'DocumentPart' object has no attribute 'get_or_add_image_part'. Did you mean: 'get_or_add_image'?
+[ERROR][2026-04-16 17:15:34,681][log.py:249]Internal Server Error: /api/documentUpload/file
+[WARNING][2026-04-16 17:17:47,027][operation.py:136]"POST - UploadDocumentController[upload_file] /api/documentUpload/file" ("BaseOxmlElement.xpath() got an unexpected keyword argument 'namespaces'",)
+[ERROR][2026-04-16 17:17:47,027][errors.py:131]BaseOxmlElement.xpath() got an unexpected keyword argument 'namespaces'
 Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
     result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
   File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
     result = self.route.view_func(
         ctx.controller_instance, *args, **ctx.view_func_kwargs
     )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 469, in create_static_soft
-    table = subdoc.add_table(rows=rows, cols=cols, style='Table Grid')
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\document.py", line 157, in add_table
-    table.style = style
-    ^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 137, in style
-    style_id = self.part.get_style_id(style_or_name, WD_STYLE_TYPE.TABLE)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\document.py", line 87, in get_style_id
-    return self.styles.get_style_id(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 98, in get_style_id
-    return self._get_style_id_from_name(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 125, in _get_style_id_from_name
-    return self._get_style_id_from_style(self[style_name], style_type)
-                                         ~~~~^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 47, in __getitem__
-    raise KeyError("no style with name '%s'" % key)
-KeyError: "no style with name 'Table Grid'"
-[ERROR][2026-02-05 13:37:42,690][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 13:39:00,989][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("no style with name 'Grid'",)
-[ERROR][2026-02-05 13:39:00,990][errors.py:131]"no style with name 'Grid'"
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 462, in upload_file
+    self.get_dg_to_reuse_dir(target_dir.parent.parent / 'reuse')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 489, in get_dg_to_reuse_dir
+    self._copy_element_with_images(child, src_doc, new_doc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 510, in _copy_element_with_images
+    pic_nodes = new_element.xpath('.//pic:pic', namespaces=namespaces)
+TypeError: BaseOxmlElement.xpath() got an unexpected keyword argument 'namespaces'
+[ERROR][2026-04-16 17:17:47,029][log.py:249]Internal Server Error: /api/documentUpload/file
+[WARNING][2026-04-16 17:19:37,022][operation.py:136]"POST - UploadDocumentController[upload_file] /api/documentUpload/file" ("'lxml.etree._Element' object has no attribute 'xml'",)
+[ERROR][2026-04-16 17:19:37,022][errors.py:131]'lxml.etree._Element' object has no attribute 'xml'
 Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
     result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
   File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
     result = self.route.view_func(
         ctx.controller_instance, *args, **ctx.view_func_kwargs
     )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 469, in create_static_soft
-    table = subdoc.add_table(rows=rows, cols=cols, style='Grid')
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\document.py", line 157, in add_table
-    table.style = style
-    ^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 137, in style
-    style_id = self.part.get_style_id(style_or_name, WD_STYLE_TYPE.TABLE)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\document.py", line 87, in get_style_id
-    return self.styles.get_style_id(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 98, in get_style_id
-    return self._get_style_id_from_name(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 125, in _get_style_id_from_name
-    return self._get_style_id_from_style(self[style_name], style_type)
-                                         ~~~~^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 47, in __getitem__
-    raise KeyError("no style with name '%s'" % key)
-KeyError: "no style with name 'Grid'"
-[ERROR][2026-02-05 13:39:01,006][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 13:39:23,558][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("no style with name 'Default'",)
-[ERROR][2026-02-05 13:39:23,558][errors.py:131]"no style with name 'Default'"
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 462, in upload_file
+    self.get_dg_to_reuse_dir(target_dir.parent.parent / 'reuse')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 489, in get_dg_to_reuse_dir
+    self._copy_element_with_images(child, src_doc, new_doc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 497, in _copy_element_with_images
+    new_element = parse_xml(element.xml)
+                            ^^^^^^^^^^^
+AttributeError: 'lxml.etree._Element' object has no attribute 'xml'
+[ERROR][2026-04-16 17:19:37,024][log.py:249]Internal Server Error: /api/documentUpload/file
+[WARNING][2026-04-16 17:21:20,339][operation.py:136]"POST - UploadDocumentController[upload_file] /api/documentUpload/file" ("BaseOxmlElement.xpath() got an unexpected keyword argument 'namespaces'",)
+[ERROR][2026-04-16 17:21:20,339][errors.py:131]BaseOxmlElement.xpath() got an unexpected keyword argument 'namespaces'
 Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
+  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 217, in run
     result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
   File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
     result = self.route.view_func(
         ctx.controller_instance, *args, **ctx.view_func_kwargs
     )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 469, in create_static_soft
-    table = subdoc.add_table(rows=rows, cols=cols, style='Default')
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\document.py", line 157, in add_table
-    table.style = style
-    ^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 137, in style
-    style_id = self.part.get_style_id(style_or_name, WD_STYLE_TYPE.TABLE)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\document.py", line 87, in get_style_id
-    return self.styles.get_style_id(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 98, in get_style_id
-    return self._get_style_id_from_name(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 125, in _get_style_id_from_name
-    return self._get_style_id_from_style(self[style_name], style_type)
-                                         ~~~~^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 47, in __getitem__
-    raise KeyError("no style with name '%s'" % key)
-KeyError: "no style with name 'Default'"
-[ERROR][2026-02-05 13:39:23,576][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 13:39:43,486][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("no style with name 'Table Grid'",)
-[ERROR][2026-02-05 13:39:43,487][errors.py:131]"no style with name 'Table Grid'"
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 469, in create_static_soft
-    table = subdoc.add_table(rows=rows, cols=cols, style='Table Grid')
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\document.py", line 157, in add_table
-    table.style = style
-    ^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 137, in style
-    style_id = self.part.get_style_id(style_or_name, WD_STYLE_TYPE.TABLE)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\document.py", line 87, in get_style_id
-    return self.styles.get_style_id(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 98, in get_style_id
-    return self._get_style_id_from_name(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 125, in _get_style_id_from_name
-    return self._get_style_id_from_style(self[style_name], style_type)
-                                         ~~~~^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 47, in __getitem__
-    raise KeyError("no style with name '%s'" % key)
-KeyError: "no style with name 'Table Grid'"
-[ERROR][2026-02-05 13:39:43,539][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 13:41:59,487][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("no style with name 'Light Grid'",)
-[ERROR][2026-02-05 13:41:59,487][errors.py:131]"no style with name 'Light Grid'"
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 469, in create_static_soft
-    table = subdoc.add_table(rows=rows, cols=cols, style='Light Grid')
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\document.py", line 157, in add_table
-    table.style = style
-    ^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\table.py", line 137, in style
-    style_id = self.part.get_style_id(style_or_name, WD_STYLE_TYPE.TABLE)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\parts\document.py", line 87, in get_style_id
-    return self.styles.get_style_id(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 98, in get_style_id
-    return self._get_style_id_from_name(style_or_name, style_type)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 125, in _get_style_id_from_name
-    return self._get_style_id_from_style(self[style_name], style_type)
-                                         ~~~~^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\styles\styles.py", line 47, in __getitem__
-    raise KeyError("no style with name '%s'" % key)
-KeyError: "no style with name 'Light Grid'"
-[ERROR][2026-02-05 13:41:59,534][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 14:20:41,809][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("'list' object has no attribute 'content'",)
-[ERROR][2026-02-05 14:20:41,811][errors.py:131]'list' object has no attribute 'content'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 493, in create_static_soft
-    run = pa.add_run(str(table_data.content[0][col-1]))
-                         ^^^^^^^^^^^^^^^^^^
-AttributeError: 'list' object has no attribute 'content'
-[ERROR][2026-02-05 14:20:41,821][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 16:20:55,068][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("Invalid tag name '50'",)
-[ERROR][2026-02-05 16:20:55,087][errors.py:131]Invalid tag name '50'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 499, in create_static_soft
-    set_cell_margins(cell)
-    ~~~~~~~~~~~~~~~~^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\extensions\tools.py", line 110, in set_cell_margins
-    node = OxmlElement("w:{}".format(m))
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\oxml\parser.py", line 62, in OxmlElement
-    return oxml_parser.makeelement(nsptag.clark_name, attrib=attrs, nsmap=nsdecls)
-           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "src/lxml/parser.pxi", line 1069, in lxml.etree._BaseParser.makeelement
-  File "src/lxml/apihelpers.pxi", line 108, in lxml.etree._makeElement
-  File "src/lxml/apihelpers.pxi", line 1739, in lxml.etree._tagValidOrRaise
-ValueError: Invalid tag name '50'
-[ERROR][2026-02-05 16:20:55,151][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 16:49:16,328][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("'Table' object has no attribute 'preferred_width'",)
-[ERROR][2026-02-05 16:49:16,332][errors.py:131]'Table' object has no attribute 'preferred_width'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 508, in create_static_soft
-    print(table.preferred_width)
-          ^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'Table' object has no attribute 'preferred_width'
-[ERROR][2026-02-05 16:49:16,381][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 16:51:02,698][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("'Table' object has no attribute 'allow_autofit'",)
-[ERROR][2026-02-05 16:51:02,701][errors.py:131]'Table' object has no attribute 'allow_autofit'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 508, in create_static_soft
-    print(table.allow_autofit)
-          ^^^^^^^^^^^^^^^^^^^
-AttributeError: 'Table' object has no attribute 'allow_autofit'
-[ERROR][2026-02-05 16:51:02,719][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-05 17:13:56,362][operation.py:131]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" (2, 'No such file or directory')
-[ERROR][2026-02-05 17:13:56,362][errors.py:131][Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R25999\\form_template\\dg\\静态硬件和固件项_2.docx'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 549, in create_static_hard
-    subdoc = self.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 462, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 619, in new_subdoc
-    self.init_docx()
-    ~~~~~~~~~~~~~~^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 56, in init_docx
-    self.docx = Document(self.template_file)
-                ~~~~~~~~^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\api.py", line 27, in Document
-    document_part = cast("DocumentPart", Package.open(docx).main_document_part)
-                                         ~~~~~~~~~~~~^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\opc\package.py", line 126, in open
-    pkg_reader = PackageReader.from_file(pkg_file)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\opc\pkgreader.py", line 22, in from_file
-    phys_reader = PhysPkgReader(pkg_file)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docx\opc\phys_pkg.py", line 76, in __init__
-    self._zipf = ZipFile(pkg_file, "r")
-                 ~~~~~~~^^^^^^^^^^^^^^^
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\zipfile\__init__.py", line 1383, in __init__
-    self.fp = io.open(file, filemode)
-              ~~~~~~~^^^^^^^^^^^^^^^^
-FileNotFoundError: [Errno 2] No such file or directory: 'E:\\pycharmProjects\\cdtestplant_v1\\media\\R25999\\form_template\\dg\\静态硬件和固件项_2.docx'
-[ERROR][2026-02-05 17:13:56,400][log.py:249]Internal Server Error: /api/generate/create/static_hard
-[WARNING][2026-02-05 18:18:25,422][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'data'), 'msg': 'Field required'}],)
-[WARNING][2026-02-05 18:18:25,431][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
-[WARNING][2026-02-05 18:18:34,561][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'data'), 'msg': 'Field required'}],)
-[WARNING][2026-02-05 18:18:34,571][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
-[WARNING][2026-02-05 18:19:31,551][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'data'), 'msg': 'Field required'}],)
-[WARNING][2026-02-05 18:19:31,559][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
-[WARNING][2026-02-05 18:20:01,886][operation.py:131]"POST - ProjectController[soft_summary] /api/testmanage/project/soft_summary/" ([{'type': 'missing', 'loc': ('body', 'payload', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'payload', 'data'), 'msg': 'Field required'}],)
-[WARNING][2026-02-05 18:20:01,896][log.py:249]Unprocessable Content: /api/testmanage/project/soft_summary/
-[WARNING][2026-02-06 09:19:08,011][log.py:249]Unauthorized: /api/system/getInfo
-[WARNING][2026-02-06 09:19:08,068][log.py:249]Unauthorized: /api/system/logout
-[WARNING][2026-02-06 09:19:17,445][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2026-02-06 09:32:51,032][log.py:249]Not Found: /api/testmanage/project/dynamic_des/
-[WARNING][2026-02-06 09:32:57,510][log.py:249]Not Found: /api/testmanage/project/dynamic_des/
-[WARNING][2026-02-06 09:33:05,303][log.py:249]Method Not Allowed: /api/testmanage/project/dynamic_des/
-[WARNING][2026-02-06 10:01:55,025][operation.py:131]"POST - ProjectController[dynamic_description] /api/testmanage/project/dynamic_description/" (400, '添加的数据未在系统内，请联系管理员')
-[WARNING][2026-02-06 10:01:55,034][log.py:249]Bad Request: /api/testmanage/project/dynamic_description/
-[WARNING][2026-02-06 10:02:03,145][operation.py:131]"POST - ProjectController[dynamic_description] /api/testmanage/project/dynamic_description/" (400, '添加的数据未在系统内，请联系管理员')
-[WARNING][2026-02-06 10:02:03,155][log.py:249]Bad Request: /api/testmanage/project/dynamic_description/
-[WARNING][2026-02-06 10:02:43,130][operation.py:131]"POST - ProjectController[dynamic_description] /api/testmanage/project/dynamic_description/" (400, '添加的数据未在系统内，请联系管理员')
-[WARNING][2026-02-06 10:02:43,141][log.py:249]Bad Request: /api/testmanage/project/dynamic_description/
-[WARNING][2026-02-06 10:39:53,890][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("expected token 'end of statement block', got 'table'",)
-[ERROR][2026-02-06 10:39:53,891][errors.py:131]expected token 'end of statement block', got 'table'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 578, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 351, in uniform_res_from_mul_data_schemas
-    doc.render(context)
-    ~~~~~~~~~~^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
-    xml_src = self.build_xml(context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
-    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
-    raise exc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
-    template = Template(src_xml)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
-    return env.from_string(source, template_class=cls)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
-    return cls.from_code(self, self.compile(source), gs, None)
-                               ~~~~~~~~~~~~^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 4, in template
-jinja2.exceptions.TemplateSyntaxError: expected token 'end of statement block', got 'table'
-[ERROR][2026-02-06 10:39:53,923][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[WARNING][2026-02-06 10:40:33,124][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ('unexpected char "\'" at 5156',)
-[ERROR][2026-02-06 10:40:33,127][errors.py:131]unexpected char "'" at 5156
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 578, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 351, in uniform_res_from_mul_data_schemas
-    doc.render(context)
-    ~~~~~~~~~~^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
-    xml_src = self.build_xml(context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
-    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
-    raise exc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 312, in render_xml_part
-    template = Template(src_xml)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1214, in __new__
-    return env.from_string(source, template_class=cls)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
-    return cls.from_code(self, self.compile(source), gs, None)
-                               ~~~~~~~~~~~~^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 4, in template
-jinja2.exceptions.TemplateSyntaxError: unexpected char "'" at 5156
-[ERROR][2026-02-06 10:40:33,143][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[WARNING][2026-02-06 10:52:55,927][operation.py:131]"GET - ProjectController[get_static_dynamic_items] /api/testmanage/project/get_static_dynamic_items/" ('测评数据',)
-[ERROR][2026-02-06 10:52:55,927][errors.py:131]'测评数据'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 454, in get_static_dynamic_items
-    item_qs = self.get_model_from_category(category).objects.filter(project=project_obj)
-              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 448, in get_model_from_category
-    return mapDict[category]
-           ~~~~~~~^^^^^^^^^^
-KeyError: '测评数据'
-[ERROR][2026-02-06 10:52:55,929][log.py:249]Internal Server Error: /api/testmanage/project/get_static_dynamic_items/
-[WARNING][2026-02-06 13:56:16,158][operation.py:131]"GET - ProjectController[get_env_analysis] /api/testmanage/project/get_env_analysis/" (1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
-[ERROR][2026-02-06 13:56:16,158][errors.py:131](1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
-    return self.cursor.execute(sql, params)
-           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
-    return self.cursor.execute(query, args)
-           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
-    res = self._query(mogrified_query)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
-    db.query(q)
-    ~~~~~~~~^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
-    _mysql.connection.query(self, query)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-MySQLdb.ProgrammingError: (1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\project.py", line 485, in get_env_analysis
-    if qs.exists():
-       ~~~~~~~~~^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\query.py", line 1337, in exists
-    return self.query.has_results(using=self.db)
-           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\query.py", line 686, in has_results
-    return compiler.has_results()
-           ~~~~~~~~~~~~~~~~~~~~^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1592, in has_results
-    return bool(self.execute_sql(SINGLE))
-                ~~~~~~~~~~~~~~~~^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\sql\compiler.py", line 1624, in execute_sql
-    cursor.execute(sql, params)
-    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
-    return super().execute(sql, params)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
-    return self._execute_with_wrappers(
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-        sql, params, many=False, executor=self._execute
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
-    return executor(sql, params, many, context)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
-    with self.db.wrap_database_errors:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\utils.py", line 94, in __exit__
-    raise dj_exc_value.with_traceback(traceback) from exc_value
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
-    return self.cursor.execute(sql, params)
-           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\backends\mysql\base.py", line 78, in execute
-    return self.cursor.execute(query, args)
-           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 179, in execute
-    res = self._query(mogrified_query)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\cursors.py", line 330, in _query
-    db.query(q)
-    ~~~~~~~~^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\MySQLdb\connections.py", line 280, in query
-    _mysql.connection.query(self, query)
-    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-django.db.utils.ProgrammingError: (1146, "Table 'chengdu_test_plant_v1.project_env_analysis' doesn't exist")
-[ERROR][2026-02-06 13:56:16,179][log.py:249]Internal Server Error: /api/testmanage/project/get_env_analysis/
-[WARNING][2026-02-06 14:05:16,384][operation.py:131]"GET - ProjectController[get_env_analysis] /api/testmanage/project/get_env_analysis/" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
-[WARNING][2026-02-06 14:05:16,392][log.py:249]Unprocessable Content: /api/testmanage/project/get_env_analysis/
-[WARNING][2026-02-06 14:05:45,945][operation.py:131]"GET - ProjectController[get_env_analysis] /api/testmanage/project/get_env_analysis/" ([{'type': 'missing', 'loc': ('query', 'id'), 'msg': 'Field required'}],)
-[WARNING][2026-02-06 14:05:45,955][log.py:249]Unprocessable Content: /api/testmanage/project/get_env_analysis/
-[WARNING][2026-02-06 14:07:06,442][log.py:249]Method Not Allowed: /api/testmanage/project/post_env_analysis/
-[WARNING][2026-02-06 17:54:26,693][log.py:249]Not Found: /api/project/case/getRelatedCase/
-[WARNING][2026-02-06 17:55:19,893][log.py:249]Not Found: /api/project/case/getRelatedCase/
-[WARNING][2026-02-06 17:55:54,935][log.py:249]Not Found: /api/project/case/getRelatedCase/
-[WARNING][2026-02-06 17:55:57,677][log.py:249]Not Found: /api/project/case/getRelatedCase/
-[WARNING][2026-02-06 17:56:36,885][log.py:249]Not Found: /api/project/case/getRelatedCase/
-[WARNING][2026-02-06 17:56:39,905][log.py:249]Not Found: /api/project/case/getRelatedCase/
-[WARNING][2026-02-07 12:50:41,012][log.py:249]Unauthorized: /api/system/getInfo
-[WARNING][2026-02-07 12:50:41,075][log.py:249]Unauthorized: /api/system/logout
-[WARNING][2026-02-07 12:50:44,998][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2026-02-07 13:37:04,069][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ("'QuerySet' object has no attribute 'influence'",)
-[ERROR][2026-02-07 13:37:04,069][errors.py:131]'QuerySet' object has no attribute 'influence'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
-    influence_qs = round_qs.influence.all()
-                   ^^^^^^^^^^^^^^^^^^
-AttributeError: 'QuerySet' object has no attribute 'influence'
-[ERROR][2026-02-07 13:37:04,071][log.py:249]Internal Server Error: /api/project/round/get_influence
-[WARNING][2026-02-07 13:37:39,505][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ('Round has no influence.',)
-[ERROR][2026-02-07 13:37:39,505][errors.py:131]Round has no influence.
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
-    influence_qs = round_qs.first().influence.all()
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
-    raise self.RelatedObjectDoesNotExist(
-    ...<2 lines>...
-    )
-apps.project.models.Round.influence.RelatedObjectDoesNotExist: Round has no influence.
-[ERROR][2026-02-07 13:37:39,508][log.py:249]Internal Server Error: /api/project/round/get_influence
-[WARNING][2026-02-07 13:38:15,267][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ('Round has no influence.',)
-[ERROR][2026-02-07 13:38:15,267][errors.py:131]Round has no influence.
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
-    influence_qs = round_qs.first().influence.all()
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
-    raise self.RelatedObjectDoesNotExist(
-    ...<2 lines>...
-    )
-apps.project.models.Round.influence.RelatedObjectDoesNotExist: Round has no influence.
-[ERROR][2026-02-07 13:38:15,269][log.py:249]Internal Server Error: /api/project/round/get_influence
-[WARNING][2026-02-07 13:39:10,565][operation.py:131]"GET - RoundController[get_influence] /api/project/round/get_influence" ('Round has no influence.',)
-[ERROR][2026-02-07 13:39:10,565][errors.py:131]Round has no influence.
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 89, in get_influence
-    influence_qs = round_qs.first().influence.all()
-                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 520, in __get__
-    raise self.RelatedObjectDoesNotExist(
-    ...<2 lines>...
-    )
-apps.project.models.Round.influence.RelatedObjectDoesNotExist: Round has no influence.
-[ERROR][2026-02-07 13:39:10,568][log.py:249]Internal Server Error: /api/project/round/get_influence
-[WARNING][2026-02-07 14:25:27,963][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'missing', 'loc': ('body', 'data', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'round_key'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'item_list'), 'msg': 'Field required'}],)
-[WARNING][2026-02-07 14:25:27,972][log.py:249]Unprocessable Content: /api/project/round/create_influence
-[WARNING][2026-02-07 14:25:49,141][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'missing', 'loc': ('body', 'data', 'id'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'round_key'), 'msg': 'Field required'}, {'type': 'missing', 'loc': ('body', 'data', 'item_list'), 'msg': 'Field required'}],)
-[WARNING][2026-02-07 14:25:49,154][log.py:249]Unprocessable Content: /api/project/round/create_influence
-[WARNING][2026-02-07 15:01:21,250][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ('Cannot assign "<QuerySet [<InfluenceArea: InfluenceArea object (195)>]>": "InfluenceItem.influence" must be a "InfluenceArea" instance.',)
-[ERROR][2026-02-07 15:01:21,250][errors.py:131]Cannot assign "<QuerySet [<InfluenceArea: InfluenceArea object (195)>]>": "InfluenceItem.influence" must be a "InfluenceArea" instance.
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\project\controllers\round.py", line 110, in post_influence
-    new_item = InfluenceItem(influence=influence_area_qs,
-                             change_type=item.change_type,
-                             change_des=item.change_des,
-                             effect_cases=item.effect_cases)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\base.py", line 566, in __init__
-    _setattr(self, field.name, rel_obj)
-    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\django\db\models\fields\related_descriptors.py", line 287, in __set__
-    raise ValueError(
-    ...<7 lines>...
-    )
-ValueError: Cannot assign "<QuerySet [<InfluenceArea: InfluenceArea object (195)>]>": "InfluenceItem.influence" must be a "InfluenceArea" instance.
-[ERROR][2026-02-07 15:01:21,258][log.py:249]Internal Server Error: /api/project/round/create_influence
-[WARNING][2026-02-07 15:19:38,249][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}],)
-[WARNING][2026-02-07 15:19:38,257][log.py:249]Unprocessable Content: /api/project/round/create_influence
-[WARNING][2026-02-07 15:19:43,626][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}],)
-[WARNING][2026-02-07 15:19:43,635][log.py:249]Unprocessable Content: /api/project/round/create_influence
-[WARNING][2026-02-07 15:20:44,492][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}],)
-[WARNING][2026-02-07 15:20:44,503][log.py:249]Unprocessable Content: /api/project/round/create_influence
-[WARNING][2026-02-07 15:21:39,506][operation.py:131]"POST - RoundController[post_influence] /api/project/round/create_influence" ([{'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 0), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 1), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 2), 'msg': 'Input should be a valid string'}, {'type': 'string_type', 'loc': ('body', 'data', 'item_list', 0, 'effect_cases', 3), 'msg': 'Input should be a valid string'}],)
-[WARNING][2026-02-07 15:21:39,515][log.py:249]Unprocessable Content: /api/project/round/create_influence
-[WARNING][2026-02-08 13:53:10,479][log.py:249]Unauthorized: /api/system/getInfo
-[WARNING][2026-02-08 13:53:10,577][log.py:249]Unauthorized: /api/system/logout
-[WARNING][2026-02-08 13:53:14,760][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2026-02-08 13:53:32,251][operation.py:131]"GET - GenerateControllerHSM[create_changePart] /api/generateHSM/create/changePart" ("RichParser.get_final_list() missing 1 required positional argument: 'doc'",)
-[ERROR][2026-02-08 13:53:32,252][errors.py:131]RichParser.get_final_list() missing 1 required positional argument: 'doc': Did you fail to use functools.wraps() in a decorator?
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\hsm.py", line 257, in create_changePart
-    print(parser.get_final_list())
-          ~~~~~~~~~~~~~~~~~~~~~^^
-TypeError: RichParser.get_final_list() missing 1 required positional argument: 'doc': Did you fail to use functools.wraps() in a decorator?
-[ERROR][2026-02-08 13:53:32,259][log.py:249]Internal Server Error: /api/generateHSM/create/changePart
-[WARNING][2026-02-08 15:04:43,157][operation.py:131]"GET - GenerateControllerHSM[create_changePart] /api/generateHSM/create/changePart" ("Expected an expression, got 'end of print statement'",)
-[ERROR][2026-02-08 15:04:43,157][errors.py:131]Expected an expression, got 'end of print statement'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\hsm.py", line 285, in create_changePart
-    doc.render(context_round, autoescape=True)
-    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
-    xml_src = self.build_xml(context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
-    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
-    raise exc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 310, in render_xml_part
-    template = jinja_env.from_string(src_xml)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
-    return cls.from_code(self, self.compile(source), gs, None)
-                               ~~~~~~~~~~~~^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 16, in template
-jinja2.exceptions.TemplateSyntaxError: Expected an expression, got 'end of print statement'
-[ERROR][2026-02-08 15:04:43,182][log.py:249]Internal Server Error: /api/generateHSM/create/changePart
-[WARNING][2026-02-08 15:05:05,418][operation.py:131]"GET - GenerateControllerHSM[create_changePart] /api/generateHSM/create/changePart" ("Expected an expression, got 'end of print statement'",)
-[ERROR][2026-02-08 15:05:05,419][errors.py:131]Expected an expression, got 'end of print statement'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\hsm.py", line 285, in create_changePart
-    doc.render(context_round, autoescape=True)
-    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 489, in render
-    xml_src = self.build_xml(context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 436, in build_xml
-    xml = self.render_xml_part(xml, self.docx._part, context, jinja_env)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 322, in render_xml_part
-    raise exc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 310, in render_xml_part
-    template = jinja_env.from_string(src_xml)
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 1111, in from_string
-    return cls.from_code(self, self.compile(source), gs, None)
-                               ~~~~~~~~~~~~^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 771, in compile
-    self.handle_exception(source=source_hint)
-    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\jinja2\environment.py", line 942, in handle_exception
-    raise rewrite_traceback_stack(source=source)
-  File "<unknown>", line 16, in template
-jinja2.exceptions.TemplateSyntaxError: Expected an expression, got 'end of print statement'
-[ERROR][2026-02-08 15:05:05,438][log.py:249]Internal Server Error: /api/generateHSM/create/changePart
-[WARNING][2026-02-09 09:29:28,553][log.py:249]Unauthorized: /api/system/getInfo
-[WARNING][2026-02-09 09:29:28,667][log.py:249]Unauthorized: /api/system/logout
-[WARNING][2026-02-09 09:30:15,071][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
-[WARNING][2026-02-09 09:34:21,513][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:21,513][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 364, in create_softComposition
-    res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:34:21,524][log.py:249]Internal Server Error: /api/generate/create/softComposition
-[WARNING][2026-02-09 09:34:22,594][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:22,595][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 548, in create_static_soft
-    res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:34:22,599][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-09 09:34:22,616][operation.py:131]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:22,616][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 564, in create_static_hard
-    res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:34:22,628][log.py:249]Internal Server Error: /api/generate/create/static_hard
-[WARNING][2026-02-09 09:34:22,630][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:22,741][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 580, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:34:22,750][operation.py:131]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:22,781][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 604, in create_dynamic_soft
-    res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:34:22,768][operation.py:131]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:22,781][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[ERROR][2026-02-09 09:34:22,813][log.py:249]Internal Server Error: /api/generate/create/dynamic_soft
-[ERROR][2026-02-09 09:34:22,814][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 639, in create_test_data
-    res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-                                               '测评数据.docx', EvaluateData)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:34:22,756][operation.py:131]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:22,819][log.py:249]Internal Server Error: /api/generate/create/test_data
-[ERROR][2026-02-09 09:34:22,824][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 622, in create_dynamic_hard
-    res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                               '动态硬件和固件项.docx', DynamicHardwareTable)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:34:22,834][operation.py:131]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:34:22,836][log.py:249]Internal Server Error: /api/generate/create/dynamic_hard
-[ERROR][2026-02-09 09:34:22,842][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 663, in create_env_diff
-    subdoc = self.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:34:22,849][log.py:249]Internal Server Error: /api/generate/create/env_diff
-[WARNING][2026-02-09 09:36:37,473][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:36:37,473][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 364, in create_softComposition
-    res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:36:37,486][log.py:249]Internal Server Error: /api/generate/create/softComposition
-[WARNING][2026-02-09 09:36:38,408][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:36:38,408][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 548, in create_static_soft
-    res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:36:38,411][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-09 09:36:38,474][operation.py:131]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" ("No module named 'pkg_resources'",)
-[WARNING][2026-02-09 09:36:38,475][operation.py:131]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[WARNING][2026-02-09 09:36:38,475][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[WARNING][2026-02-09 09:36:38,476][operation.py:131]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:36:38,476][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 564, in create_static_hard
-    res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:36:38,477][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 604, in create_dynamic_soft
-    res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:36:38,477][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 580, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:36:38,484][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 622, in create_dynamic_hard
-    res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                               '动态硬件和固件项.docx', DynamicHardwareTable)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:36:38,498][log.py:249]Internal Server Error: /api/generate/create/static_hard
-[ERROR][2026-02-09 09:36:38,501][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[ERROR][2026-02-09 09:36:38,502][log.py:249]Internal Server Error: /api/generate/create/dynamic_soft
-[ERROR][2026-02-09 09:36:38,508][log.py:249]Internal Server Error: /api/generate/create/dynamic_hard
-[WARNING][2026-02-09 09:36:38,525][operation.py:131]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:36:38,525][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 639, in create_test_data
-    res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-                                               '测评数据.docx', EvaluateData)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:36:38,529][operation.py:131]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[ERROR][2026-02-09 09:36:38,535][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 663, in create_env_diff
-    subdoc = self.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:36:38,538][log.py:249]Internal Server Error: /api/generate/create/test_data
-[ERROR][2026-02-09 09:36:38,545][log.py:249]Internal Server Error: /api/generate/create/env_diff
-[WARNING][2026-02-09 09:37:21,515][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:37:21,516][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 364, in create_softComposition
-    res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:37:21,532][log.py:249]Internal Server Error: /api/generate/create/softComposition
-[WARNING][2026-02-09 09:37:22,476][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:37:22,487][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 548, in create_static_soft
-    res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:37:22,515][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-09 09:37:22,567][operation.py:131]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:37:22,567][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 564, in create_static_hard
-    res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:37:22,576][log.py:249]Internal Server Error: /api/generate/create/static_hard
-[WARNING][2026-02-09 09:37:22,590][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:37:22,591][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 580, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:37:22,595][operation.py:131]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:37:22,595][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 604, in create_dynamic_soft
-    res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:37:22,596][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[ERROR][2026-02-09 09:37:22,602][log.py:249]Internal Server Error: /api/generate/create/dynamic_soft
-[WARNING][2026-02-09 09:37:22,624][operation.py:131]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" ("No module named 'pkg_resources'",)
-[WARNING][2026-02-09 09:37:22,624][operation.py:131]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[WARNING][2026-02-09 09:37:22,625][operation.py:131]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[ERROR][2026-02-09 09:37:22,625][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 622, in create_dynamic_hard
-    res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                               '动态硬件和固件项.docx', DynamicHardwareTable)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:37:22,626][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 639, in create_test_data
-    res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-                                               '测评数据.docx', EvaluateData)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:37:22,626][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 663, in create_env_diff
-    subdoc = self.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:37:22,629][log.py:249]Internal Server Error: /api/generate/create/dynamic_hard
-[ERROR][2026-02-09 09:37:22,639][log.py:249]Internal Server Error: /api/generate/create/test_data
-[ERROR][2026-02-09 09:37:22,643][log.py:249]Internal Server Error: /api/generate/create/env_diff
-[WARNING][2026-02-09 09:38:33,797][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:33,797][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 364, in create_softComposition
-    res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:33,804][log.py:249]Internal Server Error: /api/generate/create/softComposition
-[WARNING][2026-02-09 09:38:34,673][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("No module named 'pkg_resources'",)
-[WARNING][2026-02-09 09:38:34,673][operation.py:131]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[WARNING][2026-02-09 09:38:34,674][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[ERROR][2026-02-09 09:38:34,674][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 548, in create_static_soft
-    res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:34,674][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 564, in create_static_hard
-    res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:38:34,674][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 580, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[WARNING][2026-02-09 09:38:34,677][operation.py:131]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:34,681][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[ERROR][2026-02-09 09:38:34,685][log.py:249]Internal Server Error: /api/generate/create/static_hard
-[ERROR][2026-02-09 09:38:34,700][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 604, in create_dynamic_soft
-    res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:34,719][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[ERROR][2026-02-09 09:38:34,720][log.py:249]Internal Server Error: /api/generate/create/dynamic_soft
-[WARNING][2026-02-09 09:38:34,731][operation.py:131]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:34,731][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 622, in create_dynamic_hard
-    res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                               '动态硬件和固件项.docx', DynamicHardwareTable)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:38:34,737][operation.py:131]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:34,748][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 663, in create_env_diff
-    subdoc = self.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:38:34,746][operation.py:131]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:34,750][log.py:249]Internal Server Error: /api/generate/create/dynamic_hard
-[ERROR][2026-02-09 09:38:34,755][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 639, in create_test_data
-    res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-                                               '测评数据.docx', EvaluateData)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:34,755][log.py:249]Internal Server Error: /api/generate/create/env_diff
-[ERROR][2026-02-09 09:38:34,759][log.py:249]Internal Server Error: /api/generate/create/test_data
-[WARNING][2026-02-09 09:38:56,899][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:56,899][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 364, in create_softComposition
-    res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:56,906][log.py:249]Internal Server Error: /api/generate/create/softComposition
-[WARNING][2026-02-09 09:38:57,793][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:57,806][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 548, in create_static_soft
-    res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[WARNING][2026-02-09 09:38:57,811][operation.py:131]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:57,811][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 564, in create_static_hard
-    res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:57,817][log.py:249]Internal Server Error: /api/generate/create/static_hard
-[ERROR][2026-02-09 09:38:57,816][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-09 09:38:57,835][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("No module named 'pkg_resources'",)
-[WARNING][2026-02-09 09:38:57,835][operation.py:131]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[ERROR][2026-02-09 09:38:57,835][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 580, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:57,835][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 604, in create_dynamic_soft
-    res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:38:57,845][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[WARNING][2026-02-09 09:38:57,846][operation.py:131]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" ("cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\\pycharmProjects\\cdtestplant_v1\\.venv\\Lib\\site-packages\\docxtpl\\subdoc.py)",)
-[ERROR][2026-02-09 09:38:57,872][errors.py:131]cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 622, in create_dynamic_hard
-    res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                               '动态硬件和固件项.docx', DynamicHardwareTable)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-ImportError: cannot import name 'Subdoc' from 'docxtpl.subdoc' (E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py)
-[ERROR][2026-02-09 09:38:57,885][log.py:249]Internal Server Error: /api/generate/create/dynamic_hard
-[ERROR][2026-02-09 09:38:57,889][log.py:249]Internal Server Error: /api/generate/create/dynamic_soft
-[WARNING][2026-02-09 09:38:57,893][operation.py:131]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" ("No module named 'pkg_resources'",)
-[WARNING][2026-02-09 09:38:57,895][operation.py:131]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:38:57,895][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 663, in create_env_diff
-    subdoc = self.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:57,897][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 639, in create_test_data
-    res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-                                               '测评数据.docx', EvaluateData)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:38:57,900][log.py:249]Internal Server Error: /api/generate/create/env_diff
-[ERROR][2026-02-09 09:38:57,912][log.py:249]Internal Server Error: /api/generate/create/test_data
-[WARNING][2026-02-09 09:41:51,796][operation.py:131]"GET - GenerateControllerDG[create_softComposition] /api/generate/create/softComposition" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:51,800][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none\Lib\contextlib.py", line 85, in inner
-    return func(*args, **kwds)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 364, in create_softComposition
-    res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:51,819][log.py:249]Internal Server Error: /api/generate/create/softComposition
-[WARNING][2026-02-09 09:41:52,666][operation.py:131]"GET - GenerateControllerDG[create_static_soft] /api/generate/create/static_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:52,666][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 548, in create_static_soft
-    res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:52,669][log.py:249]Internal Server Error: /api/generate/create/static_soft
-[WARNING][2026-02-09 09:41:52,695][operation.py:131]"GET - GenerateControllerDG[create_static_hard] /api/generate/create/static_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:52,695][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 564, in create_static_hard
-    res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:52,698][log.py:249]Internal Server Error: /api/generate/create/static_hard
-[WARNING][2026-02-09 09:41:52,775][operation.py:131]"GET - GenerateControllerDG[create_dynamic_soft] /api/generate/create/dynamic_soft" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:52,775][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 604, in create_dynamic_soft
-    res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:52,778][log.py:249]Internal Server Error: /api/generate/create/dynamic_soft
-[WARNING][2026-02-09 09:41:52,782][operation.py:131]"GET - GenerateControllerDG[create_dynamic_env] /api/generate/create/dynamic_env" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:52,785][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 580, in create_dynamic_env
-    res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                                 '动态测试环境说明.docx', ProjectDynamicDescription)
-                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 350, in uniform_res_from_mul_data_schemas
-    context = cls.create_data_schema_list_context(data_qs, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 305, in create_data_schema_list_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:52,800][log.py:249]Internal Server Error: /api/generate/create/dynamic_env
-[WARNING][2026-02-09 09:41:52,808][operation.py:131]"GET - GenerateControllerDG[create_dynamic_hard] /api/generate/create/dynamic_hard" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:52,811][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 622, in create_dynamic_hard
-    res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                                               '动态硬件和固件项.docx', DynamicHardwareTable)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:52,816][log.py:249]Internal Server Error: /api/generate/create/dynamic_hard
-[WARNING][2026-02-09 09:41:52,819][operation.py:131]"GET - GenerateControllerDG[create_test_data] /api/generate/create/test_data" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:52,829][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 639, in create_test_data
-    res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
-          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-                                               '测评数据.docx', EvaluateData)
-                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 532, in uniform_static_dynamic_response
-    subdoc = cls.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:52,837][log.py:249]Internal Server Error: /api/generate/create/test_data
-[WARNING][2026-02-09 09:41:52,844][operation.py:131]"GET - GenerateControllerDG[create_env_diff] /api/generate/create/env_diff" ("No module named 'pkg_resources'",)
-[ERROR][2026-02-09 09:41:52,844][errors.py:131]No module named 'pkg_resources'
-Traceback (most recent call last):
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\operation.py", line 212, in run
-    result = self.view_func(request, **ctx.kwargs["view_func_kwargs"])
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\ninja_extra\controllers\route\route_functions.py", line 108, in as_view
-    result = self.route.view_func(
-        ctx.controller_instance, *args, **ctx.view_func_kwargs
-    )
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 663, in create_env_diff
-    subdoc = self.create_table_context(table_data, doc)
-  File "E:\pycharmProjects\cdtestplant_v1\apps\createDocument\controllers\dg.py", line 475, in create_table_context
-    subdoc = doc.new_subdoc()
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\template.py", line 617, in new_subdoc
-    from .subdoc import Subdoc
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxtpl\subdoc.py", line 11, in <module>
-    from docxcompose.properties import CustomProperties
-  File "E:\pycharmProjects\cdtestplant_v1\.venv\Lib\site-packages\docxcompose\properties.py", line 18, in <module>
-    import pkg_resources
-ModuleNotFoundError: No module named 'pkg_resources'
-[ERROR][2026-02-09 09:41:52,848][log.py:249]Internal Server Error: /api/generate/create/env_diff
-[WARNING][2026-02-09 14:48:19,415][operation.py:131]"POST - GenerateSeitaiController[create_bgDocument] /api/create/bgDocument" (500, '项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
-[ERROR][2026-02-09 14:48:19,417][log.py:249]Internal Server Error: /api/create/bgDocument
-[WARNING][2026-02-12 13:21:58,600][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 462, in upload_file
+    self.get_dg_to_reuse_dir(target_dir.parent.parent / 'reuse')
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 489, in get_dg_to_reuse_dir
+    self._copy_element_with_images(child, src_doc, new_doc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\pycharmProjects\cdtestplant_v1\apps\createSeiTaiDocument\controllers.py", line 511, in _copy_element_with_images
+    pic_nodes = new_element.xpath('.//pic:pic', namespaces=nsmap)
+TypeError: BaseOxmlElement.xpath() got an unexpected keyword argument 'namespaces'
+[ERROR][2026-04-16 17:21:20,341][log.py:249]Internal Server Error: /api/documentUpload/file
