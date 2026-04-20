@@ -1,5 +1,6 @@
 # 导入内置模块
 from pathlib import Path
+from django.db.models import QuerySet
 # 导入django、ninja等模块
 from ninja_extra import api_controller, ControllerBase, route
 from django.db import transaction
@@ -7,7 +8,7 @@ from django.shortcuts import get_object_or_404
 # 导入文档处理模块
 from docxtpl import DocxTemplate, InlineImage
 # 导入ORM模型
-from apps.project.models import Project
+from apps.project.models import Project, Case
 # 导入工具
 from utils.util import get_str_abbr, get_str_dict
 from utils.chen_response import ChenResponse
@@ -35,7 +36,7 @@ class GenerateControllerWtd(ControllerBase):
         for problem in problem_list:
             problem_dict = {'ident': problem.ident, 'name': problem.name}
             # 1.生成被测对象名称、被测对象标识、被测对象版本
-            cases = problem.case.all()
+            cases: QuerySet[Case] = problem.case.all()
             # generate_log:无关联问题单进入生成日志
             if cases.count() < 1:
                 gloger.write_warning_log('单个问题单表格', f'问题单{problem.ident}未关联用例，请检查')
@@ -70,9 +71,7 @@ class GenerateControllerWtd(ControllerBase):
                                 continue
                             else:
                                 p_list.append(rich)
-
-                        case_design_list.append(
-                            "-".join([case.dut.name, case.design.chapter + '章节' + ":" + ''.join(p_list)]))
+                        case_design_list.append("-".join([case.dut.name, case.design.chapter + '章节' + ":" + ''.join(p_list)]))
                 # 2.用例标识修改-YL_测试项类型_测试项标识_用例key+1
                 demand = case.test  # 中间变量
                 demand_testType = demand.testType  # 中间变量
@@ -86,12 +85,13 @@ class GenerateControllerWtd(ControllerBase):
             for i in range(len(str_dut_name_list)):
                 temp_name_version.append(
                     "".join([str_dut_name_list[i] + str_dut_ident_list[i], '/V', str_dut_version_list[i]]))
-            problem_dict['dut_name_version'] = "\a".join(temp_name_version)
+            problem_dict['dut_name_version'] = "\a".join(set(temp_name_version))
             problem_dict['case_ident'] = "，".join(set(case_ident_list))
             problem_dict['type'] = get_str_dict(problem.type, 'problemType')
             problem_dict['grade'] = get_str_dict(problem.grade, 'problemGrade')
 
             # 依据要求-获取其设计需求
+            print(case_design_list)
             problem_dict['yaoqiu'] = "\a".join(case_design_list)
             # 问题操作 - HTML解析
             desc_list = ['【问题操作】']

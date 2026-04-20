@@ -15,7 +15,7 @@ env.read_env(env_file=Path(__file__).resolve().parent.parent / env_file)
 # 数据库地址
 DATABASE_HOST = "127.0.0.1"
 # 数据库端口
-DATABASE_PORT = 3307  # 生成环境配置
+DATABASE_PORT = 3306  # 生成环境配置-注意打包时务必需改为3307!!!!!!
 # 数据库用户名
 DATABASE_USER = "root"
 # 数据库密码

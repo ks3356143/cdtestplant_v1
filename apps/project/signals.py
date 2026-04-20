@@ -5,6 +5,8 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.functional import SimpleLazyObject
 from django.contrib.auth import get_user_model
+# 导入用例和影响域分析Model-设计信号当删除用例对应影响域分析删除关联用例
+from apps.project.models import Case, InfluenceItem
 # 导入日志的模型
 from apps.user.models import TableOperationLog, Users
 # 导入其他模型用于排除
@@ -89,3 +91,42 @@ def post_delete_handler(sender, instance, **kwargs):
         'operate_des': '删除'
     }
     log_manager.create(user=user, **ope_dict)
+
+# 信号：删除影响域分析关联的用例，将影响域分析管理用例删除
+@receiver(post_delete, sender=Case)
+def clean_up_deleted_case_reference_from_influence(sender, instance, **kwargs):
+    """
+    监听 Case 的删除信号。
+    仅在同一个 Project 范围内，从 InfluenceItem 的 effect_cases 中移除被删用例的 key。
+    """
+    deleted_key = instance.key
+    project_id = instance.project_id
+
+    if not deleted_key or not project_id:
+        return
+
+    # 查询当前项目的影响域分析并且包含该用例
+    items = InfluenceItem.objects.filter(
+        influence__round__project_id=project_id,  # 外键链锁定项目
+        effect_cases__contains=[deleted_key]  # JSON 字段包含该 key
+    )
+
+    # 未发现有关联的影响域分析则不处理
+    if not items.exists():
+        return
+
+    # 更新影响域分析的关联用例
+    updated_items = []
+    for item in items:
+        original_keys = item.effect_cases
+        # 过滤掉被删除的 key，保留其他
+        new_keys = [k for k in original_keys if k != deleted_key]
+
+        if len(new_keys) != len(original_keys):
+            item.effect_cases = new_keys
+            updated_items.append(item)
+
+    if updated_items:
+        InfluenceItem.objects.bulk_update(updated_items, ['effect_cases'])
+    else:
+        print("⚠️ 查询到记录但未发生变更，可能数据有误")

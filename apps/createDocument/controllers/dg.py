@@ -472,51 +472,68 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 通用生成静态软件项、静态硬件项、动态软件项、动态硬件信息的context，包含fontnote和table
     @classmethod
     def create_table_context(cls, table_data: list[list[str]], doc: DocxTemplate):
-        """注意：该函数会增加一列序号列"""
+        """注意：该函数会增加一列序号列，并且支持单元格内回车换行（段落换行）"""
         subdoc = doc.new_subdoc()
         rows = len(table_data)
-        cols = len(table_data[0]) + 1  # 多渲染一个序号列
+        cols = len(table_data[0]) + 1
         table = subdoc.add_table(rows=rows, cols=cols)
+
         # 单元格处理
         for row in range(rows):
             for col in range(cols):
-                cell = table.cell(row, col)  # 单元格数据
-                # 设置边距 - 所有单元格
+                cell = table.cell(row, col)
                 set_cell_margins(cell, left=100, right=100, top=100, bottom=100)
-                pa = cell.paragraphs[0]
-                # 处理第一列 - 要居中
+
+                # 获取要显示的文本内容（字符串或按行拆分后的列表）
                 if col == 0:
-                    if row == 0:
-                        cell.text = "序号"
-                    else:
-                        cell.text = str(row)
-                    pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                # 处理非第一列
+                    # 序号列
+                    lines = ["序号"] if row == 0 else [str(row)]
                 else:
-                    cell.text = table_data[row][col - 1]
+                    raw_text = table_data[row][col - 1]
+                    # 按换行符 \n 拆分为多个段落
+                    lines = raw_text.split('\n') if raw_text else ['']
+
+                # 清空单元格原有段落（add_table 默认有一个段落）
+                cell.text = ""
+                # 删除默认段落，稍后统一添加
+                for para in cell.paragraphs:
+                    p = para._element
+                    p.getparent().remove(p)
+
+                # 逐个添加段落
+                for i, line in enumerate(lines):
+                    if i == 0:
+                        para = cell.add_paragraph(line)
+                    else:
+                        para = cell.add_paragraph(line)
+
+                    # 设置段落对齐（第一列居中，其他左对齐，可根据需要调整）
+                    if col == 0:
+                        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+                    else:
+                        para.alignment = WD_ALIGN_PARAGRAPH.LEFT
+
+                    # 对第一行（表头）设置黑体字体
+                    if row == 0:
+                        for run in para.runs:
+                            run.font.name = '黑体'
+                            run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
+                            run.font.bold = False
+                        # 表头段落居中（覆盖前面的 left）
+                        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
                 # 垂直居中
                 cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-        # 单独处理第一行
-        for col in range(cols):
-            cell = table.cell(0, col)
-            cell.text = ""
-            pa = cell.paragraphs[0]
-            if col == 0:
-                run = pa.add_run("序号")
-            else:
-                run = pa.add_run(str(table_data[0][col - 1]))
-            run.font.name = '黑体'
-            run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
-            run.font.bold = False
-            pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        # 设置序号列宽度 - 先自动调整为False然后设置True
+
+        # 设置序号列宽度
         for cell in table.columns[0].cells:
             cell.width = Mm(15)
-            pa = cell.paragraphs[0]
-            pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            for para in cell.paragraphs:
+                para.alignment = WD_ALIGN_PARAGRAPH.CENTER
+
         # 表格居中
         table.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        # 最后设置表格外边框
+        # 设置表格外边框
         set_table_border_by_cell_position(table)
         return subdoc
 
@@ -690,11 +707,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         project_qs = get_object_or_404(Project, id=id)
         security = get_str_dict(project_qs.security_level, 'security_level')
         languages = get_list_dict('language', project_qs.language)
-        runtime = get_str_dict(project_qs.runtime, 'runtime')
-        devplant = get_str_dict(project_qs.devplant, 'devplant')
         language_list = []
         for language in languages:
             language_list.append(language.get('ident_version'))
+        runtimes = get_list_dict('runtime', project_qs.runtime)
+        runtime_list = [item['ident_version'] for item in runtimes]
+        devplants = get_list_dict('devplant', project_qs.devplant)
+        devplant_list = [item['ident_version'] for item in devplants]
         # 版本先找第一轮
         project_round = project_qs.pField.filter(key=0).first()
         first_round_SO = project_round.rdField.filter(type='SO').first()
@@ -715,8 +734,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             'recv_date': project_qs.beginTime.strftime("%Y-%m-%d"),
             'dev_unit': dev_unit,
             'soft_type': project_qs.get_soft_type_display(),
-            'runtime': runtime,
-            'devplant': devplant
+            'runtime': "\a".join(runtime_list),
+            'devplant': "\a".join(devplant_list),
         }
         return create_dg_docx('被测软件基本信息.docx', context, id)
 

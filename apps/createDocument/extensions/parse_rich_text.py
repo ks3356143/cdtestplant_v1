@@ -91,6 +91,8 @@ class RichParser:
                 inline_image = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(img_size), height=Mm(height))
                 final_list.append(inline_image)
             else:
+                # ~~~新增：将\xa0修改为普通空格~~~
+                oneline = oneline.replace('\xa0', ' ')
                 final_list.append(oneline)
         if len(final_list) <= 0:
             final_list.append("")
@@ -116,9 +118,9 @@ class RichParser:
             else:
                 # 2.和上面区别：如果<p>带有“图”则居中
                 if re.match(r"[表图]\d.*", oneline):
-                    final_list.append({"isCenter": True, "data": oneline})
+                    final_list.append({"isCenter": True, "data": oneline.replace('\xa0', ' ')})
                 else:
-                    final_list.append({"isCenter": False, "data": oneline})
+                    final_list.append({"isCenter": False, "data": oneline.replace('\xa0', ' ')})
         if len(final_list) <= 0:
             final_list.append("")
         return final_list

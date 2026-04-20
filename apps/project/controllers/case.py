@@ -257,7 +257,7 @@ class CaseController(ControllerBase):
             single_qs.key = case_key
             index = index + 1
             single_qs.save()
-        return ChenResponse(message="测试用例删除成功！")
+        return ChenResponse(message="测试用例删除成功！影响域分析中如果有该关联用例则被删除。")
 
     # 右键测试项，根据测试子项生成用例
     @route.post("/case/create_by_demand", url_name='case-create-by-demand')

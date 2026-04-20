@@ -57,6 +57,10 @@ class GenerateControllerHSM(ControllerBase):
         round1_so_dut: Union[Dut, None] = round1_obj.rdField.filter(type='SO').first()
         languages = get_list_dict('language', project_obj.language)
         language_list = [item['ident_version'] for item in languages]
+        runtimes = get_list_dict('runtime', project_obj.runtime)
+        runtime_list = [item['ident_version'] for item in runtimes]
+        devplants = get_list_dict('devplant', project_obj.devplant)
+        devplant_list = [item['ident_version'] for item in devplants]
         # 取非第一轮次
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
@@ -71,8 +75,8 @@ class GenerateControllerHSM(ControllerBase):
             'language': "、".join(language_list),
             'soft_type': project_obj.get_soft_type_display(),
             'security_level': get_str_dict(project_obj.security_level, 'security_level'),
-            'runtime': get_str_dict(project_obj.runtime, 'runtime'),
-            'devplant': get_str_dict(project_obj.devplant, 'devplant'),
+            'runtime': "、".join(runtime_list),
+            'devplant': "、".join(devplant_list),
             'recv_date': project_obj.beginTime.strftime("%Y-%m-%d"),
             'dev_unit': project_obj.dev_unit,
         }

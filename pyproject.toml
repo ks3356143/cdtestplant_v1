@@ -32,7 +32,7 @@ dependencies = [
     "ua-parser-builtins>=202601",
     "user-agents>=2.2.0",
     "waitress>=3.0.2",
-    "pydantic>=2.13.0",
+    "pydantic>=2.13.1",
     "lxml>=6.0.4",
 ]
 

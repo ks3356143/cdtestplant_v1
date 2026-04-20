@@ -105,6 +105,10 @@ class GenerateControllerBG(ControllerBase):
         language_list = []
         for language in languages:
             language_list.append(language.get('ident_version'))
+        runtimes = get_list_dict('runtime', project_obj.runtime)
+        runtime_list = [item['ident_version'] for item in runtimes]
+        devplants = get_list_dict('devplant', project_obj.devplant)
+        devplant_list = [item['ident_version'] for item in devplants]
 
         # 获取轮次
         rounds = project_obj.pField.all()
@@ -112,7 +116,7 @@ class GenerateControllerBG(ControllerBase):
         for r in rounds:
             round_dict = {}
             # 获取SO的dut
-            so_dut: Dut = r.rdField.filter(type='SO').first()
+            so_dut: Dut | None = r.rdField.filter(type='SO').first()
             if so_dut:
                 round_dict['version'] = so_dut.version
                 round_dict['line_count'] = int(so_dut.total_lines)
@@ -123,8 +127,8 @@ class GenerateControllerBG(ControllerBase):
             'project_name': project_obj.name,
             'soft_type': project_obj.get_soft_type_display(),
             'security_level': get_str_dict(project_obj.security_level, 'security_level'),
-            'runtime': get_str_dict(project_obj.runtime, 'runtime'),
-            'devplant': get_str_dict(project_obj.devplant, 'devplant'),
+            'runtime': "\a".join(runtime_list),
+            'devplant': "\a".join(devplant_list),
             'language': "\a".join(language_list),
             'recv_date': project_obj.beginTime.strftime("%Y-%m-%d"),
             'dev_unit': project_obj.dev_unit,

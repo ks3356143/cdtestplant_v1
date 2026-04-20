@@ -27,50 +27,29 @@ class Project(CoreModel):
     vise_person = models.CharField(max_length=64, verbose_name="质量监督员", help_text="质量监督员")
     config_person = models.CharField(max_length=64, verbose_name="配置管理员", help_text="配置管理员")
     # ~~~~~~~~~~~
-    security_level = models.CharField(max_length=8, blank=True, null=True, verbose_name="安全等级",
-                                      help_text="安全等级")
-    test_level = models.JSONField(null=True, blank=True, help_text="测试级别", verbose_name="测试级别",
-                                  default=create_list)
-    plant_type = models.JSONField(null=True, blank=True, help_text="平台类型", verbose_name="平台类型",
-                                  default=create_list)
-    report_type = models.CharField(max_length=64, blank=True, null=True, verbose_name="报告类型",
-                                   help_text="报告类型")
-    language = models.JSONField(null=True, blank=True, help_text="被测语言", verbose_name="被测语言",
-                                default=create_list)
-    standard = models.JSONField(null=True, blank=True, help_text="依据标准", verbose_name="依据标准",
-                                default=create_list)
+    security_level = models.CharField(max_length=8, blank=True, null=True, verbose_name="安全等级", help_text="安全等级")
+    test_level = models.JSONField(null=True, blank=True, help_text="测试级别", verbose_name="测试级别", default=create_list)
+    plant_type = models.JSONField(null=True, blank=True, help_text="平台类型", verbose_name="平台类型", default=create_list)
+    report_type = models.CharField(max_length=64, blank=True, null=True, verbose_name="报告类型", help_text="报告类型")
+    language = models.JSONField(null=True, blank=True, help_text="被测语言", verbose_name="被测语言", default=create_list)
+    standard = models.JSONField(null=True, blank=True, help_text="依据标准", verbose_name="依据标准", default=create_list)
     entrust_unit = models.CharField(max_length=64, verbose_name="委托方单位", help_text="委托方单位")
-    entrust_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方联系人",
-                                       help_text="委托方联系人")
-    entrust_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方电话",
-                                             help_text="委托方电话")
-    entrust_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方邮箱",
-                                     help_text="委托方邮箱")
+    entrust_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方联系人", help_text="委托方联系人")
+    entrust_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方电话", help_text="委托方电话")
+    entrust_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="委托方邮箱", help_text="委托方邮箱")
     dev_unit = models.CharField(max_length=64, verbose_name="开发方单位", help_text="开发方单位")
-    dev_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方联系人",
-                                   help_text="研制方联系人")
-    dev_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方电话",
-                                         help_text="研制方电话")
-    dev_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方邮箱",
-                                 help_text="研制方邮箱")
+    dev_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方联系人", help_text="研制方联系人")
+    dev_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方电话", help_text="研制方电话")
+    dev_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="研制方邮箱", help_text="研制方邮箱")
     test_unit = models.CharField(max_length=64, verbose_name="测试方单位", help_text="测试方单位")
-    test_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心联系人",
-                                    help_text="测评中心联系人")
-    test_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心电话",
-                                          help_text="测评中心电话")
-    test_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心邮箱",
-                                  help_text="测评中心邮箱")
-    step = models.CharField(max_length=8, blank=True, null=True, verbose_name="项目阶段",
-                            help_text="项目阶段")
-    abbreviation = models.JSONField(null=True, blank=True, help_text="缩略语", verbose_name="缩略语",
-                                    default=create_list)
-    soft_type = models.SmallIntegerField(verbose_name='软件类型',
-                                         choices=((1, '新研'), (2, '改造'), (3, '沿用')),
-                                         default=1)
-    runtime = models.CharField(max_length=8, blank=True, null=True, verbose_name="运行环境",
-                               help_text="运行环境")
-    devplant = models.CharField(max_length=8, blank=True, null=True, verbose_name="开发环境",
-                                help_text="开发环境")
+    test_contact = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心联系人", help_text="测评中心联系人")
+    test_contact_phone = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心电话", help_text="测评中心电话")
+    test_email = models.CharField(max_length=64, blank=True, null=True, verbose_name="测评中心邮箱", help_text="测评中心邮箱")
+    step = models.CharField(max_length=8, blank=True, null=True, verbose_name="项目阶段", help_text="项目阶段")
+    abbreviation = models.JSONField(null=True, blank=True, help_text="缩略语", verbose_name="缩略语", default=create_list)
+    soft_type = models.SmallIntegerField(verbose_name='软件类型', choices=((1, '新研'), (2, '改造'), (3, '沿用')), default=1)
+    runtime = models.JSONField(null=True, blank=True, help_text="运行环境", verbose_name="运行环境", default=create_list)
+    devplant = models.JSONField(null=True, blank=True, help_text="开发环境", verbose_name="开发环境", default=create_list)
     # 9月2日新增字段：密级
     secret = models.CharField(max_length=30, default='1', verbose_name='密级', help_text='密级')
 
@@ -226,7 +205,7 @@ class Design(CoreModel):
     type = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口类型',
                             help_text='接口类型')
     # 注意：该字段改为接口数据
-    protocal = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口数据',
+    protocal = models.CharField(max_length=1024, blank=True, null=True, default='', verbose_name='接口数据',
                                 help_text='接口数据')
 
     def __str__(self):
@@ -239,23 +218,15 @@ class Design(CoreModel):
         ordering = ('key',)
 
 class TestDemand(CoreModel):
-    objects = models.Manager()
     """测试项"""
-    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求标识",
-                             help_text="测试需求标识")
-    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求名称",
-                            help_text="测试需求名称")
-    adequacy = models.CharField(max_length=256, blank=True, null=True, verbose_name="充分条件",
-                                help_text="充分条件")
-    priority = models.CharField(max_length=8, blank=True, null=True, verbose_name="优先级",
-                                help_text="优先级")
-    testType = models.CharField(max_length=8, null=True, blank=True, help_text="测试类型",
-                                verbose_name="测试类型",
-                                default="1")
-    testMethod = models.JSONField(blank=True, help_text="测试方法", verbose_name="测试方法",
-                                  default=create_list)
-    title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称",
-                             help_text="树-名称")
+    objects = models.Manager()
+    ident = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求标识", help_text="测试需求标识")
+    name = models.CharField(max_length=64, blank=True, null=True, verbose_name="测试需求名称", help_text="测试需求名称")
+    adequacy = models.CharField(max_length=2048, blank=True, null=True, verbose_name="充分条件", help_text="充分条件")
+    priority = models.CharField(max_length=8, blank=True, null=True, verbose_name="优先级", help_text="优先级")
+    testType = models.CharField(max_length=8, null=True, blank=True, help_text="测试类型", verbose_name="测试类型", default="1")
+    testMethod = models.JSONField(blank=True, help_text="测试方法", verbose_name="测试方法", default=create_list)
+    title = models.CharField(max_length=64, blank=True, null=True, verbose_name="树-名称", help_text="树-名称")
     key = models.CharField(max_length=64, blank=True, null=True,
                            verbose_name="round-dut-designkey-testdemand",
                            help_text="round-dut-designkey-testdemand")
