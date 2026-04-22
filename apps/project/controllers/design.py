@@ -15,7 +15,7 @@ from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_design
 from utils.codes import HTTP_INDEX_ERROR
-from apps.project.models import Design, Dut, Round, Project
+from apps.project.models import Design, Dut, Round, Project, JKDesignInfo
 from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, DesignModelOutSchema, \
     DesignTreeReturnSchema, \
     DesignTreeInputSchema, DesignCreateOutSchema, DesignCreateInputSchema, MultiDesignCreateInputSchema, \
@@ -24,6 +24,22 @@ from apps.project.tools.delete_change_key import design_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tools.auto_create_data import auto_create_renji
 from apps.project.tool.dragAndDrop import DesignDrapAtoB
+
+def _save_jk_direction_info(design: Design, direction: str, source: str, destination: str, description: str):
+    """保存或更新 JKDesignInfo 记录"""
+    if not source and not destination and not description:
+        # 如果三个字段全为空，则删除可能存在的记录（避免冗余数据）
+        JKDesignInfo.objects.filter(jk=design, direction=direction).delete()
+        return
+    JKDesignInfo.objects.update_or_create(
+        jk=design,
+        direction=direction,
+        defaults={
+            'source': source or '',
+            'destination': destination or '',
+            'description': description or '',
+        }
+    )
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['设计需求数据'])
 class DesignController(ControllerBase):
@@ -97,7 +113,30 @@ class DesignController(ControllerBase):
             {'key': key_string, 'round': round_instance, 'dut': dut_instance, 'title': payload.name})
         asert_dict.pop("round_key")
         asert_dict.pop("dut_key")
+        # 去掉Design不使用的字段
+        asert_dict.pop("forward_source", None)
+        asert_dict.pop("forward_destination", None)
+        asert_dict.pop("forward_description", None)
+        asert_dict.pop("reverse_source", None)
+        asert_dict.pop("reverse_destination", None)
+        asert_dict.pop("reverse_description", None)
         qs = Design.objects.create(**asert_dict)
+        # 处理接口方向信息（仅当 demandType == '3' 且存在正向/反向数据时）
+        if payload.demandType == '3':
+            _save_jk_direction_info(
+                design=qs,
+                direction=JKDesignInfo.Direction.FORWARD,
+                source=payload.forward_source,
+                destination=payload.forward_destination,
+                description=payload.forward_description,
+            )
+            _save_jk_direction_info(
+                design=qs,
+                direction=JKDesignInfo.Direction.REVERSE,
+                source=payload.reverse_source,
+                destination=payload.reverse_destination,
+                description=payload.reverse_description,
+            )
         return qs
 
     # 批量增加设计需求，对应前端批量增加页面modal
@@ -136,15 +175,36 @@ class DesignController(ControllerBase):
         # 判断是否和同项目同轮次的标识重复
         if len(design_search) > 1 and payload.ident != '':
             return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
+
         # 查到当前
         design_qs = Design.objects.get(id=id)
         for attr, value in payload.dict().items():
-            if attr == 'project_id' or attr == 'round_key' or attr == 'dut_key':
+            if attr in ('project_id', 'round_key', 'dut_key'):
                 continue
             if attr == 'name':
                 setattr(design_qs, "title", value)
             setattr(design_qs, attr, value)
         design_qs.save()
+
+        # 处理接口方向信息更新
+        if payload.demandType == '3':
+            _save_jk_direction_info(
+                design=design_qs,
+                direction=JKDesignInfo.Direction.FORWARD,
+                source=payload.forward_source,
+                destination=payload.forward_destination,
+                description=payload.forward_description,
+            )
+            _save_jk_direction_info(
+                design=design_qs,
+                direction=JKDesignInfo.Direction.REVERSE,
+                source=payload.reverse_source,
+                destination=payload.reverse_destination,
+                description=payload.reverse_description,
+            )
+        else:
+            # 如果需求类型不再是接口，则删除已有的方向信息
+            JKDesignInfo.objects.filter(jk=design_qs).delete()
         return design_qs
 
     # 删除设计需求

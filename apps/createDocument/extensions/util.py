@@ -38,6 +38,17 @@ def create_sm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     except PermissionError as e:
         return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
+def create_hsm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
+    """生成最终回归测试说明文档工具函数"""
+    input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'hsm' / template_name
+    doc = DocxTemplate(input_path)
+    doc.render(context, autoescape=True)
+    try:
+        doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/hsm" / template_name)
+        return ChenResponse(status=200, code=200, message="文档生成成功！")
+    except PermissionError as e:
+        return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+
 def create_dg_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终大纲文档工具函数"""
     input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / template_name

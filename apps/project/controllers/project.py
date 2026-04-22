@@ -463,7 +463,7 @@ class ProjectController(ControllerBase):
             return ChenResponse(status=200, code=25001, data={"table": item_obj.table, "fontnote": item_obj.fontnote})
         return ChenResponse(status=200, code=25002, data=None)
 
-    # ~~~静态软件项、静态硬件项、动态软件项、动态硬件项 - 新增或修改~~~
+    # ~~~静态软件项、静态硬件项、动态软件项、动态硬件项、测评数据 - 新增或修改~~~
     @route.post("/post_static_dynamic_item/")
     @transaction.atomic
     def post_static_dynamic_item(self, data: StaticDynamicData):

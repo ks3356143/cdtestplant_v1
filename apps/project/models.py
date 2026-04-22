@@ -15,9 +15,9 @@ class Project(CoreModel):
                              help_text="项目标识", unique=True)  # 唯一
     name = models.CharField(max_length=100, blank=True, null=True, verbose_name="项目名称",
                             help_text="项目名称")
-    beginTime = models.DateField(auto_now_add=True, null=True, blank=True, help_text="开始时间",
+    beginTime = models.DateField(null=True, blank=True, help_text="开始时间",
                                  verbose_name="开始时间")
-    endTime = models.DateField(auto_now_add=True, null=True, blank=True, help_text="结束时间",
+    endTime = models.DateField(null=True, blank=True, help_text="结束时间",
                                verbose_name="结束时间")
     duty_person = models.CharField(max_length=64, verbose_name="负责人", help_text="负责人")
     member = models.JSONField(null=True, blank=True, help_text="项目成员", verbose_name="项目成员",
@@ -198,15 +198,12 @@ class Design(CoreModel):
     dut = models.ForeignKey(to="Dut", db_constraint=False, related_name="rsField", on_delete=models.CASCADE,
                             verbose_name='归属轮次', help_text='归属轮次', related_query_name='rsQuery')
     # 如果是demandTye='3'则加上如下字段
-    source = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口来源',
-                              help_text='接口来源')
-    to = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口目的地',
-                          help_text='接口目的地')
-    type = models.CharField(max_length=64, blank=True, null=True, default='', verbose_name='接口类型',
+    type = models.CharField(max_length=1024, blank=True, null=True, default='', verbose_name='接口类型',
                             help_text='接口类型')
-    # 注意：该字段改为接口数据
-    protocal = models.CharField(max_length=1024, blank=True, null=True, default='', verbose_name='接口数据',
-                                help_text='接口数据')
+    is_bidirectional = models.BooleanField(
+        default=False,
+        verbose_name="是否双向"
+    )
 
     def __str__(self):
         return f'设计需求:{self.name}'
@@ -216,6 +213,29 @@ class Design(CoreModel):
         verbose_name = "测试需求"
         verbose_name_plural = verbose_name
         ordering = ('key',)
+
+class JKDesignInfo(CoreModel):
+    class Direction(models.TextChoices):
+        FORWARD = 'forward', '正向'
+        REVERSE = 'reverse', '反向'
+
+    jk = models.ForeignKey(Design, on_delete=models.CASCADE, related_name="jkField", verbose_name="所属接口Design")
+    direction = models.CharField(
+        max_length=10,
+        choices=Direction.choices,  # type: ignore
+        verbose_name="方向"
+    )
+    description = models.TextField(max_length=1024, blank=True, null=True, verbose_name="接口描述")
+    source = models.CharField(max_length=200, blank=True, null=True, verbose_name="来源")
+    destination = models.CharField(max_length=200, blank=True, null=True, verbose_name="目的地")
+
+    class Meta:
+        unique_together = [['jk', 'direction']]  # 同一个方向仅一条记录
+        verbose_name = "接口一个方向的信息"
+        verbose_name_plural = "接口一个方向的信息"
+
+    def __str__(self):
+        return f"{self.jk.name} - {self.get_direction_display()}"
 
 class TestDemand(CoreModel):
     """测试项"""

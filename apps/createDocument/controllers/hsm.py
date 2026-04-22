@@ -8,7 +8,7 @@ from django.db.models import QuerySet, Q
 from docxtpl import DocxTemplate
 from docx import Document
 # 导入模型
-from apps.project.models import Project, Round, Dut, InfluenceArea
+from apps.project.models import Project, Round, Dut
 from apps.dict.models import Dict
 # 导入项目工具
 from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, get_testType
@@ -19,7 +19,6 @@ from utils.path_utils import project_path
 from apps.createDocument.extensions.util import delete_dir_files
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
-from utils.util import get_str_abbr
 from apps.createDocument.extensions.content_result_tool import create_influence_context
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
@@ -234,7 +233,7 @@ class GenerateControllerHSM(ControllerBase):
             xq_dut: Dut = hround.rdField.filter(type='XQ').first()
             # 处理代码版本
             last_round_key = str(int(hround.key) - 1)
-            last_round: Round = project_obj.pField.filter(key=last_round_key).first()
+            last_round: Round | None = project_obj.pField.filter(key=last_round_key).first()
             last_round_so_dut = last_round.rdField.filter(type='SO').first()
             if not last_round_so_dut:
                 return ChenResponse(code=400, status=400,

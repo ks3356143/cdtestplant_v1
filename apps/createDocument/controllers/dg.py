@@ -15,7 +15,7 @@ from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
 from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, \
-    DynamicSoftTable, DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis
+    DynamicSoftTable, DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis, Design
 from apps.dict.models import Dict
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
@@ -91,12 +91,23 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             html_parser = RichParser(single_qs.design.description)
             desc_list = html_parser.get_final_list(doc)
             # 查询关联design以及普通design
-            doc_list = [{'dut_name': single_qs.dut.name, 'design_chapter': single_qs.design.chapter,
-                         'design_name': single_qs.design.name}]
-            for relate_design in single_qs.otherDesign.all():
-                ddict = {'dut_name': relate_design.dut.name, 'design_chapter': relate_design.chapter,
-                         'design_name': relate_design.name}
+            doc_list = [{
+                'dut_name': single_qs.dut.name,
+                'design_chapter': single_qs.design.chapter,
+                'design_name': single_qs.design.name,
+                'dut_type': single_qs.dut.type  # 添加 type 字段用于排序
+            }]
+            for relate_design in single_qs.otherDesign.all():  # type: Design
+                ddict = {
+                    'dut_name': relate_design.dut.name,
+                    'design_chapter': relate_design.chapter,
+                    'design_name': relate_design.name,
+                    'dut_type': relate_design.dut.type  # 添加 type 字段用于排序
+                }
                 doc_list.append(ddict)
+            # 定义排序顺序映射
+            TYPE_ORDER = {'YZ': 0, 'XQ': 1, 'XY': 2, 'SJ': 3, None: 99, '': 999}
+            doc_list.sort(key=lambda x: TYPE_ORDER.get(x.get('dut_type'), 999))
 
             # 组装单个测试项
             ## 打印本项目是FPGA还是CPU
@@ -403,10 +414,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             interface_dict = {
                 'name': interface.name,
                 'ident': interface.ident,
-                'source': interface.source,
-                'to': interface.to,
                 'type': interface.type,
-                'protocal': interface.protocal,
+                'is_bidirectional': interface.is_bidirectional,  # 是否有反向
+                'jk_info_list': [{
+                    'source': item.source,
+                    'destination': item.destination,
+                    'description': item.description,
+                } for item in interface.jkField.all()]
             }
             interface_list.append(interface_dict)
         # 项目接口图处理 - 2026/2/4
@@ -423,7 +437,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             'iters': interfaceNameList,
             'iter_list': interface_list,
             'image_render': image_render if image_render else "",
-            'fontnote': fontnote if fontnote else "".join([project_name, '接口示意图'])
+            'fontnote': fontnote if fontnote else "".join([project_name, '接口示意图']),
         }
         doc.render(context, autoescape=True)
         try:
@@ -469,7 +483,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
-    # 通用生成静态软件项、静态硬件项、动态软件项、动态硬件信息的context，包含fontnote和table
+    # 通用生成静态软件项、静态硬件项、动态软件项、动态硬件信息、测评数据的context，包含fontnote和table
     @classmethod
     def create_table_context(cls, table_data: list[list[str]], doc: DocxTemplate):
         """注意：该函数会增加一列序号列，并且支持单元格内回车换行（段落换行）"""

@@ -1,5 +1,5 @@
 from typing import Optional
-from apps.project.models import Design
+from apps.project.models import Design, JKDesignInfo
 from ninja import Field, Schema, ModelSchema
 from typing import List, Union
 from pydantic import AliasChoices
@@ -30,10 +30,53 @@ class DesignModelOutSchemaOrigin(ModelSchema):
 class DesignModelOutSchema(ModelSchema):
     # 新增字段 - 上级的dut对象
     dut: Optional[DutModelOutSchema] = None
+    is_bidirectional: bool = Field(False, alias='is_bidirectional')
+    forward_source: str = Field("")
+    forward_destination: str = Field("")
+    forward_description: str = Field("")
+    reverse_source: str = Field("")
+    reverse_destination: str = Field("")
+    reverse_description: str = Field("")
 
     class Meta:
         model = Design
         exclude = ['project', 'round', 'dut', 'remark', 'sort']
+
+    # ---------- 解析器方法 ----------
+    @staticmethod
+    def resolve_is_bidirectional(obj: Design) -> bool:
+        return obj.is_bidirectional
+
+    @staticmethod
+    def resolve_forward_source(obj: Design) -> str:
+        """从 JKDesignInfo 正向记录中获取 source"""
+        info = obj.jkField.filter(direction=JKDesignInfo.Direction.FORWARD).first()
+        return info.source if info else ""
+
+    @staticmethod
+    def resolve_forward_destination(obj: Design) -> str:
+        info = obj.jkField.filter(direction=JKDesignInfo.Direction.FORWARD).first()
+        return info.destination if info else ""
+
+    @staticmethod
+    def resolve_forward_description(obj: Design) -> str:
+        info = obj.jkField.filter(direction=JKDesignInfo.Direction.FORWARD).first()
+        return info.description if info else ""
+
+    @staticmethod
+    def resolve_reverse_source(obj: Design) -> str:
+        info = obj.jkField.filter(direction=JKDesignInfo.Direction.REVERSE).first()
+        return info.source if info else ""
+
+    @staticmethod
+    def resolve_reverse_destination(obj: Design) -> str:
+        info = obj.jkField.filter(direction=JKDesignInfo.Direction.REVERSE).first()
+        return info.destination if info else ""
+
+    @staticmethod
+    def resolve_reverse_description(obj: Design) -> str:
+        info = obj.jkField.filter(direction=JKDesignInfo.Direction.REVERSE).first()
+        return info.description if info else ""
 
 # 处理树状结构的schema
 class DesignTreeReturnSchema(Schema):
@@ -66,11 +109,15 @@ class DesignCreateInputSchema(Schema):
     demandType: str = Field(None, alias="demandType")
     description: str = Field("", alias="description")
     chapter: str = Field(None, alias='chapter')
-    # 接口独有的4个字段
-    source: str = Field('', alias='source')
-    to: str = Field('', alias='to')
+    # 接口类型包含
     type: str = Field('', alias='type')
-    protocal: str = Field('', alias='protocal')
+    is_bidirectional: bool = Field(False, alias='is_bidirectional')
+    forward_source: str = Field("")
+    forward_destination: str = Field("")
+    forward_description: str = Field("")
+    reverse_source: str = Field("")
+    reverse_destination: str = Field("")
+    reverse_description: str = Field("")
 
 class SingleDesignSchema(Schema):
     ident: str = Field(None, alias="ident")
