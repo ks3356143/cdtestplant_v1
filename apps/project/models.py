@@ -499,6 +499,12 @@ class StaticSoftItem(models.Model):
                                    verbose_name="关联项目", help_text="关联项目")
     table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
     fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+    rounds_map = models.JSONField(
+        verbose_name="轮次数据",
+        help_text="二维数组，每个内层数组是该行选中的轮次索引（字符串）",
+        default=list,
+        blank=True,
+    )
 
     class Meta:
         db_table = 'project_static_soft_item'
@@ -511,6 +517,12 @@ class StaticSoftHardware(models.Model):
                                    verbose_name="关联项目", help_text="关联项目")
     table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
     fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+    rounds_map = models.JSONField(
+        verbose_name="轮次数据",
+        help_text="二维数组，每个内层数组是该行选中的轮次索引（字符串）",
+        default=list,
+        blank=True,
+    )
 
     class Meta:
         db_table = 'project_static_hardware'
@@ -523,6 +535,12 @@ class DynamicSoftTable(models.Model):
                                    verbose_name="关联项目", help_text="关联项目")
     table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
     fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+    rounds_map = models.JSONField(
+        verbose_name="轮次数据",
+        help_text="二维数组，每个内层数组是该行选中的轮次索引（字符串）",
+        default=list,
+        blank=True,
+    )
 
     class Meta:
         db_table = 'project_dynamic_soft_item'
@@ -535,6 +553,12 @@ class DynamicHardwareTable(models.Model):
                                    verbose_name="关联项目", help_text="关联项目")
     table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
     fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+    rounds_map = models.JSONField(
+        verbose_name="轮次数据",
+        help_text="二维数组，每个内层数组是该行选中的轮次索引（字符串）",
+        default=list,
+        blank=True,
+    )
 
     class Meta:
         db_table = 'project_dynamic_hardware'
@@ -547,6 +571,12 @@ class EvaluateData(models.Model):
                                    verbose_name="关联项目", help_text="关联项目")
     table = models.JSONField(verbose_name="储存表格二维数组", help_text="储存表格二维数组", default=default_json_value)
     fontnote = models.CharField(max_length=256, null=True, default="", verbose_name="题注", help_text="数据的题注说明")
+    rounds_map = models.JSONField(
+        verbose_name="轮次数据",
+        help_text="二维数组，每个内层数组是该行选中的轮次索引（字符串）",
+        default=list,
+        blank=True,
+    )
 
     class Meta:
         db_table = 'project_evaluate_data'

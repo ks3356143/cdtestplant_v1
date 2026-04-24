@@ -31,7 +31,8 @@ from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入mixins-处理文档片段
 from apps.createDocument.extensions.mixins import FragementToolsMixin
 # 导入工具
-from apps.createDocument.extensions.tools import demand_sort_by_designKey, set_table_border_by_cell_position, set_cell_margins
+from apps.createDocument.extensions.tools import demand_sort_by_designKey, set_table_border_by_cell_position
+from apps.createDocument.extensions.table_creator import create_table_context, RoundType, uniform_static_dynamic_response
 
 # @api_controller("/generate", tags=['生成大纲文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generate", tags=['生成大纲文档'])
@@ -483,101 +484,10 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
-    # 通用生成静态软件项、静态硬件项、动态软件项、动态硬件信息、测评数据的context，包含fontnote和table
-    @classmethod
-    def create_table_context(cls, table_data: list[list[str]], doc: DocxTemplate):
-        """注意：该函数会增加一列序号列，并且支持单元格内回车换行（段落换行）"""
-        subdoc = doc.new_subdoc()
-        rows = len(table_data)
-        cols = len(table_data[0]) + 1
-        table = subdoc.add_table(rows=rows, cols=cols)
-
-        # 单元格处理
-        for row in range(rows):
-            for col in range(cols):
-                cell = table.cell(row, col)
-                set_cell_margins(cell, left=100, right=100, top=100, bottom=100)
-
-                # 获取要显示的文本内容（字符串或按行拆分后的列表）
-                if col == 0:
-                    # 序号列
-                    lines = ["序号"] if row == 0 else [str(row)]
-                else:
-                    raw_text = table_data[row][col - 1]
-                    # 按换行符 \n 拆分为多个段落
-                    lines = raw_text.split('\n') if raw_text else ['']
-
-                # 清空单元格原有段落（add_table 默认有一个段落）
-                cell.text = ""
-                # 删除默认段落，稍后统一添加
-                for para in cell.paragraphs:
-                    p = para._element
-                    p.getparent().remove(p)
-
-                # 逐个添加段落
-                for i, line in enumerate(lines):
-                    if i == 0:
-                        para = cell.add_paragraph(line)
-                    else:
-                        para = cell.add_paragraph(line)
-
-                    # 设置段落对齐（第一列居中，其他左对齐，可根据需要调整）
-                    if col == 0:
-                        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-                    else:
-                        para.alignment = WD_ALIGN_PARAGRAPH.LEFT
-
-                    # 对第一行（表头）设置黑体字体
-                    if row == 0:
-                        for run in para.runs:
-                            run.font.name = '黑体'
-                            run._element.rPr.rFonts.set(qn('w:eastAsia'), '黑体')
-                            run.font.bold = False
-                        # 表头段落居中（覆盖前面的 left）
-                        para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-                # 垂直居中
-                cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
-
-        # 设置序号列宽度
-        for cell in table.columns[0].cells:
-            cell.width = Mm(15)
-            for para in cell.paragraphs:
-                para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-
-        # 表格居中
-        table.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        # 设置表格外边框
-        set_table_border_by_cell_position(table)
-        return subdoc
-
-    # 统一静态软件项、静态硬件项、动态软件项、动态硬件信息的word生成 - 模版模式
-    @classmethod
-    def uniform_static_dynamic_response(cls, id: int, filename: str, r_filename: str, model) -> ChenResponse | None:
-        project_obj = get_object_or_404(Project, id=id)
-        input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / filename
-        doc = DocxTemplate(input_path)
-        qs = model.objects.filter(project=project_obj)
-        if qs.exists():
-            obj = qs.first()
-            table_data = obj.table
-            subdoc = cls.create_table_context(table_data, doc)
-            context = {
-                'fontnote': obj.fontnote,
-                'table': subdoc,
-            }
-            doc.render(context, autoescape=True)
-            try:
-                doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / r_filename)
-                return ChenResponse(status=200, code=200, message="文档生成成功！")
-            except PermissionError as e:
-                return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
-        return None
-
     # 静态软件项
     @route.get('/create/static_soft', url_name='create-static_soft')
-    def create_static_soft(self, id: int):
-        res = self.uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem)
+    def create_static_soft(self, id: int, current_round: RoundType = "0"):
+        res = uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem, current_round)
         if res is not None:
             return res
 
@@ -592,8 +502,11 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
     # 静态硬件和固件项
     @route.get('/create/static_hard', url_name='create-static_hard')
-    def create_static_hard(self, id: int):
-        res = self.uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx', '静态硬件和固件项.docx', StaticSoftHardware)
+    def create_static_hard(self, id: int, current_round: RoundType = "0"):
+        res = uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx',
+                                              '静态硬件和固件项.docx',
+                                              StaticSoftHardware,
+                                              current_round)
         if res is not None:
             return res
 
@@ -632,8 +545,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
     # 动态软件项
     @route.get('/create/dynamic_soft', url_name='create-dynamic_soft')
-    def create_dynamic_soft(self, id: int):
-        res = self.uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable)
+    def create_dynamic_soft(self, id: int, current_round: RoundType = "0"):
+        res = uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable, current_round)
         if res is not None:
             return res
 
@@ -650,9 +563,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
     # 动态硬件项
     @route.get('/create/dynamic_hard', url_name='create-dynamic_hard')
-    def create_dynamic_hard(self, id: int):
-        res = self.uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
-                                                   '动态硬件和固件项.docx', DynamicHardwareTable)
+    def create_dynamic_hard(self, id: int, current_round: RoundType = "0"):
+        res = uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
+                                              '动态硬件和固件项.docx', DynamicHardwareTable, current_round)
         if res is not None:
             return res
 
@@ -667,9 +580,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
     # 测试数据
     @route.get('/create/test_data', url_name='create-test_data')
-    def create_test_data(self, id: int):
-        res = self.uniform_static_dynamic_response(id, '测评数据_2.docx',
-                                                   '测评数据.docx', EvaluateData)
+    def create_test_data(self, id: int, current_round: RoundType = "0"):
+        res = uniform_static_dynamic_response(id, '测评数据_2.docx',
+                                              '测评数据.docx', EvaluateData, current_round)
         if res is not None:
             return res
         # 老内容
@@ -692,7 +605,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         if qs.exists():
             obj = qs.first()
             table_data = obj.table
-            subdoc = self.create_table_context(table_data, doc)
+            subdoc = create_table_context(table_data, doc)
             context = {
                 "description": obj.description,
                 "table": subdoc,

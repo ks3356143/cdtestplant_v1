@@ -460,7 +460,12 @@ class ProjectController(ControllerBase):
         item_qs = self.get_model_from_category(category).objects.filter(project=project_obj)
         if item_qs.exists():
             item_obj = item_qs.first()
-            return ChenResponse(status=200, code=25001, data={"table": item_obj.table, "fontnote": item_obj.fontnote})
+            if item_obj:
+                return ChenResponse(status=200, code=25001, data={
+                    "table": item_obj.table,
+                    "fontnote": item_obj.fontnote,
+                    "rounds": item_obj.rounds_map or []
+                })
         return ChenResponse(status=200, code=25002, data=None)
 
     # ~~~静态软件项、静态硬件项、动态软件项、动态硬件项、测评数据 - 新增或修改~~~
@@ -470,10 +475,21 @@ class ProjectController(ControllerBase):
         project_obj = self.get_project_by_id(data.id)
         model = self.get_model_from_category(data.category)
         item_qs = model.objects.filter(project=project_obj)
+        # 处理rounds_map
+        rounds = data.rounds
+        if rounds is None:
+            rounds = [["0"]] * len(data.table)
+
         if item_qs.exists():
             # 如果存在则修改
             item_qs.delete()
-        model.objects.create(project=project_obj, table=data.table, fontnote=data.fontnote)
+        model.objects.create(
+            project=project_obj,
+            table=data.table,
+            fontnote=data.fontnote,
+            rounds_map=rounds,
+        )
+        return ChenResponse(status=200, code=20000, message="保存成功")
 
     # ~~~环境差异性分析 - 获取~~~
     @route.get("/get_env_analysis/")

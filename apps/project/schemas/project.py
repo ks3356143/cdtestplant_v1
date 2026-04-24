@@ -62,6 +62,7 @@ class StaticDynamicData(Schema):
     category: str
     table: list[list[str]]
     fontnote: Optional[str] = ""
+    rounds: Optional[List[List[str]]] = None # 允许不传递
 
 # ~~~环境差异性分析~~~
 class EnvAnalysisSchema(Schema):

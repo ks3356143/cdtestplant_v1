@@ -3,6 +3,7 @@ from datetime import timedelta, date
 from apps.project.models import Project
 from django.shortcuts import get_object_or_404
 from ninja.errors import HttpError  # 从代码抛出该异常，被ninja截取变为response
+from utils.codes import PROJECT_ENDTIME_ERROR_CODE
 
 def format_remove_heng(dateT: date) -> str:
     """该函数将date对象的横杠-去掉，输出str"""
@@ -201,7 +202,8 @@ class DocTime:
         cover_time = self.p_end
         # 这里做判断，如果项目结束时间/最后一轮结束时间
         if cover_time < self.round_time[-1]['end']:
-            raise HttpError(500, message='项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
+            # 注意系统对HttpError异常重新处理，所以该处status_code看api.py文件
+            raise HttpError(PROJECT_ENDTIME_ERROR_CODE, message='项目结束时间早于最后一轮次结束时间或等于开始时间，请修改项目结束时间')
         context = times_by_cover_time(cover_time)
         context.update(cover_time=cover_time.strftime("%Y年%m月%d日"))
         return context

@@ -24,6 +24,9 @@ from apps.createDocument.extensions.content_result_tool import create_influence_
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入排序
 from apps.createDocument.extensions.tools import demand_sort_by_designKey
+# 导入静态软件项、静态硬件项、动态软件项、动态硬件项、测评数据辅助函数和模型
+from apps.createDocument.extensions.table_creator import uniform_static_dynamic_response, RoundType
+from apps.project.models import StaticSoftItem, StaticSoftHardware, DynamicSoftTable, DynamicHardwareTable, EvaluateData
 
 chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
@@ -42,6 +45,38 @@ class GenerateControllerHSM(ControllerBase):
         except PermissionError:
             return ChenResponse(code=400, status=400, message='另一个程序正在占用文件，请关闭后重试')
 
+    # ~~~新增5个接口，回归测试说明的~~~
+    # 静态软件项
+    @route.get('/create/static_soft', url_name='create-static_soft-hsm')
+    def create_hsm_static_soft(self, id: int, current_round: RoundType = "0"):
+        return uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem, current_round, isHsm=True)
+
+    # 静态硬件和固件项
+    @route.get('/create/static_hard', url_name='create-static_hard-hsm')
+    def create_hsm_static_hard(self, id: int, current_round: RoundType = "0"):
+        return uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx',
+                                               '静态硬件和固件项.docx',
+                                               StaticSoftHardware,
+                                               current_round)
+
+    # 动态软件项
+    @route.get('/create/dynamic_soft', url_name='create-dynamic_soft-hsm')
+    def create_hsm_dynamic_soft(self, id: int, current_round: RoundType = "0"):
+        return uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable, current_round, isHsm=True)
+
+    # 动态硬件项
+    @route.get('/create/dynamic_hard', url_name='create-dynamic_hard-hsm')
+    def create_hsm_dynamic_hard(self, id: int, current_round: RoundType = "0"):
+        return uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
+                                               '动态硬件和固件项.docx', DynamicHardwareTable, current_round, isHsm=True)
+
+    # 测试数据
+    @route.get('/create/test_data', url_name='create-test_data-hsm')
+    def create_hsm_test_data(self, id: int, current_round: RoundType = "0"):
+        return uniform_static_dynamic_response(id, '测评数据_2.docx',
+                                               '测评数据.docx', EvaluateData, current_round, isHsm=True)
+
+    # ~~~5个接口：end~~~
     @route.get("/create/basicInformation", url_name="create-basicInformation")
     @transaction.atomic
     def create_basicInformation(self, id: int):
