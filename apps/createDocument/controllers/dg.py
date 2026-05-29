@@ -55,7 +55,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
         # 查出第一轮所有testdemand
         project_round_one = project_qs.pField.filter(key=0).first()
-        testDemand_qs = project_round_one.rtField.all().select_related('design')
+        testDemand_qs = project_round_one.rtField.all().select_related('design') # type:ignore
         # 按照自己key排序，这样可以按照design的key排序
         sorted_demand_qs = sorted(testDemand_qs, key=demand_sort_by_designKey)
 
@@ -228,9 +228,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 2025/12/11：将20250417格式改为2025年04月17日 - 封装函数，传入字典和键值，修改对应键值信息
     def change_time_to_another(self, context: dict, key_list: list[str]):
         for key in key_list:
-            time_val = context.get(key, None)
+            time_val = context.get(key)
             if time_val:
-                context[key] = datetime.strptime(time_val, "%Y%m%d").strftime("%Y年%m月%d日")
+                context[key] = datetime.strptime(time_val, "%Y%m%d").strftime("%Y年%m月%d日") # type:ignore
         return context
 
     # 生成【主要功能和性能指标】文档片段
@@ -361,7 +361,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         if qs.exists():
             data_qs = qs.first().data_schemas
             context = cls.create_data_schema_list_context(data_qs, doc)
-            doc.render(context)
+            doc.render(context or {})
             try:
                 doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / r_filename)
                 return ChenResponse(status=200, code=200, message="文档生成成功！")
@@ -430,9 +430,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         image_render = None
         fontnote = None
         if image_obj.exists():
-            base64_bytes = base64.b64decode(image_obj.first().content.replace("data:image/png;base64,", ""))
+            base64_bytes = base64.b64decode(image_obj.first().content.replace("data:image/png;base64,", "")) # type:ignore
             image_render = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(120))
-            fontnote = image_obj.first().fontnote
+            fontnote = image_obj.first().fontnote # type:ignore
         context = {
             'project_name': project_name,
             'iters': interfaceNameList,
@@ -604,12 +604,12 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         qs = EnvAnalysis.objects.filter(project=project_obj)
         if qs.exists():
             obj = qs.first()
-            table_data = obj.table
+            table_data = obj.table # type:ignore
             subdoc = create_table_context(table_data, doc)
             context = {
-                "description": obj.description,
+                "description": obj.description, # type:ignore
                 "table": subdoc,
-                "fontnote": obj.fontnote,
+                "fontnote": obj.fontnote, # type:ignore
             }
             doc.render(context, autoescape=True)
             try:
@@ -643,7 +643,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         devplant_list = [item['ident_version'] for item in devplants]
         # 版本先找第一轮
         project_round = project_qs.pField.filter(key=0).first()
-        first_round_SO = project_round.rdField.filter(type='SO').first()
+        first_round_SO = project_round.rdField.filter(type='SO').first() # type:ignore
         if not first_round_SO:
             return ChenResponse(code=400, status=400, message='您还未创建轮次，请进入工作区创建')
         version = first_round_SO.version
@@ -721,7 +721,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             isDmsc = True if int(security) <= 2 else False
             # 获取第一轮所有测试项QuerySet
             project_round_one = project_qs.pField.filter(key=0).first()
-            testDemand_qs = project_round_one.rtField.all()
+            testDemand_qs = project_round_one.rtField.all() # type:ignore
             # grouped_data的键是测试类型名称，值为测试项名称数组
             grouped_data = {}
             for item in testDemand_qs:
@@ -819,9 +819,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         design_list = []  # 先按照design的思路进行追踪
         # 查询第一轮次
         project_round_one = project_qs.pField.filter(key=0).first()
-        testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one)
+        testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one) # type:ignore
         # 找出第一轮的研总
-        yz_dut = project_round_one.rdField.filter(type='YZ').first()
+        yz_dut = project_round_one.rdField.filter(type='YZ').first() # type:ignore
         if yz_dut:
             # 查询出验证所有design
             yz_designs = yz_dut.rsField.all()
@@ -843,7 +843,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                          str(test_item_last_chapter)])
                     test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
                                       'ident': reveal_ident}
-                    design_dict['test_demand'].append(test_item_dict)
+                    design_dict['test_demand'].append(test_item_dict) # type:ignore
                 design_list.append(design_dict)
         try:
             design_list = sorted(design_list, key=chapter_key)
@@ -889,7 +889,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                                  str(test_item_last_chapter)])
                             test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
                                               'ident': reveal_ident}
-                            design_dict['test_demand'].append(test_item_dict)
+                            design_dict['test_demand'].append(test_item_dict) # type:ignore
                     design_list.append(design_dict)
 
             if xq_dut:
@@ -912,7 +912,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                              str(test_item_last_chapter)])
                         test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
                                           'ident': reveal_ident}
-                        design_dict['test_demand'].append(test_item_dict)
+                        design_dict['test_demand'].append(test_item_dict) # type:ignore
 
                     design_list.append(design_dict)
             # 根据design的chapter排序-为防止报错崩溃使用try-但难排查
@@ -933,10 +933,10 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         test_item_prefix = '6.2'
         # 取出第一轮所有测试项的章节处理列表和字典
         project_round_one = project_qs.pField.filter(key=0).first()
-        testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one)
+        testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one) # type:ignore
         # 查询第一轮所有测试项
         test_items = []
-        test_items.extend(project_round_one.rtField.all())
+        test_items.extend(project_round_one.rtField.all()) # type:ignore
         # 最后渲染列表
         items_list = []
         for test_item in test_items:

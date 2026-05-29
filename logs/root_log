@@ -248,3 +248,6 @@ Traceback (most recent call last):
              ^^^^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'GenerateControllerDG' object has no attribute 'create_table_context'
 [ERROR][2026-04-24 15:11:55,488][log.py:249]Internal Server Error: /api/generate/create/env_diff
+[WARNING][2026-05-29 14:44:48,323][backend.py:91]Caught LDAPError looking up user: SERVER_DOWN({'result': -1, 'desc': "Can't contact LDAP server", 'ctrls': []})
+[WARNING][2026-05-29 14:45:02,302][operation.py:136]"POST - AITestController[ai_return] /api/local_doc_qa/testing_item" ([{'type': 'missing', 'loc': ('body', 'item', 'stream'), 'msg': 'Field required'}],)
+[WARNING][2026-05-29 14:45:02,302][log.py:249]Unprocessable Content: /api/local_doc_qa/testing_item
