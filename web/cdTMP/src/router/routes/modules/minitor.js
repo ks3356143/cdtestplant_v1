@@ -47,6 +47,18 @@ const TESTMANAGE = {
                 icon: "icon-file",
                 title: "登录日志"
             }
+        },
+        {
+            path: "nonrepudiation",
+            name: "nonrepudiation",
+            component: () => import("@/views/monitor/nonrepudiation/index.vue"),
+            meta: {
+                requiresAuth: true,
+                roles: ["*"],
+                locale: "抗抵赖证据",
+                icon: "icon-safe",
+                title: "抗抵赖证据"
+            }
         }
     ]
 }
