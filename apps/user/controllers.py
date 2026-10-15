@@ -68,6 +68,7 @@ class UserTokenController(TokenObtainPairController):
     @route.post("/login", response=MyTokenObtainPairOutSchema, url_name='login')
     def obtain_token(self, user_token: MyTokenObtainPairInputSchema):
         # 三权分立：特权角色（系统管理员/安全员/审计员）登录强制双因子——口令 + 图形验证码
+        # （鉴别失败处置在 schema.authenticate() 挂钩：锁定检查/失败累计/成功清零）
         login_user = Users.objects.filter(username=user_token.username).first()
         if login_user and getattr(login_user, 'role', None) in PRIVILEGED_ROLES:
             _verify_login_captcha(user_token.captcha_key, user_token.captcha_code)

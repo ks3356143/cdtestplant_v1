@@ -147,7 +147,16 @@ class MyTokenObtainPairInputSchema(TokenObtainInputSchemaBase):
         return values
 
     def authenticate(self, request, credentials: Dict):
-        super().authenticate(request, credentials)
+        # 鉴别失败处置（GB/T 28452-2012 7.1.1）：锁定检查 → 失败累计 → 成功清零
+        from apps.user.tools.login_security import check_login_locked, record_login_failure, clear_login_failure
+        username = credentials.get('username')
+        check_login_locked(username)
+        try:
+            super().authenticate(request, credentials)
+        except Exception:
+            record_login_failure(username)
+            raise
+        clear_login_failure(username)
         if self._user:
             save_login_log(request, self._user)
             if self._user.status == '2':  # type:ignore
