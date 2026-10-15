@@ -26,6 +26,8 @@ class Users(AbstractUser, CoreModel):
                                        help_text='个人网站')
     phone = models.CharField(max_length=255, verbose_name="电话", null=True, blank=True, help_text="电话", default='18888888888')
     accountId = models.CharField(max_length=255, verbose_name="用户标识", null=True, blank=True, help_text="用户标识", default='1')
+    # 主体敏感标记：用户可访问的最高密级许可（GB/T 28452 7.1.4），由系统管理员配置
+    clearance = models.CharField(max_length=30, verbose_name="密级许可", help_text="可访问的最高密级", default='1')
     # 三权分立角色：admin 系统管理员 / secadmin 系统安全员 / auditadmin 系统审计员 / user 普通用户
     role = models.CharField(
         max_length=64, verbose_name="角色", null=True, blank=True, help_text="角色", default='user',

@@ -30,7 +30,7 @@ class GroupSchema(ModelSchema):
 class CreateUserSchema(ModelSchema):
     class Config:
         model = UserModel
-        include = ('username', 'name', 'password', 'phone', 'status', 'role',)
+        include = ('username', 'name', 'password', 'phone', 'status', 'role', 'clearance',)
 
     # username判重
     @model_validator("username")
@@ -74,7 +74,7 @@ class UserRetrieveOutSchema(ModelSchema):
 class UpdateDeleteUserSchema(ModelSchema):
     class Config:
         model = UserModel
-        include = ("name", "username", "phone", "status", "role")
+        include = ("name", "username", "phone", "status", "role", "clearance")
 
     def validate_unique_username(self, id: int):
         user_filters = UserModel.objects.filter(username=self.username)

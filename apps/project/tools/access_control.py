@@ -20,8 +20,16 @@ def _user_identities(user) -> set:
     return {i for i in identities if i}
 
 
+def _secret_level(value) -> int:
+    """密级字典 key 转级别序号：1公开 < 2内部 < 3秘密★5年 < 4机密★10年 < 5绝密★20年"""
+    try:
+        return int(str(value).strip() or '1')
+    except (ValueError, TypeError):
+        return 1
+
+
 def is_project_accessible(project, user) -> bool:
-    """判断用户是否可访问项目：admin / 负责人 / 项目成员"""
+    """判断用户是否可访问项目：admin / 负责人 / 项目成员，且用户密级许可不低于项目密级（7.1.4 标记强制）"""
     if not getattr(user, 'is_authenticated', False):
         return False
     if getattr(user, 'role', None) == 'admin':
@@ -29,15 +37,21 @@ def is_project_accessible(project, user) -> bool:
     identities = _user_identities(user)
     if not identities:
         return False
-    if getattr(project, 'duty_person', None) in identities:
-        return True
-    member = getattr(project, 'member', None) or []
-    if isinstance(member, str):
-        try:
-            member = _json.loads(member)
-        except (ValueError, TypeError):
-            member = []
-    return bool(identities & set(member or []))
+    is_member = getattr(project, 'duty_person', None) in identities
+    if not is_member:
+        member = getattr(project, 'member', None) or []
+        if isinstance(member, str):
+            try:
+                member = _json.loads(member)
+            except (ValueError, TypeError):
+                member = []
+        is_member = bool(identities & set(member or []))
+    if not is_member:
+        return False
+    # 依据敏感标记执行访问控制：项目密级高于用户密级许可 → 拒绝
+    if _secret_level(getattr(project, 'secret', '1')) > _secret_level(getattr(user, 'clearance', '1')):
+        return False
+    return True
 
 
 def check_project_access(project, user):
