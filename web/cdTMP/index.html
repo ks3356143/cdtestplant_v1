@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/wxwx-logo.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="314298729@qq.com">
+    <meta name="keywords" content="测试,管理,平台,测评,用例,FPGA,CPU,嵌入式,报告,第三方,二方">
+    <meta name="description" content="测试管理平台，服务内部，部分内容不对外开放">
+    <title>测试管理平台</title>
+    <style>
+        html,
+        body,
+        #app {
+            height: 100%;
+            overflow: hidden;
+            transition-property: filter;
+            transition-duration: 1s;
+        }
+
+        .app-loading {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .app-loading__logo {
+            width: 210px;
+            height: 200px;
+            margin-left: -8%;
+            margin-top: -5%;
+        }
+
+        .app-loading__logo img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .app-loading-text {
+            position: relative;
+            margin-top: 1rem;
+        }
+
+        .app-loading-preloader,
+        .app-loading-viewtext {
+            font-size: 3.5rem;
+            color: #ddd;
+            font-weight: bold;
+        }
+
+        .app-loading-viewtext-container {
+            display: flex;
+            flex-direction: row;
+            position: absolute;
+            letter-spacing: 4.3px;
+            top: -5px;
+        }
+
+        .app-loading-viewtext {
+            color: #333;
+            animation: loader 4s infinite;
+            transform: rotateY(-90deg);
+        }
+
+        .app-loading-viewtext-container span:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(4) {
+            animation-delay: 0.8s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(5) {
+            animation-delay: 1s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(6) {
+            animation-delay: 1.2s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(7) {
+            animation-delay: 1.4s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(8) {
+            animation-delay: 1.6s;
+        }
+
+        .app-loading-viewtext-container span:nth-child(9) {
+            animation-delay: 1.8s;
+        }
+
+        @keyframes loader {
+
+            0%,
+            75%,
+            100% {
+                opacity: 0;
+                transform: rotateY(-90deg);
+            }
+
+            25%,
+            50% {
+                opacity: 1;
+                transform: rotateY(0deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <noscript>
+        <strong>你的浏览器未开启javascript支持，请开启后刷新页面访问！</strong>
+    </noscript>
+    <div id="app" class="ma-ui">
+        <div class="app-loading">
+            <div class="app-loading__logo"><img src="./logo.svg" style="width: 210px;height: 200px;" /></div>
+            <div class="app-loading-text">
+                <span class="app-loading-preloader">测</span>
+                <span class="app-loading-preloader">试</span>
+                <span class="app-loading-preloader">管</span>
+                <span class="app-loading-preloader">理</span>
+                <span class="app-loading-preloader">平</span>
+                <span class="app-loading-preloader">台</span>
+                <div class="app-loading-viewtext-container">
+                    <span class="app-loading-viewtext">测</span>
+                    <span class="app-loading-viewtext">试</span>
+                    <span class="app-loading-viewtext">管</span>
+                    <span class="app-loading-viewtext">理</span>
+                    <span class="app-loading-viewtext">平</span>
+                    <span class="app-loading-viewtext">台</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

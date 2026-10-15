@@ -1,0 +1,42 @@
+.tox-textarea-wrap {
+    height: 100% !important;
+
+    &>textarea.tox-textarea {
+        height: 100%;
+    }
+}
+
+// arco全局覆盖：覆盖arco全局的圆角设置，原来设置是0、2px、4px、6px
+body {
+    --border-radius-none: 0;
+    --border-radius-small: 0px;
+    --border-radius-medium: 0px;
+    --border-radius-large: 0px;
+}
+
+// 覆盖arco表单行间距为3px，原来为20px
+.arco-form-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+// 覆盖card组件actions的margin-top，原来为20px
+.arco-card-actions {
+    margin-top: 0px !important;
+}
+
+// 覆盖card组件，padding原来为16px
+.arco-card-body {
+    padding: 8px !important;
+}
+
+// 覆盖modal的头部样式，变为sticky
+.arco-modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background-color: rgba(255, 255, 255, 0.9);
+}
