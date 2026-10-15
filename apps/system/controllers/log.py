@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from ninja_extra import api_controller, ControllerBase, route
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
+from utils.permissions import IsAuditor
 from django.db.transaction import atomic
 from apps.system.models import LoginLog, OperationLog
 from utils.chen_pagination import MyPagination
@@ -31,8 +32,8 @@ class LogController(ControllerBase):
         log_qs = OperationLog.objects.filter(creator=user)
         return log_qs[:5]
 
-    # 操作日志：查询
-    @route.get('/operationsPagination', response=List[OperationLogOutSchema])
+    # 操作日志：查询（审计员专属）
+    @route.get('/operationsPagination', response=List[OperationLogOutSchema], permissions=[IsAuthenticated, IsAuditor])
     @atomic
     @paginate(MyPagination)
     def get_operations_pagination(self, request_username: str = None):
@@ -42,8 +43,8 @@ class LogController(ControllerBase):
         qs = logs.filter(request_username__icontains=request_username)
         return qs
 
-    # 操作日志：根据请求参数天数删除
-    @route.get('/operationsDel')
+    # 操作日志：根据请求参数天数删除（审计员专属）
+    @route.get('/operationsDel', permissions=[IsAuthenticated, IsAuditor])
     @atomic
     def operation_delete_log(self, payload: DeleteInputSchema = Query(...)):
         time = datetime.now() - timedelta(days=payload.day)
@@ -54,8 +55,8 @@ class LogController(ControllerBase):
         else:
             return ChenResponse(message='全部日志删除成功')
 
-    # 登录日志：查询
-    @route.get('/loginLogsList', response=List[LoginLogOutSchema])
+    # 登录日志：查询（审计员专属）
+    @route.get('/loginLogsList', response=List[LoginLogOutSchema], permissions=[IsAuthenticated, IsAuditor])
     @atomic
     @paginate(MyPagination)
     def get_login_logs(self, username: str = None):
@@ -65,8 +66,8 @@ class LogController(ControllerBase):
         qs = logs.filter(username__icontains=username)
         return qs
 
-    # 登录日志：根据请求参数天数删除
-    @route.get('/loginLogsDel')
+    # 登录日志：根据请求参数天数删除（审计员专属）
+    @route.get('/loginLogsDel', permissions=[IsAuthenticated, IsAuditor])
     @atomic
     def login_logs_delete(self, payload: DeleteInputSchema = Query(...)):
         time = datetime.now() - timedelta(days=payload.day)

@@ -26,7 +26,11 @@ class Users(AbstractUser, CoreModel):
                                        help_text='个人网站')
     phone = models.CharField(max_length=255, verbose_name="电话", null=True, blank=True, help_text="电话", default='18888888888')
     accountId = models.CharField(max_length=255, verbose_name="用户标识", null=True, blank=True, help_text="用户标识", default='1')
-    role = models.CharField(max_length=64, verbose_name="角色", null=True, blank=True, help_text="角色", default='user')
+    # 三权分立角色：admin 系统管理员 / secadmin 系统安全员 / auditadmin 系统审计员 / user 普通用户
+    role = models.CharField(
+        max_length=64, verbose_name="角色", null=True, blank=True, help_text="角色", default='user',
+        choices=(('admin', '系统管理员'), ('secadmin', '系统安全员'), ('auditadmin', '系统审计员'), ('user', '普通用户'))
+    )
 
     def __str__(self):
         return f'用户账号:{self.username}-用户名:{self.name}'

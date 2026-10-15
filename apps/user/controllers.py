@@ -4,6 +4,7 @@ from ninja_extra import api_controller, ControllerBase, route
 from ninja.pagination import paginate
 from utils.chen_pagination import MyPagination
 from ninja_extra.permissions import IsAuthenticated, IsAdminUser
+from utils.permissions import IsAuditor
 from ninja import Query
 from django.db import transaction
 from django.contrib.auth import authenticate
@@ -149,7 +150,8 @@ class UserManageController(ControllerBase):
 # 操作日志接口
 @api_controller("/system/log", tags=['日志记录'], auth=JWTAuth())
 class LogController(ControllerBase):
-    @route.get("/operation_list", url_name="log_list", response=List[LogOutSchema], auth=None)
+    @route.get("/operation_list", url_name="log_list", response=List[LogOutSchema],
+               permissions=[IsAuthenticated, IsAuditor])
     @paginate(MyPagination)
     def log_list(self, data: Query[LogInputSchema]):
         for attr, value in data.model_dump().items():
@@ -162,7 +164,7 @@ class LogController(ControllerBase):
         logs = logs.filter(user__username__icontains=data.user, create_datetime__range=data.create_datetime)
         return logs
 
-    @route.get('/operation_delete', url_name='log_delete', permissions=[IsAuthenticated, IsAdminUser],
+    @route.get('/operation_delete', url_name='log_delete', permissions=[IsAuthenticated, IsAuditor],
                auth=JWTAuth())
     def log_delete(self, data: LogDeleteInSchema = Query(...)):
         time = datetime.now() - timedelta(days=data.day)

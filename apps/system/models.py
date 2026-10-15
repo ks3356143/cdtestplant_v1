@@ -64,3 +64,29 @@ class OperationLog(models.Model):
         verbose_name = '操作日志'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
+
+
+class SecurityPolicy(models.Model):
+    """系统安全策略（单例行，由系统安全员 secadmin 维护）——三权分立之安全员职责载体"""
+    login_max_attempts = models.IntegerField(default=5, verbose_name="登录失败最大尝试次数",
+                                             help_text="超过该次数触发账号锁定")
+    login_window_minutes = models.IntegerField(default=15, verbose_name="失败统计时间窗口（分钟）",
+                                               help_text="在该时间窗口内累计失败次数")
+    login_lock_minutes = models.IntegerField(default=30, verbose_name="账号锁定时长（分钟）",
+                                             help_text="触发锁定后禁止登录的时长")
+    update_datetime = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="更新时间")
+
+    class Meta:
+        db_table = 'system_security_policy'
+        verbose_name = '系统安全策略'
+
+    def __str__(self):
+        return f'安全策略：失败{self.login_max_attempts}次/{self.login_window_minutes}分钟锁定{self.login_lock_minutes}分钟'
+
+    @classmethod
+    def load(cls):
+        """取单例策略行，不存在则按默认值创建"""
+        obj = cls.objects.first()
+        if obj is None:
+            obj = cls.objects.create()
+        return obj
