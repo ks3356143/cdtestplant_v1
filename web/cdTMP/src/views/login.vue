@@ -57,7 +57,7 @@
                         <a-input v-model="form.code" placeholder="请输入验证码" size="large" allow-clear :max-length="4">
                             <template #prefix><icon-safe /></template>
                             <template #append>
-                                <verify-code ref="Verify" />
+                                <img v-if="captchaImage" :src="captchaImage" class="captcha-img" title="看不清？点击刷新" @click="refreshCaptcha" />
                             </template>
                         </a-input>
                     </a-form-item>
@@ -80,8 +80,8 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue"
-import verifyCode from "@cps/ma-verifyCode/index.vue"
+import { reactive, ref, onMounted } from "vue"
+import loginAPI from "@/api/login"
 import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
 import userApi from "@/api/system/user"
@@ -90,10 +90,21 @@ import ParticlesBg from "@/components/ui/particles-bg/ParticlesBg.vue"
 const router = useRouter()
 const userStore = useUserStore()
 // 绑定登录form的数据
-// const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
-const form = reactive({ username: "superAdmin", password: "admin123", code: "" })
-// 获取验证码dom && arco表单loading
-const Verify = ref(null)
+const form = reactive({ username: "", password: "", code: "", captcha_key: "" })
+// 后端图形验证码（三权分立：特权角色登录双因子）
+const captchaImage = ref("")
+const refreshCaptcha = async () => {
+    try {
+        const res = await loginAPI.getCaptch()
+        captchaImage.value = res.data.image
+        form.captcha_key = res.data.captcha_key
+        form.code = ""
+    } catch (e) {
+        captchaImage.value = ""
+    }
+}
+onMounted(refreshCaptcha)
+// arco表单loading
 const loading = ref(null)
 // 点击登录按钮
 const errorMessage = ref("")
@@ -102,7 +113,7 @@ const handleSubmit = async ({ values, errors }) => {
         return
     }
     loading.value = true
-    if (Verify.value.checkResult(form.code) && !errors) {
+    if (!errors) {
         // 登录逻辑需要用到userStore
         try {
             const login_res = await userStore.login(form)
@@ -121,6 +132,8 @@ const handleSubmit = async ({ values, errors }) => {
             }
         } catch (err) {
             errorMessage.value = err.message
+            // 验证码一次性使用，失败后刷新
+            refreshCaptcha()
         } finally {
             loading.value = false
         }
@@ -194,6 +207,12 @@ const handleSubmit = async ({ values, errors }) => {
 
     :deep(.arco-input-append) {
         padding: 0 !important;
+    }
+
+    .captcha-img {
+        height: 36px;
+        display: block;
+        cursor: pointer;
     }
 
     .other-login {

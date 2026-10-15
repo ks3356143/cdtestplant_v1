@@ -66,7 +66,7 @@ const useUserStore = defineStore("user", {
 
         // login函数，传一个form信息
         login(form) {
-            const form_data = { username: form.username, password: form.password }
+            const form_data = { username: form.username, password: form.password, captcha_key: form.captcha_key, captcha_code: form.code }
             return loginAPI
                 .login(form_data)
                 .then((res) => {
