@@ -128,6 +128,16 @@ const crudColumns = reactive([
         labelWidth: "86px"
     },
     {
+        title: "密级许可",
+        dataIndex: "clearance",
+        align: "center",
+        width: 130,
+        formType: "select",
+        dict: { name: "secret", props: { label: "title", value: "key" } },
+        addDefaultValue: "1",
+        labelWidth: "86px"
+    },
+    {
         title: "电话",
         align: "center",
         width: 150,
