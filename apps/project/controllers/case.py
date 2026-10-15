@@ -15,7 +15,7 @@ from datetime import datetime
 from django.utils import timezone
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_case
-from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, Project, Problem
+from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, Project, Problem, NonrepudiationEvidence
 from apps.project.schemas.case import DeleteSchema, CaseModelOutSchema, CaseFilterSchema, \
     CaseTreeReturnSchema, ReplaceCaseSchema, PersonReplaceSchema, ExetimeReplaceSchema, \
     CaseTreeInputSchema, CaseCreateOutSchema, CaseCreateInputSchema, DemandNodeSchema
@@ -236,6 +236,17 @@ class CaseController(ControllerBase):
         case_qs.ident = case_qs.test.ident
         # ~~~~~~~~~end~~~~~~~~~
         case_qs.save()
+        # 抗抵赖证据：用例执行结果提交 → 原发证据（测试人员身份+时间戳+步骤结果摘要，GB/T 28452 7.1.2）
+        executed_steps = [item for item in (payload.dict().get('testStep') or []) if item.get('result')]
+        if executed_steps:
+            NonrepudiationEvidence.record(
+                request=self.context.request, evidence_type='1', actor=self.context.request.user,
+                action='用例执行结果提交', business_type='case', business_ident=str(case_qs.id),
+                business_name=case_qs.name,
+                payload={'case_ident': case_qs.ident, 'case_name': case_qs.name,
+                         'steps': [{'operation': s.get('operation'), 'result': s.get('result'),
+                                    'passed': s.get('passed')} for s in executed_steps]},
+            )
         return case_qs
 
     # 删除测试用例

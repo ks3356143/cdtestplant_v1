@@ -662,3 +662,59 @@ class InfluenceItem(CoreModel):
         db_table = 'influence_item'
         verbose_name = "影响域分析 - 行数据"
         verbose_name_plural = verbose_name
+
+
+class NonrepudiationEvidence(models.Model):
+    """
+    抗抵赖证据（GB/T 28452-2012 第三级 7.1.2）
+    证据只进不改不删：模型不提供任何修改删除接口，仅审计员（auditadmin）可查询核验
+    """
+    TYPE_CHOICES = (('1', '原发证据'), ('2', '接收证据'))
+    evidence_type = models.CharField(max_length=8, choices=TYPE_CHOICES, verbose_name="证据类型",
+                                     help_text="1 原发证据（提交方）/ 2 接收证据（确认方）")
+    actor = models.ForeignKey('user.Users', db_constraint=False, on_delete=models.SET_NULL, null=True,
+                              blank=True, verbose_name="行为主体", help_text="用户删除后证据仍保留")
+    actor_name = models.CharField(max_length=64, verbose_name="主体账号")
+    actor_role = models.CharField(max_length=64, null=True, blank=True, verbose_name="主体角色")
+    action = models.CharField(max_length=32, verbose_name="行为类型",
+                              help_text="问题单提交/问题单处理确认/用例执行结果提交")
+    business_type = models.CharField(max_length=16, verbose_name="业务类型", help_text="problem/case")
+    business_ident = models.CharField(max_length=64, verbose_name="业务标识")
+    business_name = models.CharField(max_length=128, null=True, blank=True, verbose_name="业务名称")
+    data_digest = models.CharField(max_length=64, verbose_name="数据摘要(SHA256)",
+                                   help_text="对关键内容快照计算，可核验数据是否被篡改")
+    content_snapshot = models.TextField(null=True, blank=True, verbose_name="关键内容快照")
+    operation_ip = models.CharField(max_length=32, null=True, blank=True, verbose_name="操作IP",
+                                    help_text="传输链路信息")
+    create_datetime = models.DateTimeField(auto_now_add=True, verbose_name="证据生成时间")
+
+    class Meta:
+        db_table = 'project_nonrepudiation_evidence'
+        verbose_name = '抗抵赖证据'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
+
+    def __str__(self):
+        return f'抗抵赖证据[{self.get_evidence_type_display()}]{self.actor_name}-{self.action}-{self.business_ident}'
+
+    @classmethod
+    def record(cls, request, evidence_type: str, actor, action: str, business_type: str,
+               business_ident: str, business_name: str, payload: dict):
+        """生成一条抗抵赖证据：对关键内容快照计算 SHA256 摘要，记录主体、时间、IP"""
+        import hashlib
+        import json as _json
+        snapshot = _json.dumps(payload, ensure_ascii=False, sort_keys=True, default=str)
+        digest = hashlib.sha256(snapshot.encode('utf-8')).hexdigest()
+        return cls.objects.create(
+            evidence_type=evidence_type,
+            actor=actor if getattr(actor, 'is_authenticated', False) else None,
+            actor_name=getattr(actor, 'username', '') or '',
+            actor_role=getattr(actor, 'role', '') or '',
+            action=action,
+            business_type=business_type,
+            business_ident=str(business_ident),
+            business_name=business_name,
+            data_digest=digest,
+            content_snapshot=snapshot,
+            operation_ip=request.META.get('REMOTE_ADDR', '') if request is not None else '',
+        )

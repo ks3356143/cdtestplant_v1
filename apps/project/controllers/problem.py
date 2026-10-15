@@ -12,7 +12,7 @@ from typing import List, Optional
 from utils.chen_response import ChenResponse
 from utils.codes import HTTP_INDEX_ERROR
 from django.shortcuts import get_object_or_404
-from apps.project.models import Case, Problem, Project, TestDemand
+from apps.project.models import Case, Problem, Project, TestDemand, NonrepudiationEvidence
 from apps.project.schemas.problem import (
     DeleteSchema,
     ProblemModelOutSchema,
@@ -28,6 +28,19 @@ from utils.smallTools.interfaceTools import conditionNoneToBlank
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['问题单系列'])
 class ProblemController(ControllerBase):
+    def _record_problem_feedback_evidence(self, problem_qs: Problem):
+        """抗抵赖证据：问题单处理反馈（改正措施/原因分析/影响域/回归结果）→ 接收证据（处理人）"""
+        feedback = {k: getattr(problem_qs, k) for k in ('solve', 'analysis', 'effect_scope', 'verify_result')
+                    if getattr(problem_qs, k)}
+        if not feedback:
+            return
+        NonrepudiationEvidence.record(
+            request=self.context.request, evidence_type='2', actor=self.context.request.user,
+            action='问题单处理确认', business_type='problem', business_ident=str(problem_qs.id),
+            business_name=problem_qs.name,
+            payload={'ident': problem_qs.ident, 'status': problem_qs.status, **feedback},
+        )
+
     @route.get("/getProblemList", response=List[ProblemModelOutSchema], exclude_none=True,
                url_name="problem-list")
     @transaction.atomic
@@ -195,6 +208,15 @@ class ProblemController(ControllerBase):
             qs.save()
         # 对problem的ident排序
         self.reset_problem_ident(project_id)
+        # 抗抵赖证据：问题单提交 → 原发证据（提交人身份+时间戳+数据摘要，GB/T 28452 7.1.2）
+        NonrepudiationEvidence.record(
+            request=self.context.request, evidence_type='1', actor=self.context.request.user,
+            action='问题单提交', business_type='problem', business_ident=str(qs.id),
+            business_name=qs.name,
+            payload={'ident': qs.ident, 'name': qs.name, 'status': qs.status, 'grade': qs.grade,
+                     'type': qs.type, 'operation': qs.operation, 'result': qs.result,
+                     'postPerson': qs.postPerson},
+        )
         return qs
 
     # 更新问题单
@@ -206,6 +228,7 @@ class ProblemController(ControllerBase):
         for attr, value in payload.dict().items():
             setattr(problem_qs, attr, value)
         problem_qs.save()
+        self._record_problem_feedback_evidence(problem_qs)
         return ChenResponse(message="问题单更新成功")
 
     # 弹窗的-更新问题单
@@ -217,6 +240,7 @@ class ProblemController(ControllerBase):
         for attr, value in payload.dict().items():
             setattr(problem_qs, attr, value)
         problem_qs.save()
+        self._record_problem_feedback_evidence(problem_qs)
         return ChenResponse(message="问题单更新成功")
 
     # 删除问题单

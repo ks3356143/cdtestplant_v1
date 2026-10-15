@@ -7,7 +7,8 @@ from apps.project.controllers.testDemand import TestDemandController
 from apps.project.controllers.case import CaseController
 from apps.project.controllers.problem import ProblemController
 from apps.project.controllers.treeOperation import TreeController
+from apps.project.controllers.evidence import NonrepudiationController
 
 # 将导入的控制器以列表方式放入下面数组
 __all__ = ['ProjectController', 'RoundController', 'DutController', 'DesignController', 'TestDemandController',
-           'CaseController', 'ProblemController', 'TreeController']
+           'CaseController', 'ProblemController', 'TreeController', 'NonrepudiationController']
