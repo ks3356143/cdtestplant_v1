@@ -4,8 +4,8 @@ from ninja_extra import api_controller, ControllerBase, route
 from ninja.errors import HttpError
 from ninja.pagination import paginate
 from utils.chen_pagination import MyPagination
-from ninja_extra.permissions import IsAuthenticated, IsAdminUser
-from utils.permissions import IsAuditor
+from ninja_extra.permissions import IsAuthenticated
+from utils.permissions import IsAuditor, IsSystemAdmin
 from ninja import Query
 from django.db import transaction
 from django.contrib.auth import authenticate
@@ -25,7 +25,7 @@ from apps.project.models import Project
 # 工具函数
 from utils.chen_crud import update, multi_delete
 from apps.user.tools.ldap_tools import load_ldap_users
-from utils.permissions import IsAuditor, PRIVILEGED_ROLES
+from utils.permissions import PRIVILEGED_ROLES
 
 Users = get_user_model()
 
@@ -103,7 +103,7 @@ class UserTokenController(TokenObtainPairController):
 class UserManageController(ControllerBase):
     # 用户创建接口
     @route.post("/save", response=CreateUserOutSchema, url_name="user_create", auth=JWTAuth(),
-                permissions=[IsAuthenticated, IsAdminUser])
+                permissions=[IsAuthenticated, IsSystemAdmin])
     def create_user(self, user_schema: CreateUserSchema):
         user = user_schema.create()
         return user
@@ -123,8 +123,8 @@ class UserManageController(ControllerBase):
             qs = qs.filter(name__in=all_member)
         return qs
 
-    # 用户检索接口
-    @route.get("/index", response=List[UserRetrieveOutSchema])
+    # 用户检索接口（仅系统管理员：三权分立，普通用户/安全员/审计员无账号管理权）
+    @route.get("/index", response=List[UserRetrieveOutSchema], permissions=[IsAuthenticated, IsSystemAdmin])
     @paginate(MyPagination)
     def index_user(self, filters: UserRetrieveInputSchema = Query(...)):
         # 重要，处理前端不传值为None的情况
@@ -144,7 +144,7 @@ class UserManageController(ControllerBase):
         return qs
 
     @route.put("/update/{user_id}", response=UpdateDeleteUserOutSchema,
-               permissions=[IsAuthenticated, IsAdminUser],
+               permissions=[IsAuthenticated, IsSystemAdmin],
                url_name="user-update")
     def update_user(self, user_id: int, payload: UpdateDeleteUserSchema):
         if payload.username == "superAdmin":
@@ -153,7 +153,7 @@ class UserManageController(ControllerBase):
         update_user = update(self.context.request, user_id, payload, Users)
         return {"message": "用户更新成功"}
 
-    @route.delete("/delete", permissions=[IsAuthenticated, IsAdminUser], url_name="user-delete")
+    @route.delete("/delete", permissions=[IsAuthenticated, IsSystemAdmin], url_name="user-delete")
     def delete_user(self, data: DeleteUserSchema):
         ids = data.ids
         # 去掉删除创始人
@@ -164,7 +164,7 @@ class UserManageController(ControllerBase):
         return ChenResponse(code=200, status=200, message="删除成功")
 
     # 管理员改变用户状态是否停用/启用
-    @route.get('/change_status', auth=JWTAuth(), permissions=[IsAuthenticated, IsAdminUser],
+    @route.get('/change_status', auth=JWTAuth(), permissions=[IsAuthenticated, IsSystemAdmin],
                url_name='user-change')
     def change_user_status(self, user_status: str, userId: int):
         user = Users.objects.filter(id=userId).first()
@@ -176,7 +176,8 @@ class UserManageController(ControllerBase):
         user.save()
         return user.status
 
-    @route.post("/modifyPassword", auth=JWTAuth(), permissions=[IsAuthenticated, IsAdminUser])
+    # 用户自助修改本人密码（旧密码校验，登录用户均可操作）
+    @route.post("/modifyPassword", auth=JWTAuth(), permissions=[IsAuthenticated])
     def modify_password(self, payload: AdminModifyPasswordSchema):
         user: UserClass = self.context.request.user  # type:ignore
         if user:

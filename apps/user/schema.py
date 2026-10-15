@@ -27,10 +27,11 @@ class GroupSchema(ModelSchema):
         include = ("name",)
 
 # schema：作用于创建用户请求
+# 注意：不含 clearance——密级标记由系统安全员统一配置（三权分立，GB/T 28452-2012 7.1.5），管理员只管账号
 class CreateUserSchema(ModelSchema):
     class Config:
         model = UserModel
-        include = ('username', 'name', 'password', 'phone', 'status', 'role', 'clearance',)
+        include = ('username', 'name', 'password', 'phone', 'status', 'role',)
 
     # username判重
     @model_validator("username")
@@ -70,11 +71,11 @@ class UserRetrieveOutSchema(ModelSchema):
         model = UserModel
         exclude = ("password",)
 
-# 删除和更新用户
+# 删除和更新用户（不含 clearance——密级标记由系统安全员统一配置，见安全策略接口）
 class UpdateDeleteUserSchema(ModelSchema):
     class Config:
         model = UserModel
-        include = ("name", "username", "phone", "status", "role", "clearance")
+        include = ("name", "username", "phone", "status", "role")
 
     def validate_unique_username(self, id: int):
         user_filters = UserModel.objects.filter(username=self.username)

@@ -15,6 +15,8 @@ from utils.chen_crud import multi_delete_dut
 from utils.codes import HTTP_INDEX_ERROR
 from apps.project.models import Dut, Round, Project, DutMetrics
 from django.shortcuts import get_object_or_404
+# 自主访问控制（GB/T 28452-2012 7.1.3）
+from apps.project.tools.access_control import check_project_access, check_project_access_by_id
 from apps.project.schemas.dut import DutModelOutSchema, DutFilterSchema, DutTreeReturnSchema, DutTreeInputSchema, \
     DutCreateInputSchema, DutCreateOutSchema, DeleteSchema, DutCreateR1SoDutSchema
 # 导入自动生成design、demand、case的辅助函数

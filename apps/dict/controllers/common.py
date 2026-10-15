@@ -26,7 +26,7 @@ class AITestController(ControllerBase):
         target_url = "http://192.168.0.63:8777/api/local_doc_qa/testing_item"
         payload = {
             "question": item.question,
-            "model_name": "qwen3.5",  # 可能会变
+            "model_name": "qwen3.5",  # 待变化
             "project_type": item.project_type,
             "streaming": False,
             "user_focus_points": "",
@@ -79,7 +79,10 @@ class CommonController(ControllerBase):
             month_list.append(month_dict)
         project_qs = Project.objects.all()
         for project in project_qs:
+            begin_time = project.beginTime
+            if not begin_time:
+                continue
             for m in month_list:
-                if m['month'] == project.beginTime.month and project.beginTime.year == current_year:
+                if m['month'] == begin_time.month and begin_time.year == current_year:
                     m['count'] += 1
         return ChenResponse(status=200, code=200, data=month_list)

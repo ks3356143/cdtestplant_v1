@@ -2,7 +2,8 @@ from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
 from apps.dict.models import Dict, DictItem
 from ninja_jwt.authentication import JWTAuth
-from ninja_extra.permissions import IsAuthenticated, IsAdminUser
+from ninja_extra.permissions import IsAuthenticated
+from utils.permissions import IsSystemAdmin
 from ninja.pagination import paginate
 from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
@@ -41,7 +42,7 @@ class DictController(ControllerBase):
                                  update_datetime__range=date_list)
         return qs
 
-    @route.put("/dataDict/changeStatus", url_name="dict-changeStatus", permissions=[IsAdminUser])
+    @route.put("/dataDict/changeStatus", url_name="dict-changeStatus", permissions=[IsSystemAdmin])
     @transaction.atomic
     def change_dict_status(self, data: ChangeStautsSchemaInput):
         qs = Dict.objects.get(id=data.id)
@@ -49,7 +50,7 @@ class DictController(ControllerBase):
         qs.save()
         return ChenResponse(code=200, status=200, message="修改状态成功")
 
-    @route.put("/dataDict/changeItemStatus", url_name="dict-changeItemStatus", permissions=[IsAdminUser])
+    @route.put("/dataDict/changeItemStatus", url_name="dict-changeItemStatus", permissions=[IsSystemAdmin])
     @transaction.atomic
     def change_dict_item_status(self, data: ChangeStautsSchemaInput):
         qs = DictItem.objects.get(id=data.id)
@@ -79,8 +80,8 @@ class DictController(ControllerBase):
                                      show_title__icontains=payload.show_title).order_by('sort')
         return qs
 
-    # 更改dictItem的sort字段接口
-    @route.put("/dataDict/numberOperation", url_name="dictitem-changesort")
+    # 更改dictItem的sort字段接口（字典为平台配置数据，写操作仅系统管理员）
+    @route.put("/dataDict/numberOperation", url_name="dictitem-changesort", permissions=[IsSystemAdmin])
     @transaction.atomic
     def change_item_sort(self, data: DictItemChangeSrotInput):
         qs = DictItem.objects.get(id=data.id)
@@ -89,7 +90,7 @@ class DictController(ControllerBase):
         return ChenResponse(code=200, status=200, message='排序序号更新成功')
 
     # 新增dictItem
-    @route.post("/dataDict/saveitem", response=DictItemOut, url_name="dictitem-save")
+    @route.post("/dataDict/saveitem", response=DictItemOut, url_name="dictitem-save", permissions=[IsSystemAdmin])
     @transaction.atomic
     def save_item(self, payload: DictItemCreateInputSchema):
         # 先根据dict_id查询出dict
@@ -106,7 +107,8 @@ class DictController(ControllerBase):
         return qs
 
     # 更新dictitem数据
-    @route.put("/dataDict/update/{id}", response=DictItemOut, url_name='dictitem-update')
+    @route.put("/dataDict/update/{id}", response=DictItemOut, url_name='dictitem-update',
+               permissions=[IsSystemAdmin])
     @transaction.atomic
     def update(self, id: int, payload: DictItemUpdateInputSchema):
         dictitem_qs = DictItem.objects.get(id=id)
@@ -116,7 +118,7 @@ class DictController(ControllerBase):
         return dictitem_qs
 
     # 删除dictItem数据
-    @route.delete("/dictType/realDeleteItem", url_name="dictitem-delete", permissions=[IsAdminUser])
+    @route.delete("/dictType/realDeleteItem", url_name="dictitem-delete", permissions=[IsSystemAdmin])
     @transaction.atomic
     def delete_dictitem(self, data: DeleteSchema):
         # 根据其中一个id查询出dict的id
