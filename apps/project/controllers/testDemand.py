@@ -15,6 +15,7 @@ from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_testDemand
 from utils.codes import HTTP_INDEX_ERROR
+from apps.project.tools.access_control import check_project_access, check_project_access_by_id
 from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
     TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, \
@@ -36,6 +37,7 @@ class TestDemandController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_test_demand_list(self, datafilter: TestDemandFilterSchema = Query(...)):
+        check_project_access_by_id(datafilter.project_id, self.context.request.user)
         conditionNoneToBlank(datafilter)
         query_params = {
             'project__id': datafilter.project_id,
@@ -75,6 +77,7 @@ class TestDemandController(ControllerBase):
     @route.get("/getTestDemandOne", response=TestDemandModelOutSchema, url_name='testDemand-one')
     @transaction.atomic
     def get_test_demand_one(self, project_id: int, key: str):
+        check_project_access_by_id(project_id, self.context.request.user)
         demand_qs = TestDemand.objects.filter(project_id=project_id, key=key).first()
         if demand_qs:
             sub_list = []
@@ -91,6 +94,8 @@ class TestDemandController(ControllerBase):
     def get_demand_by_id(self, id: int):
         demand_qs = TestDemand.objects.filter(id=id).first()
         if demand_qs:
+            check_project_access(demand_qs.project, self.context.request.user)
+        if demand_qs:
             sub_list = []
             for step_obj in demand_qs.testQField.all():
                 setattr(step_obj, "subStep", step_obj.testStepField.all().values())
@@ -103,6 +108,7 @@ class TestDemandController(ControllerBase):
     @route.get("/getTestdemandInfo", response=List[TestDemandTreeReturnSchema], url_name="testDemand-info")
     @transaction.atomic
     def get_testDemand_tree(self, payload: TestDemandTreeInputSchema = Query(...)):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         qs = TestDemand.objects.filter(project__id=payload.project_id, design__key=payload.key)
         return qs
 
@@ -110,6 +116,7 @@ class TestDemandController(ControllerBase):
     @route.post("/testDemand/save", response=TestDemandCreateOutSchema, url_name="testDemand-create")
     @transaction.atomic
     def create_test_demand(self, payload: TestDemandCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         asert_dict = payload.dict(exclude_none=True)
         # ident判重
         project_qs = Project.objects.filter(id=payload.project_id).first()
@@ -222,6 +229,7 @@ class TestDemandController(ControllerBase):
     @route.put("/testDemand/update/{id}", response=TestDemandCreateOutSchema, url_name="testDemand-update")
     @transaction.atomic
     def update_testDemand(self, id: int, payload: TestDemandCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=payload.project_id)
         # 查到当前
         testDemand_qs = TestDemand.objects.get(id=id)
@@ -315,6 +323,7 @@ class TestDemandController(ControllerBase):
     def solveRelatedTestDemand(self, data: TestDemandRelatedSchema):
         test_item_ids = data.data
         non_exist_ids = [x for x in test_item_ids]
+        check_project_access_by_id(data.project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=data.project_id)
         key_str = "-".join([data.round_key, data.dut_key, data.design_key])
         design_item = project_qs.psField.filter(key=key_str).first()
@@ -346,6 +355,7 @@ class TestDemandController(ControllerBase):
     @route.post('/testDemand/getExistRelatedTestDemand', url_name="testDemand-getExistRelatedTestDemand")
     @transaction.atomic
     def getExistRelatedTestDemand(self, data: TestDemandExistRelatedSchema):
+        check_project_access_by_id(data.project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=data.project_id)
         key_str = "-".join([data.round_key, data.dut_key, data.design_key])
         design_item = project_qs.psField.filter(key=key_str).first()
@@ -360,6 +370,7 @@ class TestDemandController(ControllerBase):
     @transaction.atomic
     def copy_to_design(self, data: DemandCopyToDesignSchema):
         """前端测试项右键复制到某个设计需求下面"""
+        check_project_access_by_id(data.project_id, self.context.request.user)
         new_demand_key = demand_copy_to_design(data.project_id, data.demand_key, data.design_id, data.depth)
         return ChenResponse(data={'key': new_demand_key})
 
@@ -367,6 +378,7 @@ class TestDemandController(ControllerBase):
     @route.post("/testDemand/replace/", url_name='testDemand-replace')
     @transaction.atomic
     def replace_demand_content(self, payload: ReplaceDemandContentSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         # 1.首先查询项目
         project_obj: Project = get_object_or_404(Project, id=payload.project_id)
         # 2.查询[所有轮次]的selectRows的id
@@ -396,6 +408,7 @@ class TestDemandController(ControllerBase):
     @route.post("/testDemand/priorityReplace/", url_name='demand-priority-replace')
     @transaction.atomic
     def multiple_modify_demand_priority(self, payload: PriorityReplaceSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         # 替换优先级
         demand_qs = TestDemand.objects.filter(id__in=payload.selectRows)
         demand_qs.update(priority=payload.priority)

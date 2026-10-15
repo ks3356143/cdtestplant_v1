@@ -32,6 +32,7 @@ class DutController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_dut_list(self, filters: DutFilterSchema = Query(...)):
+        check_project_access_by_id(filters.project_id, self.context.request.user)
         qs = model_retrieve(filters, Dut.objects, ['project_id', 'round_id']).order_by("-create_datetime")
         qs = qs.filter(project__id=filters.project_id, round__key=filters.round_id)
         return qs
@@ -39,6 +40,7 @@ class DutController(ControllerBase):
     # 处理树状数据
     @route.get("/getDutInfo", response=List[DutTreeReturnSchema], url_name="dut-info")
     def get_round_tree(self, payload: DutTreeInputSchema = Query(...)):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         qs = Dut.objects.filter(project__id=payload.project_id, round__key=payload.key)
         return qs
 
@@ -46,6 +48,7 @@ class DutController(ControllerBase):
     @route.get("/getDutOne", response=DutModelOutSchema, url_name="dut-one")
     @transaction.atomic
     def get_dut(self, project_id: int, key: str):
+        check_project_access_by_id(project_id, self.context.request.user)
         dut_qs = Dut.objects.filter(project_id=project_id, key=key).first()
         if dut_qs:
             return dut_qs
@@ -55,6 +58,7 @@ class DutController(ControllerBase):
     def get_one_by_id(self, id: int):
         dut_qs = Dut.objects.filter(id=id).first()
         if dut_qs:
+            check_project_access(dut_qs.project, self.context.request.user)
             return dut_qs
         raise HttpError(500, "未找到相应的数据")
 
@@ -62,6 +66,7 @@ class DutController(ControllerBase):
     @route.post("/dut/save", url_name="dut-create", response=DutCreateOutSchema)
     @transaction.atomic
     def create_dut(self, payload: DutCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         asert_dict = payload.dict(exclude_none=True)
         # 当被测件为SO时，一个轮次只运行有一个
         if payload.type == 'SO':
@@ -87,6 +92,7 @@ class DutController(ControllerBase):
     @route.put("/dut/update/{id}", url_name="dut-update", response=DutCreateOutSchema)
     @transaction.atomic
     def update_dut(self, id: int, payload: DutCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         dut_search = Dut.objects.filter(project__id=payload.project_id, ident=payload.ident)
         # 判断是否和同项目同轮次的标识重复
         if len(dut_search) > 1:
@@ -125,6 +131,7 @@ class DutController(ControllerBase):
             dut_single = Dut.objects.filter(id=data.ids[0])[0]
         except IndexError:
             return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选择需要删除的内容')
+        check_project_access(dut_single.project, self.context.request.user)
         # 查询出dut所属的轮次id、key
         round_id = dut_single.round.id
         round_key = dut_single.round.key
@@ -176,6 +183,7 @@ class DutController(ControllerBase):
     @route.post("/dut/createR1Sodut", response=DutCreateOutSchema, url_name='dut-r1SoDut')
     @transaction.atomic
     def create_r1_so_dut(self, data: DutCreateR1SoDutSchema):
+        check_project_access_by_id(data.project_id, self.context.request.user)
         asert_dict = data.dict(exclude_none=True)  # asert_dict['round_key']可以获取是第几轮次
         round_key = asert_dict.pop('round_key')
         project_obj = get_object_or_404(Project, id=data.project_id)
@@ -204,6 +212,7 @@ class DutController(ControllerBase):
     @route.get('/dut/dut_type', url_name='testDemand-type')
     @transaction.atomic
     def get_dut_type(self, project_id: int, key: str):
+        check_project_access_by_id(project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=project_id)
         dut = project_qs.pdField.filter(key=key).first()
         return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
@@ -215,6 +224,7 @@ class UploadController(ControllerBase):
     def upload_code_lines(self, dut_id: int, file: File[UploadedFile]):
         # 获取dut对象
         dut_qs: Dut = get_object_or_404(Dut, id=dut_id)
+        check_project_access(dut_qs.project, self.context.request.user)
         # 创建临时目录
         with tempfile.TemporaryDirectory() as tmp_dir:
             # 保存上传的ZIP文件

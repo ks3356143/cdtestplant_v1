@@ -13,6 +13,7 @@ from utils.chen_response import ChenResponse
 from utils.codes import HTTP_INDEX_ERROR
 from django.shortcuts import get_object_or_404
 from apps.project.models import Case, Problem, Project, TestDemand, NonrepudiationEvidence
+from apps.project.tools.access_control import check_project_access, check_project_access_by_id
 from apps.project.schemas.problem import (
     DeleteSchema,
     ProblemModelOutSchema,
@@ -46,6 +47,7 @@ class ProblemController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_problem_list(self, data: ProblemFilterSchema = Query(...)):
+        check_project_access_by_id(data.project_id, self.context.request.user)
         project_id = data.project_id
         conditionNoneToBlank(data)
         # 组装查询条件
@@ -91,6 +93,7 @@ class ProblemController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_all_problems(self, round_key: Optional[str] = False, data: ProblemFilterWithHangSchema = Query(...)):
+        check_project_access_by_id(data.project_id, self.context.request.user)
         project_id = data.project_id
         conditionNoneToBlank(data)
         # 先查询当前项目
@@ -180,6 +183,7 @@ class ProblemController(ControllerBase):
     @route.post("/problem/save", response=ProblemCreateOutSchema, url_name="problem-create")
     @transaction.atomic
     def create_case_demand(self, payload: ProblemCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         payload = self.__date_solve(payload)
         asert_dict = payload.dict()
         project_id = payload.project_id
@@ -223,6 +227,7 @@ class ProblemController(ControllerBase):
     @route.put("/problem/update/{id}", response=ProblemCreateOutSchema, url_name="problem-update")
     @transaction.atomic
     def update_problem(self, id: int, payload: ProblemCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         # 查到当前
         problem_qs = Problem.objects.get(id=id)
         for attr, value in payload.dict().items():
@@ -235,6 +240,7 @@ class ProblemController(ControllerBase):
     @route.put("/problem/modalupdate/{id}", response=ProblemCreateOutSchema, url_name="problem-update")
     @transaction.atomic
     def update_modal_problem(self, id: int, payload: ProblemUpdateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         # 查到当前
         problem_qs = Problem.objects.get(id=id)
         for attr, value in payload.dict().items():
@@ -251,6 +257,7 @@ class ProblemController(ControllerBase):
         problems = Problem.objects.filter(id__in=data.ids)
         if not problems.exists():
             return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选取删除内容')
+        check_project_access(problems.first().project, self.context.request.user)
         # 4.查询出当前项目id
         project_id = None
         # 2.循环该取出problem
@@ -269,6 +276,7 @@ class ProblemController(ControllerBase):
     @transaction.atomic
     def get_relative_cases(self, id: int):
         problem_qs = get_object_or_404(Problem, id=id)
+        check_project_access(problem_qs.project, self.context.request.user)
         cases = problem_qs.case.all()
         case_list = []
         for case in cases:
@@ -290,6 +298,7 @@ class ProblemController(ControllerBase):
     @route.get("/getSingleProblem", url_name="problem-single", response=ProblemCreateOutSchema)
     @transaction.atomic
     def search_single_problem(self, data: ProblemSingleInputSchema = Query(...)):
+        check_project_access_by_id(data.project_id, self.context.request.user)
         key_string = "".join(
             [data.round_id, '-', data.dut_id, '-', data.design_id, '-', data.test_id, '-', data.case_id, '-',
              data.problem_id])

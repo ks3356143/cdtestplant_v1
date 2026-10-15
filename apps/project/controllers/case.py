@@ -16,6 +16,7 @@ from django.utils import timezone
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_case
 from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, Project, Problem, NonrepudiationEvidence
+from apps.project.tools.access_control import check_project_access, check_project_access_by_id
 from apps.project.schemas.case import DeleteSchema, CaseModelOutSchema, CaseFilterSchema, \
     CaseTreeReturnSchema, ReplaceCaseSchema, PersonReplaceSchema, ExetimeReplaceSchema, \
     CaseTreeInputSchema, CaseCreateOutSchema, CaseCreateInputSchema, DemandNodeSchema
@@ -37,6 +38,7 @@ class CaseController(ControllerBase):
         """有id则查询一个case，无id则查询多个"""
         data_dict = data.dict()
         case_id = data_dict.pop('id')
+        check_project_access_by_id(data.project_id, self.context.request.user)
         if case_id:
             # 当传入了id，则查询单个
             qs = Case.objects.filter(id=case_id)  # type:ignore
@@ -83,6 +85,7 @@ class CaseController(ControllerBase):
     @route.get("/getCaseOne", response=CaseModelOutSchemaWithoutProblem, url_name='case-one')
     @transaction.atomic
     def get_case_one(self, key: str, projectId: int):
+        check_project_access_by_id(projectId, self.context.request.user)
         """用于在用例树状页面，获取promblem信息，这里根据key获取信息"""
         project_obj = get_object_or_404(Project, id=projectId)
         case = project_obj.pcField.filter(key=key).first()
@@ -98,6 +101,7 @@ class CaseController(ControllerBase):
         """用于在用例树状页面，获取promblem信息，这里根据key获取信息"""
         case = Case.objects.filter(id=id).first()
         if case:
+            check_project_access(case.project, self.context.request.user)
             setattr(case, "testStep", case.step.all().values())
             setattr(case, 'testType', get_testType(case.test.testType, dict_code='testType'))
             return case
@@ -107,6 +111,7 @@ class CaseController(ControllerBase):
     @route.get("/getCaseInfo", response=List[CaseTreeReturnSchema], url_name="case-info")
     @transaction.atomic
     def get_case_tree(self, payload: CaseTreeInputSchema = Query(...)):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         qs = Case.objects.filter(project__id=payload.project_id, test__key=payload.key)  # type:ignore
         for q in qs:
             # 遍历每个用例节点，查看是否有关联问题单
@@ -123,6 +128,7 @@ class CaseController(ControllerBase):
     @route.post("/case/save", response=CaseCreateOutSchema, url_name="case-create")
     @transaction.atomic
     def create_case(self, payload: CaseCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         asert_dict = payload.dict(exclude_none=True)
         # 构造demand_key
         test_whole_key = "".join(
@@ -165,6 +171,7 @@ class CaseController(ControllerBase):
     @route.post("/case/multi_save", url_name="case-batch-create")
     @transaction.atomic
     def multi_case_save(self, payload: BatchCreateCaseInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=payload.project_id)
         user_name = self.context.request.user.name
         keys = []
@@ -211,6 +218,7 @@ class CaseController(ControllerBase):
     @route.put("/case/update/{id}", response=CaseCreateOutSchema, url_name="case-update")
     @transaction.atomic
     def update_case(self, id: int, payload: CaseCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         # 查到当前
         case_qs = Case.objects.get(id=id)  # type:ignore
         for attr, value in payload.dict().items():
@@ -258,6 +266,7 @@ class CaseController(ControllerBase):
             case_single = Case.objects.filter(id=data.ids[0])[0]  # type:ignore
         except IndexError:
             return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选择需要删除的内容')
+        check_project_access(case_single.project, self.context.request.user)
         test_id = case_single.test.id
         test_key = case_single.test.key
         multi_delete_case(data.ids, Case)
@@ -273,6 +282,7 @@ class CaseController(ControllerBase):
     # 右键测试项，根据测试子项生成用例
     @route.post("/case/create_by_demand", url_name='case-create-by-demand')
     def create_case_by_demand(self, demand_node: DemandNodeSchema):
+        check_project_access_by_id(demand_node.project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=demand_node.project_id)
         if demand_node.key and demand_node.key != '':
             demand = get_object_or_404(TestDemand, key=demand_node.key, project=project_qs)
@@ -325,6 +335,7 @@ class CaseController(ControllerBase):
     @route.get("/case/copy_or_move_to_demand", url_name='case-copy-move-demand')
     @transaction.atomic
     def copy_move_case_to_demand(self, project_id: int, case_key: str, demand_key: str, move: bool):
+        check_project_access_by_id(project_id, self.context.request.user)
         if move:  # 移动
             old_key, new_key = case_move_to_test(project_id, case_key, demand_key)
         else:  # 复制
@@ -344,6 +355,7 @@ class CaseController(ControllerBase):
     @route.post("/case/replace/", url_name='case-replace')
     @transaction.atomic
     def replace_case_step_content(self, payload: ReplaceCaseSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         # 1.首先查询项目
         project_obj: Project = get_object_or_404(Project, id=payload.project_id)
         # 2.查询[所有轮次]的selectRows的id
@@ -373,6 +385,10 @@ class CaseController(ControllerBase):
     @route.post("/case/personReplace/", url_name='case-person-replace')
     @transaction.atomic
     def bulk_replace_person(self, payload: PersonReplaceSchema):
+        if payload.selectRows:
+            first_case = Case.objects.filter(id=payload.selectRows[0]).first()
+            if first_case:
+                check_project_access(first_case.project, self.context.request.user)
         # 替换设计人员
         case_qs = Case.objects.filter(id__in=payload.selectRows)
         if payload.designPerson != '不替换' and payload.designPerson != '':
@@ -386,6 +402,10 @@ class CaseController(ControllerBase):
     @route.post("/case/timeReplace/", url_name='case-time-replace')
     @transaction.atomic
     def bulk_replace_time(self, payload: ExetimeReplaceSchema):
+        if payload.selectRows:
+            first_case = Case.objects.filter(id=payload.selectRows[0]).first()
+            if first_case:
+                check_project_access(first_case.project, self.context.request.user)
         selected_case_ids = payload.selectRows
         if not selected_case_ids:
             return ChenResponse(status=500, code=50999, message='未选择行!', data="")
@@ -411,6 +431,7 @@ class CaseController(ControllerBase):
     # 给级联选择器数据 -> 上一轮次所有用例
     @route.get("/case/getRelatedCase", url_name='case-related-case')
     def get_cases_related_case(self, id: int, round_key: str):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         previous_round_obj = project_obj.pField.filter(key=int(round_key) - 1).first()
         # dut -> design

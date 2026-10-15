@@ -8,16 +8,19 @@ from apps.project.schemas.round import TreeReturnRound, RoundInfoOutSchema, Edit
 from typing import List
 from utils.chen_response import ChenResponse
 from apps.project.tools.delete_change_key import round_delete_sub_node_key
+from apps.project.tools.access_control import check_project_access, check_project_access_by_id
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['轮次数据'])
 class RoundController(ControllerBase):
     @route.get("/getRoundInfo/{project_id}", response=List[TreeReturnRound], url_name="round-info")
     def get_round_tree(self, project_id):
+        check_project_access_by_id(project_id, self.context.request.user)
         qs = Round.objects.filter(project__id=project_id).order_by('key')
         return qs
 
     @route.get("/getOneRoundInfo", response=RoundInfoOutSchema, url_name="round-one-info")
     def get_round_info(self, projectId: str, round: str):
+        check_project_access_by_id(projectId, self.context.request.user)
         qs = Round.objects.filter(project__id=projectId).order_by('id')
         # 这里问题是如果删除中间轮次会出现问题
         qs = qs.get(key=round)
@@ -26,6 +29,7 @@ class RoundController(ControllerBase):
     # 更新轮次信息
     @route.put("/round/update/{id}", response=RoundInfoOutSchema, url_name="round-update")
     def update_round(self, id, payload: EditSchemaIn):
+        check_project_access_by_id(payload.project, self.context.request.user)
         round = self.get_object_or_exception(Round, project__id=payload.project, id=id)
         # 去重功能
         exist_round = Round.objects.filter(project__id=payload.project)
@@ -43,6 +47,7 @@ class RoundController(ControllerBase):
     @route.delete("/round/delete", url_name="round-delete")
     @transaction.atomic
     def delete_round(self, project_id: str, data: DeleteSchema):
+        check_project_access_by_id(project_id, self.context.request.user)
         # 先查询该project下面的值
         instance = self.get_object_or_exception(Round, project__id=project_id, key=data.key)
         if instance.key == '0':
@@ -70,6 +75,7 @@ class RoundController(ControllerBase):
 
     @route.post("/round/save", response=CreateRoundOutSchema, url_name="round-create")
     def create_round(self, project_id: str, data: CreateRoundInputSchema):
+        check_project_access_by_id(project_id, self.context.request.user)
         asert_dict = data.dict()
         asert_dict['project_id'] = int(project_id)
         asert_dict['title'] = asert_dict['name']
@@ -86,6 +92,7 @@ class RoundController(ControllerBase):
     @route.get("/round/get_influence", response=List[InfluenceItemOutSchema], url_name="round-get-influence-items")
     @transaction.atomic
     def get_influence(self, id: int, round_key: str):
+        check_project_access_by_id(id, self.context.request.user)
         round_qs = Round.objects.filter(project__id=id, key=round_key)
         round_obj = round_qs.first()
         influence_qs = InfluenceArea.objects.filter(round=round_obj)
@@ -100,6 +107,7 @@ class RoundController(ControllerBase):
     @route.get("/round/get_status_influence", url_name="round-get-status-influence")
     @transaction.atomic
     def get_status_influence(self, id: int, round_key: str):
+        check_project_access_by_id(id, self.context.request.user)
         round_qs = Round.objects.filter(project__id=id, key=round_key)
         round_obj = round_qs.first()
         influence_qs = InfluenceArea.objects.filter(round=round_obj)
@@ -114,6 +122,7 @@ class RoundController(ControllerBase):
     @route.post("/round/create_influence", url_name="round-influence-create")
     @transaction.atomic
     def post_influence(self, data: InfluenceInputSchema):
+        check_project_access_by_id(data.id, self.context.request.user)
         round_obj = Round.objects.filter(project_id=data.id, key=data.round_key).first()
         influence_area_qs = InfluenceArea.objects.filter(round=round_obj)
         if influence_area_qs.exists():

@@ -15,6 +15,7 @@ from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_design
 from utils.codes import HTTP_INDEX_ERROR
+from apps.project.tools.access_control import check_project_access, check_project_access_by_id
 from apps.project.models import Design, Dut, Round, Project, JKDesignInfo
 from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, DesignModelOutSchema, \
     DesignTreeReturnSchema, \
@@ -48,6 +49,7 @@ class DesignController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_design_list(self, datafilter: DesignFilterSchema = Query(...)):
+        check_project_access_by_id(datafilter.project_id, self.context.request.user)
         conditionNoneToBlank(datafilter)
         query_params = {
             'project__id': datafilter.project_id,
@@ -68,6 +70,7 @@ class DesignController(ControllerBase):
 
     @route.get("/getDesignOne", response=DesignModelOutSchema, url_name='design-one')
     def get_dut(self, project_id: int, key: str):
+        check_project_access_by_id(project_id, self.context.request.user)
         design_qs = Design.objects.filter(project_id=project_id, key=key).first()
         if design_qs:
             return design_qs
@@ -77,12 +80,14 @@ class DesignController(ControllerBase):
     def get_one_by_id(self, id: int):
         design_qs = Design.objects.filter(id=id).first()
         if design_qs:
+            check_project_access(design_qs.project, self.context.request.user)
             return design_qs
         raise HttpError(500, "未找到相应的数据")
 
     # 处理树状数据
     @route.get("/getDesignDemandInfo", response=List[DesignTreeReturnSchema], url_name="design-info")
     def get_design_tree(self, payload: DesignTreeInputSchema = Query(...)):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         qs = Design.objects.filter(
             project__id=payload.project_id,
             dut__key=payload.key
@@ -93,6 +98,7 @@ class DesignController(ControllerBase):
     @route.post("/designDemand/save", response=DesignCreateOutSchema, url_name="design-create")
     @transaction.atomic
     def create_design(self, payload: DesignCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         asert_dict = payload.dict(exclude_none=True)
         # 如果识别description为None变为空字符串
         description = asert_dict.get('description')
@@ -143,6 +149,7 @@ class DesignController(ControllerBase):
     @route.post('/designDemand/multi_save', url_name='design-multi-create')
     @transaction.atomic
     def multi_create_design(self, payload: MultiDesignCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=payload.project_id)
         dut_obj = project_obj.pdField.filter(key=payload.dut_key).first()
         round_obj = dut_obj.round
@@ -170,6 +177,7 @@ class DesignController(ControllerBase):
     @route.put("/editDesignDemand/{id}", response=DesignCreateOutSchema, url_name="design-update")
     @transaction.atomic
     def update_design(self, id: int, payload: DesignCreateInputSchema):
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident,
                                               round__key=payload.round_key)
         # 判断是否和同项目同轮次的标识重复
@@ -216,6 +224,7 @@ class DesignController(ControllerBase):
             design_single = Design.objects.filter(id=data.ids[0])[0]
         except IndexError:
             return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选择需要删除的内容')
+        check_project_access(design_single.project, self.context.request.user)
         dut_id = design_single.dut.id
         dut_key = design_single.dut.key
         multi_delete_design(data.ids, Design)
@@ -232,6 +241,7 @@ class DesignController(ControllerBase):
     # 给复制功能级联选择器查询所有的设计需求【这是查项目所有的设计需求】
     @route.get("/designDemand/getRelatedDesign", url_name='dut-relatedDesign')
     def getRelatedDesign(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         # 依次找出round -> dut -> design
         round_qs = project_qs.pField.all()
@@ -252,6 +262,7 @@ class DesignController(ControllerBase):
     @transaction.atomic
     def replace_content(self, payload: ReplaceDesignContentSchema):
         # 1.首先查询项目
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         project_obj: Project = get_object_or_404(Project, id=payload.project_id)
         # 2.查询[所有轮次]的selectRows的id
         design_qs = project_obj.psField.filter(id__in=payload.selectRows, round__key=payload.round_key)
@@ -268,6 +279,7 @@ class DesignController(ControllerBase):
     @route.get("/create_renji/", url_name='renji')
     @transaction.atomic
     def create_rj(self, round_id: int, project_id: int):
+        check_project_access_by_id(project_id, self.context.request.user)
         user_name = self.context.request.user.name  # 获取当前用户名
         project_obj: Project = get_object_or_404(Project, id=project_id)
         dut_qs = Dut.objects.filter(round__key=round_id, project=project_obj, type='XQ').first()
@@ -310,6 +322,7 @@ class DesignController(ControllerBase):
     @route.get("/switch_position", url_name='design-switch-position')
     @transaction.atomic
     def switch_position(self, from_key: str, to_key: str, pos: int, project_id: int):
+        check_project_access_by_id(project_id, self.context.request.user)
         from_key_list = from_key.split("-")
         to_key_list = to_key.split("-")
         # 如果两个设计需求被测件或轮次不一样则报错

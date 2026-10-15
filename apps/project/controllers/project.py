@@ -19,6 +19,8 @@ from apps.project.models import Project, Round, ProjectSoftSummary, StuctSortDat
 from apps.project.schemas.project import ProjectRetrieveSchema, ProjectFilterSchema, ProjectCreateInput, \
     DeleteSchema, SoftSummarySchema, DataSchema, StaticDynamicData, EnvAnalysisSchema
 from utils.util import get_str_dict
+from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
+                                               ensure_creator_member, check_project_manage)
 # 时间处理模块
 from apps.project.tool.timeList import time_return_to
 # 反射工具
@@ -72,6 +74,8 @@ class ProjectController(ControllerBase):
     @transaction.atomic
     def get_project_by_id(self, project_id: int):
         project_obj = get_object_or_404(Project, id=project_id)
+        # 自主访问控制：负责人/项目成员/系统管理员方可访问（GB/T 28452 7.1.3）
+        check_project_access(project_obj, self.context.request.user)
         return project_obj
 
     @route.post("/save")
@@ -82,6 +86,8 @@ class ProjectController(ControllerBase):
         if ident_qucover:
             return ChenResponse(code=400, status=400, message="项目标识重复，请重新设置")
         qs = create(self.context.request, data_dict, Project)
+        # 自主访问控制：非管理员创建项目时，把创建人写入负责人/成员（授权起点）
+        ensure_creator_member(qs, self.context.request.user)
         # 创建项目时候自动添加第一轮测试
         if qs:
             Round.objects.create(project_id=qs.id, key='0', level='0', title='第1轮测试', name='第1轮测试',
@@ -106,6 +112,7 @@ class ProjectController(ControllerBase):
     def update_project(self, project_id: int, payload: ProjectCreateInput):
         # 判断标识是否是被允许的字符串
         project = self.get_object_or_exception(Project, id=project_id)
+        check_project_manage(project, self.context.request.user)
         old_ident = project.ident
         # 更新操作
         for attr, value in payload.dict().items():
@@ -134,6 +141,10 @@ class ProjectController(ControllerBase):
     @route.delete("/delete")
     @transaction.atomic
     def delete(self, data: DeleteSchema):
+        # 自主访问控制：仅负责人（或系统管理员）可删除自己的项目
+        from apps.project.models import Project as ProjectModel
+        for pid in data.ids:
+            check_project_manage(get_object_or_404(ProjectModel, id=pid), self.context.request.user)
         idents = multi_delete_project(data.ids, Project)
         # 查询media所属项目文件夹，并删除
         for ident in idents:
@@ -149,6 +160,7 @@ class ProjectController(ControllerBase):
     @transaction.atomic
     def board(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
+        check_project_access(project_obj, self.context.request.user)
         # 1.项目阶段直接转字符串
         step_str = get_str_dict(project_obj.step, 'step')
         # 2.返回时间信息
@@ -268,6 +280,7 @@ class ProjectController(ControllerBase):
     @route.get('/document_time_show')
     @transaction.atomic
     def document_time_show(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         time = time_return_to(id)
         return time
 
