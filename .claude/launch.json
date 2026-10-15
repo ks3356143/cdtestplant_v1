@@ -1,0 +1,17 @@
+{
+    "version": "0.0.1",
+    "configurations": [
+        {
+            "name": "backend",
+            "runtimeExecutable": "uv",
+            "runtimeArgs": ["run", "python", "manage.py", "runserver", "127.0.0.1:8000", "--noreload"],
+            "port": 8000
+        },
+        {
+            "name": "frontend",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["--prefix", "web/cdTMP", "run", "dev"],
+            "port": 3888
+        }
+    ]
+}
