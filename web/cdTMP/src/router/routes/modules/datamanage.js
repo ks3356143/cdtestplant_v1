@@ -18,7 +18,7 @@ const DATAMANAGE = {
             component: () => import("@/views/datamanage/dictmanage/index.vue"),
             meta: {
                 requiresAuth: true,
-                roles: ["*"],
+                roles: ["admin"], // 字典为平台配置数据，仅系统管理员可管理
                 locale: "字典管理",
                 icon: "icon-book",
                 title: "字典管理"

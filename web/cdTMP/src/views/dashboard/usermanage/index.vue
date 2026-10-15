@@ -124,8 +124,7 @@ const crudColumns = reactive([
         formType: "select",
         dict: { name: "user_role", props: { label: "title", value: "key" } },
         addDefaultValue: "user",
-        addRules: [{ required: true, message: "角色必选" }],
-        labelWidth: "86px"
+        addRules: [{ required: true, message: "角色必选" }]
     },
     {
         title: "密级许可",
@@ -134,8 +133,9 @@ const crudColumns = reactive([
         width: 130,
         formType: "select",
         dict: { name: "secret", props: { label: "title", value: "key" } },
-        addDefaultValue: "1",
-        labelWidth: "86px"
+        // 密级标记由系统安全员在"安全策略"页统一配置（三权分立），管理员仅可查看
+        addDisplay: false,
+        editDisplay: false
     },
     {
         title: "电话",
@@ -165,8 +165,7 @@ const crudColumns = reactive([
         search: true,
         formType: "radio",
         dict: { name: "data_status", props: { label: "title", value: "key" } },
-        addDefaultValue: "1",
-        labelWidth: "86px"
+        addDefaultValue: "1"
     },
     {
         title: "注册时间",
