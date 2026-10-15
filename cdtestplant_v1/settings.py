@@ -92,6 +92,8 @@ CACHES = {
         "LOCATION": "redis://127.0.0.1:6379/1",  # 这里直接使用redis别名作为host ip地址
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            # Windows 绿色版 Redis 5.0.14 仅支持 RESP2；redis-py 8.x 需显式固定，否则 HELLO 命令报错
+            "CONNECTION_POOL_KWARGS": {"protocol": 2},
             # "PASSWORD": "yourpassword",  # 换成你自己密码
         },
     }
@@ -160,3 +162,6 @@ API_OPERATION_EXCLUDE_START = [
 
 # 配置单次请求最大字节数（base64图片和上传需求文档适用）
 DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880 * 10
+
+# 初始化无用变量
+ALL_MODELS_OBJECTS = {}

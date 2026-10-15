@@ -126,6 +126,10 @@ class MyTokenObtainPairOutSchema(Schema):
     token_exp_data: datetime
 
 class MyTokenObtainPairInputSchema(TokenObtainInputSchemaBase):
+    # 图形验证码（三权分立：特权角色登录双因子，服务端校验）
+    captcha_key: str = None
+    captcha_code: str = None
+
     @classmethod
     def get_response_schema(cls) -> Type[Schema]:
         """修改默认的返回Schema"""
