@@ -7,6 +7,8 @@ from ninja_jwt.authentication import JWTAuth
 
 from apps.system.models import SecurityPolicy
 from apps.system.schemas.policy import (ClearanceItemSchema, ClearanceUpdateSchema, SecurityPolicyOutSchema)
+from apps.user.models import TableOperationLog
+from utils.audit import audit_log, EVENT_CLEARANCE_CHANGE, EVENT_POLICY_CHANGE
 from utils.chen_response import ChenResponse
 from utils.permissions import IsSecurityAdmin
 
@@ -30,10 +32,17 @@ class SecurityPolicyController(ControllerBase):
     @transaction.atomic
     def update_policy(self, payload: SecurityPolicyOutSchema):
         policy = SecurityPolicy.load()
+        old = {f: getattr(policy, f) for f in ('login_max_attempts', 'login_window_minutes', 'login_lock_minutes')}
         for field, value in payload.model_dump().items():
             setattr(policy, field, value)
         policy.save(update_fields=['login_max_attempts', 'login_window_minutes', 'login_lock_minutes',
                                    'update_datetime'])
+        # 审计留痕（7.1.6：强制策略变更）
+        changed = {f: (old[f], getattr(policy, f)) for f in old if old[f] != getattr(policy, f)}
+        detail = '安全策略变更：' + ('；'.join(f'{k}={v[0]}→{v[1]}' for k, v in changed.items()) if changed else '无字段变化')
+        audit_log(self.context.request, EVENT_POLICY_CHANGE,
+                  f'{detail}（旧值：失败{old["login_max_attempts"]}次/{old["login_window_minutes"]}分钟锁定'
+                  f'{old["login_lock_minutes"]}分钟）')
         return policy
 
     # ~~~~~~~~~~~~ 敏感标记管理（GB/T 28452-2012 7.1.4/7.1.5）：安全员负责为用户授予密级许可 ~~~~~~~~~~~~
@@ -51,12 +60,16 @@ class SecurityPolicyController(ControllerBase):
         if user.username == 'superAdmin':
             return ChenResponse(code=400, status=400, message="系统管理员账号不参与密级标记管理")
         if user.clearance != payload.clearance:
+            from apps.system.models import AuditLog  # noqa 确保模型已加载
+            old_label = SECRET_LEVEL_LABELS.get(user.clearance, user.clearance)
             user.clearance = payload.clearance
             user.save(update_fields=['clearance', 'update_datetime'])
-            # 留痕：写入操作日志，供审计员核验（标记变更属于安全相关操作）
-            from apps.user.models import TableOperationLog
+            new_label = SECRET_LEVEL_LABELS.get(payload.clearance, payload.clearance)
+            # 审计留痕（7.1.6：敏感标记修改）+ 操作日志
+            audit_log(self.context.request, EVENT_CLEARANCE_CHANGE,
+                      f'敏感标记变更：用户 {user.username} 密级许可 {old_label} → {new_label}')
             TableOperationLog.objects.create(
                 user=self.context.request.user,
                 operate_obj=f'用户:{user.username}',
-                operate_des=f'系统安全员将密级许可调整为{SECRET_LEVEL_LABELS.get(payload.clearance, payload.clearance)}')
+                operate_des=f'系统安全员将密级许可调整为{new_label}')
         return user

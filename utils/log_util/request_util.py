@@ -117,9 +117,10 @@ def get_os(request, ):
 
 def save_login_log(request, user):
     """
-    保存登录日志
+    保存登录日志 + 统一审计埋点（7.1.6：身份鉴别成功事件）
     :return:
     """
+    from utils.audit import audit_log, EVENT_LOGIN_SUCCESS
     ip = get_request_ip(request=request)
     analysis_data = {
         'username': user.username,
@@ -130,3 +131,4 @@ def save_login_log(request, user):
         'creator_id': user.id
     }
     LoginLog.objects.create(**analysis_data)
+    audit_log(request, EVENT_LOGIN_SUCCESS, f'用户 {user.username} 登录成功', user=user)

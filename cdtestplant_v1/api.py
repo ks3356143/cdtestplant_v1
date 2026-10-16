@@ -1,5 +1,6 @@
 from utils.chen_ninja import ChenNinjaAPI
 from ninja.errors import HttpError
+from ninja_extra.exceptions import PermissionDenied
 # 导入orjson解析器，渲染器，提升性能
 from cdtestplant_v1.parser import MyParser
 from cdtestplant_v1.renderer import MyRenderer
@@ -25,6 +26,18 @@ def in_program_exception_handler(request, exc):
     if exc.status_code is PROJECT_ENDTIME_ERROR_CODE:
         data['flag'] = PROJECT_ENDTIME_ERROR_CODE
     return api.create_response(request, status=500, message=exc.message, data=data)
+
+# 越权拒绝统一审计告警（7.1.6）：所有 403（DAC/标记/管理权限）记为安全告警事件
+@api.exception_handler(PermissionDenied)
+def access_denied_exception_handler(request, exc: PermissionDenied):
+    from utils.audit import audit_log, EVENT_ACCESS_DENIED
+    detail = getattr(exc, 'detail', None) or getattr(exc, 'message', '越权访问被拒绝')
+    if not isinstance(detail, str):
+        detail = str(detail)
+    audit_log(request, EVENT_ACCESS_DENIED,
+              f'安全告警：越权访问被拒绝 {request.method} {request.path} —— {detail}',
+              success=False)
+    return api.create_response(request, status=403, message=detail, data={'code': 403})
 
 # 自动寻找每个app下面controllers.py中被@api_controller修饰的类
 api.auto_discover_controllers()

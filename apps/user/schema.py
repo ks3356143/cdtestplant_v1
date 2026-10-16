@@ -155,7 +155,7 @@ class MyTokenObtainPairInputSchema(TokenObtainInputSchemaBase):
         try:
             super().authenticate(request, credentials)
         except Exception:
-            record_login_failure(username)
+            record_login_failure(username, request)  # 传入 request 以记录来源 IP（7.1.6 审计）
             raise
         clear_login_failure(username)
         if self._user:

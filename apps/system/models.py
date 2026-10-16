@@ -66,6 +66,32 @@ class OperationLog(models.Model):
         ordering = ('-create_datetime',)
 
 
+class AuditLog(models.Model):
+    """统一审计日志（GB/T 28452-2012 第三级 7.1.6）：核心安全事件全程留痕，仅审计员可查，防篡改（无更新入口）"""
+    id = models.BigAutoField(primary_key=True, help_text="Id", verbose_name="Id")
+    username = models.CharField(max_length=50, verbose_name="主体账号", null=True, blank=True,
+                                help_text="事件主体账号")
+    role = models.CharField(max_length=30, verbose_name="主体角色", null=True, blank=True,
+                            help_text="事件主体角色")
+    actor = models.ForeignKey(to=settings.AUTH_USER_MODEL, related_query_name='audit_actor', null=True,
+                              verbose_name='主体用户', help_text="事件主体用户", on_delete=models.SET_NULL,
+                              db_constraint=False)
+    event_type = models.CharField(max_length=40, verbose_name="事件类型", help_text="EVENT_* 常量")
+    detail = models.CharField(max_length=500, verbose_name="事件内容", help_text="事件描述")
+    success = models.BooleanField(default=True, verbose_name="操作结果", help_text="成功/失败")
+    ip = models.CharField(max_length=32, verbose_name="操作IP", null=True, blank=True, help_text="操作IP")
+    user_agent = models.CharField(max_length=500, verbose_name="设备信息", null=True, blank=True,
+                                  help_text="User-Agent")
+    create_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True, help_text="事件时间",
+                                           verbose_name="事件时间")
+
+    class Meta:
+        db_table = 'system_audit_log'
+        verbose_name = '统一审计日志'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
+
+
 class SecurityPolicy(models.Model):
     """系统安全策略（单例行，由系统安全员 secadmin 维护）——三权分立之安全员职责载体"""
     login_max_attempts = models.IntegerField(default=5, verbose_name="登录失败最大尝试次数",
