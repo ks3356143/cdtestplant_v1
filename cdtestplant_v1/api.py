@@ -28,15 +28,22 @@ def in_program_exception_handler(request, exc):
     return api.create_response(request, status=500, message=exc.message, data=data)
 
 # 越权拒绝统一审计告警（7.1.6）：所有 403（DAC/标记/管理权限）记为安全告警事件
+# 同一 主体+IP+路径 30 秒窗口去重——探测脚本批量触发时审计表不被刷爆（但每次仍拒绝）
 @api.exception_handler(PermissionDenied)
 def access_denied_exception_handler(request, exc: PermissionDenied):
     from utils.audit import audit_log, EVENT_ACCESS_DENIED
     detail = getattr(exc, 'detail', None) or getattr(exc, 'message', '越权访问被拒绝')
     if not isinstance(detail, str):
         detail = str(detail)
-    audit_log(request, EVENT_ACCESS_DENIED,
-              f'安全告警：越权访问被拒绝 {request.method} {request.path} —— {detail}',
-              success=False)
+    user = getattr(request, 'user', None)
+    username = getattr(user, 'username', '') if user is not None and getattr(user, 'is_authenticated', False) else ''
+    from django.core.cache import cache
+    dedup_key = f"audit_deny:{username}:{request.META.get('REMOTE_ADDR', '')}:{request.path}"
+    if cache.get(dedup_key) is None:
+        cache.set(dedup_key, 1, 30)
+        audit_log(request, EVENT_ACCESS_DENIED,
+                  f'安全告警：越权访问被拒绝 {request.method} {request.path} —— {detail}',
+                  success=False)
     return api.create_response(request, status=403, message=detail, data={'code': 403})
 
 # 自动寻找每个app下面controllers.py中被@api_controller修饰的类

@@ -11,7 +11,7 @@ from utils.chen_pagination import MyPagination
 from ninja.pagination import paginate
 from ninja import Query
 from utils.chen_response import ChenResponse
-from utils.audit import audit_log, EVENT_LOG_PURGE, EVENT_LOG_PURGE_DENIED
+from utils.audit import ALERT_EVENTS, audit_log, EVENT_LOG_PURGE, EVENT_LOG_PURGE_DENIED, get_event_types
 # 导入schemas
 from apps.system.schemas.log import (LogOutSchema, OperationLogOutSchema, LoginLogOutSchema, DeleteInputSchema,
                                      AuditLogOutSchema, AuditFilterSchema)
@@ -86,24 +86,28 @@ class LogController(ControllerBase):
         if filters.event_type:
             condition &= Q(event_type=filters.event_type)
         if filters.only_alerts:
-            condition &= Q(event_type__in=['account_lock', 'access_denied', 'log_purge_denied'])
+            # 告警事件集合唯一真相源：utils.audit.ALERT_EVENTS
+            condition &= Q(event_type__in=ALERT_EVENTS)
         if filters.start_time:
             condition &= Q(create_datetime__gte=filters.start_time)
         if filters.end_time:
+            # +1 天把当天整天纳入（end_time 为日期时 inclusive 边界）
             condition &= Q(create_datetime__lte=filters.end_time + timedelta(days=1))
         if filters.ip:
             condition &= Q(ip__icontains=filters.ip)
         return AuditLog.objects.filter(condition)
 
-    # 事件类型可用值（前端筛选下拉）
+    # 事件类型清单（下拉与统计标签的唯一来源：code/label/告警标记）
     @route.get('/auditEventTypes', permissions=[IsAuthenticated, IsAuditor])
     @atomic
     def get_audit_event_types(self):
-        return ChenResponse(data=list(AuditLog.objects.values_list('event_type', flat=True).distinct()))
+        return ChenResponse(data=get_event_types())
 
-    def _protected_log_purge(self, day: int, model, label: str):
+    def _protected_log_purge(self, day, model, label: str):
         """审计日志按保留期保护删除：全清/短于最小保留期一律拒绝并告警；合法清理自身留痕"""
         request = self.context.request
+        if day is None:
+            day = AUDIT_MIN_RETENTION_DAYS  # 未指定时按保留期上限清理
         if day < AUDIT_MIN_RETENTION_DAYS:
             audit_log(request, EVENT_LOG_PURGE_DENIED,
                       f'安全告警：越权日志删除尝试被拒绝（{label}，day={day}，须≥{AUDIT_MIN_RETENTION_DAYS}天），'
@@ -111,7 +115,6 @@ class LogController(ControllerBase):
             return ChenResponse(status=403, code=403,
                                 message=f'审计日志受保护：仅能清理 {AUDIT_MIN_RETENTION_DAYS} 天前的日志，禁止全清')
         time = datetime.now() - timedelta(days=day)
-        count = model.objects.filter(create_datetime__lt=time).count()
-        model.objects.filter(create_datetime__lt=time).delete()
+        count, _ = model.objects.filter(create_datetime__lt=time).delete()
         audit_log(request, EVENT_LOG_PURGE, f'{label}按保留期清理：删除 {day} 天前数据 {count} 条（保留期内日志不可删）')
         return ChenResponse(message=f'清理成功：删除{day}天前{label}数据 {count} 条')

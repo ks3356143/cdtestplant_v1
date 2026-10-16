@@ -22,9 +22,9 @@ class LoginLogOutSchema(ModelSchema):
         model = LoginLog
         exclude = ['remark', 'modifier', 'country', 'sort', 'creator']
 
-# 4.删除日志的Schema
+# 4.删除日志的Schema（day 不传时由后端取最小保留期默认值，前端不必硬编码）
 class DeleteInputSchema(Schema):
-    day: int = Field(7, ge=0)
+    day: Optional[int] = Field(None, ge=0)
 
 # 5.统一审计日志输出schema（7.1.6）
 class AuditLogOutSchema(Schema):
@@ -39,6 +39,7 @@ class AuditLogOutSchema(Schema):
     create_datetime: datetime
 
 # 6.统一审计日志检索过滤器（账号/时间/事件类型/告警/IP 多维度）
+# 注意：start_time/end_time 为 None 时不参与过滤（controllers 中 if 真值判断保护）
 class AuditFilterSchema(Schema):
     username: Optional[str] = ''
     event_type: Optional[str] = ''

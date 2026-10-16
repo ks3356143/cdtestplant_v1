@@ -90,6 +90,10 @@ class AuditLog(models.Model):
         verbose_name = '统一审计日志'
         verbose_name_plural = verbose_name
         ordering = ('-create_datetime',)
+        indexes = (
+            models.Index(fields=['create_datetime'], name='auditlog_time_idx'),
+            models.Index(fields=['event_type'], name='auditlog_type_idx'),
+        )
 
 
 class SecurityPolicy(models.Model):

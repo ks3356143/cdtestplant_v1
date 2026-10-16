@@ -37,12 +37,11 @@ class SecurityPolicyController(ControllerBase):
             setattr(policy, field, value)
         policy.save(update_fields=['login_max_attempts', 'login_window_minutes', 'login_lock_minutes',
                                    'update_datetime'])
-        # 审计留痕（7.1.6：强制策略变更）
+        # 审计留痕（7.1.6：强制策略变更，新旧值对比）
         changed = {f: (old[f], getattr(policy, f)) for f in old if old[f] != getattr(policy, f)}
-        detail = '安全策略变更：' + ('；'.join(f'{k}={v[0]}→{v[1]}' for k, v in changed.items()) if changed else '无字段变化')
-        audit_log(self.context.request, EVENT_POLICY_CHANGE,
-                  f'{detail}（旧值：失败{old["login_max_attempts"]}次/{old["login_window_minutes"]}分钟锁定'
-                  f'{old["login_lock_minutes"]}分钟）')
+        detail = '安全策略变更：' + ('；'.join(f'{k}={v[0]}→{v[1]}' for k, v in changed.items())
+                                  if changed else '无字段变化')
+        audit_log(self.context.request, EVENT_POLICY_CHANGE, detail)
         return policy
 
     # ~~~~~~~~~~~~ 敏感标记管理（GB/T 28452-2012 7.1.4/7.1.5）：安全员负责为用户授予密级许可 ~~~~~~~~~~~~
@@ -60,7 +59,6 @@ class SecurityPolicyController(ControllerBase):
         if user.username == 'superAdmin':
             return ChenResponse(code=400, status=400, message="系统管理员账号不参与密级标记管理")
         if user.clearance != payload.clearance:
-            from apps.system.models import AuditLog  # noqa 确保模型已加载
             old_label = SECRET_LEVEL_LABELS.get(user.clearance, user.clearance)
             user.clearance = payload.clearance
             user.save(update_fields=['clearance', 'update_datetime'])

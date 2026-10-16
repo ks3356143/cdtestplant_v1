@@ -1,8 +1,9 @@
 from io import BytesIO
 import copy
+import zipfile
 from docx.parts.image import ImagePart
 from pathlib import Path
-from django.conf import settings
+from django.http import FileResponse
 from django.core.files.storage import FileSystemStorage
 from utils.path_utils import project_path
 from ninja import File, UploadedFile
@@ -14,21 +15,21 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import QuerySet
 from docx import Document
-from docxtpl import DocxTemplate
+from urllib.parse import quote
 # 工具
+from apps.createSeiTaiDocument.extensions.download_token import generate_download_token, get_file_by_token
 from apps.createSeiTaiDocument.docXmlUtils import generate_temp_doc, get_frag_from_document
 from apps.createSeiTaiDocument.schema import SeitaiInputSchema
 from utils.chen_response import ChenResponse
 from apps.project.models import Project, Dut
 from apps.createDocument.extensions.documentTime import DocTime
 from utils.util import get_str_dict
-from apps.createSeiTaiDocument.extensions.download_response import get_file_respone
 # 图片工具docx
 from apps.createSeiTaiDocument.extensions.shape_size_tool import set_shape_size
 # 修改temp文本片段工具
 from apps.createSeiTaiDocument.docXmlUtils import get_jinja_stdContent_element, stdContent_modify
 
-main_download_path = Path(settings.BASE_DIR) / 'media'
+main_download_path = Path.cwd() / 'media'
 
 # @api_controller("/create", tags=['生成产品文档接口'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/create", tags=['生成产品文档接口'])
@@ -39,6 +40,23 @@ class GenerateSeitaiController(ControllerBase):
         super().__init__(*args, **kwargs)
         self.project_obj: Project | None = None
         self.temp_context = {}
+
+    def _token_download(self, file_path, file_name: str = None):
+        """二段式下载统一出口：生成一次性令牌，返回 {download_token, file_name}（前端 iframe 拉取）"""
+        token = generate_download_token(file_path)
+        return {"download_token": token, "file_name": file_name or Path(file_path).name}
+
+    def _regression_download(self, project_id, cname_list, doc_kind: str):
+        """回归文档下载统一出口：单份直接下载，多份打包 zip（doc_kind: '说明' | '记录'）"""
+        final_dir = main_download_path / project_path(project_id) / 'final_seitai'
+        if len(cname_list) == 1:
+            return self._token_download(final_dir / f'第二轮回归测试{doc_kind}.docx')
+        zip_path = final_dir / f'回归测试{doc_kind}文档.zip'
+        with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for cname in cname_list:
+                doc_name = f"第{cname}轮回归测试{doc_kind}.docx"
+                zf.write(final_dir / doc_name, doc_name)
+        return self._token_download(zip_path)
 
     @route.post("/dgDocument", url_name="create-dgDocument")
     @transaction.atomic
@@ -78,8 +96,7 @@ class GenerateSeitaiController(ControllerBase):
         # ~~~~end~~~~
         try:
             doc_docx.save(dg_seitai_final_path)
-            # 文件下载
-            return get_file_respone(payload.id, '测评大纲')
+            return self._token_download(dg_seitai_final_path, "测评大纲.docx")
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="文档未生成或生成错误！，{0}".format(e))
 
@@ -116,7 +133,7 @@ class GenerateSeitaiController(ControllerBase):
         # 注册时间变量
         try:
             doc_docx.save(sm_seitai_final_file)
-            return get_file_respone(payload.id, '测试说明')
+            return self._token_download(sm_seitai_final_file, "测试说明.docx")
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -150,7 +167,7 @@ class GenerateSeitaiController(ControllerBase):
             set_shape_size(shape)
         try:
             doc_docx.save(jl_seitai_final_file)
-            return get_file_respone(payload.id, '测试记录')
+            return self._token_download(jl_seitai_final_file, "测试记录.docx")
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -203,10 +220,7 @@ class GenerateSeitaiController(ControllerBase):
             except PermissionError as e:
                 return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
         # 因为回归说明、回归记录可能有多份，多份下载zip否则docx
-        if len(cname_list) == 1:
-            return get_file_respone(payload.id, '第二轮回归测试说明')
-        else:
-            return get_file_respone(payload.id, list(map(lambda x: f"第{x}轮回归测试说明", cname_list)))
+        return self._regression_download(payload.id, cname_list, '说明')
 
     @route.post('/hjlDocument', url_name='create-hjlDocument')
     @transaction.atomic
@@ -256,10 +270,7 @@ class GenerateSeitaiController(ControllerBase):
                 doc_docx.save(hjl_seitai_final_path)
             except PermissionError as e:
                 return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
-        if len(cname_list) == 1:
-            return get_file_respone(payload.id, '第二轮回归测试记录')
-        else:
-            return get_file_respone(payload.id, list(map(lambda x: f"第{x}轮回归测试说明", cname_list)))
+        return self._regression_download(payload.id, cname_list, '记录')
 
     @route.post('/wtdDocument', url_name='create-wtdDocument')
     @transaction.atomic
@@ -288,7 +299,7 @@ class GenerateSeitaiController(ControllerBase):
         self.text_frag_replace_handle(text_frag_name_list, doc_docx)
         try:
             doc_docx.save(wtd_seitai_final_path)
-            return get_file_respone(payload.id, '问题单')
+            return self._token_download(wtd_seitai_final_path, "问题单.docx")
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -324,7 +335,7 @@ class GenerateSeitaiController(ControllerBase):
         self.text_frag_replace_handle(text_frag_name_list, doc_docx)
         try:
             doc_docx.save(bg_seitai_final_path)
-            return get_file_respone(payload.id, '测评报告')
+            return self._token_download(bg_seitai_final_path, "测评报告.docx")
         except PermissionError as e:
             return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
 
@@ -338,6 +349,21 @@ class GenerateSeitaiController(ControllerBase):
                 stdContent_modify(self.temp_context[alias], doc_docx, sdtContent)
             else:
                 print('未查找的文本片段变量：', alias)
+
+    # 二段式非阻塞下载文件接口（只读流式响应，无 DB 写，无需事务）
+    @route.get('/download/{token}', url_name='download-with-token')
+    def download_file_with_token(self, token: str):
+        file_path = get_file_by_token(token)
+        if not file_path:
+            return ChenResponse(status=404, code=404, message="下载令牌无效或已过期")
+        if not file_path.exists():
+            return ChenResponse(status=404, code=404, message="文件不存在，可能已被清理")
+        response = FileResponse(open(file_path, 'rb'))
+        response['Content-Type'] = 'application/octet-stream'
+        # 中文文件名必须用 filename*=UTF-8''xxx 格式
+        encoded_name = quote(file_path.name)
+        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{encoded_name}"
+        return response
 
     # ~~~~下面是生成文档辅助文本片段取变量，统一设置报错信息等，后续看重复代码封装~~~~
     # self拥有变量：self.project_obj / self.temp_context(用于替换文本片段的字典)

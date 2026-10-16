@@ -23,8 +23,9 @@ from apps.user.schema import UserInfoOutSchema, CreateUserSchema, CreateUserOutS
 from apps.user.models import TableOperationLog, Users as UserClass
 from apps.project.models import Project
 # 工具函数
-from utils.chen_crud import update, multi_delete
+from utils.chen_crud import multi_delete
 from apps.user.tools.ldap_tools import load_ldap_users
+from utils.audit import audit_log, EVENT_USER_CHANGE
 from utils.permissions import PRIVILEGED_ROLES
 
 Users = get_user_model()
@@ -107,7 +108,6 @@ class UserManageController(ControllerBase):
     def create_user(self, user_schema: CreateUserSchema):
         user = user_schema.create()
         # 审计留痕（7.1.6：账号注册/权限授予）
-        from utils.audit import audit_log, EVENT_USER_CHANGE
         audit_log(self.context.request, EVENT_USER_CHANGE,
                   f'账号创建：新建用户 {user.username}（{user.name}），角色 {getattr(user, "role", "") or "user"}')
         return user
@@ -154,28 +154,25 @@ class UserManageController(ControllerBase):
         if payload.username == "superAdmin":
             return ChenResponse(code=400, status=400, message="无法编辑，唯一管理员账号")
         payload.validate_unique_username(user_id)
-        target = Users.objects.filter(id=user_id).first()
-        old_role = getattr(target, 'role', None)
-        update_user = update(self.context.request, user_id, payload, Users)
+        # 一次查询拿到旧角色并就地更新（避免 audit 埋点带来的额外 SELECT）
+        target = get_object_or_404(Users, id=user_id)
+        old_role = target.role
+        for attr, value in payload.dict().items():
+            setattr(target, attr, value)
+        target.save()
         # 审计留痕（7.1.6：账号信息/权限变更）
-        from utils.audit import audit_log, EVENT_USER_CHANGE
-        role_now = getattr(update_user, 'role', None)
-        role_part = f'，角色 {old_role} → {role_now}' if old_role != role_now else ''
+        role_part = f'，角色 {old_role} → {target.role}' if old_role != target.role else ''
         audit_log(self.context.request, EVENT_USER_CHANGE,
-                  f'账号修改：用户 {update_user.username}{role_part}')
+                  f'账号修改：用户 {target.username}{role_part}')
         return {"message": "用户更新成功"}
 
     @route.delete("/delete", permissions=[IsAuthenticated, IsSystemAdmin], url_name="user-delete")
     def delete_user(self, data: DeleteUserSchema):
-        ids = data.ids
-        # 去掉删除创始人
-        for item in ids:
-            if item == 1:
-                ids.pop(item)
+        # 保护创始人：剔除 id=1 后再删（注意不能在迭代中 pop 列表元素——会跳过元素）
+        ids = [i for i in data.ids if i != 1]
         usernames = list(Users.objects.filter(id__in=ids).values_list('username', flat=True))
         multi_delete(ids, Users)
         # 审计留痕（7.1.6：账号注销/权限回收）
-        from utils.audit import audit_log, EVENT_USER_CHANGE
         audit_log(self.context.request, EVENT_USER_CHANGE, f'账号删除：注销用户 {usernames or ids}')
         return ChenResponse(code=200, status=200, message="删除成功")
 
@@ -191,7 +188,6 @@ class UserManageController(ControllerBase):
         user.status = user_status
         user.save()
         # 审计留痕（7.1.6：账号启用/禁用）
-        from utils.audit import audit_log, EVENT_USER_CHANGE
         state = '启用' if str(user_status) == '1' else '禁用'
         audit_log(self.context.request, EVENT_USER_CHANGE, f'账号状态变更：{state}用户 {user.username}')
         return user.status
