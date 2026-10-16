@@ -59,6 +59,18 @@ const TESTMANAGE = {
                 icon: "icon-safe",
                 title: "抗抵赖证据"
             }
+        },
+        {
+            path: "auditLog",
+            name: "auditLog",
+            component: () => import("@/views/monitor/auditLog/index.vue"),
+            meta: {
+                requiresAuth: true,
+                roles: ["auditadmin"],
+                locale: "统一安全审计",
+                icon: "icon-search",
+                title: "统一安全审计"
+            }
         }
     ]
 }

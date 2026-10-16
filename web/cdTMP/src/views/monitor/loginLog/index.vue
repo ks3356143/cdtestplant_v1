@@ -7,10 +7,7 @@
                 </template>
                 <template #tableBeforeButtons>
                     <a-button type="primary" status="warning" @click="handleDeleteLogButton">
-                        <template #icon> <icon-delete /> </template>删除7天前数据
-                    </a-button>
-                    <a-button type="primary" status="danger" @click="handleDeleteAllLogButton">
-                        <template #icon> <icon-delete /> </template>删除全部日志
+                        <template #icon> <icon-delete /> </template>删除30天前数据
                     </a-button>
                 </template>
                 <!-- 操作列 -->
@@ -29,15 +26,11 @@ import { ref } from "vue"
 import logApi from "@/api/monitor/loginLog"
 import { Message, Notification } from "@arco-design/web-vue"
 const crudRef = ref({})
-// 删除日志按钮事件处理函数
+// 删除日志按钮事件处理函数（审计日志保护：仅可清理30天前数据，禁全清）
 const handleDeleteLogButton = async () => {
-    const res = await logApi.loginLogsDelete({ day: 7 }) // 参数：{day:4}保留4天内的日志
-    Message.success(res.message)
-}
-const handleDeleteAllLogButton = async () => {
-    const res = await logApi.loginLogsDelete({ day: 0 }) // 0表示删除全部日志
-    crudRef.value.refresh()
-    Message.success(res.message)
+    const res = await logApi.loginLogsDelete({ day: 30 }) // 只能清理保留期外的日志
+    if (res.data || res.message) Message.success(res.message || "清理成功")
+    else Message.error("清理被拒绝")
 }
 // 点击操作：查看【思路打开编辑窗口】
 const handleSee = (record) => {
