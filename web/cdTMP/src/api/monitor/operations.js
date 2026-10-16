@@ -15,7 +15,7 @@ export default {
      * 操作日志删除
      * @returns 后台返回的删除信息
      */
-    operationsDelete(params = { day: 7 }) {
+    operationsDelete(params = {}) {
         return request({
             url: `/system/log/operationsDel`,
             method: "get",

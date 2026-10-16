@@ -28,7 +28,7 @@ import { Message, Notification } from "@arco-design/web-vue"
 const crudRef = ref({})
 // 删除日志按钮事件处理函数（审计日志保护：仅可清理30天前数据，禁全清）
 const handleDeleteLogButton = async () => {
-    const res = await logApi.loginLogsDelete({ day: 30 }) // 只能清理保留期外的日志
+    const res = await logApi.loginLogsDelete() // 不传 day，后端按 30 天保留期默认清理
     if (res.data || res.message) Message.success(res.message || "清理成功")
     else Message.error("清理被拒绝")
 }

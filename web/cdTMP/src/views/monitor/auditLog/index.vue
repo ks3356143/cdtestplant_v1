@@ -14,7 +14,7 @@
                     </a-form-item>
                     <a-form-item label="事件类型">
                         <a-select v-model="filters.event_type" placeholder="全部" allow-clear style="width: 170px">
-                            <a-option v-for="t in allTypes" :key="t" :value="t">{{ eventLabel(t) }}</a-option>
+                            <a-option v-for="t in allTypes" :key="t" :value="t">{{ labelOf(t) }}</a-option>
                         </a-select>
                     </a-form-item>
                     <a-form-item label="操作IP">
@@ -36,7 +36,7 @@
                 <a-space style="margin-top: 10px" wrap>
                     <a-tag v-for="(c, t) in typeCounts" :key="t" :color="isAlert(t) ? 'red' : 'arcoblue'"
                            style="cursor: pointer" @click="filterByType(t)">
-                        {{ eventLabel(t) }} × {{ c }}
+                        {{ labelOf(t) }} × {{ c }}
                     </a-tag>
                 </a-space>
                 <div style="margin-top: 8px; color: var(--color-text-3); font-size: 12px">
@@ -61,7 +61,7 @@
                         <a-table-column title="事件类型" :width="130">
                             <template #cell="{ record }">
                                 <a-tag :color="isAlert(record.event_type) ? 'red' : 'arcoblue'">
-                                    {{ eventLabel(record.event_type) }}
+                                    {{ labelOf(record.event_type) }}
                                 </a-tag>
                             </template>
                         </a-table-column>
@@ -89,11 +89,14 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from "vue"
+import roleMap from "@/utils/roleMap"
 import auditLogApi from "@/api/monitor/auditLog"
 
-// 告警类事件（红色高亮）
-const ALERT_TYPES = new Set(["account_lock", "access_denied", "log_purge_denied"])
-const isAlert = (t) => ALERT_TYPES.has(t)
+// 事件类型清单（code/label/alert 由后端唯一提供：utils.audit.get_event_types）
+const eventTypes = ref([])
+const labelOf = (t) => eventTypes.value.find(e => e.code === t)?.label || t
+const isAlert = (t) => eventTypes.value.find(e => e.code === t)?.alert || false
+const allTypes = computed(() => eventTypes.value.map(e => e.code))
 
 // 筛选状态
 const filters = reactive({
@@ -107,22 +110,7 @@ const rows = ref([])
 const loading = ref(false)
 const pagination = ref({ total: 0, current: 1, pageSize: 10, showTotal: true })
 
-// 事件类型中文标签
-const EVENT_LABELS = {
-    login_success: "登录成功",
-    login_fail: "鉴别失败",
-    account_lock: "账号锁定告警",
-    user_change: "账号管理",
-    clearance_change: "标记变更",
-    policy_change: "策略变更",
-    access_denied: "越权访问告警",
-    business_change: "业务数据变更",
-    log_purge: "审计日志清理",
-    log_purge_denied: "日志删除告警"
-}
-const allTypes = Object.keys(EVENT_LABELS)
-const eventLabel = (t) => EVENT_LABELS[t] || t
-const roleMap = { admin: "系统管理员", secadmin: "系统安全员", auditadmin: "系统审计员", user: "普通用户" }
+// 角色中文标签（共享常量）
 const roleLabel = (r) => roleMap[r] || "普通用户"
 const fmtTime = (s) => (s ? String(s).replace(/T/, " ").split(".")[0] : "")
 
@@ -154,6 +142,17 @@ const doQuery = async () => {
     }
 }
 
+// 事件类型清单加载（后端唯一事实源：label/告警标记）
+const loadEventTypes = async () => {
+    const res = await auditLogApi.getAuditEventTypes()
+    eventTypes.value = res.data || []
+}
+
+onMounted(() => {
+    loadEventTypes()
+    doQuery()
+})
+
 const search = () => {
     pagination.value.current = 1
     doQuery()
@@ -179,8 +178,6 @@ const onPageSizeChange = (s) => {
     pagination.value.pageSize = s
     doQuery()
 }
-
-onMounted(doQuery)
 </script>
 
 <style scoped>

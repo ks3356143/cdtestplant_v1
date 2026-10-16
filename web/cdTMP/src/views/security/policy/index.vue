@@ -72,6 +72,7 @@
 <script setup>
 import { onMounted, ref } from "vue"
 import { Message } from "@arco-design/web-vue"
+import roleMap from "@/utils/roleMap"
 import policyApi from "@/api/system/policy"
 
 // 登录失败锁定策略
@@ -103,7 +104,6 @@ const usersLoading = ref(false)
 const savingId = ref(null)
 // 密级字典（与后端 secret 字典 key 一致）
 const secretLevels = { 1: "公开", 2: "内部", 3: "秘密★5年", 4: "机密★10年", 5: "绝密★20年" }
-const roleMap = { admin: "系统管理员", secadmin: "系统安全员", auditadmin: "系统审计员", user: "普通用户" }
 const roleLabel = (role) => roleMap[role] || "普通用户"
 
 const loadUsers = async () => {
