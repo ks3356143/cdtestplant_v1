@@ -96,6 +96,31 @@ class AuditLog(models.Model):
         )
 
 
+class DataIntegrityTag(models.Model):
+    """数据完整性校验标签（GB/T 28452-2012 第三级 7.1.7）：重要敏感数据的关键字段快照摘要，
+    业务写操作后刷新；核查时重算比对，不一致即完整性破损（多为绕过应用直改数据库）"""
+    id = models.BigAutoField(primary_key=True, help_text="Id", verbose_name="Id")
+    table_name = models.CharField(max_length=64, verbose_name="受保护表",
+                                  help_text="project_case 等 db_table")
+    object_id = models.CharField(max_length=32, verbose_name="数据行 id")
+    digest = models.CharField(max_length=64, verbose_name="完整性摘要(SHA256)",
+                              help_text="关键字段排序 JSON 快照的 SHA256")
+    algorithm = models.CharField(max_length=16, default='SHA256', verbose_name="算法")
+    update_datetime = models.DateTimeField(auto_now=True, null=True, blank=True,
+                                           verbose_name="标签更新时间")
+    create_datetime = models.DateTimeField(auto_now_add=True, null=True, blank=True,
+                                           verbose_name="创建时间")
+
+    class Meta:
+        db_table = 'system_data_integrity_tag'
+        verbose_name = '数据完整性标签'
+        verbose_name_plural = verbose_name
+        unique_together = (('table_name', 'object_id'),)
+
+    def __str__(self):
+        return f'完整性标签[{self.table_name}#{self.object_id}]'
+
+
 class SecurityPolicy(models.Model):
     """系统安全策略（单例行，由系统安全员 secadmin 维护）——三权分立之安全员职责载体"""
     login_max_attempts = models.IntegerField(default=5, verbose_name="登录失败最大尝试次数",

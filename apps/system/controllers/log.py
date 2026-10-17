@@ -11,10 +11,11 @@ from utils.chen_pagination import MyPagination
 from ninja.pagination import paginate
 from ninja import Query
 from utils.chen_response import ChenResponse
-from utils.audit import ALERT_EVENTS, audit_log, EVENT_LOG_PURGE, EVENT_LOG_PURGE_DENIED, get_event_types
+from utils.audit import (ALERT_EVENTS, EVENT_INTEGRITY_BROKEN, EVENT_INTEGRITY_CHECK, EVENT_LOG_PURGE,
+                         EVENT_LOG_PURGE_DENIED, audit_log, get_event_types)
 # 导入schemas
 from apps.system.schemas.log import (LogOutSchema, OperationLogOutSchema, LoginLogOutSchema, DeleteInputSchema,
-                                     AuditLogOutSchema, AuditFilterSchema)
+                                     AuditLogOutSchema, AuditFilterSchema, IntegrityCheckOutSchema)
 
 # 审计日志最小保留期（天）：日志保护（7.1.6 判定标准3）——审计员也只能清理超过保留期的旧日志，
 # 全清一律拒绝；清理动作自身审计留痕，非审计员触发则告警
@@ -118,3 +119,35 @@ class LogController(ControllerBase):
         count, _ = model.objects.filter(create_datetime__lt=time).delete()
         audit_log(request, EVENT_LOG_PURGE, f'{label}按保留期清理：删除 {day} 天前数据 {count} 条（保留期内日志不可删）')
         return ChenResponse(message=f'清理成功：删除{day}天前{label}数据 {count} 条')
+
+    # ~~~~~~~~~~~~ 数据完整性核查（7.1.7）：重要数据完整性标签批量校验 ~~~~~~~~~~~~
+
+    @route.get('/integrityCheck', response=IntegrityCheckOutSchema, permissions=[IsAuthenticated, IsAuditor])
+    @atomic
+    def integrity_check(self):
+        """批量重算完整性标签并与存储摘要比对：发现底层篡改即告警并留痕"""
+        from apps.project.tools.integrity import verify_all
+        from apps.system.models import DataIntegrityTag
+        results = verify_all()
+        broken = [r for r in results if not r['intact']]
+        # 破损数据逐条审计告警（7.1.6 联动）；完好则记一次核查通过
+        if broken:
+            for r in broken:
+                audit_log(None, EVENT_INTEGRITY_BROKEN,
+                          f'安全告警：数据完整性校验失败 {r["label"]}（{r["table"]}#{r["id"]}），'
+                          f'标签摘要 {r["stored"]}… ≠ 当前重算 {r["actual"]}…，疑似绕过应用直改数据库',
+                          success=False)
+            audit_log(self.context.request, EVENT_INTEGRITY_CHECK,
+                      f'数据完整性核查：共 {len(results)} 条受保护数据，发现 {len(broken)} 条破损（已告警）',
+                      success=False)
+        else:
+            audit_log(self.context.request, EVENT_INTEGRITY_CHECK,
+                      f'数据完整性核查：共 {len(results)} 条受保护数据全部完好')
+        return {
+            'total': len(results),
+            'broken': len(broken),
+            'items': results,
+            'recovery_hint': ('发现破损数据：平台负责检测与告警；修复请使用数据库备份（如 dbdata.sql 导出）'
+                              '核对该表数据后恢复——应用层无法凭空重建被底层篡改的内容') if broken
+                             else '全部受保护数据完好，无需恢复',
+        }

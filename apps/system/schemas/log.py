@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import List, Optional
 
 from ninja import ModelSchema, Field, Schema
 from apps.system.models import AuditLog, LoginLog, OperationLog
@@ -47,3 +47,21 @@ class AuditFilterSchema(Schema):
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
     only_alerts: Optional[bool] = False
+
+# 7.数据完整性核查结果（7.1.7）
+class IntegrityItemSchema(Schema):
+    table: str
+    id: int
+    label: str
+    ident: str
+    algorithm: str
+    stored: str
+    actual: str
+    intact: bool
+    checked_at: Optional[datetime] = None
+
+class IntegrityCheckOutSchema(Schema):
+    total: int
+    broken: int
+    items: List[IntegrityItemSchema]
+    recovery_hint: str

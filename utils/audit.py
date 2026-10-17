@@ -18,9 +18,11 @@ EVENT_ACCESS_DENIED = 'access_denied'
 EVENT_BUSINESS_CHANGE = 'business_change'
 EVENT_LOG_PURGE = 'log_purge'
 EVENT_LOG_PURGE_DENIED = 'log_purge_denied'
+EVENT_INTEGRITY_CHECK = 'integrity_check'
+EVENT_INTEGRITY_BROKEN = 'integrity_broken'
 
 # 告警类事件（审计页红色高亮 + "只看告警"筛选）
-ALERT_EVENTS = (EVENT_ACCOUNT_LOCK, EVENT_ACCESS_DENIED, EVENT_LOG_PURGE_DENIED)
+ALERT_EVENTS = (EVENT_ACCOUNT_LOCK, EVENT_ACCESS_DENIED, EVENT_LOG_PURGE_DENIED, EVENT_INTEGRITY_BROKEN)
 
 # 事件类型中文标签（唯一真相源；审计页下拉/标签消费 /auditEventTypes 接口）
 EVENT_LABELS = {
@@ -34,6 +36,8 @@ EVENT_LABELS = {
     EVENT_BUSINESS_CHANGE: '业务数据变更',
     EVENT_LOG_PURGE: '审计日志清理',
     EVENT_LOG_PURGE_DENIED: '日志删除告警',
+    EVENT_INTEGRITY_CHECK: '完整性核查',
+    EVENT_INTEGRITY_BROKEN: '数据篡改告警',
 }
 
 
