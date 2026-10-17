@@ -85,7 +85,7 @@
 import { reactive, ref } from "vue"
 import loginAPI from "@/api/login"
 import { useUserStore } from "@/store"
-import { useRouter, useRoute } from "vue-router"
+import { useRouter } from "vue-router"
 import userApi from "@/api/system/user"
 // 导入背景ui组件
 import ParticlesBg from "@/components/ui/particles-bg/ParticlesBg.vue"
@@ -111,7 +111,6 @@ const refreshCaptcha = async () => {
 // arco表单loading
 const loading = ref(null)
 // 点击登录按钮
-const errorMessage = ref("")
 const handleSubmit = async ({ values, errors }) => {
     if (loading.value) {
         return
@@ -141,9 +140,8 @@ const handleSubmit = async ({ values, errors }) => {
                 // 验证码一次性使用，已显示时失败需刷新
                 refreshCaptcha()
             }
-            errorMessage.value = login_res && login_res.message
-        } catch (err) {
-            errorMessage.value = err.message
+        } catch {
+            // 登录失败原因由接口层统一提示
         } finally {
             loading.value = false
         }

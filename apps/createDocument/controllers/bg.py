@@ -7,8 +7,6 @@ from django.db.models import Q
 from docxtpl import DocxTemplate
 from typing import Optional
 from docx import Document
-from ninja_extra.permissions import IsAuthenticated  # type:ignore
-from ninja_jwt.authentication import JWTAuth  # type:ignore
 # 导入模型
 from apps.project.models import Project, Dut, TestDemand, Problem
 # 工具类函数
@@ -28,6 +26,19 @@ from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
+
+
+# 公共工具：从倒序轮次中找出最后一个（轮次key最大）含源代码的被测件
+def get_last_so_dut(project_obj: Project) -> Optional[Dut]:
+    rounds = project_obj.pField.order_by('-key')  # qs：轮次
+    last_dut_so: Optional[Dut] = None
+    for round in rounds:
+        # 查询其源代码dut
+        dut_so = round.rdField.filter(type='SO').first()
+        if dut_so:
+            last_dut_so = dut_so
+            break
+    return last_dut_so
 
 # @api_controller("/generateBG", tags=['生成报告文档系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generateBG", tags=['生成报告文档系列'])
@@ -142,6 +153,9 @@ class GenerateControllerBG(ControllerBase):
         project_obj = get_object_or_404(Project, id=id)
         # 找到第一轮轮次对象、第二轮轮次对象
         round1 = project_obj.pField.filter(key='0').first()
+        # 首轮不存在时直接返回错误，避免后续 AttributeError
+        if not round1:
+            return ChenResponse(code=400, status=400, message='未找到首轮测试信息，请先创建轮次')
         # 第一轮测试项个数
         round1_demand_qs = round1 and round1.rtField.all()
         # 第一轮用例个数
@@ -368,7 +382,7 @@ class GenerateControllerBG(ControllerBase):
                 doc.save(
                     Path.cwd() / "media" / project_path_str / "output_dir/bg" / f"测试内容和结果_第{context['round_id']}轮次.docx")
             except PermissionError:
-                ChenResponse(code=400, status=400, message='您已打开生成文件，请关闭后再试...')
+                return ChenResponse(code=400, status=400, message='您已打开生成文件，请关闭后再试...')
 
     # 软件问题统计
     @route.get('/create/problem_statistics')
@@ -505,15 +519,8 @@ class GenerateControllerBG(ControllerBase):
     @transaction.atomic
     def create_quality_evaluate(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
-        # 找出最后一轮
-        rounds = project_obj.pField.order_by('-key')  # qs：轮次
-        last_dut_so: Optional[Dut] = None
-        for round in rounds:
-            # 查询其源代码dut
-            dut_so = round.rdField.filter(type='SO').first()
-            if dut_so:
-                last_dut_so = dut_so
-                break
+        # 找出最后一轮（含源代码被测件）
+        last_dut_so = get_last_so_dut(project_obj)
         # 计算千行缺陷率
         problem_count = project_obj.projField.count()
         # 如果没有轮次信息则返回错误
@@ -521,14 +528,17 @@ class GenerateControllerBG(ControllerBase):
             return ChenResponse(code=400, status=400, message='您还未创建轮次，请进入工作区创建')
         # 计算注释率
         ## 总行数
-        total_lines = int(last_dut_so.total_lines)
+        total_lines = int(last_dut_so.total_lines or 0)
         ## 有效注释行
-        effective_comment_lines = int(last_dut_so.comment_lines)
+        effective_comment_lines = int(last_dut_so.comment_lines or 0)
+        # 总行数为0或为空时无法计算比率，明确返回错误，避免 ValueError/ZeroDivisionError
+        if total_lines <= 0:
+            return ChenResponse(code=400, status=400, message='源代码被测件总行数为0或未填写，无法计算注释率，请补充被测件行数信息')
         comment_ratio = (effective_comment_lines / total_lines) * 100
         context = {
             'last_version': last_dut_so.version,  # 最后轮次代码版本
             'comment_percent': format(comment_ratio, '.4f'),  # 最后轮次代码注释率
-            'qian_comment_rate': format(problem_count / int(last_dut_so.total_lines) * 1000, '.4f'),
+            'qian_comment_rate': format(problem_count / total_lines * 1000, '.4f'),
             'avg_function_lines': "XXXX",
             'avg_cyclomatic': 'XXXX',
             'avg_fan_out': 'XXXX',
@@ -550,14 +560,7 @@ class GenerateControllerBG(ControllerBase):
         if project_obj.report_type == '9':
             is_JD = True
         # 找出最后一轮并且有源代码的dut
-        rounds = project_obj.pField.order_by('-key')  # qs：轮次
-        last_dut_so: Optional[Dut] = None
-        for round in rounds:
-            # 查询其源代码dut
-            dut_so = round.rdField.filter(type='SO').first()
-            if dut_so:
-                last_dut_so = dut_so
-                break
+        last_dut_so = get_last_so_dut(project_obj)
         # 找出所有被测件协议（XY）、需求规格说明（XQ）、设计说明（SJ）
         duties_qs = project_obj.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY'))
         # ***Inspect-start***

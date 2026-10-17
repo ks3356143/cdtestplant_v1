@@ -65,24 +65,29 @@ class ContactController(ControllerBase):
     @route.put("/contact/update/{id}", response=ContactOut, url_name='contact-update')
     @transaction.atomic
     def update_contact(self, id: int, data: ContactListInputSchema):
-        for attr, value in data.__dict__.items():
-            if getattr(data, attr) is None:
-                setattr(data, attr, '')
         qs = Contact.objects.filter(id=id).first()
-        if qs:
-            if qs.key != data.key:
-                key_qs = Contact.objects.filter(key=str(data.key))
-                if len(key_qs) > 0:
-                    return ChenResponse(code=400, status=400, message="公司或单位的编号重复，请修改")
-            if qs.name != data.name:
-                name_qs = Contact.objects.filter(name=data.name)
-                if len(name_qs) > 0:
-                    return ChenResponse(code=400, status=400, message="全称重复，请修改")
-            # 更新联系人数据
-            for attr, value in data.__dict__.items():
-                setattr(qs, attr, value)
-            qs.save()
-            return qs
+        # 找不到记录时明确返回，避免函数掉出返回 None 触发 ContactOut 序列化报错
+        if not qs:
+            return ChenResponse(code=404, status=404, message="未找到该公司或单位信息")
+        # 部分更新：仅处理用户实际传入的字段，缺失字段保持原值（避免被清成空串）
+        update_data = data.dict(exclude_none=True)
+        # key 为整型字段：与已存值按整型比较，避免 "3" != 3 恒真导致未改 key 也误触发重名检查
+        if 'key' in update_data:
+            try:
+                new_key = int(update_data['key'])
+            except (TypeError, ValueError):
+                return ChenResponse(code=400, status=400, message="公司或单位的编号必须为整数")
+            if new_key != qs.key and Contact.objects.filter(key=new_key).exists():
+                return ChenResponse(code=400, status=400, message="公司或单位的编号重复，请修改")
+            update_data['key'] = new_key
+        if update_data.get('name') and update_data['name'] != qs.name:
+            if Contact.objects.filter(name=update_data['name']).exists():
+                return ChenResponse(code=400, status=400, message="全称重复，请修改")
+        # 更新联系人数据
+        for attr, value in update_data.items():
+            setattr(qs, attr, value)
+        qs.save()
+        return qs
 
     @route.delete('/contact/delete', url_name='contact-delete')
     @transaction.atomic

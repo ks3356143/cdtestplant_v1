@@ -95,34 +95,26 @@ class DutController(ControllerBase):
     @transaction.atomic
     def update_dut(self, id: int, payload: DutCreateInputSchema):
         check_project_access_by_id(payload.project_id, self.context.request.user)
-        dut_search = Dut.objects.filter(project__id=payload.project_id, ident=payload.ident)
+        dut_search = Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
+                                        ident=payload.ident)
         # 判断是否和同项目同轮次的标识重复
         if len(dut_search) > 1:
             return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
         # 查到当前
-        if payload.type == 'SO':
-            dut_qs = Dut.objects.get(id=id)
-            for attr, value in payload.dict().items():
-                if attr == 'project_id' or attr == 'round_key':
-                    continue
-                if attr == 'name':
-                    setattr(dut_qs, "title", value)
-                setattr(dut_qs, attr, value)
-            dut_qs.save()
-            return dut_qs
-        else:
-            dut_qs = Dut.objects.get(id=id)
-            for attr, value in payload.dict().items():
-                if attr == 'project_id' or attr == 'round_key':
-                    continue
-                if attr == 'total_lines' or attr == 'effective_lines' or attr == 'comment_lines':
-                    setattr(dut_qs, attr, "")
-                    continue
-                if attr == 'name':
-                    setattr(dut_qs, "title", value)
-                setattr(dut_qs, attr, value)
-            dut_qs.save()
-            return dut_qs
+        # 两个分支（SO / 非SO）逻辑一致，仅非源代码被测件需清空代码统计字段，这里合并处理
+        dut_qs = Dut.objects.get(id=id)
+        for attr, value in payload.dict().items():
+            if attr == 'project_id' or attr == 'round_key':
+                continue
+            # 非源代码被测件：清空代码统计字段（由上传的源代码分析重新填充）
+            if payload.type != 'SO' and attr in ('total_lines', 'effective_lines', 'comment_lines'):
+                setattr(dut_qs, attr, "")
+                continue
+            if attr == 'name':
+                setattr(dut_qs, "title", value)
+            setattr(dut_qs, attr, value)
+        dut_qs.save()
+        return dut_qs
 
     # 删除被测件 - 1.重新对key排序 2.重新对表示尾号排序
     @route.delete("/dut/delete", url_name="dut-delete")
@@ -148,6 +140,9 @@ class DutController(ControllerBase):
                 message = '源代码被测件不能删除'
         multi_delete_dut(ids, Dut)
         dut_all_qs = Dut.objects.filter(round__id=round_id).order_by('id')
+        # 整轮被测件被删空时无需重排，直接返回，避免 IndexError
+        if not dut_all_qs.exists():
+            return ChenResponse(message=message)
         ident_before_string = dut_all_qs[0].ident.split("UT")[0]  # 输出类似于“R2233-R1-”
         index = 0
         for single_qs in dut_all_qs:
@@ -197,7 +192,10 @@ class DutController(ControllerBase):
         asert_dict['ident'] = "-".join(
             [project_obj.ident, ''.join(['R', str(int(round_key) + 1)]), 'UT', str(dut_count + 1)]).replace("UT-", "UT")
         # 查询round_id
-        round_id = project_obj.pField.filter(key=round_key).first().id
+        round_obj = project_obj.pField.filter(key=round_key).first()
+        if not round_obj:
+            return ChenResponse(code=400, status=400, message='轮次不存在，请检查...')
+        round_id = round_obj.id
         asert_dict['round_id'] = round_id
         asert_dict.update({'key': key_string, 'title': '软件源代码', 'type': 'SO', 'name': '软件源代码', 'level': '1'})
         dut_qs: Dut = Dut.objects.create(**asert_dict)
@@ -217,6 +215,8 @@ class DutController(ControllerBase):
         check_project_access_by_id(project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=project_id)
         dut = project_qs.pdField.filter(key=key).first()
+        if not dut:
+            return ChenResponse(code=400, status=400, message='被测件不存在，请检查...')
         return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
 
 @api_controller("/dut_upload", tags=['上传源代码/上传需求规格说明解析'])

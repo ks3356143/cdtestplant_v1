@@ -1,7 +1,16 @@
 """该模块：选择节点新创建一个轮次，数据为选中节点"""
 import re
 from copy import deepcopy
+from ninja.errors import HttpError
 from apps.project.models import Project, Round, Dut, Design, TestDemand, Case
+
+
+def _fetch_or_raise(model, message: str, **filters):
+    """按条件取第一条，取不到则抛出明确错误（统一判空，避免坏 key 直接 AttributeError 崩溃）"""
+    obj = model.objects.filter(**filters).first()
+    if obj is None:
+        raise HttpError(500, message=message)
+    return obj
 
 class TreeKey(object):
     """生成一个dict，展示复制的节点tree_dict是解析后的属性名称"""
@@ -70,15 +79,15 @@ class TreeKey(object):
         for round_k, round_v in self.tree_dict.items():
             # 1.这是轮次层级，如果为'all'，则复制整个轮次到第二轮
             if round_v == 'all':
-                round_obj: Round = Round.objects.filter(key=round_k, project=project_obj).first()
+                round_obj: Round = _fetch_or_raise(Round, f'轮次不存在：{round_k}', key=round_k, project=project_obj)
                 round_obj.remark = f"第{round_count + 1}轮测试"
-                round_obj.ident = round_obj.ident.replace(round_obj.ident[-1], f'{round_count + 1}')
+                round_obj.ident = round_obj.ident[:-1] + f'{round_count + 1}'
                 round_obj.name = f"第{round_count + 1}轮测试"
                 round_obj.title = f"第{round_count + 1}轮测试"
                 round_obj.key = f"{round_count}"
                 round_obj.id = None
                 round_obj.save()
-                round_origin: Round = Round.objects.filter(key=round_k, project=project_obj).first()
+                round_origin: Round = _fetch_or_raise(Round, f'轮次不存在：{round_k}', key=round_k, project=project_obj)
                 dut_qs = round_origin.rdField.all()
                 for dut in dut_qs:
                     dut_origin = deepcopy(dut)
@@ -132,9 +141,9 @@ class TreeKey(object):
             # 2.如果不是all，下面有值
             if isinstance(round_v, dict):
                 # 2.1 如果字典，则先要创建轮次
-                round_obj: Round = Round.objects.filter(key=round_k, project=project_obj).first()
+                round_obj: Round = _fetch_or_raise(Round, f'轮次不存在：{round_k}', key=round_k, project=project_obj)
                 round_obj.remark = f"第{round_count + 1}轮测试"
-                round_obj.ident = round_obj.ident.replace(round_obj.ident[-1], f'{round_count + 1}')
+                round_obj.ident = round_obj.ident[:-1] + f'{round_count + 1}'
                 round_obj.name = f"第{round_count + 1}轮测试"
                 round_obj.title = f"第{round_count + 1}轮测试"
                 round_obj.key = f"{round_count}"
@@ -146,14 +155,14 @@ class TreeKey(object):
                     dut_key_origin = round_k + "-" + dut_k
                     if dut_v == 'all':
                         # 查询原始dut
-                        dut_obj = Dut.objects.filter(key=dut_key_origin, project=project_obj).first()
+                        dut_obj = _fetch_or_raise(Dut, f'被测件不存在：{dut_key_origin}', key=dut_key_origin, project=project_obj)
                         dut_obj.ident = dut_obj.ident[:11] + str(dut_index)
                         dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', dut_obj.ident)
                         dut_obj.key = f"{round_count}-{dut_index - 1}"
                         dut_obj.round = round_obj
                         dut_obj.id = None
                         dut_obj.save()
-                        dut_origin = Dut.objects.filter(key=dut_key_origin, project=project_obj).first()
+                        dut_origin = _fetch_or_raise(Dut, f'被测件不存在：{dut_key_origin}', key=dut_key_origin, project=project_obj)
                         design_qs = dut_origin.rsField.all()
                         for i, design in enumerate(design_qs):
                             design_origin = deepcopy(design)
@@ -198,7 +207,7 @@ class TreeKey(object):
                                         step_obj.save()
 
                     if isinstance(dut_v, dict):
-                        dut_obj = Dut.objects.filter(key=dut_key_origin, project=project_obj).first()
+                        dut_obj = _fetch_or_raise(Dut, f'被测件不存在：{dut_key_origin}', key=dut_key_origin, project=project_obj)
                         dut_obj.ident = dut_obj.ident[:11] + str(dut_index)
                         dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', dut_obj.ident)
                         dut_obj.key = f"{round_count}-{dut_index - 1}"
@@ -209,14 +218,13 @@ class TreeKey(object):
                         for design_k, design_v in dut_v.items():
                             design_key_origin = round_k + "-" + dut_k + "-" + design_k
                             if design_v == 'all':
-                                design_obj = Design.objects.filter(key=design_key_origin, project=project_obj).first()
+                                design_obj = _fetch_or_raise(Design, f'设计需求不存在：{design_key_origin}', key=design_key_origin, project=project_obj)
                                 design_obj.key = f"{dut_obj.key}-{design_index - 1}"
                                 design_obj.dut = dut_obj
                                 design_obj.round = round_obj
                                 design_obj.id = None
                                 design_obj.save()
-                                design_origin = Design.objects.filter(key=design_key_origin,
-                                                                      project=project_obj).first()
+                                design_origin = _fetch_or_raise(Design, f'设计需求不存在：{design_key_origin}', key=design_key_origin, project=project_obj)
                                 demand_qs = design_origin.dtField.all()
                                 for j, demand in enumerate(demand_qs):
                                     demand_origin = deepcopy(demand)
@@ -252,7 +260,7 @@ class TreeKey(object):
                                             step_obj.save()
 
                             if isinstance(design_v, dict):
-                                design_obj = Design.objects.filter(key=design_key_origin, project=project_obj).first()
+                                design_obj = _fetch_or_raise(Design, f'设计需求不存在：{design_key_origin}', key=design_key_origin, project=project_obj)
                                 design_obj.key = f"{round_count}-{dut_index - 1}-{design_index - 1}"
                                 design_obj.dut = dut_obj
                                 design_obj.round = round_obj
@@ -262,16 +270,14 @@ class TreeKey(object):
                                 for demand_k, demand_v in design_v.items():
                                     demand_key_origin = round_k + "-" + dut_k + "-" + design_k + "-" + demand_k
                                     if demand_v == 'all':
-                                        demand_obj = TestDemand.objects.filter(key=demand_key_origin,
-                                                                               project=project_obj).first()
+                                        demand_obj = _fetch_or_raise(TestDemand, f'测试项不存在：{demand_key_origin}', key=demand_key_origin, project=project_obj)
                                         demand_obj.key = f"{design_obj.key}-{demand_index - 1}"
                                         demand_obj.design = design_obj
                                         demand_obj.dut = dut_obj
                                         demand_obj.round = round_obj
                                         demand_obj.id = None
                                         demand_obj.save()
-                                        demand_origin = TestDemand.objects.filter(key=demand_key_origin,
-                                                                                  project=project_obj).first()
+                                        demand_origin = _fetch_or_raise(TestDemand, f'测试项不存在：{demand_key_origin}', key=demand_key_origin, project=project_obj)
                                         for content_obj in demand_origin.testQField.all():
                                             content_origin = deepcopy(content_obj)
                                             content_obj.testDemand = demand_obj
@@ -297,16 +303,14 @@ class TreeKey(object):
                                                 step_obj.save()
 
                                     if isinstance(demand_v, dict):
-                                        demand_obj = TestDemand.objects.filter(key=demand_key_origin,
-                                                                               project=project_obj).first()
+                                        demand_obj = _fetch_or_raise(TestDemand, f'测试项不存在：{demand_key_origin}', key=demand_key_origin, project=project_obj)
                                         demand_obj.key = f"{round_count}-{dut_index - 1}-{design_index - 1}-{demand_index - 1}"
                                         demand_obj.design = design_obj
                                         demand_obj.dut = dut_obj
                                         demand_obj.round = round_obj
                                         demand_obj.id = None
                                         demand_obj.save()
-                                        demand_origin = TestDemand.objects.filter(key=demand_key_origin,
-                                                                                  project=project_obj).first()
+                                        demand_origin = _fetch_or_raise(TestDemand, f'测试项不存在：{demand_key_origin}', key=demand_key_origin, project=project_obj)
                                         for content_obj in demand_origin.testQField.all():
                                             content_origin = deepcopy(content_obj)
                                             content_obj.testDemand = demand_obj
@@ -320,8 +324,7 @@ class TreeKey(object):
                                         for case_k, case_v in demand_v.items():
                                             case_key_origin = round_k + "-" + dut_k + "-" + design_k + "-" + demand_k + "-" + case_k
                                             if case_v == 'all':
-                                                case_obj = Case.objects.filter(key=case_key_origin,
-                                                                               project=project_obj).first()
+                                                case_obj = _fetch_or_raise(Case, f'用例不存在：{case_key_origin}', key=case_key_origin, project=project_obj)
                                                 case_obj.key = f"{demand_obj.key}-{case_index}"
                                                 case_obj.test = demand_obj
                                                 case_obj.dut = dut_obj
@@ -329,8 +332,7 @@ class TreeKey(object):
                                                 case_obj.round = round_obj
                                                 case_obj.id = None
                                                 case_obj.save()
-                                                case_origin = Case.objects.filter(key=case_key_origin,
-                                                                                  project=project_obj).first()
+                                                case_origin = _fetch_or_raise(Case, f'用例不存在：{case_key_origin}', key=case_key_origin, project=project_obj)
                                                 for step_obj in case_origin.step.all():
                                                     step_obj.case = case_obj
                                                     step_obj.id = None

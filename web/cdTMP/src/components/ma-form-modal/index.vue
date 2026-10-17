@@ -30,7 +30,6 @@
  */
 import { reactive, ref, watch } from "vue"
 import MaForm from "@/components/ma-form/index.vue"
-import { Message } from "@arco-design/web-vue"
 import MaInfo from "@/components/ma-info/index.vue"
 import { setModalSizeEvent } from "@/utils/common"
 

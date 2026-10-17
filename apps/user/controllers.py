@@ -12,7 +12,6 @@ from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 from ninja_jwt.authentication import JWTAuth
 from ninja_jwt.controller import TokenObtainPairController
-from ninja_jwt import schema
 from typing import List
 from utils.chen_response import ChenResponse
 from apps.user.schema import UserInfoOutSchema, CreateUserSchema, CreateUserOutSchema, \
@@ -126,9 +125,10 @@ class UserManageController(ControllerBase):
         qs = Users.objects.all()
         if project_id is not None:
             project_obj = get_object_or_404(Project, id=project_id)
-            all_member: list = project_obj.member
+            # member 为 JSONField(null=True)，可能为 None；避免直接 append 抛 AttributeError
+            all_member: list = list(project_obj.member) if project_obj.member else []
             # 将member和duty_person联合
-            if project_obj.duty_person not in project_obj.member:
+            if project_obj.duty_person not in all_member:
                 all_member.append(project_obj.duty_person)
             qs = qs.filter(name__in=all_member)
         return qs
@@ -210,7 +210,6 @@ class UserManageController(ControllerBase):
             user.set_password(payload.newPassword)
             user.save()
             return ChenResponse(status=200, code=200, message='管理员修改密码成功')
-        return None
 
     # 用户登录后动态读取LDAP用户录入数据
     @route.get("/ldap", url_name='user-ldap')

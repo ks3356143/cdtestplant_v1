@@ -4,9 +4,6 @@ from pathlib import Path
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from ninja_extra import api_controller, ControllerBase, route
-# 导入权限相关
-from ninja_extra.permissions import IsAuthenticated
-from ninja_jwt.authentication import JWTAuth
 # 导入数据库模型
 from apps.project.models import Project
 from apps.dict.models import Dict
@@ -86,7 +83,6 @@ class GenerateControllerJL(ControllerBase):
                     step_list.append(step_dict)
                 # 这里判断里面的单个步骤的执行情况，来输出一个整个用例的执行情况
                 exe_noncount = 0
-                execution_str = '已执行'
                 for ste in step_list:
                     if ste.get('passed') == '未执行':
                         exe_noncount += 1

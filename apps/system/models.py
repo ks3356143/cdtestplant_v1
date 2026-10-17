@@ -140,8 +140,6 @@ class SecurityPolicy(models.Model):
 
     @classmethod
     def load(cls):
-        """取单例策略行，不存在则按默认值创建"""
-        obj = cls.objects.first()
-        if obj is None:
-            obj = cls.objects.create()
+        """取单例策略行，不存在则按默认值创建（用 get_or_create 避免并发下建出两条单例行）"""
+        obj, _ = cls.objects.get_or_create()
         return obj

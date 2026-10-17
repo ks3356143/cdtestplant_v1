@@ -6,13 +6,10 @@ from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
 from utils.chen_pagination import MyPagination
 from django.db import transaction
-from django.contrib.auth import get_user_model
 from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
 from apps.dict.schema import DeleteSchema, AbbreviationOut, AbbreviationListInputSchema
-
-Users = get_user_model()
 
 @api_controller("/system", tags=['缩略语接口'], auth=JWTAuth(), permissions=[IsAuthenticated])
 class AbbreviationController(ControllerBase):
@@ -54,8 +51,9 @@ class AbbreviationController(ControllerBase):
         for attr, value in data.__dict__.items():
             if getattr(data, attr) is None:
                 setattr(data, attr, '')
-        key_qs = Abbreviation.objects.filter(title=data.title)
-        if len(key_qs) > 1:
+        # 判重时排除自身，避免恰好只有一条同名记录（自身）时校验被跳过而造出重复项
+        key_qs = Abbreviation.objects.filter(title=data.title).exclude(id=id)
+        if key_qs.exists():
             return ChenResponse(code=400, status=400, message="缩略语重复，请修改...")
         # 查询id
         qs = Abbreviation.objects.get(id=id)

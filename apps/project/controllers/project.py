@@ -98,11 +98,14 @@ class ProjectController(ControllerBase):
             try:
                 copytree(src_dir, dist_dir)  # shutil模块直接是复制并命名，如果命名文件存在则抛出FileExists异常
             except PermissionError:
+                transaction.set_rollback(True)  # 标记回滚，避免报错但数据已落库
                 return ChenResponse(code=500, status=500,
                                     message="错误，检查是否打开了服务器的conf中的文档，关闭后重试")
             except FileExistsError:
+                transaction.set_rollback(True)
                 return ChenResponse(code=500, status=500, message='文件标识已存在或输入为空格，请修改')
             except FileNotFoundError:
+                transaction.set_rollback(True)
                 return ChenResponse(code=500, status=500, message='文件不存在，请检查')
             return ChenResponse(code=200, status=200, message="添加项目成功，并添加第一轮测试")
         return ChenResponse(code=400, status=400, message="未添加任何项目")
@@ -131,10 +134,13 @@ class ProjectController(ControllerBase):
                     d.ident = d.ident.replace(old_ident, new_ident)
                     d.save()
             except PermissionError:
+                transaction.set_rollback(True)  # 标记回滚，避免报错但数据已落库
                 return ChenResponse(code=500, status=500, message="错误，请关闭文件资源管理器再试")
             except FileExistsError:
+                transaction.set_rollback(True)
                 return ChenResponse(code=500, status=500, message='文件标识已存在或输入为空格，请修改')
             except FileNotFoundError:
+                transaction.set_rollback(True)
                 return ChenResponse(code=500, status=500, message='文件不存在，请检查')
         return ChenResponse(code=200, status=200, message="项目更新成功")
 
@@ -152,6 +158,7 @@ class ProjectController(ControllerBase):
             try:
                 rmtree(project_media_path)
             except FileNotFoundError:
+                transaction.set_rollback(True)  # 标记回滚，避免报错但数据已落库
                 return ChenResponse(status=400, code=400, message='项目模版目录可能不存在，可能之前已删除')
         return ChenResponse(message="删除成功！")
 
@@ -249,7 +256,7 @@ class ProjectController(ControllerBase):
                 '时间': {
                     '开始时间': project_obj.beginTime,
                     '结束时间': project_obj.endTime,
-                    '到现在时间': f"{(date.today() - project_obj.beginTime).days}天",
+                    '到现在时间': f"{(date.today() - project_obj.beginTime).days}天" if project_obj.beginTime else '',
                 },
                 '人员': {
                     '负责人': project_obj.duty_person,

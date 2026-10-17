@@ -53,7 +53,7 @@
                                 <component :is="config.icon" />
                             </div>
                             <div class="title">
-                                {{ config.title === "buttonText" ? $t("upload.buttonText") : config.title }}
+                                {{ config.title === "buttonText" ? "点击上传" : config.title }}
                             </div>
                         </div>
                     </slot>
@@ -89,7 +89,7 @@ const uploadImageHandler = async (options) => {
     }
     const file = options.fileItem.file
     if (file.size > config.size) {
-        Message.warning(file.name + " " + t("upload.sizeLimit"))
+        Message.warning(file.name + " 文件大小超出限制")
         currentItem.value = {}
         return
     }

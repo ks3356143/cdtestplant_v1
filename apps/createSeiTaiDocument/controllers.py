@@ -34,8 +34,6 @@ main_download_path = Path.cwd() / 'media'
 # @api_controller("/create", tags=['生成产品文档接口'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/create", tags=['生成产品文档接口'])
 class GenerateSeitaiController(ControllerBase):
-    chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.project_obj: Project | None = None
@@ -180,14 +178,15 @@ class GenerateSeitaiController(ControllerBase):
         cname_list = []
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='无回归轮次，请添加后再生成')
+        # 循环不变量提到循环外
+        is_jd = True if self.project_obj.report_type == '9' else False
+        member = self.project_obj.member[0] if len(
+            self.project_obj.member) > 0 else self.project_obj.duty_person
         for hround in hround_list:
-            # 获取当前轮次中文数字
-            cname = self.chinese_round_name[int(hround.key)]
+            # 获取当前轮次中文数字（key+1 即轮次数，digit_to_chinese 支持 ≥10）
+            cname = digit_to_chinese(int(hround.key) + 1)
             # 将cname存入一个list，以便后续拼接给下载函数
             cname_list.append(cname)
-            is_jd = True if self.project_obj.report_type == '9' else False
-            member = self.project_obj.member[0] if len(
-                self.project_obj.member) > 0 else self.project_obj.duty_person
             # 回归轮次的标识和版本
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
@@ -232,13 +231,14 @@ class GenerateSeitaiController(ControllerBase):
         cname_list = []
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='无回归测试轮次，请创建后再试')
+        # 循环不变量提到循环外
+        member = self.project_obj.member[0] if len(
+            self.project_obj.member) > 0 else self.project_obj.duty_person
+        is_jd = True if self.project_obj.report_type == '9' else False
         for hround in hround_list:
-            # 取出当前轮次key减1就是上一轮次
-            cname = self.chinese_round_name[int(hround.key)]  # 输出二、三...
+            # 取出当前轮次中文数字（key+1 即轮次数，digit_to_chinese 支持 ≥10）
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             cname_list.append(cname)
-            member = self.project_obj.member[0] if len(
-                self.project_obj.member) > 0 else self.project_obj.duty_person
-            is_jd = True if self.project_obj.report_type == '9' else False
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
                 return ChenResponse(status=400, code=400, message=f'您缺少第{cname}轮的源代码被测件')
@@ -391,7 +391,7 @@ class GenerateSeitaiController(ControllerBase):
             return
         raise HttpError(500, "第一轮次被测件：需求规格说明可能未创建，生成文档失败")
 
-# documentType - 对应的目录名称
+# documentType - 对应的目录名称（其键同时作为 documentType 白名单，见 get_fragment_name_by_document_name）
 documentType_to_dir = {
     '测评大纲': '',
     '测试说明': 'sm',
@@ -419,6 +419,10 @@ class CreateFragmentController(ControllerBase):
 
     @staticmethod
     def get_fragment_name_by_document_name(id: int, document_name: str):
+        # 安全校验：documentType 必须落在白名单内（即 documentType_to_dir 的键），
+        # 防止把 '..'、绝对路径或非法字符拼进文件路径造成路径遍历
+        if document_name not in documentType_to_dir:
+            raise HttpError(400, "非法的文档类型参数")
         # 1.找到模版的路径 - 不用异常肯定存在
         document_path = main_download_path / project_path(
             id) / 'form_template' / 'products' / f"{document_name}.docx"
@@ -463,9 +467,33 @@ class OverwriteStorage(FileSystemStorage):
         super().__init__(*args, **kwargs)
 
 def digit_to_chinese(num):
-    num_dict = {'0': '零', '1': '一', '2': '二', '3': '三', '4': '四',
-                '5': '五', '6': '六', '7': '七', '8': '八', '9': '九', '10': '十'}
-    return ''.join(num_dict[d] for d in str(num))
+    """把轮次数字转为规范中文（1→一 … 10→十、11→十一、20→二十、21→二十一），支持 1~9999。
+
+    与 generate_temp_doc 找模板、upload_file 命名文件、文档片段白名单使用同一套中文，
+    避免轮次 ≥10 时（原来 digit_to_chinese 会给「一零」）模板找不到。
+    """
+    num = int(num)
+    if num <= 0:
+        return str(num)
+    digits = '零一二三四五六七八九'
+    units = ['', '十', '百', '千']
+    s = str(num)
+    n = len(s)
+    parts = []
+    for idx, ch in enumerate(s):
+        d = int(ch)
+        pos = n - idx - 1
+        if d == 0:
+            # 连续零只保留一个，结尾零最后统一去掉
+            if parts and parts[-1] != '零':
+                parts.append('零')
+        else:
+            # 一十 -> 十
+            if pos == 1 and d == 1 and not parts:
+                parts.append('十')
+            else:
+                parts.append(digits[d] + units[pos])
+    return ''.join(parts).rstrip('零')
 
 # 处理用户上传有文档片段的产品文档文件：注意回归测试说明、回归测试记录需要单独处理
 @api_controller('/documentUpload', tags=['生成文档-上传模版文档接口'])

@@ -73,15 +73,13 @@
 </template>
 
 <script setup>
-import { ref, watch, provide, onMounted, onUnmounted, nextTick, getCurrentInstance, inject, computed } from "vue"
+import { ref, watch, provide, onMounted, onUnmounted, nextTick, getCurrentInstance, computed } from "vue"
 import { isNil, set, get, cloneDeep } from "lodash-es"
 import defaultOptions from "./js/defaultOptions.js"
 import { getComponentName, toHump, interactiveControl, handleFlatteningColumns, insertGlobalCssToHead, insertGlobalFunctionsToHtml } from "./js/utils.js"
 import { loadDict, handlerCascader } from "./js/networkRequest.js"
 import arrayComponentDefault from "./js/defaultArrayComponent.js"
 import ColumnService from "./js/columnService.js"
-
-import { runEvent } from "./js/event.js"
 import { Message } from "@arco-design/web-vue"
 // 修改源码导入：查找和替换组件
 import BulkReplaceModal from "@/components/ma-form/Customs/BulkReplaceModal.vue"

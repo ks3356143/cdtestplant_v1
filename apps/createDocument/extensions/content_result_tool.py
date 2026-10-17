@@ -1,8 +1,8 @@
 from apps.project.models import Project, Round, InfluenceArea
 from docxtpl import DocxTemplate
 from utils.util import *
-from utils.chen_response import ChenResponse
 from django.db.models import Q
+from ninja.errors import HttpError
 from apps.createDocument.extensions.parse_rich_text import RichParser
 
 def create_round_context(project_obj: Project, round_id: str):
@@ -13,19 +13,22 @@ def create_round_context(project_obj: Project, round_id: str):
     round_str_id = str(round_id)
     # 1. 首先先查询给定轮次的round对向
     round_obj = project_obj.pField.filter(key=round_str_id).first()
-    # 如果没有轮次对象则返回错误
+    # 如果没有轮次对象则抛出错误【契约统一：抛 HttpError，调用方按元组解包】
     if not round_obj:
-        return ChenResponse(code=400, status=400, message='注意您没有设置第二轮测试，请添加!')
+        raise HttpError(400, f'注意您没有设置第{round_id}轮测试，请添加!')
     dut_qs_r2 = round_obj.rdField  # 当前轮被测件dut对象qs
     dut_qs_r1 = project_obj.pdField.filter(round__key=str(round_id - 1))  # 上一个轮次被测件dut对象qs
 
-    # 查询当前轮次duts，是否有源代码，如果没有返回错误
+    # 查询当前轮次duts，是否有源代码，如果没有抛出错误
     so_dut = dut_qs_r2.filter(type='SO').first()  # 当前轮次源代码被测件对象
     if not so_dut:
-        return ChenResponse(code=400, status=400, message='注意您某轮次没有编写源代码被测件信息，务必添加...')
+        raise HttpError(400, '注意您某轮次没有编写源代码被测件信息，务必添加...')
 
     # 查询上一个轮次的dut中的源代码、需求文档
     r1_so_dut = dut_qs_r1.filter(type='SO').first()
+    # 上一轮缺少源代码被测件时也要明确报错，避免 None.version 崩溃
+    if not r1_so_dut:
+        raise HttpError(400, f'注意您第{round_id}轮次缺少上一轮源代码被测件信息，请添加...')
 
     # 3. 文档审查清单
     doc_list = []

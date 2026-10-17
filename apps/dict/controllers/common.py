@@ -1,6 +1,5 @@
 from datetime import date
 from ninja_extra import api_controller, ControllerBase, route
-import json
 from typing import Literal
 from apps.project.models import Project
 from django.db import transaction
@@ -82,7 +81,10 @@ class CommonController(ControllerBase):
             begin_time = project.beginTime
             if not begin_time:
                 continue
+            # 年份判断提到月份循环外：非当前年份的项目不再空跑 12 个月
+            if begin_time.year != current_year:
+                continue
             for m in month_list:
-                if m['month'] == begin_time.month and begin_time.year == current_year:
+                if m['month'] == begin_time.month:
                     m['count'] += 1
         return ChenResponse(status=200, code=200, data=month_list)

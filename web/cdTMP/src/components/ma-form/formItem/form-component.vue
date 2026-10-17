@@ -15,8 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, getCurrentInstance, watch, inject } from "vue"
-import { get, set } from "lodash-es"
+import { onMounted, getCurrentInstance, inject } from "vue"
 import MaFormItem from "./form-item.vue"
 import { runEvent } from "../js/event.js"
 

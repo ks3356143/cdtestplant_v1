@@ -11,7 +11,13 @@ def analyze_code_directory(file_path):
         'avg_function_lines': 0,  # 平均模块行数
         'avg_cyclomatic': 0,  # 平均圈复杂度
         'avg_fan_out': 0,  # 平均扇出
-        'function_count': 0  # 函数个数
+        'function_count': 0,  # 函数个数
+        # 以下为无 C/C++ 文件（无函数）时的默认值，避免调用方读取时 KeyError
+        'max_cyclomatic': 0,  # 模块最大圈复杂度
+        'high_cyclomatic_ratio': 0,  # 圈复杂度>20比例
+        'comment_lines': 0,  # 注释行数
+        'total_blanks': 0,  # 空行数
+        'code_ratio': 0,  # 代码比例
     }
     total_comments = 0
     total_blanks = 0

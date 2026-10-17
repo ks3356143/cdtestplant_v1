@@ -36,6 +36,9 @@ class DocTime:
                 'end': round.endTime,
                 'location': round.location
             })
+        # 无轮次时无法计算封面等时间，明确抛出错误（与其它方法入口保持一致）
+        if len(self.round_time) <= 0:
+            raise HttpError(status_code=400, message='您还未创建轮次，请填写后再生成')
         # ~~~~由上面时间二次计算得出时间~~~~ -> TODO:可由用户设置间隔时间!!!!
         self.dg_bz_start = self.p_start + timedelta(days=1)  # 大纲编制开始时间，项目开始时间+1天
         self.dg_bz_end = self.dg_bz_start + timedelta(days=6)  # 大纲编制结束时间，大纲编制开始+6天

@@ -152,6 +152,8 @@ class DesignController(ControllerBase):
         check_project_access_by_id(payload.project_id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=payload.project_id)
         dut_obj = project_obj.pdField.filter(key=payload.dut_key).first()
+        if not dut_obj:
+            return ChenResponse(status=400, code=400, message='被测件不存在，请检查...')
         round_obj = dut_obj.round
         # 当前dut下的design个数
         design_count = Design.objects.filter(project=project_obj, dut=dut_obj).count()
@@ -305,8 +307,8 @@ class DesignController(ControllerBase):
         # ident容错，查询是否有拼接的
         current_ident = "".join([new_design_obj.ident, "1"])
         project_obj = dut_obj.project
-        exit_ident = project_obj.psField.filter(ident=current_ident).exists()
-        if exit_ident:
+        # 循环递增直到不再冲突（原实现只 bump 一次，X1、X2 都已存在时仍会撞）
+        while project_obj.psField.filter(ident=current_ident).exists():
             match = re.search(r'(\d+)$', current_ident)
             if match:
                 num = int(match.group(1)) + 1

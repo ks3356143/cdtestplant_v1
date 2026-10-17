@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.apps import apps
 from django.db import models
-from cdtestplant_v1 import settings
 
 class CoreModel(models.Model):
     """
@@ -20,13 +19,17 @@ class CoreModel(models.Model):
         verbose_name = '核心模型'
         verbose_name_plural = verbose_name
 
+# 模块级缓存：避免每次调用都重新枚举全部模型（原实现先清空再判断恒真，缓存永不生效）
+_ALL_MODELS_OBJECTS_CACHE = None
+
 def get_all_models_objects(model_name=None):
     """
     获取所有 models 对象
     :return: {}
     """
-    settings.ALL_MODELS_OBJECTS = {}
-    if not settings.ALL_MODELS_OBJECTS:
+    global _ALL_MODELS_OBJECTS_CACHE
+    if _ALL_MODELS_OBJECTS_CACHE is None:
+        _ALL_MODELS_OBJECTS_CACHE = {}
         all_models = apps.get_models()
         for item in list(all_models):
             table = {
@@ -40,7 +43,7 @@ def get_all_models_objects(model_name=None):
                     "field": field.name
                 }
                 table['tableFields'].append(fields)
-            settings.ALL_MODELS_OBJECTS.setdefault(item.__name__, {"table": table, "object": item})
+            _ALL_MODELS_OBJECTS_CACHE.setdefault(item.__name__, {"table": table, "object": item})
     if model_name:
-        return settings.ALL_MODELS_OBJECTS[model_name] or {}
-    return settings.ALL_MODELS_OBJECTS or {}
+        return _ALL_MODELS_OBJECTS_CACHE.get(model_name) or {}
+    return _ALL_MODELS_OBJECTS_CACHE or {}

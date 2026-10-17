@@ -25,10 +25,13 @@ Test_result_width = Mm(78)  # 3.测试记录-测试结果
 Horizatal_width = Mm(130)  # 4.所有文档-页面图片的横向距离（图片宽度预设置）
 
 def getParentRunNode(node):
-    """传入oxml节点对象，获取其祖先节点的CT_R"""
+    """传入oxml节点对象，获取其祖先节点的CT_R；节点不在 CT_R 内时返回 None"""
     if isinstance(node, CT_R):
         return node
-    return getParentRunNode(node.getparent())
+    parent = node.getparent()
+    if parent is None:
+        return None
+    return getParentRunNode(parent)
 
 def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=None):
     """ 该函数参数：
@@ -85,22 +88,25 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
     exclusive_copied_files = []
     # 新：储存reuse的文档片段
     reuse_files = []
-    # 将被拷贝文件分别放入不同两个数组
-    for file in output_files_path.iterdir():
-        if file.is_file():
-            if file.suffix == '.docx':
-                dg_copied_files.append(file)
-        elif file.is_dir():
-            # 如果文件夹名称为sm/jl/hsm/hjl/bg/wtd则进入该判断
-            # 所以要求文件系统文件夹名称必须是sm/jl/hsm/hjl/bg/wtd不然无法生成
-            if file.stem == doc_type:
-                for f in file.iterdir():
-                    if f.suffix == '.docx':
-                        exclusive_copied_files.append(f)
-    for file in (prefix / 'reuse').iterdir():
-        if file.is_file():
-            if file.suffix == '.docx':
-                reuse_files.append(file)
+    # 将被拷贝文件分别放入不同两个数组（目录不存在时跳过，避免 FileNotFoundError）
+    if output_files_path.exists():
+        for file in output_files_path.iterdir():
+            if file.is_file():
+                if file.suffix == '.docx':
+                    dg_copied_files.append(file)
+            elif file.is_dir():
+                # 如果文件夹名称为sm/jl/hsm/hjl/bg/wtd则进入该判断
+                # 所以要求文件系统文件夹名称必须是sm/jl/hsm/hjl/bg/wtd不然无法生成
+                if file.stem == doc_type:
+                    for f in file.iterdir():
+                        if f.suffix == '.docx':
+                            exclusive_copied_files.append(f)
+    reuse_path = prefix / 'reuse'
+    if reuse_path.exists():
+        for file in reuse_path.iterdir():
+            if file.is_file():
+                if file.suffix == '.docx':
+                    reuse_files.append(file)
     # 找到基础模版的所有std域
     doc = Document(template_file.as_posix())
     body = doc.element.body
@@ -208,8 +214,11 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
     graph_node_list = body.xpath('.//pic:pic')
     graph_node_list_transform = []
     for picNode in graph_node_list:
-        # 遍历替换后模版的所有pic，去找祖先
-        sdt_node = picNode.xpath('ancestor::w:sdt[1]')[0]
+        # 遍历替换后模版的所有pic，去找祖先（图片不在 sdt 内时跳过，避免 IndexError）
+        sdt_nodes = picNode.xpath('ancestor::w:sdt[1]')
+        if not sdt_nodes:
+            continue
+        sdt_node = sdt_nodes[0]
         for sdt_node_child in sdt_node.iterchildren():
             # 找到sdt下一级的stdPr
             if sdt_node_child.tag.endswith('sdtPr'):
@@ -219,6 +228,9 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
                         graph_node_list_transform.append({'yu_name': yu_name, 'yu_node': picNode})
     for graph_node in graph_node_list_transform:
         image_run_node = getParentRunNode(graph_node['yu_node'])
+        # 图片节点不在 CT_R 内时跳过，避免 None.clear() 报错
+        if image_run_node is None:
+            continue
         image_run_node.clear()
         # 循环去image_part_list找name和yu_name相等的图片
         for img_part in image_part_list:

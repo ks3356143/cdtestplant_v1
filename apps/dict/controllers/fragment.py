@@ -2,6 +2,7 @@ from typing import List,Optional
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Schema, Field, Query, ModelSchema
 from ninja.errors import HttpError
+import logging
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from pydantic import model_validator
@@ -12,6 +13,8 @@ from utils.chen_pagination import MyPagination
 from utils.chen_crud import updateWithoutRequestParam, multi_delete, createWithOutRequestParam
 # ORM模型
 from apps.dict.models import Fragment
+
+logger = logging.getLogger(__name__)
 
 # Schemas
 ## 查询fragment的输入
@@ -47,24 +50,9 @@ class FragmentUpdateSchema(Schema):
     project_id: int = Field(None, alias='projectId')
     content: str = Field(None, alias='content')
 
-    def validate_unique_update_fragName(self, id: int):
-        frag_filters = Fragment.objects.filter(name=self.name)
-        if len(frag_filters) > 1:
-            raise HttpError(400, "文档片段名称重复")
-        elif len(frag_filters) == 1:
-            if frag_filters[0].id == id:
-                return
-            else:
-                raise HttpError(400, "文档片段名称重复")
-        else:
-            return
-
 # 删除schema
 class FragmentDeleteSchema(Schema):
     ids: List[int]
-
-# 全局静态变量
-PIC_URL_PREFIX = "/uploads/"
 
 # Controller
 @api_controller("/system/userField", tags=['文档片段'], auth=JWTAuth(), permissions=[IsAuthenticated])
@@ -72,9 +60,11 @@ class UserFiledController(ControllerBase):
     @route.get("/getFragment", response=List[FragmentOutSchema], url_name='fragment-list')
     @paginate(MyPagination)
     def get_fragement(self, condition: Query[FragementListSchema]):
-        fragment_qs = Fragment.objects.filter(project_id=condition.project_id)
+        # 仅按传入的 projectId 过滤：省略时不做 IS NULL 查询（原第三次重复 filter 已清理）
+        fragment_qs = Fragment.objects.all()
+        if condition.project_id is not None:
+            fragment_qs = fragment_qs.filter(project_id=condition.project_id)
         res_qs = model_retrieve(condition, fragment_qs, ['project_id', 'is_main'])
-        res_qs = res_qs.filter(project_id=condition.project_id)
         return res_qs
 
     @route.post("/add", url_name='fragment-add', response=FragmentOutSchema)
@@ -85,8 +75,10 @@ class UserFiledController(ControllerBase):
     def delete_fragment(self, data: FragmentDeleteSchema):
         try:
             multi_delete(data.ids, Fragment)
-        except Exception:
-            raise HttpError(500, "删除失败")
+        except Exception as e:
+            # 保留原始异常信息，便于排查删除失败原因
+            logger.exception("删除文档片段失败：ids=%s", data.ids)
+            raise HttpError(500, "删除失败") from e
 
     @route.put("/update/{int:id}", url_name='fragment-update')
     def update_fragment(self, id: int, data: FragmentUpdateSchema):

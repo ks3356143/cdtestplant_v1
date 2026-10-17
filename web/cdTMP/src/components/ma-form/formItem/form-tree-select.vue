@@ -58,7 +58,6 @@ import { ref, inject, onMounted, watch } from "vue"
 import { get, set } from "lodash-es"
 import MaFormItem from "./form-item.vue"
 import { runEvent } from "../js/event.js"
-import { handlerCascader } from "../js/networkRequest.js"
 
 const props = defineProps({
     component: Object,

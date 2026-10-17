@@ -19,7 +19,6 @@ from utils.path_utils import project_path
 from apps.createDocument.extensions.util import delete_dir_files
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
-from apps.createDocument.extensions.content_result_tool import create_influence_context
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 # 导入排序
@@ -157,7 +156,7 @@ class GenerateControllerHSM(ControllerBase):
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
-            return None
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
 
         context = {
             'project_obj': project_obj.name,
@@ -172,6 +171,10 @@ class GenerateControllerHSM(ControllerBase):
             # 取上一轮次
             so_dut_last: Dut = Dut.objects.filter(round__key=str(int(hround.key) - 1), project=project_obj,
                                                   type='SO').first()
+            # 上一轮缺少源代码被测件时明确报错，避免 None.version 崩溃
+            if not so_dut_last:
+                return ChenResponse(code=400, status=400,
+                                    message=f'您第{cname}轮次中缺少上一轮源代码被测件信息，请添加')
             round_context = deepcopy(context)
             round_context['current_version'] = so_dut.version
             round_context['last_version'] = so_dut_last.version
@@ -218,7 +221,7 @@ class GenerateControllerHSM(ControllerBase):
         # 非第一轮的轮次
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
-            return None
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
             std_documents_round = deepcopy(std_documents)
             # 取出当前轮次key
@@ -229,7 +232,7 @@ class GenerateControllerHSM(ControllerBase):
             hjl_duty = {'doc_name': f'{project_obj.name}软件第{cname}轮测试记录',
                         'ident_version': f'PT-{project_obj.ident}-TN{int(hround.key) + 1}',
                         'publish_date': hround.endTime, 'source': project_obj.test_unit}
-            std_documents.extend([hsm_duty, hjl_duty])
+            std_documents_round.extend([hsm_duty, hjl_duty])
             context = {
                 'std_documents': std_documents_round
             }
@@ -258,7 +261,7 @@ class GenerateControllerHSM(ControllerBase):
         # 非第一轮的轮次
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
-            return None
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
             context_round = deepcopy(context)
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
@@ -275,8 +278,7 @@ class GenerateControllerHSM(ControllerBase):
                                     message=f'您第{chinese_round_name[int(hround.key)]}轮次中缺少源代码版本信息，请添加')
             last_dm_version = last_round_so_dut.version
             now_dm_version = so_dut.version
-            # 这里插入影响域分析部分，并加入context
-            context_round['influence'] = create_influence_context(doc, hround, project_obj)  # noqa
+            # 影响域分析暂不写入该文档（原计算行结果紧接着被覆盖，属于无用计算，已移除以避免创建多余子文档/图片）
             context_round['influence'] = None
             # 如果存在这个轮次的需求文档，则查询上个版本
             last_xq_version = ""
@@ -313,7 +315,7 @@ class GenerateControllerHSM(ControllerBase):
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
-            return None
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         # 遍历非第一轮的轮次
         for hround in hround_list:
             cname = chinese_round_name[int(hround.key)]  # var：输出二、三字样
@@ -409,7 +411,7 @@ class GenerateControllerHSM(ControllerBase):
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
-            return None
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
             # 先查询dict字典，查出总共有多少个testType
             test_type_len = Dict.objects.get(code='testType').dictItem.count()
@@ -466,7 +468,7 @@ class GenerateControllerHSM(ControllerBase):
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
-            return None
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
             # 先查询dict字典，查出总共有多少个testType
@@ -556,7 +558,7 @@ class GenerateControllerHSM(ControllerBase):
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         demand_prefix = '4.1'
         if len(hround_list) < 1:
-            return
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
             # 取出当前轮次key减1就是上一轮次
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
@@ -566,7 +568,7 @@ class GenerateControllerHSM(ControllerBase):
             so_dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
                 return ChenResponse(code=400, status=400, message=f'第{cname}轮次无源代码被测件')
-            so_designs = so_dut.rsField.filter()
+            so_designs = so_dut.rsField.all()
             for design in so_designs:
                 design_dict = {'name': design.name, 'chapter': design.chapter, 'test_demand': []}
                 test_items = []

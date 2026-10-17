@@ -93,12 +93,12 @@ def time_return_to(id):
         bg_otime[r['name']] = [r['start'], r['end']]
     temp_dict = time_parser.bg_final_time()
     ### 6.2.报告文档时间
-    bg_otime['封面时间'] = temp_dict['cover_time'],
+    bg_otime['封面时间'] = temp_dict['cover_time']
     bg_otime['拟制时间'] = temp_dict['preparation_time']
-    bg_otime['校对时间'] = temp_dict['inspect_time'],
-    bg_otime['审核时间'] = temp_dict['auditing_time'],
-    bg_otime['批准时间'] = temp_dict['ratify_time'],
-    bg_otime['创建时间'] = temp_dict['create_doc_time'],
+    bg_otime['校对时间'] = temp_dict['inspect_time']
+    bg_otime['审核时间'] = temp_dict['auditing_time']
+    bg_otime['批准时间'] = temp_dict['ratify_time']
+    bg_otime['创建时间'] = temp_dict['create_doc_time']
     bg_otime['v1版本时间'] = temp_dict['doc_v1_time']
     time.append(bg_otime)
     return time

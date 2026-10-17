@@ -18,9 +18,9 @@
                     <div>
                         <icon-upload class="text-5xl text-gray-400" />
                         <div class="text-red-600 font-bold">
-                            {{ config.title === "buttonText" ? $t("upload.buttonText") : config.title }}
+                            {{ config.title === "buttonText" ? "点击上传" : config.title }}
                         </div>
-                        {{ $t("upload.uploadDesc") }}<span style="color: #3370ff">{{ $t("upload.clickUpload") }}</span>
+                        将文件拖到此处，或<span style="color: #3370ff">点击上传</span>
                     </div>
                 </div>
             </slot>
@@ -179,7 +179,7 @@ const chunkUpload = async (options) => {
         }
     } catch (e) {
         console.error(e)
-        Message.error(t("upload.fileHashFail"))
+        Message.error("文件上传失败")
     }
 }
 

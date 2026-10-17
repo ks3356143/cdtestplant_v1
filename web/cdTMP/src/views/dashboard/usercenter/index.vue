@@ -50,7 +50,6 @@
 
 <script setup>
 import { computed, ref } from "vue"
-import MaUpload from "@cps/ma-upload/index.vue"
 import userInfomation from "./components/userInfo.vue"
 import editpassword from "./components/editpassword.vue"
 import { useUserStore } from "@/store"

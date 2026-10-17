@@ -164,8 +164,12 @@ class TestDemandController(ControllerBase):
     @route.post("/testDemand/multi_save", url_name="testDemand-multi-create")
     @transaction.atomic
     def create_multi_test_demand(self, payload: TestDemandMultiCreateInputSchema):
+        # 访问控制：与其它写接口保持一致，防止跨项目写入（自主访问控制 7.1.3）
+        check_project_access_by_id(payload.project_id, self.context.request.user)
         # 1.首先判断测试项标识是否重复
         project_qs = Project.objects.filter(id=payload.project_id).first()
+        if not project_qs:
+            return ChenResponse(code=400, status=400, message='项目不存在，请检查')
         designs = project_qs.psField.all()
         ## 给返回response的data数据以便前端更新树状目录
         keys = []
@@ -302,9 +306,12 @@ class TestDemandController(ControllerBase):
     @route.get("/testDemand/getRelatedTestDemand", url_name="testDemand-getRelatedTestDemand")
     @transaction.atomic
     def getRelatedTestDemand(self, id: int, round: str):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         # 找出属于该轮次的所有测试项
         round_qs = project_qs.pField.filter(key=round).first()
+        if not round_qs:
+            return ChenResponse(status=400, code=400, message='轮次不存在，请检查...')
         designs = round_qs.dsField.all()
         data_list = []
         for design in designs:

@@ -1,5 +1,4 @@
 from apps.user.models import Users
-from django.contrib.auth.models import Group
 from ninja_schema import ModelSchema, model_validator, Schema
 from ninja_extra.exceptions import APIException
 from ninja_extra import status
@@ -9,6 +8,7 @@ from ninja import Field
 from ninja.errors import HttpError
 from ninja_jwt.schema import TokenObtainInputSchemaBase
 from ninja_jwt.tokens import RefreshToken
+from pydantic import model_validator as pydantic_model_validator
 from utils.log_util.request_util import save_login_log
 
 UserModel = Users
@@ -19,13 +19,6 @@ class UsernameException(APIException):
     default_detail = "用户名已存在，注册失败"
     default_code = 400
 
-class GroupSchema(ModelSchema):
-    class Config:
-        # 因为保证唯一性，所以ninja_schema使用set集合
-        model = Group
-        # 注意ninja_schema(include)和ninja(model_fields)
-        include = ("name",)
-
 # schema：作用于创建用户请求
 # 注意：不含 clearance——密级标记由系统安全员统一配置（三权分立，GB/T 28452-2012 7.1.5），管理员只管账号
 class CreateUserSchema(ModelSchema):
@@ -33,11 +26,11 @@ class CreateUserSchema(ModelSchema):
         model = UserModel
         include = ('username', 'name', 'password', 'phone', 'status', 'role',)
 
-    # username判重
+    # username判重（精确匹配：子串匹配会把 admin123 误判为与已存在的 admin 重复）
     @model_validator("username")
     @classmethod
     def unique_username(cls, value):
-        if UserModel.objects.filter(username__icontains=value).exists():
+        if UserModel.objects.filter(username=value).exists():
             raise UsernameException()
         return value
 
@@ -119,6 +112,13 @@ class AdminModifyPasswordSchema(Schema):
     newPassword_confirmation: str
     oldPassword: str
 
+    @pydantic_model_validator(mode='after')
+    def check_new_password_confirmation(self):
+        # 两次输入的新密码必须一致（原实现声明了确认字段却从未校验）
+        if self.newPassword != self.newPassword_confirmation:
+            raise ValueError('两次输入的新密码不一致')
+        return self
+
 # ~~~~~~~~~~~~~~~~~~~~JWT~~~~~~~~~~~~~~~~~~~~
 # 定义输出的内容，修改了输出access变为token，新增token_exp_data字段
 class MyTokenObtainPairOutSchema(Schema):
@@ -159,6 +159,7 @@ class MyTokenObtainPairInputSchema(TokenObtainInputSchemaBase):
             raise
         clear_login_failure(username)
         if self._user:
-            save_login_log(request, self._user)
+            # 先判禁用再记登录日志：避免被禁用账号在审计中留下"登录成功"记录，与结果矛盾
             if self._user.status == '2':  # type:ignore
                 raise HttpError(401, "账号已被禁用，请联系管理员...")
+            save_login_log(request, self._user)

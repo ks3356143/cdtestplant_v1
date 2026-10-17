@@ -19,7 +19,7 @@
                         <div>
                             <icon-upload class="text-5xl text-gray-400" />
                             <div class="text-red-600 font-bold">
-                                {{ config.title === "buttonText" ? $t("upload.buttonText") : config.title }}
+                                {{ config.title === "buttonText" ? "点击上传" : config.title }}
                             </div>
                             将文件拖到此处，或<span style="color: #3370ff">点击上传</span>
                         </div>
@@ -87,7 +87,7 @@ const uploadFileHandler = async (options) => {
     }
     const file = options.fileItem.file
     if (file.size > config.size) {
-        Message.warning(file.name + " " + t("upload.sizeLimit"))
+        Message.warning(file.name + " 文件大小超出限制")
         currentItem.value = {}
         return
     }

@@ -1,22 +1,21 @@
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 
 # 1.1)这个函数参数1：request、参数2：schema或schema.dict()、参数3：ORM模型
+# 注意：request 参数仅为兼容旧调用签名，实际未使用，逻辑与 createWithOutRequestParam 完全一致
 def create(request, data, model):
-    if not isinstance(data, dict):
-        data = data.dict()
-    query_set = model.objects.create(**data)
-    return query_set
+    return createWithOutRequestParam(data, model)
 
 # 1.2)新增快捷函数，直接填入data
 def createWithOutRequestParam(data, model):
     if not isinstance(data, dict):
-        data = data.dict()
+        data = data.model_dump()
     query_set = model.objects.create(**data)
     return query_set
 
 # 2.1)更新便捷函数，特别注意参数0为request后面有用，参数1：id，参数2：schema，参数3：ORM模型
 def update(request, id, data, model):
-    dict_data = data.dict()
+    dict_data = data.model_dump()
     instance = get_object_or_404(model, id=id)
     for attr, value in dict_data.items():
         setattr(instance, attr, value)
@@ -34,12 +33,13 @@ def updateWithoutRequestParam(id, data, model):
     return instance
 
 # 多个id删除便捷函数，参数1:ids数组，参数2：ORM模型
+# 加事务：中途某个 id 不存在时整体回滚，避免部分删除的不一致状态
+@transaction.atomic
 def multi_delete(ids, model):
     for item in ids:
         # 删除多对多关系 - project
         instance = get_object_or_404(model, pk=item)
         instance.delete()
-    pass
 
 # project删除，对应problem问题单多对多关系也要删除
 def multi_delete_project(ids, model):

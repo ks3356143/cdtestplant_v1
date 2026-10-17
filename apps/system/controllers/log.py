@@ -92,8 +92,8 @@ class LogController(ControllerBase):
         if filters.start_time:
             condition &= Q(create_datetime__gte=filters.start_time)
         if filters.end_time:
-            # +1 天把当天整天纳入（end_time 为日期时 inclusive 边界）
-            condition &= Q(create_datetime__lte=filters.end_time + timedelta(days=1))
+            # 以「日期」为边界把结束日整天纳入；end_time 带时分秒时不会溢出到次日同时刻
+            condition &= Q(create_datetime__date__lte=filters.end_time.date())
         if filters.ip:
             condition &= Q(ip__icontains=filters.ip)
         return AuditLog.objects.filter(condition)

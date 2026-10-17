@@ -15,7 +15,7 @@ from pathlib import Path
 from utils.chen_response import ChenResponse
 # 导入数据库ORM
 from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, \
-    DynamicSoftTable, DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis, Design
+    DynamicSoftTable, DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis
 from apps.dict.models import Dict
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
@@ -55,6 +55,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
         # 查出第一轮所有testdemand
         project_round_one = project_qs.pField.filter(key=0).first()
+        if not project_round_one:
+            return ChenResponse(status=400, code=400, message="未找到首轮测试信息!")
         testDemand_qs = project_round_one.rtField.all().select_related('design') # type:ignore
         # 按照自己key排序，这样可以按照design的key排序
         sorted_demand_qs = sorted(testDemand_qs, key=demand_sort_by_designKey)
@@ -204,12 +206,15 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                                              'dev_contact', 'dev_contact_phone', 'test_unit', 'test_contact',
                                              'test_contact_phone'])
         # 根据entrust_unit、dev_unit、test_unit查找Contact中地址信息
-        entrust_addr = Contact.objects.get(name=contact_dict['entrust_unit']).addr
-        dev_addr = Contact.objects.get(name=contact_dict['dev_unit']).addr
-        test_addr = Contact.objects.get(name=contact_dict['test_unit']).addr
-        contact_dict['entrust_addr'] = entrust_addr
-        contact_dict['dev_addr'] = dev_addr
-        contact_dict['test_addr'] = test_addr
+        entrust_contact_obj = Contact.objects.filter(name=contact_dict['entrust_unit']).first()
+        dev_contact_obj = Contact.objects.filter(name=contact_dict['dev_unit']).first()
+        test_contact_obj = Contact.objects.filter(name=contact_dict['test_unit']).first()
+        # 联系人缺失（或未填单位名称）时明确报错，避免 DoesNotExist 500
+        if not (entrust_contact_obj and dev_contact_obj and test_contact_obj):
+            return ChenResponse(code=400, status=400, message='未找到对应联系单位地址信息，请先在联系人中维护委托/研制/测评单位')
+        contact_dict['entrust_addr'] = entrust_contact_obj.addr
+        contact_dict['dev_addr'] = dev_contact_obj.addr
+        contact_dict['test_addr'] = test_contact_obj.addr
         context = {
             'datas': contact_dict
         }
@@ -721,6 +726,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             isDmsc = True if int(security) <= 2 else False
             # 获取第一轮所有测试项QuerySet
             project_round_one = project_qs.pField.filter(key=0).first()
+            if not project_round_one:
+                return ChenResponse(status=400, code=400, message="未找到首轮测试信息!")
             testDemand_qs = project_round_one.rtField.all() # type:ignore
             # grouped_data的键是测试类型名称，值为测试项名称数组
             grouped_data = {}
@@ -819,6 +826,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         design_list = []  # 先按照design的思路进行追踪
         # 查询第一轮次
         project_round_one = project_qs.pField.filter(key=0).first()
+        if not project_round_one:
+            return ChenResponse(status=400, code=400, message="未找到首轮测试信息!")
         testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one) # type:ignore
         # 找出第一轮的研总
         yz_dut = project_round_one.rdField.filter(type='YZ').first() # type:ignore
@@ -848,7 +857,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         try:
             design_list = sorted(design_list, key=chapter_key)
         except Exception as e:
-            print("研总的追踪排序报错，错误原因：", e)
+            self.logger.write_warning_log('研制总要求追踪', f'排序报错，错误原因：{e}')
         context = {
             'design_list': design_list
         }
@@ -919,7 +928,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             try:
                 design_list = sorted(design_list, key=chapter_key)
             except Exception as e:
-                print("追踪排序报错，错误原因：", e)
+                self.logger.write_warning_log('需求规格说明追踪', f'排序报错，错误原因：{e}')
             context = {
                 'design_list': design_list
             }
@@ -933,6 +942,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         test_item_prefix = '6.2'
         # 取出第一轮所有测试项的章节处理列表和字典
         project_round_one = project_qs.pField.filter(key=0).first()
+        if not project_round_one:
+            return ChenResponse(status=400, code=400, message="未找到首轮测试信息!")
         testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one) # type:ignore
         # 查询第一轮所有测试项
         test_items = []
@@ -1012,6 +1023,8 @@ def chapter_key(item):
     if "." in item['chapter']:
         # 如果是有章节号的则排序
         return [int(part) for part in item['chapter'].split(".")]
-    if item['test_demand'][0]['name'] in ['文档审查', '静态分析', '代码审查', '代码走查']:
+    # test_demand 可能为空，避免索引越界
+    test_demand = item.get('test_demand') or []
+    if test_demand and test_demand[0]['name'] in ['文档审查', '静态分析', '代码审查', '代码走查']:
         return [0, 0, 0, 0]
     return big_num

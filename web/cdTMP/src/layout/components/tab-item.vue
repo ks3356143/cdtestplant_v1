@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PropType, computed } from "vue"
+import { computed } from "vue"
 import { useRouter, useRoute } from "vue-router"
 import { useTabBarStore } from "@/store"
 import { DEFAULT_ROUTE_NAME, REDIRECT_ROUTE_NAME } from "@/router/constants"

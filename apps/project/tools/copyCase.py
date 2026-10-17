@@ -15,8 +15,12 @@ def case_move_to_test(project_id: int, case_key: str, demand_key: str) -> Tuple[
         raise HttpError(500, message='无法移动到自己所属测试项里面')
     project_qs = get_object_or_404(Project, id=project_id)
     case = project_qs.pcField.filter(key=case_key).first()
+    if not case:
+        raise HttpError(500, message=f'用例不存在：{case_key}')
     demand_origin = case.test  # 未变化之前case对应的测试项
     demand = project_qs.ptField.filter(key=demand_key).first()  # 新的demand对象
+    if not demand:
+        raise HttpError(500, message=f'测试项不存在：{demand_key}')
     case.ident = demand.ident
     case.test = demand
     case.round = demand.round
@@ -38,7 +42,11 @@ def case_copy_to_test(project_id: int, case_key: str, demand_key: str) -> Tuple[
     # 初始化内容
     project_qs = get_object_or_404(Project, id=project_id)
     case = project_qs.pcField.filter(key=case_key).first()
+    if not case:
+        raise HttpError(500, message=f'用例不存在：{case_key}')
     demand = project_qs.ptField.filter(key=demand_key).first()
+    if not demand:
+        raise HttpError(500, message=f'测试项不存在：{demand_key}')
     origin_case = deepcopy(case)
     case.id = None
     case.ident = demand.ident
@@ -60,8 +68,12 @@ def case_to_case_copy_or_move(project_id: int, drag_key: str, drop_key: str, mov
     """待优化和上面一样：TODO:封装多个函数理清思路"""
     project_qs = get_object_or_404(Project, id=project_id)
     drag_case = project_qs.pcField.filter(key=drag_key).first()
+    if not drag_case:
+        raise HttpError(500, message=f'被拖拽用例不存在：{drag_key}')
     drag_demand = drag_case.test
     drop_case = project_qs.pcField.filter(key=drop_key).first()
+    if not drop_case:
+        raise HttpError(500, message=f'目标用例不存在：{drop_key}')
     drop_demand = drop_case.test
     # 判断是否移动到同级
     same_root_flag = False

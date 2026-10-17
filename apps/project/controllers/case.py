@@ -184,6 +184,8 @@ class CaseController(ControllerBase):
             # 查询当前测试项下case数量，以设置case的key
             demand_key = case_data.parent_key
             demand_obj = demands.filter(key=demand_key).first()
+            if not demand_obj:
+                return ChenResponse(status=400, code=60004, message=f'测试项不存在：{demand_key}，请检查')
             case_count = demand_obj.tcField.count()
             key_string = ''.join([demand_key, "-", str(case_count)])
             keys.append(key_string)
@@ -385,10 +387,10 @@ class CaseController(ControllerBase):
     @route.post("/case/personReplace/", url_name='case-person-replace')
     @transaction.atomic
     def bulk_replace_person(self, payload: PersonReplaceSchema):
-        if payload.selectRows:
-            first_case = Case.objects.filter(id=payload.selectRows[0]).first()
-            if first_case:
-                check_project_access(first_case.project, self.context.request.user)
+        # 访问控制：对整批选中的用例逐一校验，避免只检查第一行造成跨项目篡改（自主访问控制 7.1.3）
+        selected_case_qs = Case.objects.filter(id__in=payload.selectRows)
+        for project in {c.project for c in selected_case_qs}:
+            check_project_access(project, self.context.request.user)
         # 替换设计人员
         case_qs = Case.objects.filter(id__in=payload.selectRows)
         if payload.designPerson != '不替换' and payload.designPerson != '':
@@ -402,13 +404,13 @@ class CaseController(ControllerBase):
     @route.post("/case/timeReplace/", url_name='case-time-replace')
     @transaction.atomic
     def bulk_replace_time(self, payload: ExetimeReplaceSchema):
-        if payload.selectRows:
-            first_case = Case.objects.filter(id=payload.selectRows[0]).first()
-            if first_case:
-                check_project_access(first_case.project, self.context.request.user)
         selected_case_ids = payload.selectRows
         if not selected_case_ids:
             return ChenResponse(status=500, code=50999, message='未选择行!', data="")
+        # 访问控制：对整批选中的用例逐一校验，避免只检查第一行造成跨项目篡改（自主访问控制 7.1.3）
+        selected_case_qs = Case.objects.filter(id__in=payload.selectRows)
+        for project in {c.project for c in selected_case_qs}:
+            check_project_access(project, self.context.request.user)
         # 随机日期
         start, end = payload.exetime
         start_date = datetime.strptime(start, "%Y-%m-%d").date()
@@ -434,6 +436,9 @@ class CaseController(ControllerBase):
         check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         previous_round_obj = project_obj.pField.filter(key=int(round_key) - 1).first()
+        # 无上一轮次（首轮或上一轮已被删除）时返回空数据，避免崩溃
+        if not previous_round_obj:
+            return ChenResponse(message='获取成功', data=[])
         # dut -> design
         data_list = []
         for dut in previous_round_obj.rdField.all():

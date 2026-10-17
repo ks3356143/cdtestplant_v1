@@ -20,7 +20,10 @@ class DictController(ControllerBase):
     @route.get("/dataDict/list", response=List[DictItemOut], url_name="dict-list")
     def get_dict(self, code: str):
         """传入code类型：例如testType，返回字典Item信息"""
-        dict_qs = Dict.objects.get(code=code)
+        # code 非唯一且可空：用 filter().first() 安全查询，避免缺失/重复时抛 500
+        dict_qs = Dict.objects.filter(code=code).first()
+        if not dict_qs:
+            return []
         items = dict_qs.dictItem.filter(status='1')
         return items
 
@@ -96,7 +99,7 @@ class DictController(ControllerBase):
         # 先根据dict_id查询出dict
         dict_qs = Dict.objects.get(id=payload.dict_id)
         qs1 = dict_qs.dictItem.filter(title=payload.title)
-        if len(qs1) > 0:
+        if qs1.exists():
             return ChenResponse(code=400, status=400, message='字典标签重复，请检查')
         # 计算key值应该为多少
         key_number = str(len(dict_qs.dictItem.all()) + 1)
@@ -112,7 +115,8 @@ class DictController(ControllerBase):
     @transaction.atomic
     def update(self, id: int, payload: DictItemUpdateInputSchema):
         dictitem_qs = DictItem.objects.get(id=id)
-        for attr, value in payload.dict().items():
+        # 部分更新：仅覆盖用户实际传入的字段，避免缺失字段被置为 None 清空原值
+        for attr, value in payload.dict(exclude_none=True).items():
             setattr(dictitem_qs, attr, value)
         dictitem_qs.save()
         return dictitem_qs
@@ -121,8 +125,12 @@ class DictController(ControllerBase):
     @route.delete("/dictType/realDeleteItem", url_name="dictitem-delete", permissions=[IsSystemAdmin])
     @transaction.atomic
     def delete_dictitem(self, data: DeleteSchema):
-        # 根据其中一个id查询出dict的id
-        dictItem_single = DictItem.objects.filter(id=data.ids[0])[0]
+        if not data.ids:
+            return ChenResponse(code=400, status=400, message="未选择要删除的字典条目")
+        # 根据其中一个id查询出dict的id（用 first() 避免 id 不存在时 IndexError）
+        dictItem_single = DictItem.objects.filter(id=data.ids[0]).first()
+        if not dictItem_single:
+            return ChenResponse(code=400, status=400, message="要删除的字典条目不存在")
         dict_id = dictItem_single.dict.id
         multi_delete(data.ids, DictItem)
         index = 1
@@ -143,7 +151,7 @@ class DictController(ControllerBase):
         if dict_single:
             # 再判断是否dictItem重复
             qs = dict_single.dictItem.filter(title=data.title)
-            if len(qs) > 0:
+            if qs.exists():
                 return ChenResponse(code=400, status=400, message='字典标签重复，请检查')
             # 查看key值应该为多少了
             key_number = str(len(dict_single.dictItem.all()) + 1)
@@ -162,7 +170,7 @@ class DictController(ControllerBase):
         # 先根据dict_id查询出dict
         dict_qs = Dict.objects.get(code=payload.code)
         qs1 = dict_qs.dictItem.filter(title=payload.title)
-        if len(qs1) > 0:
+        if qs1.exists():
             return ChenResponse(code=400, status=400, message='字典标签重复，请检查')
         # 计算key值应该为多少
         key_number = str(len(dict_qs.dictItem.all()) + 1)

@@ -12,7 +12,7 @@ class Total(Schema):
 class MyPagination(PaginationBase):
     class Input(Schema):
         pageSize: int = Field(10, gt=0)
-        page: int = Field(1, gt=-1)
+        page: int = Field(1, ge=1)
 
     class Output(Schema):
         items: List[Any]

@@ -1,8 +1,6 @@
 from copy import deepcopy
 from pathlib import Path
 from ninja_extra import api_controller, ControllerBase, route
-from ninja_extra.permissions import IsAuthenticated
-from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.db.models import QuerySet
 from docxtpl import DocxTemplate
@@ -108,7 +106,7 @@ class GenerateControllerHJL(ControllerBase):
         project_obj = get_object_or_404(Project, id=id)
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
-            return None
+            return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         demand_prefix = '3.1'
         # 循环每轮轮次对象
         for hround in hround_list:

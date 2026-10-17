@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, inject, provide, ref, watch } from "vue"
+import { getCurrentInstance, ref, watch } from "vue"
 import tool from "@/utils/tool"
 import { get, isArray, isBoolean, isEmpty, isFunction } from "lodash-es"
 import { loadDict } from "@cps/ma-form/js/networkRequest.js"

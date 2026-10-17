@@ -31,13 +31,13 @@ class ChenNinjaAPI(NinjaExtraAPI):
                 std_data['data']['code'] = HTTP_USER_PASSWORD_ERROR_CODE  # TODO:后续单独以枚举方式定义code
             else:
                 std_data['message'] = '您的token已过期，请重新登录'
-        # 3.因为前端是获取message，所以这里处理
-        elif status != 200 and std_data['message'] == '请求成功':
-            std_data['message'] = '请求失败，请检查'
+        # 3.因为前端是获取message，所以这里处理（404/422 判断需排在通用失败分支之前，否则永远不可达）
         elif status == 404:
             std_data['message'] = '未找到相应的内容，请检查参数'
         elif status == 422:
             std_data['message'] = '请求的参数或响应数据未通过验证'
+        elif status != 200 and std_data['message'] == '请求成功':
+            std_data['message'] = '请求失败，请检查'
         content = self.renderer.render(request, std_data, response_status=status)
         content_type = "{}; charset={}".format(
             self.renderer.media_type, self.renderer.charset

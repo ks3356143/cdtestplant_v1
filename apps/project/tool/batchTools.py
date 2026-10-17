@@ -89,8 +89,12 @@ def parse_case_content_string(content: str):
         if "@" not in line:
             message = f"第{line_number}行没有使用@符号分割，请检查!"
             return ChenResponse(status=200, code=60001, data=line_number, message=message)
-        # 这里必然有@，组装current_step
-        [operation, expect] = line.strip().split("@")
+        # 这里必然有@，组装current_step（一行内@多于1个时给出明确错误，避免 ValueError 直冒 500）
+        try:
+            [operation, expect] = line.strip().split("@")
+        except ValueError:
+            message = f"第{line_number}行@符号数量不正确，请检查!"
+            return ChenResponse(status=200, code=60005, data=line_number, message=message)
         # 错误处理两种情况，操作为空，预期为空
         if not operation.strip():
             message = f"第{line_number}行@符号前面的输入内容为空，请检查!"

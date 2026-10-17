@@ -82,9 +82,8 @@ class RoundController(ControllerBase):
         # 标识去重
         exist_round = Round.objects.filter(project__id=project_id)
         for exist_r in exist_round:
-            if exist_r.id != int(project_id):
-                if exist_r.ident == asert_dict['ident']:
-                    return ChenResponse(code=400, status=400, message='标识和其他重复')
+            if exist_r.ident == asert_dict['ident']:
+                return ChenResponse(code=400, status=400, message='标识和其他重复')
         Round.objects.create(**asert_dict)
         return ChenResponse(message="新增轮次成功")
 
@@ -124,28 +123,21 @@ class RoundController(ControllerBase):
     def post_influence(self, data: InfluenceInputSchema):
         check_project_access_by_id(data.id, self.context.request.user)
         round_obj = Round.objects.filter(project_id=data.id, key=data.round_key).first()
+        if not round_obj:
+            return ChenResponse(status=400, code=400, message='轮次不存在，请检查...')
         influence_area_qs = InfluenceArea.objects.filter(round=round_obj)
         if influence_area_qs.exists():
+            # 已存在则先删除旧的关联项（删除后重建）
             influence_area_obj = influence_area_qs.first()
             influence_area_obj.influence_items.all().delete()
-            # 先删除再创建
-            data_list = []
-            for item in data.item_list:
-                new_item = InfluenceItem(influence=influence_area_obj,
-                                         change_type=item.change_type,
-                                         change_influ=item.change_influ,
-                                         change_des=item.change_des,
-                                         effect_cases=item.effect_cases)
-                data_list.append(new_item)
-            InfluenceItem.objects.bulk_create(data_list)
         else:
-            parent_obj = InfluenceArea.objects.create(round=round_obj)
-            data_list = []
-            for item in data.item_list:
-                new_item = InfluenceItem(influence=parent_obj,
-                                         change_type=item.change_type,
-                                         change_influ=item.change_influ,
-                                         change_des=item.change_des,
-                                         effect_cases=item.effect_cases)
-                data_list.append(new_item)
-            InfluenceItem.objects.bulk_create(data_list)
+            influence_area_obj = InfluenceArea.objects.create(round=round_obj)
+        data_list = []
+        for item in data.item_list:
+            new_item = InfluenceItem(influence=influence_area_obj,
+                                     change_type=item.change_type,
+                                     change_influ=item.change_influ,
+                                     change_des=item.change_des,
+                                     effect_cases=item.effect_cases)
+            data_list.append(new_item)
+        InfluenceItem.objects.bulk_create(data_list)

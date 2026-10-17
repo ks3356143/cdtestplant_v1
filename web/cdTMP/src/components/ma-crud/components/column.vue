@@ -236,16 +236,12 @@
 </template>
 
 <script setup>
-import { inject, ref, provide } from "vue"
+import { inject } from "vue"
 import config from "@/config/crud"
-import uploadConfig from "@/config/upload"
 import { Message } from "@arco-design/web-vue"
 import { isFunction, get, isArray, isObject } from "lodash-es"
 import CustomRender from "../js/custom-render"
 import tool from "@/utils/tool"
-import commonApi from "@/api/common"
-
-import formInput from "@cps/ma-form/formItem/form-input.vue"
 
 const emit = defineEmits(["refresh", "showImage"])
 const props = defineProps({

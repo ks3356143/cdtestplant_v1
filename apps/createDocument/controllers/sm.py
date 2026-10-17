@@ -5,9 +5,6 @@ from ninja_extra import ControllerBase, api_controller, route
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-# 认证和权限
-from ninja_extra.permissions import IsAuthenticated
-from ninja_jwt.authentication import JWTAuth
 # 导入模型
 from apps.project.models import Project
 from apps.dict.models import Dict

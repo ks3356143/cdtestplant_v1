@@ -113,8 +113,11 @@ class MyHTMLParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if tag == 'img':
-            img_base64 = attrs[0][1]
-            self.allStrList.append(img_base64)
+            # 按属性名查找 src（无属性的 <img> 会 IndexError；attrs[0] 也未必是 src）
+            for name, value in attrs:
+                if name == 'src':
+                    self.allStrList.append(value)
+                    break
 
     def handle_endtag(self, tag):
         pass
@@ -317,7 +320,13 @@ def create_problem_table(problems):
     }]
 
     for problem in problems:
-        index = int(problem.grade) - 1
+        # grade 为空或非 1-4 时，int() 会抛错或索引越界，这里做防护并跳过该问题
+        try:
+            index = int(problem.grade) - 1
+        except (TypeError, ValueError):
+            continue
+        if index < 0 or index >= len(res_list):
+            continue
         if problem.type == '1':
             res_list[index]['other_count'] += 1
         elif problem.type == '2':
@@ -379,18 +388,27 @@ def create_problem_type_table(problems):
     }]
 
     for problem in problems:
-        index = int(problem.grade) - 1
-        belong_demand: TestDemand = problem.case.all()[0].test
-        if belong_demand.testType == '8':  # 属于文档审查问题
-            res_list[index]['wd_count'] += 1
-        elif belong_demand.testType == '15':  # 属于静态分析问题
-            res_list[index]['jt_count'] += 1
-        elif belong_demand.testType == '2' or belong_demand.testType == '3':  # 属于代码审查和走查
-            res_list[index]['dm_count'] += 1
-        else:  # 属于动态发现问题
-            res_list[index]['dt_count'] += 1
+        # grade 为空或非 1-4 时，int() 会抛错或索引越界，这里做防护并跳过该问题
+        try:
+            index = int(problem.grade) - 1
+        except (TypeError, ValueError):
+            continue
+        if index < 0 or index >= len(res_list):
+            continue
+        # 判空：问题单可能未关联任何用例，problem.case.all()[0] 会 IndexError
+        first_case = problem.case.first()
+        if first_case is not None:
+            belong_demand: TestDemand = first_case.test
+            if belong_demand.testType == '8':  # 属于文档审查问题
+                res_list[index]['wd_count'] += 1
+            elif belong_demand.testType == '15':  # 属于静态分析问题
+                res_list[index]['jt_count'] += 1
+            elif belong_demand.testType == '2' or belong_demand.testType == '3':  # 属于代码审查和走查
+                res_list[index]['dm_count'] += 1
+            else:  # 属于动态发现问题
+                res_list[index]['dt_count'] += 1
 
-        # 是否归零
+        # 是否归零（与是否关联用例无关）
         if problem.status == '1':
             res_list[index]['closed_count'] += 1
         else:

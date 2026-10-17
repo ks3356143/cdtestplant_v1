@@ -1,4 +1,4 @@
-import { isEmpty, isFunction, get, set } from "lodash-es"
+import { isEmpty, isFunction, get } from "lodash-es"
 
 export const containerItems = ["tabs", "table", "card", "grid", "grid-tailwind", "children-form"]
 export const inputType = ["input", "input-password", "input-search"]

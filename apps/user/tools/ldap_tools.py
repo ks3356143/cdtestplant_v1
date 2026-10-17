@@ -10,7 +10,6 @@ server_uri = env('AUTH_LDAP_SERVER_URI', default='ldap://dns.paisat.cn:389')
 dn = env('AUTH_LDAP_BIND_DN',default='CN=Administrator,CN=Users,DC=sstc,DC=ctu')
 password = env('AUTH_LDAP_BIND_PASSWORD',default='WXWX2019!!!!!!')
 base_dn = env('BASE_DN',default='OU=all,DC=sstc,DC=ctu')
-filter_str = env('FILTER_STR',default='(sAMAccountName=%(user)s)')
 
 # 3. 连接LDAP服务器进行操作
 def load_ldap_users(url=server_uri,
@@ -29,9 +28,11 @@ def load_ldap_users(url=server_uri,
     temp_users = []
     for user in ldap_users:
         username_field = user[-1]['sAMAccountName'][0]
-        email_field = user[-1].get('mail', username_field + b'@sstc.ctu')[0]
-        if isinstance(email_field, int):
-            email_field = username_field + b'@sstc.ctu'
+        # mail 为 LDAP 属性列表（值可能是 bytes）；取列表首项，缺失/为空时回退到默认邮箱
+        # （原实现写成 .get('mail', 默认)[0]：mail 缺失时默认值是 bytes，[0] 返回 int，
+        #  再靠 isinstance(int) 分支兜底，逻辑晦涩；此处直接按真实类型处理）
+        mail_values = user[-1].get('mail')
+        email_field = mail_values[0] if mail_values else username_field + b'@sstc.ctu'
         user_dict = {
             'username': username_field.decode(),
             'name': user[-1]['name'][0].decode(),
@@ -44,7 +45,8 @@ def load_ldap_users(url=server_uri,
             # 如果存在则更新
             update_flag = False
             c_user = db_user.first()
-            if c_user != user_dict['username']:
+            # 与字符串比较（原实现拿模型实例与字符串比较恒为 True，导致每次同步都重置密码）
+            if c_user.username != user_dict['username']:
                 c_user.username = user_dict['username']
                 update_flag = True
             if c_user.name != user_dict['name']:

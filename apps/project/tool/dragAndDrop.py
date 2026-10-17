@@ -16,6 +16,10 @@ def DesignDrapAtoB(a: Design,
         list_qs.insert(b_index, a)
     elif pos == 1:
         list_qs.insert(b_index + 1, a)
+    else:
+        # 兜底：pos 非 -1/1（如前端传 0）时按“放到 b 后面”处理，
+        # 避免元素已 remove 但两个分支都不命中导致从未插回
+        list_qs.insert(b_index + 1, a)
     # 重新完成排序后调整key
     prefix = "".join([a.dut.key, "-"])
     for index, obj in enumerate(list_qs):

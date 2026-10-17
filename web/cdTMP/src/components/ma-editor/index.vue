@@ -77,8 +77,6 @@ let content = computed({
     }
 })
 
-const list = ref([])
-
 /**
  * 辅助函数：遍历元素和子元素的style样式
  */
@@ -136,7 +134,7 @@ function removeCommentNodes(node) {
 const { theme } = storeToRefs(appStore)
 
 const initConfig = reactive({
-    api_key: "ae9bz8l50ymnme8mtw1vp6prbj8n6ow59evb1nthdivzlk8s",
+    api_key: import.meta.env.VITE_TINYMCE_KEY || "",
     menubar: false, // 菜单栏显隐
     language_url: "/tinymce/i18n/zh_CN.js",
     language: "zh_CN",
@@ -177,26 +175,7 @@ const initConfig = reactive({
 
 const editorKey = ref(new Date().getTime())
 
-// 图片作为img的base64处理
-watch(
-    () => list.value,
-    (imgs) => {
-        let tmp = ""
-        imgs.map((img) => {
-            if (
-                img.indexOf(".jpg") > -1 ||
-                img.indexOf(".png") > -1 ||
-                img.indexOf(".bmp") > -1 ||
-                img.indexOf(".jpeg") > -1 ||
-                img.indexOf(".svg") > -1 ||
-                img.indexOf(".gif") > -1
-            ) {
-                tmp += `<img src=${img} width="100%" />`
-            }
-        })
-        content.value = content.value ? content.value + tmp : tmp
-    }
-)
+// 内容变化时向父组件派发 change 事件
 watch(
     () => content.value,
     (vl) => {

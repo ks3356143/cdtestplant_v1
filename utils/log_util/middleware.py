@@ -66,7 +66,7 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             'request_os': get_os(request),
             'request_browser': get_browser(request),
             # 'request_msg': request.session.get('request_msg'),
-            'status': True if response.data.get('code') in [2000, ] else False,
+            'status': True if response.data.get('code') in [200, ] else False,
             'json_result': {"code": response.data.get('code'), "msg": response.data.get('result')},
         }
         operation_log, creat = OperationLog.objects.update_or_create(defaults=info, id=self.operation_log_id)

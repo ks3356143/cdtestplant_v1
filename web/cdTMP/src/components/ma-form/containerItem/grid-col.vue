@@ -28,7 +28,6 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance } from "vue"
 import { getComponentName } from "../js/utils.js"
 const props = defineProps({ component: Object })
 </script>

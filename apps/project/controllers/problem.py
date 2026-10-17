@@ -257,7 +257,9 @@ class ProblemController(ControllerBase):
         problems = Problem.objects.filter(id__in=data.ids)
         if not problems.exists():
             return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选取删除内容')
-        check_project_access(problems.first().project, self.context.request.user)
+        # 访问控制：对整批选中问题单逐一校验，避免只检查第一条造成跨项目删除（自主访问控制 7.1.3）
+        for project in {p.project for p in problems}:
+            check_project_access(project, self.context.request.user)
         # 4.查询出当前项目id
         project_id = None
         # 2.循环该取出problem
@@ -311,8 +313,12 @@ class ProblemController(ControllerBase):
     def relate_problem(self, case_key: str, problem_id: int, val: bool):  # val是将要变成的值
         # 先判断将要变成的值是否为True
         problem_obj: Problem = Problem.objects.filter(id=problem_id).first()
+        if not problem_obj:
+            return ChenResponse(code=400, status=400, message='问题单不存在，请检查...', data={'isOK': False})
         project_id = problem_obj.project_id  # 根据问题单反推项目id
         case_obj = Case.objects.filter(project_id=project_id, key=case_key).first()
+        if not case_obj:
+            return ChenResponse(code=400, status=400, message='测试用例不存在，请检查...', data={'isOK': False})
         flag = False  # 是否操作成功的标志
         if val:
             # 这分支是进行关联操作

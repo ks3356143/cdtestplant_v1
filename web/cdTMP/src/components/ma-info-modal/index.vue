@@ -37,8 +37,7 @@
 <script setup>
 import MaInfo from "../ma-info/index.vue"
 import { getCurrentInstance, reactive, ref, watch } from "vue"
-import { isArray, isFunction, isObject, isString } from "lodash-es"
-import { isComponent } from "@arco-design/web-vue/es/_utils/vue-utils"
+import { isArray, isString } from "lodash-es"
 import { setModalSizeEvent } from "@/utils/common"
 const emit = defineEmits(["visible", "validateError", "open", "cancel", "close"])
 const app = getCurrentInstance().appContext.app

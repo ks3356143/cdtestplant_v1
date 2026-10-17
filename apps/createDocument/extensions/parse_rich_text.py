@@ -96,8 +96,9 @@ class RichParser:
                 final_list.append(oneline)
         if len(final_list) <= 0:
             final_list.append("")
-        # 针对tinymce中，粘贴表格最后一行显示句号问题，这里统一删除
-        if final_list[-1] == '\xa0':
+        # 针对tinymce中，粘贴表格最后一行显示句号问题，这里统一删除末尾空白行
+        # 注意：上面已将 \xa0 替换为普通空格，故这里判断“strip 后为空”的行，且避免清空整个列表
+        if len(final_list) > 1 and isinstance(final_list[-1], str) and final_list[-1].strip() == '':
             final_list.pop()
         return final_list
 

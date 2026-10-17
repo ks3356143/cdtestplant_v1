@@ -4,15 +4,15 @@
 -->
 <template>
     <div class="w-full p-2 resource-container h-full lg:flex lg:justify-between rounded-xs">
-        <a-modal v-model:visible="openNetworkModal" :ok-text="$t('sys.save')" :on-before-ok="saveNetworkImg" draggable>
-            <template #title>{{ $t("maResource.saveNetworkImage") }}</template>
-            <a-input v-model="networkImg" class="mb-3" :placeholder="$t('maResource.networkImageNotice')" allow-clear />
+        <a-modal v-model:visible="openNetworkModal" ok-text="保存" :on-before-ok="saveNetworkImg" draggable>
+            <template #title>保存网络图片</template>
+            <a-input v-model="networkImg" class="mb-3" placeholder="请输入网络图片地址" allow-clear />
             <a-image :src="networkImg ?? ''" width="100%" style="min-height: 150px" />
         </a-modal>
         <div class="lg:w-1/5 w-full p-2 shadow-sm">
             <ma-tree-slider
                 :data="sliderData"
-                :search-placeholder="$t('maResource.searchResource')"
+                search-placeholder="搜索资源"
                 :field-names="{ title: 'title', key: 'key' }"
                 @click="handlerClick"
                 icon="icon-folder"
@@ -24,17 +24,17 @@
                 <div class="flex">
                     <ma-upload v-model="uploadFile" multiple :show-list="false" type="chunk" :resource="false" />
                     <a-button class="ml-3" @click="openNetworkModal = true">
-                        <icon-image /> {{ $t("maResource.saveNetworkImage") }}
+                        <icon-image /> 保存网络图片
                     </a-button>
                 </div>
                 <a-input
                     v-model="filename"
                     class="input-search lg:mt-0 mt-2"
-                    :placeholder="$t('maResource.searchFileNotice')"
+                    placeholder="输入文件名搜索"
                     @press-enter="searchFile"
                 />
             </div>
-            <a-spin :loading="resourceLoading" :tip="$t('maResource.loadingText')" class="h-full">
+            <a-spin :loading="resourceLoading" tip="加载中..." class="h-full">
                 <div class="resource-list mt-2" ref="rl" v-if="attachmentList && attachmentList.length > 0">
                     <div
                         class="item rounded-xs"
@@ -76,9 +76,7 @@
                     v-model:page-size="pageSize"
                     @change="changePage"
                 />
-                <a-button type="primary" @click="selectComplete" class="mt-3 lg:mt-0">{{
-                    $t("maResource.ok")
-                }}</a-button>
+                <a-button type="primary" @click="selectComplete" class="mt-3 lg:mt-0">确定</a-button>
             </div>
         </div>
     </div>
@@ -90,11 +88,9 @@ import MaUpload from "@cps/ma-upload/index.vue"
 import uploadConfig from "@/config/upload"
 import MaTreeSlider from "@cps/ma-treeSlider/index.vue"
 import commonApi from "@/api/common"
-import { xor } from "lodash-es"
 import tool from "@/utils/tool"
 import { Message } from "@arco-design/web-vue"
 
-const { t } = useI18n()
 const sliderData = ref([])
 const defaultKey = ref(["all"])
 const uploadFile = ref()
@@ -212,7 +208,7 @@ const changePage = async (page) => {
 
 const saveNetworkImg = async (done) => {
     if (!networkImg.value) {
-        Message.error(t("maResource.networkImageNotice"))
+        Message.error("请输入网络图片地址")
         done(false)
         return
     }

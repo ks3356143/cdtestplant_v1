@@ -10,7 +10,3 @@ class DocNameEnum(Enum):
     hjl = 5
     bg = 6
     wtd = 7
-
-if __name__ == '__main__':
-    print(DocNameEnum.dg)
-    print(DocNameEnum.dg.value)

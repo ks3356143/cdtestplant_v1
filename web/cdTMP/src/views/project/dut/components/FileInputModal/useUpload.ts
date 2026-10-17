@@ -1,5 +1,5 @@
 import { ref } from "vue"
-import { Message, Notification } from "@arco-design/web-vue"
+import { Notification } from "@arco-design/web-vue"
 
 const templateDemandObj = {
     chapter: "",

@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, toRef, watch } from "vue"
+import { inject, ref } from "vue"
 
 const visible = ref(false)
 const bordered = ref("show")

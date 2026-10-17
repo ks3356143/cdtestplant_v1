@@ -279,7 +279,7 @@
 
 <script setup>
 import config from "@/config/crud"
-import { ref, watch, provide, nextTick, onMounted, onUnmounted, computed } from "vue"
+import { ref, watch, provide, nextTick, onMounted, onUnmounted } from "vue"
 import defaultOptions from "./js/defaultOptions"
 import { loadDict } from "@cps/ma-form/js/networkRequest.js"
 import ColumnService from "@cps/ma-form/js/columnService"
@@ -291,7 +291,6 @@ import MaImport from "./components/import.vue"
 import MaColumn from "./components/column.vue"
 import MaContextMenu from "./components/contextMenu.vue"
 import checkAuth from "@/directives/auth/auth"
-import checkRole from "@/directives/role/role"
 import { Message } from "@arco-design/web-vue"
 import { request } from "@/utils/request"
 import tool from "@/utils/tool"
