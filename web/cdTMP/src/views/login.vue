@@ -43,7 +43,9 @@
                         </a-input-password>
                     </a-form-item>
 
+                    <!-- 图形验证码：仅特权账号（管理员/安全员/审计员）登录时按需出现 -->
                     <a-form-item
+                        v-if="needCaptcha"
                         field="code"
                         :hide-label="true"
                         :rules="[
@@ -80,7 +82,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, onMounted } from "vue"
+import { reactive, ref } from "vue"
 import loginAPI from "@/api/login"
 import { useUserStore } from "@/store"
 import { useRouter, useRoute } from "vue-router"
@@ -92,6 +94,9 @@ const userStore = useUserStore()
 // 绑定登录form的数据
 const form = reactive({ username: "", password: "", code: "", captcha_key: "" })
 // 后端图形验证码（三权分立：特权角色登录双因子）
+// needCaptcha 默认 false：普通用户看不到验证码框；特权账号登录时由后端业务码触发显示，
+// 因此登录页不需要任何"查该账号是否特权"的探测接口，特权账号名单不可被枚举
+const needCaptcha = ref(false)
 const captchaImage = ref("")
 const refreshCaptcha = async () => {
     try {
@@ -103,7 +108,6 @@ const refreshCaptcha = async () => {
         captchaImage.value = ""
     }
 }
-onMounted(refreshCaptcha)
 // arco表单loading
 const loading = ref(null)
 // 点击登录按钮
@@ -117,7 +121,7 @@ const handleSubmit = async ({ values, errors }) => {
         // 登录逻辑需要用到userStore
         try {
             const login_res = await userStore.login(form)
-            if (login_res) {
+            if (login_res && login_res.ok) {
                 const { redirect, ...otherQuery } = router.currentRoute.value.query
                 router.push({
                     name: redirect || "workplace",
@@ -127,13 +131,19 @@ const handleSubmit = async ({ values, errors }) => {
                 })
                 // 加载LDAP数据/内网/暂定
                 await userApi.loadLDAPUsers()
-            } else {
                 return
             }
+            // 特权账号首次登录：后端要求图形验证码，此时才显示输入框并拉取图片
+            if (login_res && login_res.needCaptcha) {
+                needCaptcha.value = true
+                await refreshCaptcha()
+            } else if (needCaptcha.value) {
+                // 验证码一次性使用，已显示时失败需刷新
+                refreshCaptcha()
+            }
+            errorMessage.value = login_res && login_res.message
         } catch (err) {
             errorMessage.value = err.message
-            // 验证码一次性使用，失败后刷新
-            refreshCaptcha()
         } finally {
             loading.value = false
         }

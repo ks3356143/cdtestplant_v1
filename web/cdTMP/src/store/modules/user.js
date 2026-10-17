@@ -65,21 +65,24 @@ const useUserStore = defineStore("user", {
         },
 
         // login函数，传一个form信息
+        // 返回 { ok, needCaptcha?, message? }：needCaptcha 为真时由登录页显示验证码输入框
         login(form) {
             const form_data = { username: form.username, password: form.password, captcha_key: form.captcha_key, captcha_code: form.code }
             return loginAPI
                 .login(form_data)
                 .then((res) => {
-                    if (res.success === true) {
+                    if (res.success === true && res.data && res.data.token) {
                         this.setToken(res.data.token)
-                        // this.setToken(res.data.token)
-                        return true
-                    } else {
-                        return false
+                        return { ok: true }
                     }
+                    // 特权账号：后端提示需要图形验证码（B 方案，登录页按需显示）
+                    if (res.data && res.data.need_captcha) {
+                        return { ok: false, needCaptcha: true, message: res.message }
+                    }
+                    return { ok: false, message: res.message }
                 })
                 .catch((e) => {
-                    return false
+                    return { ok: false, message: e && e.message }
                 })
         },
         logoutCallBack() {

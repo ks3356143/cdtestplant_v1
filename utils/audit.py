@@ -47,13 +47,14 @@ def get_event_types():
             for code in EVENT_LABELS]
 
 
-def audit_log(request, event_type: str, detail: str, *, user=None, success: bool = True):
+def audit_log(request, event_type: str, detail: str, *, user=None, username: str = None, success: bool = True):
     """
     写入统一审计日志。
     :param request: 当前请求（取 IP/UA），可为 None（非 HTTP 场景）
     :param event_type: EVENT_* 常量之一
     :param detail: 事件描述（中文，供审计员阅读）
     :param user: 事件主体用户对象；None 时尝试 request.user
+    :param username: 主体账号；未认证场景（登录失败/锁定）取不到 request.user 时显式指定
     :param success: 事件结果（成功/失败）
     """
     try:
@@ -61,12 +62,14 @@ def audit_log(request, event_type: str, detail: str, *, user=None, success: bool
         if user is None and request is not None:
             user = getattr(request, 'user', None)
         actor = None
-        username = ''
+        uname = ''
         role = ''
         if user is not None and getattr(user, 'is_authenticated', False):
             actor = user
-            username = getattr(user, 'username', '') or ''
+            uname = getattr(user, 'username', '') or ''
             role = getattr(user, 'role', '') or ''
+        elif username:
+            uname = username
         ip = ''
         ua = ''
         if request is not None:
@@ -74,7 +77,7 @@ def audit_log(request, event_type: str, detail: str, *, user=None, success: bool
             ip = get_request_ip(request)
             ua = str(getattr(request, 'META', {}).get('HTTP_USER_AGENT', '') or '')
         AuditLog.objects.create(
-            username=username, role=role, actor=actor,
+            username=uname, role=role, actor=actor,
             event_type=event_type, detail=detail, success=success,
             ip=ip, user_agent=ua[:500],
         )

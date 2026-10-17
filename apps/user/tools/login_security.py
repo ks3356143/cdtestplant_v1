@@ -40,11 +40,11 @@ def record_login_failure(username: str, request=None):
         LoginLog.objects.create(username=username, remark='安全告警：连续登录失败超限，账号已锁定')
         audit_log(request, EVENT_ACCOUNT_LOCK,
                   f'安全告警：账号 {username} 连续登录失败 {fails} 次超限（{policy.login_max_attempts} 次阈值），已锁定 '
-                  f'{policy.login_lock_minutes} 分钟', success=False)
+                  f'{policy.login_lock_minutes} 分钟', username=username, success=False)
     else:
         cache.set(fail_key, fails, policy.login_window_minutes * 60)
         audit_log(request, EVENT_LOGIN_FAIL,
-                  f'账号 {username} 口令鉴别失败（第 {fails}/{policy.login_max_attempts} 次）', success=False)
+                  f'账号 {username} 口令鉴别失败（第 {fails}/{policy.login_max_attempts} 次）', username=username, success=False)
 
 
 def clear_login_failure(username: str):

@@ -27,6 +27,7 @@ from utils.chen_crud import multi_delete
 from apps.user.tools.ldap_tools import load_ldap_users
 from utils.audit import audit_log, EVENT_USER_CHANGE
 from utils.permissions import PRIVILEGED_ROLES
+from utils.codes import HTTP_CAPTCHA_REQUIRED
 
 Users = get_user_model()
 
@@ -72,6 +73,11 @@ class UserTokenController(TokenObtainPairController):
         # （鉴别失败处置在 schema.authenticate() 挂钩：锁定检查/失败累计/成功清零）
         login_user = Users.objects.filter(username=user_token.username).first()
         if login_user and getattr(login_user, 'role', None) in PRIVILEGED_ROLES:
+            # 未带验证码：以业务码请前端按需显示验证码输入框（登录页默认不显示，
+            # 普通用户零影响；不设探测接口，特权账号名单不可被枚举）
+            if not user_token.captcha_key or not user_token.captcha_code:
+                return ChenResponse(code=HTTP_CAPTCHA_REQUIRED, data={'need_captcha': True},
+                                    message='该账号登录需要图形验证码，请输入后重试')
             _verify_login_captcha(user_token.captcha_key, user_token.captcha_code)
         user_token.check_user_authentication_rule()
         return user_token.to_response_schema()
