@@ -1,6 +1,5 @@
 from typing import List
 
-from ninja import Query
 from ninja_extra import api_controller, ControllerBase, route
 from ninja_extra.permissions import IsAuthenticated
 from ninja_jwt.authentication import JWTAuth
@@ -8,7 +7,6 @@ from django.db import transaction
 
 from apps.project.models import NonrepudiationEvidence
 from apps.project.schemas.evidence import EvidenceOutSchema
-from utils.chen_pagination import MyPagination
 from utils.permissions import IsAuditor
 
 

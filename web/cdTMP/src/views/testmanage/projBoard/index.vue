@@ -6,7 +6,7 @@
             <!-- 时间线显示项目情况 -->
             <time-line :pInfo="loadingData" :projectId="route.params.projectId"></time-line>
             <!-- 以轮次为合集展示需求下面的测试项数、用例数，测试类型下面测试项和用例数量 -->
-            <round-info v-for="item in loadingData.statistics" :data="item"></round-info>
+            <round-info v-for="(item, index) in loadingData.statistics" :key="index" :data="item"></round-info>
         </a-layout-content>
     </div>
 </template>

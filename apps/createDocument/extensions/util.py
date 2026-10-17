@@ -27,60 +27,36 @@ def merge_all_cell(table: Table) -> None:
                     temp_text = cell.text
             index += 1
 
-def create_sm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
-    """生成最终说明文档工具函数"""
-    input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'sm' / template_name
+def _create_docx(template_name: str, context: dict, id: int, form_sub: str, output_sub: str) -> ChenResponse:
+    """统一文档生成：从 form_template/<form_sub>/ 读取模版，渲染后保存到 <output_sub>/"""
+    input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / form_sub / template_name
     doc = DocxTemplate(input_path)
     doc.render(context, autoescape=True)
     try:
-        doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/sm" / template_name)
+        doc.save(Path.cwd() / "media" / project_path(id) / output_sub / template_name)
         return ChenResponse(status=200, code=200, message="文档生成成功！")
     except PermissionError as e:
         return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+
+def create_sm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
+    """生成最终说明文档工具函数"""
+    return _create_docx(template_name, context, id, 'sm', 'output_dir/sm')
 
 def create_hsm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终回归测试说明文档工具函数"""
-    input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'hsm' / template_name
-    doc = DocxTemplate(input_path)
-    doc.render(context, autoescape=True)
-    try:
-        doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/hsm" / template_name)
-        return ChenResponse(status=200, code=200, message="文档生成成功！")
-    except PermissionError as e:
-        return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+    return _create_docx(template_name, context, id, 'hsm', 'output_dir/hsm')
 
 def create_dg_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终大纲文档工具函数"""
-    input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / template_name
-    doc = DocxTemplate(input_path)
-    doc.render(context, autoescape=True)
-    try:
-        doc.save(Path.cwd() / "media" / project_path(id) / "output_dir" / template_name)
-        return ChenResponse(status=200, code=200, message="文档生成成功！")
-    except PermissionError as e:
-        return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+    return _create_docx(template_name, context, id, 'dg', 'output_dir')
 
 def create_bg_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终报告文档工具函数"""
-    input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'bg' / template_name
-    doc = DocxTemplate(input_path)
-    doc.render(context, autoescape=True)
-    try:
-        doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/bg" / template_name)
-        return ChenResponse(status=200, code=200, message="文档生成成功！")
-    except PermissionError as e:
-        return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+    return _create_docx(template_name, context, id, 'bg', 'output_dir/bg')
 
 def create_wtd_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终问题单文档工具函数"""
-    input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'wtd' / template_name
-    doc = DocxTemplate(input_path)
-    doc.render(context, autoescape=True)
-    try:
-        doc.save(Path.cwd() / "media" / project_path(id) / "output_dir/wtd" / template_name)
-        return ChenResponse(status=200, code=200, message="文档生成成功！")
-    except PermissionError as e:
-        return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+    return _create_docx(template_name, context, id, 'wtd', 'output_dir/wtd')
 
 def get_round1_problem(project: Project) -> Any:
     """

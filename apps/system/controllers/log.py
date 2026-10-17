@@ -127,7 +127,6 @@ class LogController(ControllerBase):
     def integrity_check(self):
         """批量重算完整性标签并与存储摘要比对：发现底层篡改即告警并留痕"""
         from apps.project.tools.integrity import verify_all
-        from apps.system.models import DataIntegrityTag
         results = verify_all()
         broken = [r for r in results if not r['intact']]
         # 破损数据逐条审计告警（7.1.6 联动）；完好则记一次核查通过

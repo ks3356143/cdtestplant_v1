@@ -11,11 +11,20 @@ export default {
         })
     },
     /**
-     * 审计事件类型可用值
+     * 审计事件类型清单（{code,label,alert}，后端唯一事实源）
      */
     getAuditEventTypes() {
         return request({
             url: `/system/log/auditEventTypes`,
+            method: "get"
+        })
+    },
+    /**
+     * 数据完整性核查（7.1.7）：批量重算完整性标签并比对
+     */
+    integrityCheck() {
+        return request({
+            url: `/system/log/integrityCheck`,
             method: "get"
         })
     }

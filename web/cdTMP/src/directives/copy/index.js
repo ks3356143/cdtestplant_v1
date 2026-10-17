@@ -4,7 +4,11 @@ import { Message } from "@arco-design/web-vue"
 
 const copy = (el, binding) => {
     const { value } = binding
-    el.addEventListener("click", async () => {
+    // 若已绑定过监听，先移除旧的，避免 updated 时重复叠加监听
+    if (el._copyHandler) {
+        el.removeEventListener("click", el._copyHandler)
+    }
+    el._copyHandler = async () => {
         if (value && value !== "") {
             try {
                 await useClipboard().toClipboard(value)
@@ -15,7 +19,8 @@ const copy = (el, binding) => {
         } else {
             throw new Error(`need for copy content! Like v-copy="Hello World"`)
         }
-    })
+    }
+    el.addEventListener("click", el._copyHandler)
 }
 
 export default {

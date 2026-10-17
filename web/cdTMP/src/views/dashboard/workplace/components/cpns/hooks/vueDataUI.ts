@@ -160,7 +160,7 @@ function useVueDataUI(data: Ref<ResData>) {
         let scaleMax = 10
         if (data.value) {
             const countData = data.value.data.map((it) => it.count)
-            scaleMax = Math.max(...countData) || 10
+            scaleMax = Math.max(0, ...countData) || 10
         }
 
         // 动态生成颜色相关配置

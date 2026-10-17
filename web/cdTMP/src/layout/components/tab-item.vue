@@ -101,8 +101,10 @@ const disabledRight = computed(() => {
 const tagClose = (tag, idx) => {
     tabBarStore.deleteTag(idx, tag)
     if (props.itemData.fullPath === route.fullPath) {
-        const latest = tagList.value[idx - 1] // 获取队列的前一个tab
-        router.push({ name: latest.name })
+        const latest = tagList.value[idx - 1] ?? tagList.value[0] // 获取队列的前一个tab（首个tab被关闭时退回到当前首个）
+        if (latest) {
+            router.push({ name: latest.name })
+        }
     }
 }
 

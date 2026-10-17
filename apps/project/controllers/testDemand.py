@@ -1,5 +1,3 @@
-from multiprocessing.spawn import old_main_modules
-
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
 from ninja_jwt.authentication import JWTAuth

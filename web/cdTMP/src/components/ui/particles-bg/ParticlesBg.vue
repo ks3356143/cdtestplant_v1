@@ -80,6 +80,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     window.removeEventListener("resize", initCanvas)
+    if (rafId) window.cancelAnimationFrame(rafId)
 })
 
 watch([mouseX, mouseY], () => {
@@ -180,6 +181,7 @@ function remapValue(value: number, start1: number, end1: number, start2: number,
     return remapped > 0 ? remapped : 0
 }
 
+let rafId: number | undefined
 function animate() {
     clearContext()
     circles.value.forEach((circle, i) => {
@@ -228,6 +230,6 @@ function animate() {
             )
         }
     })
-    window.requestAnimationFrame(animate)
+    rafId = window.requestAnimationFrame(animate)
 }
 </script>

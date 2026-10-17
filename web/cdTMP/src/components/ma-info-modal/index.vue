@@ -12,7 +12,7 @@
         </template>
         <slot></slot>
         <slot name="body"></slot>
-        <a-card class="mt-2" :hoverable="true" v-for="info in layout">
+        <a-card class="mt-2" :hoverable="true" v-for="(info, layoutIndex) in layout" :key="layoutIndex">
             <ma-info
                 v-if="isArray(info?.child)"
                 :title="info.title"

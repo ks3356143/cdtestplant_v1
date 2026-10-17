@@ -98,7 +98,7 @@
                                             direction="vertical"
                                             v-model="value"
                                         >
-                                            <div v-for="item in filteredOptions" class="select-all-options">
+                                            <div v-for="item in filteredOptions" :key="item.value" class="select-all-options">
                                                 <a-checkbox :value="item.value">{{ item.label }}</a-checkbox>
                                             </div>
                                         </a-checkbox-group>

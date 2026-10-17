@@ -26,16 +26,19 @@ export default function useFetchData(fetchFn: Function, columns: Ref<any>) {
             page.value = 1
         }
         isFetching.value = true
-        const res = await fetchFn({
-            projectId,
-            round,
-            page: page.value, // 不要忘记value
-            pageSize: pageSize.value, // 不要忘记value
-            ...searchParams.value
-        })
-        tableData.value = res.data.items
-        total.value = res.data.pageInfo.total
-        isFetching.value = false
+        try {
+            const res = await fetchFn({
+                projectId,
+                round,
+                page: page.value, // 不要忘记value
+                pageSize: pageSize.value, // 不要忘记value
+                ...searchParams.value
+            })
+            tableData.value = res.data.items
+            total.value = res.data.pageInfo.total
+        } finally {
+            isFetching.value = false
+        }
     }
     // 首次加载时触发一次
     onMounted(() => {

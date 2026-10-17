@@ -200,7 +200,7 @@
                             </template>
                             <template v-else-if="row.dict && row.dict.translation">
                                 <template v-if="isArray(get(record, row.dataIndex))">
-                                    <a-tag v-for="item in get(record, row.dataIndex)" class="ml-1">{{
+                                    <a-tag v-for="(item, index) in get(record, row.dataIndex)" :key="index" class="ml-1">{{
                                         getDataIndex(row, item)
                                     }}</a-tag>
                                 </template>

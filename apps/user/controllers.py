@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from ninja_extra import api_controller, ControllerBase, route
 from ninja.errors import HttpError
 from ninja.pagination import paginate

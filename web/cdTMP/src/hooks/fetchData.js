@@ -11,9 +11,12 @@ const useFetchData = (defaultValue = {}, fetDataFunc) => {
     /// 相当于created
     async function fetchOrigin() {
         isDataLoading.value = true
-        const res = await fetDataFunc()
-        loadingData.value = res.data
-        isDataLoading.value = false
+        try {
+            const res = await fetDataFunc()
+            loadingData.value = res.data
+        } finally {
+            isDataLoading.value = false
+        }
     }
     fetchOrigin()
     return {

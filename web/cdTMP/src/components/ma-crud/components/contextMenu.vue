@@ -4,7 +4,7 @@
         v-show="crudContextMenuVisible"
         :style="{ left: left + 'px', top: top + 'px', height: 'auto' }"
     >
-        <template v-for="item in options?.contextMenu?.items ?? []">
+        <template v-for="(item, itemIndex) in options?.contextMenu?.items ?? []" :key="itemIndex">
             <li v-if="item.operation === 'divider'"><a-divider margin="8px" /></li>
             <li v-if="item.operation === 'print'">
                 <div class="context-menu-item" @click="execCommand(item)">
@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, inject, watch, nextTick } from "vue"
+import { ref, inject, watch, nextTick, onUnmounted } from "vue"
 import checkAuth from "@/directives/auth/auth"
 import { isArray } from "lodash-es"
 
@@ -79,21 +79,25 @@ const showVerify = (type) => {
     return true
 }
 
+const crudContextMenuhandler = (e) => {
+    const dom = document.querySelector(".ma-crud-contextmenu")
+    if (dom && !dom.contains(e.target)) {
+        closeCrudcontextMenu()
+    }
+}
+
 watch(
     () => crudContextMenuVisible.value,
     (value) => {
-        const crudContextMenuhandler = (e) => {
-            const dom = document.querySelector(".ma-crud-contextmenu")
-            if (dom && !dom.contains(e.target)) {
-                closeCrudcontextMenu()
-            }
-        }
-
         value
-            ? document.body.addEventListener("click", (e) => crudContextMenuhandler(e))
-            : document.body.removeEventListener("click", (e) => crudContextMenuhandler(e))
+            ? document.body.addEventListener("click", crudContextMenuhandler)
+            : document.body.removeEventListener("click", crudContextMenuhandler)
     }
 )
+
+onUnmounted(() => {
+    document.body.removeEventListener("click", crudContextMenuhandler)
+})
 
 const openContextMenu = async (ev, record) => {
     crudContextMenuVisible.value = true

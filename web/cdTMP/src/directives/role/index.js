@@ -6,10 +6,7 @@ const checkRole = (el, binding) => {
 
     if (Array.isArray(value)) {
         if (value.length > 0) {
-            let isHas = false
-            value.map((item) => {
-                isHas = role(item)
-            })
+            const isHas = value.some((item) => role(item))
 
             if (!isHas && el.parentNode) {
                 el.parentNode.removeChild(el)

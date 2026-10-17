@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from ninja import ModelSchema, Field, Schema
-from apps.system.models import AuditLog, LoginLog, OperationLog
+from apps.system.models import LoginLog, OperationLog
 
 # 1.登录日志输出schema - 前五条
 class LogOutSchema(ModelSchema):

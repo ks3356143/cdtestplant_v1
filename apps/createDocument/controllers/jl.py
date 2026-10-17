@@ -15,7 +15,7 @@ from docxtpl import InlineImage
 from docxtpl import DocxTemplate
 # 导入自己工具
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
-from utils.util import get_ident, get_case_ident, get_testType
+from utils.util import get_ident, get_case_ident
 from utils.chen_response import ChenResponse
 from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
@@ -88,7 +88,7 @@ class GenerateControllerJL(ControllerBase):
                 exe_noncount = 0
                 execution_str = '已执行'
                 for ste in step_list:
-                    if ste.get('execution') == '3':
+                    if ste.get('passed') == '未执行':
                         exe_noncount += 1
                 if exe_noncount > 0 and exe_noncount != len(step_list):
                     execution_str = '部分执行'

@@ -5,7 +5,10 @@ a = Analysis(
     ['run.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[
+        ('media', '.'),
+        ('conf', '.'),
+    ],
     hiddenimports=[
         'django.contrib.auth',
         'django.contrib.contenttypes',
@@ -14,7 +17,6 @@ a = Analysis(
         'ninja_extra',
         'ninja_jwt',
         'tinymce',
-        'celery',
         'apps.user',
         'apps.dict',
         'apps.dict.controllers',

@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, onMounted, onUnmounted } from "vue"
 import { useUserStore } from "@/store"
 import dayjs from "dayjs"
 const userStore = useUserStore()
@@ -32,9 +32,13 @@ const showTime = () => {
     time.value = dayjs().format("HH:mm:ss")
     day.value = dayjs().format("YYYY年MM月DD日")
 }
+let timer = null
 onMounted(() => {
     showTime()
-    setInterval(() => showTime(), 1000)
+    timer = setInterval(() => showTime(), 1000)
+})
+onUnmounted(() => {
+    clearInterval(timer)
 })
 </script>
 

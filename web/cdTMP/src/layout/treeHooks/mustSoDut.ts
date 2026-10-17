@@ -78,14 +78,14 @@ export default function useMustSoDut(projectId: Ref<string>) {
     const handleSoDutExistsForceModal = async () => {
         /// 主动后端请求
         const res = await dutApi.getSoExists({ id: projectId.value })
-        res.data.round_list.forEach((item) => {
+        for (const item of res.data.round_list) {
             if (!item.isExists) {
                 Message.warning(`识别到您未添加第${parseInt(item.key) + 1}轮源代码的信息，请填写信息自动创建`)
                 soDutModalTitle.value = `强制添加第${parseInt(item.key) + 1}轮源代码的信息`
                 soDutFormRef.value!.open({ round_key: item.key })
                 return
             }
-        })
+        }
     }
     // events
     /**

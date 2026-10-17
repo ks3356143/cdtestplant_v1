@@ -99,10 +99,10 @@ const emit = defineEmits(["enterFinish"])
 const route = useRoute()
 const treeDataStore = useTreeDataStore()
 // ~~~刚开始就加载字典数据，给选择框使用~~~
-let demandType = []
+const demandType = ref([])
 const getDictDemandType = async function () {
     const res = await dictApi.getDictByCode({ code: "demandType" })
-    demandType = res.data
+    demandType.value = res.data
 }
 getDictDemandType()
 // 弹窗显示ref

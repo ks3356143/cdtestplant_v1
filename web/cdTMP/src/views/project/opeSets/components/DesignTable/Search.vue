@@ -83,18 +83,27 @@ const getComponentName = (formType: string) => {
 // 6.dicts - 需要根据dict来请求后端
 const dicts = ref({})
 provide("dicts", dicts)
-columns.value.map(async (it: any) => {
+const loadColumnDicts = async () => {
+    const dictColumns = columns.value.filter((it: any) => it.dict && it.formType === "select")
+    if (!dictColumns.length) return
     searchLoading.value = true
-    // 处理带dict和formType为select的
-    if (it.dict && it.formType === "select") {
-        const res = await dictApi.getDictByCode({ code: it.dataIndex })
-        dicts.value[it.dataIndex] = res.data.map((it) => ({
-            label: it.title,
-            value: it.key
-        }))
+    try {
+        await Promise.all(
+            dictColumns.map(async (it: any) => {
+                const res = await dictApi.getDictByCode({ code: it.dataIndex })
+                dicts.value[it.dataIndex] = res.data.map((item: any) => ({
+                    label: item.title,
+                    value: item.key
+                }))
+            })
+        )
+    } catch (e) {
+        console.log("加载搜索字典失败：", e)
+    } finally {
+        searchLoading.value = false
     }
-    searchLoading.value = false
-})
+}
+loadColumnDicts()
 </script>
 
 <style lang="less" scoped>

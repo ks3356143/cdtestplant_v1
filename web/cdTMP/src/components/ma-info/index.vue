@@ -11,11 +11,11 @@
             :label-style="props.labelStyle"
             :value-style="props.valueStyle"
         >
-            <a-descriptions-item v-for="item in descriptions" :label="item.label" :span="item.span ? item.span : isArray(item.value) ? props.column : 1">
+            <a-descriptions-item v-for="(item, descIndex) in descriptions" :key="item.dataIndex ?? descIndex" :label="item.label" :span="item.span ? item.span : isArray(item.value) ? props.column : 1">
                 <template v-if="item.formType === 'upload'">
                     <a-image-preview-group infinite v-if="isArray(item.value)">
                         <a-space>
-                            <a-image v-for="src in item.value" :src="tool.viewImage(src)" width="50" />
+                            <a-image v-for="(src, srcIndex) in item.value" :key="srcIndex" :src="tool.viewImage(src)" width="50" />
                         </a-space>
                     </a-image-preview-group>
                     <a-image v-else :src="tool.viewImage(item.value)" width="50"></a-image>
@@ -45,7 +45,7 @@
                     <template v-if="isArray(item.value)">
                         <!-- 修改源码 -->
                         <a-space>
-                            <a-tag v-for="v in item.value" color="magenta">
+                            <a-tag v-for="(v, tagIndex) in item.value" :key="tagIndex" color="magenta">
                                 <template v-if="v.length > 0">
                                     {{ item.dict.data.find((row) => row.value == v)?.label }}
                                 </template>

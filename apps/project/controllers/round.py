@@ -8,7 +8,7 @@ from apps.project.schemas.round import TreeReturnRound, RoundInfoOutSchema, Edit
 from typing import List
 from utils.chen_response import ChenResponse
 from apps.project.tools.delete_change_key import round_delete_sub_node_key
-from apps.project.tools.access_control import check_project_access, check_project_access_by_id
+from apps.project.tools.access_control import check_project_access_by_id
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['轮次数据'])
 class RoundController(ControllerBase):

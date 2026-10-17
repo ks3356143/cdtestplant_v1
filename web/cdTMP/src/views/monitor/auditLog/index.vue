@@ -6,6 +6,43 @@
                 全程留痕、多维检索；审计日志受保护，仅能按保留期清理，无法被篡改或全清。
             </a-alert>
 
+            <!-- 数据完整性核查（7.1.7） -->
+            <a-card class="general-card" style="margin-bottom: 12px">
+                <template #title>
+                    <icon-safe style="color: rgb(var(--primary-6))" />
+                    数据完整性核查（7.1.7）
+                </template>
+                <a-space style="margin-bottom: 8px" wrap>
+                    <a-button type="primary" :loading="checking" @click="runIntegrityCheck">立即核查</a-button>
+                    <span style="color: var(--color-text-3); font-size: 12px">
+                        对项目/测试用例/执行结果/问题单的重要数据批量重算完整性标签，发现底层篡改即告警
+                    </span>
+                </a-space>
+                <template v-if="lastCheck">
+                    <a-alert :type="lastCheck.broken ? 'error' : 'success'" style="margin-bottom: 8px">
+                        共核查 {{ lastCheck.total }} 条受保护数据：
+                        <a-tag :color="lastCheck.broken ? 'red' : 'green'">
+                            {{ lastCheck.broken ? `发现 ${lastCheck.broken} 条完整性破损` : '全部完好' }}
+                        </a-tag>
+                        <span style="font-size: 12px">{{ lastCheck.recovery_hint }}</span>
+                    </a-alert>
+                    <a-table v-if="lastCheck.broken" :data="lastCheck.items.filter(i => !i.intact)"
+                             :pagination="false" size="small" :bordered="{ cell: true }">
+                        <template #columns>
+                            <a-table-column title="受保护数据" data-index="label" :width="180"></a-table-column>
+                            <a-table-column title="标识" data-index="ident" :width="140"></a-table-column>
+                            <a-table-column title="标签摘要" data-index="stored" :width="150"></a-table-column>
+                            <a-table-column title="重算摘要" data-index="actual" :width="150"></a-table-column>
+                            <a-table-column title="结论" :width="110">
+                                <template #cell="{ record }">
+                                    <a-tag color="red">完整性破损</a-tag>
+                                </template>
+                            </a-table-column>
+                        </template>
+                    </a-table>
+                </template>
+            </a-card>
+
             <!-- 筛选区 -->
             <a-card class="general-card" style="margin-bottom: 12px">
                 <a-form :model="filters" layout="inline">
@@ -146,6 +183,19 @@ const doQuery = async () => {
 const loadEventTypes = async () => {
     const res = await auditLogApi.getAuditEventTypes()
     eventTypes.value = res.data || []
+}
+
+// 数据完整性核查（7.1.7）
+const checking = ref(false)
+const lastCheck = ref(null)
+const runIntegrityCheck = async () => {
+    checking.value = true
+    try {
+        const res = await auditLogApi.integrityCheck()
+        lastCheck.value = res.data
+    } finally {
+        checking.value = false
+    }
 }
 
 onMounted(() => {

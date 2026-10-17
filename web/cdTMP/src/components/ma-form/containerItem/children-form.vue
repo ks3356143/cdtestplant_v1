@@ -116,7 +116,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <template v-for="(item, index) in formModel[props.component.dataIndex]">
+                        <template v-for="(item, index) in formModel[props.component.dataIndex]" :key="index">
                             <tr class="arco-table-tr">
                                 <td class="arco-table-td">
                                     <span class="arco-table-cell">

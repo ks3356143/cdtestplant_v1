@@ -1,7 +1,6 @@
 from docx.oxml.ns import qn  # qn作用是元素的.tag属性，自动帮你处理namespace
 from docx.shape import InlineShape
 from apps.createSeiTaiDocument.docXmlUtils import (
-    Demand_table_xqms,
     Timing_diagram_width,
     Test_result_width,
     Horizatal_width

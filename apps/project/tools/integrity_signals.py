@@ -3,8 +3,6 @@
 apps.py ready() 中统一连接 post_save / post_delete 信号——覆盖一切写路径
 （控制器、后台、脚本），无需逐接口埋点。
 """
-from django.core import signals as dj_signals
-
 from utils.audit import audit_log, EVENT_BUSINESS_CHANGE
 
 
@@ -34,7 +32,6 @@ def audit_on_delete(sender, instance, **kwargs):
         from apps.system.models import DataIntegrityTag
         DataIntegrityTag.objects.filter(
             table_name=instance._meta.db_table, object_id=str(instance.pk)).delete()
-        from utils.audit import EVENT_BUSINESS_CHANGE
         label = getattr(instance, 'ident', None) or getattr(instance, 'name', None) or instance.pk
         audit_log(None, EVENT_BUSINESS_CHANGE,
                   f'重要数据删除：{instance._meta.verbose_name} {label}；关联完整性标签已同步清理')

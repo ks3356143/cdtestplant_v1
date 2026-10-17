@@ -1,4 +1,3 @@
-import re
 from utils.chen_response import ChenResponse
 
 def parse_test_content_string(content: str):

@@ -67,10 +67,14 @@ const loginLogList = computed(() => {
 // 操作日志不用hook
 const isLoading = ref(true)
 const data = ref([])
-logApi.getOperationLog().then((res) => {
-    data.value = res.data
-    isLoading.value = false
-})
+logApi.getOperationLog()
+    .then((res) => {
+        data.value = res.data
+    })
+    .catch((e) => console.log("获取操作日志失败：", e))
+    .finally(() => {
+        isLoading.value = false
+    })
 
 const operationLogList = computed(() => {
     return data.value.map((item) => {

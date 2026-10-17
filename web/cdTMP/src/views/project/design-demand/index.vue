@@ -40,7 +40,7 @@
             <div class="pb-3">已存在的关联项:</div>
             <a-typography-paragraph>
                 <ol class="ol-reset">
-                    <li v-for="item in computedRelatedData">{{ item }}</li>
+                    <li v-for="(item, index) in computedRelatedData" :key="index">{{ item }}</li>
                 </ol>
             </a-typography-paragraph>
             <div class="pb-3">选择关联的测试需求项:</div>

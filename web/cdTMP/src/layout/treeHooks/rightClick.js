@@ -127,7 +127,7 @@ export function useRightClick(projectId, routeViewRef) {
             demand_key: rightClickNode.nodekey,
             depth: checkboxValue.value
         })
-        if ((res.code = 200)) {
+        if (res.code === 200) {
             // 注意必须传projectId，否则返回空
             treeDataStore.updateTestDemandTreeData(res.data, projectId.value)
             Notification.success("复制成功,为避免重复,设置了(复制)字样,请手动修改...")

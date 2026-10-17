@@ -5,10 +5,7 @@ const checkAuth = (el, binding) => {
 
     if (Array.isArray(value)) {
         if (value.length > 0) {
-            let isHas = false
-            value.map((item) => {
-                isHas = auth(item)
-            })
+            const isHas = value.some((item) => auth(item))
 
             if (!isHas && el.parentNode) {
                 el.parentNode.removeChild(el)

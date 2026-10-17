@@ -1,7 +1,6 @@
 from ninja.errors import HttpError
-from pyasn1_modules.rfc2315 import Data
 
-from apps.project.models import Project, StuctSortData
+from apps.project.models import Project
 from ninja import Schema, ModelSchema
 from pydantic import field_validator
 from typing import List, Optional

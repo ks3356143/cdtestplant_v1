@@ -77,7 +77,7 @@ class GenerateControllerWtd(ControllerBase):
                 demand_testType = demand.testType  # 中间变量
                 testType_abbr = get_str_abbr(demand_testType, 'testType')  # 输出FT
                 case_ident_list.append("_".join(
-                    ['YL', testType_abbr, demand.ident, str(int(case.key[-1]) + 1).rjust(3, '0')]))
+                    ['YL', testType_abbr, demand.ident, str(int(case.key.split("-")[-1]) + 1).rjust(3, '0')]))
             problem_dict['duts_name'] = "/".join(set(str_dut_name_list))
             problem_dict['duts_ref'] = "/".join(set(str_dut_ident_list))
             problem_dict['duts_version'] = "/".join(set(str_dut_version_list))
@@ -91,7 +91,6 @@ class GenerateControllerWtd(ControllerBase):
             problem_dict['grade'] = get_str_dict(problem.grade, 'problemGrade')
 
             # 依据要求-获取其设计需求
-            print(case_design_list)
             problem_dict['yaoqiu'] = "\a".join(case_design_list)
             # 问题操作 - HTML解析
             desc_list = ['【问题操作】']
