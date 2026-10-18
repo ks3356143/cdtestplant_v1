@@ -42,7 +42,6 @@ const fetchProblemData = async (
     try {
         const problemData = await singleProblemApi.getSingleProblem(params)
         data.value = problemData.data // 是个对象
-        console.log(data.value)
     } catch (e) {
         Message.error("请求失败，请检测网络")
     } finally {

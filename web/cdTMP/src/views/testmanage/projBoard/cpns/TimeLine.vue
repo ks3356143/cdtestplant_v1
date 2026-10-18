@@ -39,7 +39,7 @@
         <a-modal v-model:visible="visible" unmount-on-close hide-cancel :closable="false" width="auto">
             <template #title> 生成文档时间一览表 </template>
             <a-card :style="{ width: '600px' }" :title="item.title" hoverable v-for="(item, index) in timeList" :key="item.title">
-                <p v-for="(value, key, idx) in item" class="flex">
+                <p v-for="(value, key) in item" class="flex">
                     <template v-if="key !== 'title'">
                         <span class="font-bold w-75">{{ key }}</span>
                         <span class="">{{ value }}</span>

@@ -42,8 +42,8 @@ export default function useUpload(htmlData: any) {
         // 上传成功后清空解析章节名称
         parseChapter.value = ""
     }
-    const handleUploadError = (fileItem: any) => {
-        console.log(fileItem.response)
+    const handleUploadError = () => {
+        // 上传失败由组件内提示，这里无需额外处理
     }
     const getObjFromChapter = (parseObj: any) => {
         if (parseObj.title === parseChapter.value) return parseObj

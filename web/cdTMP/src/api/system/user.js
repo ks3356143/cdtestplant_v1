@@ -2,17 +2,6 @@ import { request } from "@/api/request"
 
 export default {
     /**
-     * 更新用户信息
-     * @returns
-     */
-    updateInfo(data = {}) {
-        return request({
-            url: "system/user/updateInfo",
-            method: "post",
-            data
-        })
-    },
-    /**
      * 用户修改密码
      * @returns
      */
@@ -104,34 +93,12 @@ export default {
         })
     },
     /**
-     * 请求所有user信息
-     * @returns
-     */
-    getUserDict(params = {}) {
-        return request({
-            url: "system/user/dict",
-            method: "get",
-            params
-        })
-    },
-    /**
      * 加载LDAP的用户数据
      * @returns
      */
     loadLDAPUsers(params = {}) {
         return request({
             url: "system/user/ldap",
-            method: "get",
-            params
-        })
-    },
-    /**
-     * 获取用户分组group的id和层级信息
-     * @returns
-     */
-    getGroupList(params = {}) {
-        return request({
-            url: "system/user/group/list",
             method: "get",
             params
         })

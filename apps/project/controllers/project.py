@@ -4,6 +4,7 @@ from typing import List
 from shutil import copytree, rmtree
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from django.db.models import Count, Q
 from ninja_extra import api_controller, ControllerBase, route
 from ninja_extra.permissions import IsAuthenticated
 from ninja_jwt.authentication import JWTAuth
@@ -15,7 +16,7 @@ from ninja import Query
 from utils.chen_response import ChenResponse
 from utils.chen_crud import create, multi_delete_project
 from apps.project.models import Project, Round, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, DynamicSoftTable, \
-    DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis
+    DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis, CaseStep
 from apps.project.schemas.project import ProjectRetrieveSchema, ProjectFilterSchema, ProjectCreateInput, \
     DeleteSchema, SoftSummarySchema, DataSchema, StaticDynamicData, EnvAnalysisSchema
 from utils.util import get_str_dict
@@ -44,10 +45,7 @@ class ProjectController(ControllerBase):
             end_time = '9999-01-01'
         date_list = [start_time, end_time]
         # 前端返回的member
-        member_list = []
-        for key, value in self.context.request.GET.items():
-            if key.find('member') != -1:
-                member_list.append(self.context.request.GET[key])
+        member_list = [value for key, value in self.context.request.GET.items() if 'member' in key]
         qs = Project.objects.filter(
             ident__icontains=filters.ident, name__icontains=filters.name,
             beginTime__range=date_list, duty_person__icontains=filters.duty_person,
@@ -179,11 +177,21 @@ class ProjectController(ControllerBase):
         noexe_count = 0  # 未执行数量
         partexe_count = 0  # 部分执行数量
         ## 5.1 计算已执行的用例数 -> 所以的都通过/未通过才算执行，否则部分执行
+        # 一次性按用例聚合步骤通过情况，避免逐用例多次 count 查询（N+1）
+        # 注意：注解名不能与模型字段 passed 同名，否则 Q(passed=...) 会错误地指向注解
+        step_stats = {
+            row['case_id']: row
+            for row in CaseStep.objects.filter(case__project=project_obj).values('case_id').annotate(
+                total_cnt=Count('id'),
+                passed_cnt=Count('id', filter=Q(passed='1')),
+                notpassed_cnt=Count('id', filter=Q(passed='2')),
+            )
+        }
         for case in case_qs:
-            steps = case.step.all()
-            steps_count = steps.count()  # 步骤总数
-            passed_steps_count = steps.filter(passed='1').count()
-            notPassed_steps_count = steps.filter(passed='2').count()
+            stat = step_stats.get(case.id)
+            steps_count = stat['total_cnt'] if stat else 0  # 步骤总数
+            passed_steps_count = stat['passed_cnt'] if stat else 0
+            notPassed_steps_count = stat['notpassed_cnt'] if stat else 0
             notExe_steps_count = steps_count - passed_steps_count - notPassed_steps_count
             if notExe_steps_count > 0:
                 # 步骤全是未执行，则用例未执行
@@ -268,13 +276,13 @@ class ProjectController(ControllerBase):
                     '邮箱': project_obj.dev_email
                 },
                 '用例数': {
-                    '总数': case_qs.count(),
+                    '总数': len(case_qs),
                     '已执行': exe_count,
                     '未执行': noexe_count,
                     '部分执行': partexe_count,
                 },
                 '问题数': {
-                    '总数': problems.count(),
+                    '总数': len(problems),
                     '已闭环': close_count,
                     '未闭环': open_count,
                 }

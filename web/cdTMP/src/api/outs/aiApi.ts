@@ -1,7 +1,5 @@
 import { request } from "@/api/request"
 
-const AI_API_BASE = import.meta.env.VUE_APP_AI_API_BASE || "http://192.168.0.63:8777"
-
 interface DataRowType {
     question: string
     streaming: boolean

@@ -107,11 +107,6 @@ const useTreeDataStore = defineStore("treeDataStore", {
             let roundLength = this.treeData.length
             // 取出最后一个key的值
             let lastKey = parseInt(this.treeData[this.treeData.length - 1].key) + 1
-            // 遍历数组，找出key最大值
-            let key_list = []
-            this.treeData.forEach((item) => {
-                key_list.push(parseInt(item.key))
-            })
             if (roundLength !== lastKey) {
                 let cha = lastKey - roundLength
                 return lastKey - cha - 1

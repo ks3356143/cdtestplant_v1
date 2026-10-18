@@ -2,11 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from utils.models import CoreModel
 
-STATUS_CHOICES = (
-    (0, '禁用'),
-    (1, '启用')
-)
-
 class Users(AbstractUser, CoreModel):
     username = models.CharField(max_length=150, unique=True, db_index=True, verbose_name='用户账号',
                                 help_text="用户账号")

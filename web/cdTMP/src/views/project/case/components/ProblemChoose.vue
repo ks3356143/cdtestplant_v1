@@ -132,7 +132,6 @@ const crudOptions = ref({
     showIndex: false,
     rowSelection: { showCheckedAll: true },
     operationWidth: 160,
-    operationColumnAlign: "center",
     add: { show: true, api: problemApi.save, text: "新增无关联用例的问题单" },
     edit: { show: true, api: problemApi.modalupdate },
     delete: { show: true, api: problemApi.delete },

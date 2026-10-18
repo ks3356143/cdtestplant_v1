@@ -20,7 +20,6 @@ interface OriginOptionsType {
 
 export default function () {
     const route = useRoute()
-    const casecadeLoading = ref(false)
     const originOptions = ref<OriginOptionsType[]>([])
     const casecadeOptions = computed(() => {
         return originOptions.value.map(({ children, ...rest }) => ({
@@ -37,14 +36,11 @@ export default function () {
     })
     // 初始化是直接获取数据
     const fetchOptionsData = async () => {
-        casecadeLoading.value = true
         try {
             const res = await designApi.getRelatedCasDesign({ id: route.query.id })
             originOptions.value = res.data
         } catch (e) {
             Message.error("级联数据获取失败，请重新打开此页面!")
-        } finally {
-            casecadeLoading.value = false
         }
     }
     return { fetchOptionsData, casecadeOptions }

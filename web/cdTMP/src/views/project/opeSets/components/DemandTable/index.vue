@@ -36,7 +36,6 @@
             v-bind="options"
             hoverable
             column-resizable
-            ref="tableRef"
             :scroll="{ x: '100%' }"
             :row-selection="{ type: 'checkbox', showCheckedAll: true, onlyCurrent: true }"
             row-key="id"
@@ -97,7 +96,7 @@
                 </template>
                 <!-- 上级节点列 -->
                 <a-table-column title="对应设计需求" align="center" :width="120" fixed="right">
-                    <template #cell="{ record, column, rowIndex }">
+                    <template #cell="{ record }">
                         <Trigger :designInfo="record.design" @refresh="fetchData()" />
                     </template>
                 </a-table-column>
@@ -127,7 +126,7 @@
             ref="replaceModal"
             :selectRows="selecteds"
             :api="demandApi.replace"
-            :columns="columns.filter((it) => it.dataIndex !== 'priority' && it.dataIndex !== 'testType')"
+            :columns="replaceColumns"
             key="modal-demand"
             popup-key="demand"
             @replaceSuccess="replaceSuccessHandle"
@@ -138,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from "vue"
+import { computed, provide, ref } from "vue"
 import type { ISearchFormDemand } from "@/views/project/opeSets/components/DesignTable/types"
 import useSettings from "@/views/project/opeSets/components/DesignTable/useSettings"
 import MySetting from "@/views/project/opeSets/components/TableCommonComponent/Setting.vue"
@@ -258,6 +257,8 @@ const { deletesMultipleAction } = useDelete(demandApi.delete, fetchData, selecte
 
 // 7.2.批量替换相关
 const replaceModal = ref<InstanceType<typeof ReplaceModal> | null>(null)
+// 供批量替换弹窗使用的列（去掉展示型字段）
+const replaceColumns = computed(() => columns.value.filter((it) => it.dataIndex !== "priority" && it.dataIndex !== "testType"))
 const handleOpenReplaceModal = () => {
     replaceModal.value?.open(undefined)
 }

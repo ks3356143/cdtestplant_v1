@@ -1,11 +1,15 @@
 <template>
   <a-card :bordered="false">
-    <a-form layout="inline" style="margin-bottom: 12px">
+    <a-form :model="filters" layout="inline" style="margin-bottom: 12px">
       <a-form-item label="业务标识">
         <a-input v-model="filters.business_ident" placeholder="问题单/用例 id" allow-clear style="width: 160px" />
       </a-form-item>
       <a-form-item label="业务类型">
-        <a-select v-model="filters.business_type" placeholder="全部" allow-clear style="width: 140px" />
+        <a-select v-model="filters.business_type" placeholder="全部" allow-clear style="width: 140px">
+          <a-option v-for="item in BUSINESS_TYPE_OPTIONS" :key="item.value" :value="item.value">
+            {{ item.label }}
+          </a-option>
+        </a-select>
         <a-button style="margin-left: 8px" type="outline" @click="loadData">查询</a-button>
         <a-button style="margin-left: 8px" @click="resetFilters">重置</a-button>
       </a-form-item>
@@ -17,7 +21,7 @@
       :columns="columns"
       :data="rows"
       :loading="loading"
-      :pagination="{ pageSize: 10 }"
+      :pagination="pagination"
       row-key="id"
     />
   </a-card>
@@ -29,7 +33,15 @@ import evidenceApi from "@/api/monitor/nonrepudiation"
 
 const loading = ref(false)
 const rows = ref([])
+// 避免每次渲染重建分页对象
+const pagination = { pageSize: 10 }
 const filters = reactive({ business_ident: "", business_type: undefined })
+// 业务类型取值与后端 NonrepudiationEvidence.business_type 一致（problem/case）
+const BUSINESS_TYPE_OPTIONS = [
+  { value: "problem", label: "问题单" },
+  { value: "case", label: "用例" }
+]
+const businessTypeLabel = (val) => BUSINESS_TYPE_OPTIONS.find((i) => i.value === val)?.label || val || "-"
 // 数据摘要列太长，截断展示
 const truncate = (val) => (val ? String(val).slice(0, 20) + "…" : "")
 
@@ -38,7 +50,12 @@ const columns = [
   { title: "主体账号", dataIndex: "actor_name", width: 110 },
   { title: "主体角色", dataIndex: "actor_role", width: 110 },
   { title: "行为类型", dataIndex: "action", width: 140 },
-  { dataIndex: "business_type", title: "业务类型", width: 90 },
+  {
+    dataIndex: "business_type",
+    title: "业务类型",
+    width: 90,
+    render: ({ record }) => businessTypeLabel(record.business_type)
+  },
   { title: "业务标识", dataIndex: "business_ident", width: 90 },
   { title: "业务名称", dataIndex: "business_name", ellipsis: true, width: 160 },
   {

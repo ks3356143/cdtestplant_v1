@@ -56,6 +56,75 @@ class GenerateSeitaiController(ControllerBase):
                 zf.write(final_dir / doc_name, doc_name)
         return self._token_download(zip_path)
 
+    def _first_member(self):
+        """取项目成员第一位，为空则回退负责人"""
+        member = self.project_obj.member
+        return member[0] if len(member) > 0 else self.project_obj.duty_person
+
+    def _build_regression_docs(self, payload: SeitaiInputSchema, doc_type: str, doc_kind: str,
+                               final_time, no_round_msg: str, gen_err_msg: str,
+                               with_location: bool = False, resize_shapes: bool = False):
+        """回归说明/记录统一生成：按轮次循环生成多份文档，最后单份下载或打包 zip。
+
+        :param doc_type: 模板类型（hsm 说明 / hjl 记录）
+        :param doc_kind: 下载命名（说明 / 记录）
+        :param final_time: DocTime 上取时间的方法（hsm_final_time / hjl_final_time），签名 (doc_time, round_key)
+        :param with_location: 是否在上下文中附带本轮测试地点（仅说明需要）
+        :param resize_shapes: 是否重设时序图大小（仅记录需要）
+        """
+        self.project_obj = get_object_or_404(Project, id=payload.id)
+        hround_list: QuerySet = self.project_obj.pField.exclude(key='0')  # 非第一轮次
+        if len(hround_list) < 1:
+            return ChenResponse(code=400, status=400, message=no_round_msg)
+        # 循环不变量提到循环外（DocTime 只构造一次，避免循环内重复查库）
+        is_jd = self.project_obj.report_type == '9'
+        member = self._first_member()
+        doc_time = DocTime(payload.id)
+        cname_list = []
+        for hround in hround_list:
+            # 获取当前轮次中文数字（key+1 即轮次数，digit_to_chinese 支持 ≥10）
+            cname = digit_to_chinese(int(hround.key) + 1)
+            # 将cname存入一个list，以便后续拼接给下载函数
+            cname_list.append(cname)
+            # 回归轮次的源代码被测件（提供标识、版本）
+            so_dut: Dut = hround.rdField.filter(type='SO').first()
+            if not so_dut:
+                return ChenResponse(status=400, code=400, message=f'您缺少第{cname}轮的源代码被测件')
+            # 每次循环会更新temp_context
+            context = {
+                'project_name': self.project_obj.name,
+                'project_ident': self.project_obj.ident,
+                'is_jd': is_jd,
+                'sec_title': get_str_dict(self.project_obj.secret, 'secret'),
+                'duty_person': self.project_obj.duty_person,
+                'member': member,
+                'round_num': str(int(hround.key) + 1),
+                'round_num_chn': cname,
+                'soft_ident': so_dut.ref,
+                'soft_version': so_dut.version,
+            }
+            if with_location:
+                context['location'] = hround.location
+            self.temp_context = context | final_time(doc_time, hround.key)
+            # 注意回归测试说明、回归测试记录都生成多个文档
+            result = generate_temp_doc(doc_type, payload.id, round_num=cname, frag_list=payload.frag)
+            if isinstance(result, dict):
+                return ChenResponse(status=400, code=400, message=result.get('msg', gen_err_msg))
+            replace_path, seitai_final_path = result
+            text_frag_name_list, doc_docx = get_jinja_stdContent_element(replace_path)
+            # 文本片段操作
+            self.text_frag_replace_handle(text_frag_name_list, doc_docx)
+            # 需要时重设时序图大小
+            if resize_shapes:
+                for shape in doc_docx.inline_shapes:
+                    set_shape_size(shape)
+            try:
+                doc_docx.save(seitai_final_path)
+            except PermissionError as e:
+                return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
+        # 因为回归说明、回归记录可能有多份，多份下载zip否则docx
+        return self._regression_download(payload.id, cname_list, doc_kind)
+
     @route.post("/dgDocument", url_name="create-dgDocument")
     @transaction.atomic
     def create_dgDocument(self, payload: SeitaiInputSchema):
@@ -64,7 +133,7 @@ class GenerateSeitaiController(ControllerBase):
         # 生成大纲需要的文本片段信息储存在字典里面
         sec_title = get_str_dict(self.project_obj.secret, 'secret')
         duty_person = self.project_obj.duty_person
-        is_jd = True if self.project_obj.report_type == '9' else False
+        is_jd = self.project_obj.report_type == '9'
         self.temp_context = {
                                 'is_jd': is_jd,
                                 'jd_or_third': "鉴定" if is_jd else "第三方",
@@ -74,8 +143,7 @@ class GenerateSeitaiController(ControllerBase):
                                 'sec_title': '密级：' + sec_title,
                                 'sec': sec_title,
                                 'duty_person': duty_person,
-                                'member': self.project_obj.member[0] if len(
-                                    self.project_obj.member) > 0 else duty_person,
+                                'member': self._first_member(),
                                 'entrust_unit': self.project_obj.entrust_unit
                             } | DocTime(payload.id).dg_final_time()  # python3.9以上推荐使用|运算符合并
         # 调用self添加temp_context信息
@@ -105,7 +173,7 @@ class GenerateSeitaiController(ControllerBase):
         # 获取项目对象
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # 首先第二层模版所需变量
-        is_jd = True if self.project_obj.report_type == '9' else False
+        is_jd = self.project_obj.report_type == '9'
         self.temp_context = {
                                 'project_name': self.project_obj.name,
                                 'project_ident': self.project_obj.ident,
@@ -115,8 +183,7 @@ class GenerateSeitaiController(ControllerBase):
                                 'sec_title': get_str_dict(self.project_obj.secret, 'secret'),
                                 'sec': get_str_dict(self.project_obj.secret, 'secret'),
                                 'duty_person': self.project_obj.duty_person,
-                                'member': self.project_obj.member[0] if len(
-                                    self.project_obj.member) > 0 else self.project_obj.duty_person,
+                                'member': self._first_member(),
                             } | DocTime(payload.id).sm_final_time()
         self.get_first_round_code_ident()
         # 文档片段操作
@@ -140,9 +207,8 @@ class GenerateSeitaiController(ControllerBase):
     def create_jlDocument(self, payload: SeitaiInputSchema):
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
-        is_jd = True if self.project_obj.report_type == '9' else False
-        member = self.project_obj.member[0] if len(
-            self.project_obj.member) > 0 else self.project_obj.duty_person
+        is_jd = self.project_obj.report_type == '9'
+        member = self._first_member()
         self.temp_context = {
                                 'project_name': self.project_obj.name,
                                 'project_ident': self.project_obj.ident,
@@ -173,104 +239,23 @@ class GenerateSeitaiController(ControllerBase):
     @transaction.atomic
     def create_hsmDocument(self, payload: SeitaiInputSchema):
         """生成最后的回归测试说明-（多个文档）"""
-        self.project_obj = get_object_or_404(Project, id=payload.id)
-        hround_list: QuerySet = self.project_obj.pField.exclude(key='0')  # 非第一轮次
-        cname_list = []
-        if len(hround_list) < 1:
-            return ChenResponse(code=400, status=400, message='无回归轮次，请添加后再生成')
-        # 循环不变量提到循环外
-        is_jd = True if self.project_obj.report_type == '9' else False
-        member = self.project_obj.member[0] if len(
-            self.project_obj.member) > 0 else self.project_obj.duty_person
-        for hround in hround_list:
-            # 获取当前轮次中文数字（key+1 即轮次数，digit_to_chinese 支持 ≥10）
-            cname = digit_to_chinese(int(hround.key) + 1)
-            # 将cname存入一个list，以便后续拼接给下载函数
-            cname_list.append(cname)
-            # 回归轮次的标识和版本
-            so_dut: Dut = hround.rdField.filter(type='SO').first()
-            if not so_dut:
-                return ChenResponse(status=400, code=400, message=f'您缺少第{cname}轮的源代码被测件')
-            # 每次循环会更新temp_context
-            self.temp_context = {
-                                    'project_name': self.project_obj.name,
-                                    'project_ident': self.project_obj.ident,
-                                    'is_jd': is_jd,
-                                    'sec_title': get_str_dict(self.project_obj.secret, 'secret'),
-                                    'duty_person': self.project_obj.duty_person,
-                                    'member': member,
-                                    'round_num': str(int(hround.key) + 1),
-                                    'round_num_chn': cname,
-                                    'soft_ident': so_dut.ref,
-                                    'soft_version': so_dut.version,
-                                    'location': hround.location,
-                                } | DocTime(payload.id).hsm_final_time(hround.key)
-            # 注意回归测试说明、回归测试记录都生成多个文档
-            result = generate_temp_doc('hsm', payload.id, round_num=cname, frag_list=payload.frag)
-            if isinstance(result, dict):
-                return ChenResponse(status=400, code=400,
-                                    message=result.get('msg', '回归测试说明生成报错...'))
-            hsm_replace_path, hsm_seitai_final_path = result
-            text_frag_name_list, doc_docx = get_jinja_stdContent_element(hsm_replace_path)
-            # 文本片段操作
-            self.text_frag_replace_handle(text_frag_name_list, doc_docx)
-            try:
-                doc_docx.save(hsm_seitai_final_path)
-            except PermissionError as e:
-                return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
-        # 因为回归说明、回归记录可能有多份，多份下载zip否则docx
-        return self._regression_download(payload.id, cname_list, '说明')
+        return self._build_regression_docs(
+            payload, doc_type='hsm', doc_kind='说明',
+            final_time=DocTime.hsm_final_time,
+            no_round_msg='无回归轮次，请添加后再生成',
+            gen_err_msg='回归测试说明生成报错...',
+            with_location=True)
 
     @route.post('/hjlDocument', url_name='create-hjlDocument')
     @transaction.atomic
     def create_hjlDocument(self, payload: SeitaiInputSchema):
         """生成最后的回归测试记录-（多个文档）"""
-        self.project_obj: Project = get_object_or_404(Project, id=payload.id)
-        # 取非第一轮次
-        hround_list: QuerySet = self.project_obj.pField.exclude(key='0')
-        cname_list = []
-        if len(hround_list) < 1:
-            return ChenResponse(code=400, status=400, message='无回归测试轮次，请创建后再试')
-        # 循环不变量提到循环外
-        member = self.project_obj.member[0] if len(
-            self.project_obj.member) > 0 else self.project_obj.duty_person
-        is_jd = True if self.project_obj.report_type == '9' else False
-        for hround in hround_list:
-            # 取出当前轮次中文数字（key+1 即轮次数，digit_to_chinese 支持 ≥10）
-            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
-            cname_list.append(cname)
-            so_dut: Dut = hround.rdField.filter(type='SO').first()
-            if not so_dut:
-                return ChenResponse(status=400, code=400, message=f'您缺少第{cname}轮的源代码被测件')
-            self.temp_context = {
-                                    'project_name': self.project_obj.name,
-                                    'project_ident': self.project_obj.ident,
-                                    'is_jd': is_jd,
-                                    'sec_title': get_str_dict(self.project_obj.secret, 'secret'),
-                                    'duty_person': self.project_obj.duty_person,
-                                    'member': member,
-                                    'round_num': str(int(hround.key) + 1),
-                                    'round_num_chn': cname,
-                                    'soft_ident': so_dut.ref,
-                                    'soft_version': so_dut.version,
-                                } | DocTime(payload.id).hjl_final_time(hround.key)
-
-            result = generate_temp_doc('hjl', payload.id, round_num=cname, frag_list=payload.frag)
-            if isinstance(result, dict):
-                return ChenResponse(status=400, code=400,
-                                    message=result.get('msg', '回归测试记录生成错误!'))
-            hjl_replace_path, hjl_seitai_final_path = result
-            text_frag_name_list, doc_docx = get_jinja_stdContent_element(hjl_replace_path)
-            # 文本片段操作
-            self.text_frag_replace_handle(text_frag_name_list, doc_docx)
-            # 重新设置时序图大小(注意不变)
-            for shape in doc_docx.inline_shapes:
-                set_shape_size(shape)
-            try:
-                doc_docx.save(hjl_seitai_final_path)
-            except PermissionError as e:
-                return ChenResponse(status=400, code=400, message="模版文件已打开，请关闭后再试，{0}".format(e))
-        return self._regression_download(payload.id, cname_list, '记录')
+        return self._build_regression_docs(
+            payload, doc_type='hjl', doc_kind='记录',
+            final_time=DocTime.hjl_final_time,
+            no_round_msg='无回归测试轮次，请创建后再试',
+            gen_err_msg='回归测试记录生成错误!',
+            resize_shapes=True)
 
     @route.post('/wtdDocument', url_name='create-wtdDocument')
     @transaction.atomic
@@ -278,9 +263,8 @@ class GenerateSeitaiController(ControllerBase):
         """生成最后的问题单"""
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
-        member = self.project_obj.member[0] if len(
-            self.project_obj.member) > 0 else self.project_obj.duty_person
-        is_jd = True if self.project_obj.report_type == '9' else False
+        member = self._first_member()
+        is_jd = self.project_obj.report_type == '9'
         self.temp_context = {
                                 "project_name": self.project_obj.name,
                                 'project_ident': self.project_obj.ident,
@@ -310,9 +294,8 @@ class GenerateSeitaiController(ControllerBase):
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
         ## 1.判断是否为JD
-        member = self.project_obj.member[0] if len(
-            self.project_obj.member) > 0 else self.project_obj.duty_person
-        is_jd = True if self.project_obj.report_type == '9' else False
+        member = self._first_member()
+        is_jd = self.project_obj.report_type == '9'
         self.temp_context = {
                                 'project_name': self.project_obj.name,
                                 'project_ident': self.project_obj.ident,
@@ -415,7 +398,7 @@ class CreateFragmentController(ControllerBase):
             return ChenResponse(status=500, code=500,
                                 message='文档片段还未生成，请关闭后再打开/或者先下载基础文档')
         # 到这里说fragments_files数组有值，返回文件名数组
-        return ChenResponse(data=[fragment for fragment in frags], message='返回文档片段成功')
+        return ChenResponse(data=frags, message='返回文档片段成功')
 
     @staticmethod
     def get_fragment_name_by_document_name(id: int, document_name: str):

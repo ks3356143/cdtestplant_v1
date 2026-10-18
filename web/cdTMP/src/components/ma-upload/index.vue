@@ -43,7 +43,6 @@ const props = defineProps({
 
 if (!["id", "url", "hash"].includes(props.returnType)) {
     Message.error("MaUpload组件props的returnType只能为：id, url, hash 其中一个")
-    console.error("MaUpload组件props的returnType只能为：id, url, hash 其中一个")
 }
 
 watch(

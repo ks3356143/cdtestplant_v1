@@ -21,9 +21,8 @@ class RoundController(ControllerBase):
     @route.get("/getOneRoundInfo", response=RoundInfoOutSchema, url_name="round-one-info")
     def get_round_info(self, projectId: str, round: str):
         check_project_access_by_id(projectId, self.context.request.user)
-        qs = Round.objects.filter(project__id=projectId).order_by('id')
         # 这里问题是如果删除中间轮次会出现问题
-        qs = qs.get(key=round)
+        qs = Round.objects.get(project__id=projectId, key=round)
         return qs
 
     # 更新轮次信息
@@ -31,12 +30,9 @@ class RoundController(ControllerBase):
     def update_round(self, id, payload: EditSchemaIn):
         check_project_access_by_id(payload.project, self.context.request.user)
         round = self.get_object_or_exception(Round, project__id=payload.project, id=id)
-        # 去重功能
-        exist_round = Round.objects.filter(project__id=payload.project)
-        for exist_r in exist_round:
-            if exist_r.id != int(id):
-                if exist_r.ident == payload.ident:
-                    return ChenResponse(code=400, status=400, message='标识和其他重复')
+        # 去重功能：同项目下不能出现相同标识（排除自己）
+        if Round.objects.filter(project__id=payload.project, ident=payload.ident).exclude(id=int(id)).exists():
+            return ChenResponse(code=400, status=400, message='标识和其他重复')
         for attr, value in payload.dict().items():
             # 不知道为什么多个project
             if attr != "project":
@@ -80,10 +76,8 @@ class RoundController(ControllerBase):
         asert_dict['project_id'] = int(project_id)
         asert_dict['title'] = asert_dict['name']
         # 标识去重
-        exist_round = Round.objects.filter(project__id=project_id)
-        for exist_r in exist_round:
-            if exist_r.ident == asert_dict['ident']:
-                return ChenResponse(code=400, status=400, message='标识和其他重复')
+        if Round.objects.filter(project__id=project_id, ident=asert_dict['ident']).exists():
+            return ChenResponse(code=400, status=400, message='标识和其他重复')
         Round.objects.create(**asert_dict)
         return ChenResponse(message="新增轮次成功")
 

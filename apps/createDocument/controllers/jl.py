@@ -16,6 +16,7 @@ from utils.util import get_ident, get_case_ident
 from utils.chen_response import ChenResponse
 from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
+from apps.createDocument.extensions.util import build_testtype_output
 
 # @api_controller("/generateJL", tags=['生成测试记录系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generateJL", tags=['生成测试记录系列'])
@@ -41,6 +42,9 @@ class GenerateControllerJL(ControllerBase):
         testType_list, last_chapter_items = create_csx_chapter_dict(round_one)
         # 找出所有测试项
         testDemands = round_one.rtField.all()
+        # 问题单前缀为循环不变量，提到循环外
+        problem_prefix = "PT"
+        proj_ident = project_obj.ident
         # 首先轮询所有测试需求
         for demand in testDemands:
             type_index = type_number_list.index(int(demand.testType))
@@ -94,8 +98,6 @@ class GenerateControllerJL(ControllerBase):
                     execution_str = '已执行'
                 # 查询所有的problem
                 problem_list = []
-                problem_prefix = "PT"
-                proj_ident = project_obj.ident
                 for problem in case.caseField.all():
                     problem_list.append("_".join([problem_prefix, proj_ident, problem.ident]))
                 # 组装用例的dict
@@ -125,22 +127,9 @@ class GenerateControllerJL(ControllerBase):
                 demand_dict['item'].append(case_dict)
 
             list_list[type_index].append(demand_dict)
-        # 定义渲染上下文
+        # 定义渲染上下文（组装并按测试类型排序，一次取出字典项避免循环内查库）
         context = {}
-        output_list = []
-        for (index, li) in enumerate(list_list):
-            qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))  # type:ignore
-            context_str = qs.title
-            sort = qs.sort
-            table = {
-                "type": context_str,
-                "item": li,
-                "sort": sort
-            }
-            output_list.append(table)
-        # 排序
-        output_list = sorted(output_list, key=(lambda x: x["sort"]))
-        context["data"] = output_list
+        context["data"] = build_testtype_output(list_list)
 
         doc.render(context, autoescape=True)
         try:

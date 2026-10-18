@@ -134,8 +134,7 @@ const onCancel = () => {
 
 const emit = defineEmits(["onChangeSearchHide", "onChangeColumnHide"])
 
-const changeColumn = (ev: string, type: any, name: any) => {
-    const column = columns.value.find((item: { dataIndex: any }) => item.dataIndex === name)
+const changeColumn = (_ev: string, type: any) => {
     switch (type) {
         case "hide":
             emit("onChangeColumnHide")

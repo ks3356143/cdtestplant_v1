@@ -89,7 +89,7 @@ class ProblemController(ControllerBase):
 
     # 搜索全部问题单/或查询轮次下的问题单
     @route.get('/problem/searchAllProblem', response=List[ProblemModelOutSchema], exclude_none=True,
-               url_name="problem-allList")
+               url_name="problem-search-all")
     @transaction.atomic
     @paginate(MyPagination)
     def get_all_problems(self, round_key: Optional[str] = False, data: ProblemFilterWithHangSchema = Query(...)):
@@ -105,7 +105,7 @@ class ProblemController(ControllerBase):
                                     grade__icontains=data.grade,
                                     operation__icontains=data.operation,
                                     postPerson__icontains=data.postPerson,
-                                    ).order_by("id")
+                                    ).order_by("id").prefetch_related('case__round')
         closeMethod1 = self.context.request.GET.get("closeMethod[0]")
         closeMethod2 = self.context.request.GET.get("closeMethod[1]")
         query_final = []
@@ -120,24 +120,17 @@ class ProblemController(ControllerBase):
             if closeMethod2 in arr:
                 query_final.append(query)
                 continue
-        # 遍历所有problem，查询是有否有关联case，如果有则设置hang为True，否则False
-        hang = True
-        # 过滤不是该轮次的问题单对象列表
-        deleted_problem_list = []
+        # 遍历所有problem，查询是有否有关联case，如果有则设置为非悬挂，否则悬挂
+        # 关联用例已预取，避免逐条 exists()/filter() 查询（N+1）
+        deleted_ids = set()
         for pro_obj in query_final:
-            case_exists = pro_obj.case.exists()
-            if not case_exists:
-                setattr(pro_obj, "hang", hang)
+            related_cases = list(pro_obj.case.all())
+            setattr(pro_obj, "hang", not related_cases)
             # 如果有关联用例还要看是否是查询轮次的问题单，过滤出去
-            elif case_exists:
-                hang = False
-                setattr(pro_obj, "hang", hang)
-                hang = True
-                if round_key:
-                    if not pro_obj.case.filter(round__key=round_key).exists():
-                        deleted_problem_list.append(pro_obj)
-        for dq in deleted_problem_list:
-            query_final.remove(dq)
+            if related_cases and round_key and not any(c.round.key == round_key for c in related_cases):
+                deleted_ids.add(pro_obj.id)
+        if deleted_ids:
+            query_final = [p for p in query_final if p.id not in deleted_ids]
         # !!!如果是轮次查询则返回轮次，如果是关联查询则查询关联当前的case
         if round_key:
             pass
@@ -237,7 +230,7 @@ class ProblemController(ControllerBase):
         return ChenResponse(message="问题单更新成功")
 
     # 弹窗的-更新问题单
-    @route.put("/problem/modalupdate/{id}", response=ProblemCreateOutSchema, url_name="problem-update")
+    @route.put("/problem/modalupdate/{id}", response=ProblemCreateOutSchema, url_name="problem-modal-update")
     @transaction.atomic
     def update_modal_problem(self, id: int, payload: ProblemUpdateInputSchema):
         check_project_access_by_id(payload.project_id, self.context.request.user)
@@ -308,7 +301,7 @@ class ProblemController(ControllerBase):
         return qs
 
     # 让测试用例关联/取消问题单
-    @route.get('/problem/relateProblem', exclude_none=True, url_name="problem-allList")
+    @route.get('/problem/relateProblem', exclude_none=True, url_name="problem-relate-case")
     @transaction.atomic
     def relate_problem(self, case_key: str, problem_id: int, val: bool):  # val是将要变成的值
         # 先判断将要变成的值是否为True
@@ -342,7 +335,9 @@ class ProblemController(ControllerBase):
     def reset_problem_ident(cls, project_id: int):
         project_obj: Project = get_object_or_404(Project, id=project_id)
         # 获取所有问题单
-        problem_qs = project_obj.projField.prefetch_related('case').prefetch_related('case__test')
+        problem_qs = project_obj.projField.prefetch_related('case__test__round')
+        # 预取测试类型字典，避免循环内逐条查询（N+1）
+        type_sort_map = {d.key: d.sort for d in DictItem.objects.filter(dict__code='testType')}
         # 待排序列表
         not_sorted_problems = []
         # 处理为List[Dict]以便后续排序修改ident
@@ -351,12 +346,15 @@ class ProblemController(ControllerBase):
             if len(cases):
                 # 如果关联了case
                 belong_demand: TestDemand = cases[0].test
-                # 找到对应测试类型
-                test_type = DictItem.objects.get(dict__code='testType', key=belong_demand.testType)
+                # 找到对应测试类型（字典缺失时与原实现一致地抛出）
+                try:
+                    test_type_sort = type_sort_map[belong_demand.testType]
+                except KeyError:
+                    raise DictItem.DoesNotExist
                 # 找到测试类型的sort/找到轮次key
                 not_sorted_problems.append({
                     'problem': problem,
-                    'sort': test_type.sort,
+                    'sort': test_type_sort,
                     'round_key': belong_demand.round.key,
                 })
             else:

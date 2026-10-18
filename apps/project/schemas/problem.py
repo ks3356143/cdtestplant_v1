@@ -39,20 +39,6 @@ class ProblemFilterWithHangSchema(ProblemFilterSchema):
     # 搜索增加hang字段
     hang: str = Field('3', alias='hang')
 
-# 处理树状结构的schema
-class ProblemTreeReturnSchema(Schema):
-    title: str = Field(..., alias='title')
-    key: str = Field(..., alias='key')
-    level: str = Field(..., alias='level')
-    isLeaf: bool = Field(..., alias='isLeaf')
-
-class ProblemTreeInputSchema(Schema):
-    # 注意这里有alias
-    project_id: int = Field(None, alias='projectId')
-    key: str = Field(None, alias='key')
-    level: str = Field(None, alias='level')
-    isLeaf: bool = Field(None, alias='isLeaf')
-
 # 增加问题单
 class ProblemCreateOutSchema(ModelSchema):
     class Meta:

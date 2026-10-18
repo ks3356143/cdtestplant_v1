@@ -7,16 +7,17 @@ import tailwindcss from "@tailwindcss/vite"
 
 export default ({ mode }) => {
     const env = loadEnv(mode, process.cwd())
-    console.log("当前环境为：", mode)
     const proxyPrefix = env.VITE_APP_PROXY_PREFIX
     return defineConfig({
         base: env.VITE_APP_BASE,
         plugins: [
             vue(),
             vueJsx(),
+            // 产物分析图输出到 dist/visualizer.html，需要时自行打开（不自动弹浏览器，
+            // 否则每次构建都会抢占前台）
             visualizer({
-                open: true,
-                filename: "./dist/visualizer.html" // 分析图生成的文件名
+                open: false,
+                filename: "./dist/visualizer.html"
             }),
             tailwindcss()
         ],
@@ -46,33 +47,6 @@ export default ({ mode }) => {
                     }
                 }
             }
-            // assetsPublicPath: "./"
-            // v8版本又报tinymce is not defined，只有遗憾业务js大的问题
-            /** 
-            rolldownOptions: {
-                output: {
-                    codeSplitting: {
-                        groups: [
-                            {
-                                test: (id) => id.includes("tinymce"),
-                                name: "tinymce",
-                            }
-                        ]
-                    }
-                }
-            }
-            */
-            // vite v7版本配置：V8已经移除
-            /** 
-            rollupOptions: {
-                output: {
-                    manualChunks: (id) => {
-                        if (id.includes("tinymce")) return "tinymce"
-                        return null
-                    }
-                }
-            }
-            */
         },
         server: {
             host: "0.0.0.0",

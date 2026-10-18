@@ -47,39 +47,21 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
     project_path_str = project_path(project_id)
     # 根据传入需要处理的文档类型，自动获路径
     prefix = Path.cwd() / 'media' / project_path_str
-    template_file: Path = prefix / 'form_template' / 'products' / '测评大纲.docx'
-    to_tpl_file: Path = prefix / 'temp' / '测评大纲.docx'
-    seitai_final_file: Path = prefix / 'final_seitai' / '测评大纲.docx'
-    if doc_type == 'sm':
-        template_file = prefix / 'form_template' / 'products' / '测试说明.docx'
-        to_tpl_file = prefix / 'temp' / '测试说明.docx'
-        seitai_final_file: Path = prefix / 'final_seitai' / '测试说明.docx'
-    elif doc_type == 'jl':
-        template_file = prefix / 'form_template' / 'products' / '测试记录.docx'
-        to_tpl_file = prefix / 'temp' / '测试记录.docx'
-        seitai_final_file: Path = prefix / 'final_seitai' / '测试记录.docx'
-    elif doc_type == 'bg':
-        template_file = prefix / 'form_template' / 'products' / '测评报告.docx'
-        to_tpl_file = prefix / 'temp' / '测评报告.docx'
-        seitai_final_file: Path = prefix / 'final_seitai' / '测评报告.docx'
-    elif doc_type == 'hsm':
-        # 如果products里面存在“用户上传的第n轮回归测试说明.docx，则使用它作为模版”
-        template_file = prefix / 'form_template' / 'products' / f'第{round_num}轮回归测试说明.docx'
+    products_dir = prefix / 'form_template' / 'products'
+    # 常规文档类型 -> 中文文件名（未匹配到则回退“测评大纲”，与原 if/elif 行为一致）
+    doc_name_map = {'sm': '测试说明', 'jl': '测试记录', 'bg': '测评报告', 'wtd': '问题单'}
+    if doc_type in ('hsm', 'hjl'):
+        # 回归说明/记录：若 products 里存在“用户上传的第n轮xxx.docx”，则用它作为模版
+        round_kind = '回归测试说明' if doc_type == 'hsm' else '回归测试记录'
+        doc_name = f'第{round_num}轮{round_kind}.docx'
+        template_file: Path = products_dir / doc_name
         if not template_file.exists():
-            template_file = prefix / 'form_template' / 'products' / '回归测试说明.docx'
-        to_tpl_file = prefix / 'temp' / f'第{round_num}轮回归测试说明.docx'
-        seitai_final_file: Path = prefix / 'final_seitai' / f'第{round_num}轮回归测试说明.docx'
-    elif doc_type == 'hjl':
-        # 如果products里面存在“用户上传的第n轮回归测试记录.docx，则使用它作为模版”
-        template_file = prefix / 'form_template' / 'products' / f'第{round_num}轮回归测试记录.docx'
-        if not template_file.exists():
-            template_file = prefix / 'form_template' / 'products' / '回归测试记录.docx'
-        to_tpl_file = prefix / 'temp' / f'第{round_num}轮回归测试记录.docx'
-        seitai_final_file: Path = prefix / 'final_seitai' / f'第{round_num}轮回归测试记录.docx'
-    elif doc_type == 'wtd':
-        template_file = prefix / 'form_template' / 'products' / '问题单.docx'
-        to_tpl_file = prefix / 'temp' / '问题单.docx'
-        seitai_final_file: Path = prefix / 'final_seitai' / '问题单.docx'
+            template_file = products_dir / f'{round_kind}.docx'
+    else:
+        doc_name = doc_name_map.get(doc_type, '测评大纲') + '.docx'
+        template_file = products_dir / doc_name
+    to_tpl_file: Path = prefix / 'temp' / doc_name
+    seitai_final_file: Path = prefix / 'final_seitai' / doc_name
     # 定义找寻被复制文件根路径 - 后续会根据type找子路径
     output_files_path = prefix / 'output_dir'
     # 这里可能修改，储存大纲里面的文档片段
@@ -91,9 +73,8 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
     # 将被拷贝文件分别放入不同两个数组（目录不存在时跳过，避免 FileNotFoundError）
     if output_files_path.exists():
         for file in output_files_path.iterdir():
-            if file.is_file():
-                if file.suffix == '.docx':
-                    dg_copied_files.append(file)
+            if file.is_file() and file.suffix == '.docx':
+                dg_copied_files.append(file)
             elif file.is_dir():
                 # 如果文件夹名称为sm/jl/hsm/hjl/bg/wtd则进入该判断
                 # 所以要求文件系统文件夹名称必须是sm/jl/hsm/hjl/bg/wtd不然无法生成
@@ -104,9 +85,8 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
     reuse_path = prefix / 'reuse'
     if reuse_path.exists():
         for file in reuse_path.iterdir():
-            if file.is_file():
-                if file.suffix == '.docx':
-                    reuse_files.append(file)
+            if file.is_file() and file.suffix == '.docx':
+                reuse_files.append(file)
     # 找到基础模版的所有std域
     doc = Document(template_file.as_posix())
     body = doc.element.body
@@ -116,24 +96,21 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
     image_part_list = []  # 修改为字典两个字段{ 'name':'测评对象', 'img':ImagePart }
     # 筛选片段【二】：用户前端要求不要覆盖的文档片段
     frag_is_cover_dict = {item.name: item.isCover for item in frag_list}
-    # 遍历所有控件 -> 放入area_name_list【这里准备提取公共代码】
+    # 遍历所有控件 -> 放入area_name_list
     for sdt_ele in sdt_element_list:
         isLock = False
+        # 同一 sdtPr 只扫一次子节点：同时识别 lock 与别名
         for elem in sdt_ele.iterchildren():
-            # 【一】用户设置lock - 下面2个if将需要被替换的(控件名称)存入area_name_list
             if elem.tag.endswith('sdtPr'):
+                area_name = None
                 for el in elem.getchildren():
                     if el.tag.endswith('lock'):
                         isLock = True
-            if elem.tag.endswith('sdtPr'):
-                for el in elem.getchildren():
-                    if el.tag.endswith('alias'):
-                        # 筛序【一】：取出用户设置lock的文档片段
-                        if len(el.attrib.values()) > 0 and (isLock == False):
-                            area_name = el.attrib.values()[0]
-                            # 筛选【二】：前端用户选择要覆盖的片段
-                            if frag_is_cover_dict.get(area_name):
-                                area_name_list.append(area_name)
+                    if el.tag.endswith('alias') and len(el.attrib.values()) > 0:
+                        area_name = el.attrib.values()[0]
+                # 筛序【一】：未锁定；筛选【二】：前端用户选择要覆盖的片段
+                if area_name is not None and not isLock and frag_is_cover_dict.get(area_name):
+                    area_name_list.append(area_name)
             # 下面开始替换area_name_list的“域”（这时已经被筛选-因为sdtPr和sdtContent是成对出现）
             if elem.tag.endswith('sdtContent'):
                 if len(area_name_list) > 0:
@@ -194,9 +171,7 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
                         doc_copied = Document(copied_file_path)  # 需要重新获取否则namespace错误
                         copied_body = doc_copied.element.body
                         img_node_list = copied_body.xpath('.//pic:pic')
-                        if not img_node_list:
-                            pass
-                        else:
+                        if img_node_list:
                             for img_node in img_node_list:
                                 img: CT_Picture = img_node
                                 # 根据节点找到图片的关联id
@@ -210,24 +185,22 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
                                 # doc_copied.part.related_parts是一个字典
                                 image_part_list.append({'name': area_pop_name, 'img': related_part})
 
-    # 现在是替换后，找到替换后文档所有pic:pic，并对“域”名称进行识别
-    graph_node_list = body.xpath('.//pic:pic')
-    graph_node_list_transform = []
-    for picNode in graph_node_list:
-        # 遍历替换后模版的所有pic，去找祖先（图片不在 sdt 内时跳过，避免 IndexError）
-        sdt_nodes = picNode.xpath('ancestor::w:sdt[1]')
+    # 现在是替换后，找到替换后文档所有 pic，边识别所属“域”名称边替换
+    for pic_node in body.xpath('.//pic:pic'):
+        # 去找图片的祖先 sdt（图片不在 sdt 内时跳过）
+        sdt_nodes = pic_node.xpath('ancestor::w:sdt[1]')
         if not sdt_nodes:
             continue
-        sdt_node = sdt_nodes[0]
-        for sdt_node_child in sdt_node.iterchildren():
-            # 找到sdt下一级的stdPr
+        # 找到 sdt 下一级 sdtPr 的别名（即“域”名称）
+        yu_name = None
+        for sdt_node_child in sdt_nodes[0].iterchildren():
             if sdt_node_child.tag.endswith('sdtPr'):
                 for sdtPr_node_child in sdt_node_child.getchildren():
                     if sdtPr_node_child.tag.endswith('alias'):
                         yu_name = sdtPr_node_child.attrib.values()[0]
-                        graph_node_list_transform.append({'yu_name': yu_name, 'yu_node': picNode})
-    for graph_node in graph_node_list_transform:
-        image_run_node = getParentRunNode(graph_node['yu_node'])
+        if yu_name is None:
+            continue
+        image_run_node = getParentRunNode(pic_node)
         # 图片节点不在 CT_R 内时跳过，避免 None.clear() 报错
         if image_run_node is None:
             continue
@@ -235,7 +208,7 @@ def generate_temp_doc(doc_type: str, project_id: int, round_num=None, frag_list=
         # 循环去image_part_list找name和yu_name相等的图片
         for img_part in image_part_list:
             # 1.如果找到相等
-            if img_part['name'] == graph_node['yu_name']:
+            if img_part['name'] == yu_name:
                 # 2.找到即可添加图片到“域”
                 image_run_node.clear()
                 # 辅助：去找其父节点是否为段落，是段落则存起来，后面好居中

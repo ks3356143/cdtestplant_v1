@@ -85,20 +85,3 @@ defineOptions({
     name: "projmanage"
 })
 </script>
-
-<style scoped lang="less">
-.msg-menu {
-    & li {
-        border-radius: 1px;
-        cursor: pointer;
-        margin-bottom: 5px;
-        padding: 10px;
-        padding-left: 20px;
-    }
-    & li:hover,
-    & li.active {
-        background: var(--color-fill-2);
-        color: rgb(var(--primary-5));
-    }
-}
-</style>

@@ -1,7 +1,6 @@
 from typing import List
 from apps.dict.models import DictItem
 from apps.project.models import TestDemand
-from html.parser import HTMLParser
 from django.db.models import QuerySet
 # 导入生成文档检查器log - 单例模式
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
@@ -102,67 +101,21 @@ def get_dict_info(dict_code, item_str):
             res['index'] = qs.sort
     return res
 
-# 简单HTML解析器 - 解析富文本的parser - 复杂的使用apps/createDocument/extensions/parse_rich_text.py
-class MyHTMLParser(HTMLParser):
-    def __init__(self):
-        HTMLParser.__init__(self)
-        self.allStrList = []
-
-    def error(self, message):
-        print("HTML解析器出错，error信息为：", message)
-
-    def handle_starttag(self, tag, attrs):
-        if tag == 'img':
-            # 按属性名查找 src（无属性的 <img> 会 IndexError；attrs[0] 也未必是 src）
-            for name, value in attrs:
-                if name == 'src':
-                    self.allStrList.append(value)
-                    break
-
-    def handle_endtag(self, tag):
-        pass
-
-    def handle_data(self, data):
-        if data != '\n':
-            self.allStrList.append(data)
-
-# 不提取图片的HTML解析器
-class MyHTMLParser_p(HTMLParser):
-    def __init__(self):
-        HTMLParser.__init__(self)
-        self.allStrList = []
-
-    def handle_data(self, data):
-        if data != '\n':
-            self.allStrList.append(data)
+def _problem_count_str(problems, field, dict_code, suffix=''):
+    """按 problem 的指定字段查字典计数，输出形如“一般问题4个、严重问题1个”的字符串"""
+    count_dict = {}
+    for problem in problems:
+        key: str = get_str_dict(getattr(problem, field), dict_code)
+        count_dict[key] = count_dict.get(key, 0) + 1
+    return "、".join(f"{key}{suffix}{value}个" for key, value in count_dict.items())
 
 def create_problem_grade_str(problems):
     """传入问题qs，生成到文档的字符串：严重问题4个、一般问题10个"""
-    problem_r1_grade_dict = {}
-    for problem in problems:
-        grade_key: str = get_str_dict(problem.grade, 'problemGrade')
-        if grade_key in problem_r1_grade_dict.keys():
-            problem_r1_grade_dict[grade_key] += 1
-        else:
-            problem_r1_grade_dict[grade_key] = 1
-    problem_r1_grade_list = []
-    for key, value in problem_r1_grade_dict.items():
-        problem_r1_grade_list.append("".join([f"{key}问题", f"{value}个"]))
-    return "、".join(problem_r1_grade_list)
+    return _problem_count_str(problems, 'grade', 'problemGrade', '问题')
 
 def create_problem_type_str(problems):
     """传入问题qs，生成到文档的字符串：文档问题1个，程序问题10个"""
-    problem_r1_type_dict = {}
-    for problem in problems:
-        type_key: str = get_str_dict(problem.type, 'problemType')
-        if type_key in problem_r1_type_dict.keys():
-            problem_r1_type_dict[type_key] += 1
-        else:
-            problem_r1_type_dict[type_key] = 1
-    problem_r1_type_list = []
-    for key, value in problem_r1_type_dict.items():
-        problem_r1_type_list.append("".join([f"{key}", f"{value}个"]))
-    return "、".join(problem_r1_type_list)
+    return _problem_count_str(problems, 'type', 'problemType')
 
 def create_str_testType_list(cases):
     """传入用例的qs，生成其测试类型的字符串：例如包含xxx测试5个，xxx测试11个，返回的是元组第二个元素表示测试类型个数"""
@@ -414,12 +367,3 @@ def create_problem_type_table(problems):
         else:
             res_list[index]['non_closed_count'] += 1
     return res_list
-
-def get_demand_testTypes(demand_qs) -> str:
-    """传入测试项qs，返回字符串类似于“静态分析、代码审查、功能测试等”"""
-    testType_list = list(demand_qs.values("testType").distinct().order_by('testType'))
-    t_code_list = [item['testType'] for item in testType_list]
-    t_code_list = get_list_dict_info('testType', t_code_list)
-    t_code_list.sort(key=lambda x: int(x['index']))
-    t_str = [item['title'] for item in t_code_list]
-    return '、'.join(t_str) if len(t_str) > 0 else "测试"

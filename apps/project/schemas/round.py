@@ -52,9 +52,10 @@ class CreateRoundInputSchema(ModelSchema):
         fields = ['beginTime', 'best_condition_tem', 'best_condition_voltage', 'endTime', 'grade', 'ident',
                   'low_condition_tem', 'low_condition_voltage', 'name',
                   'typical_condition_tem', 'typical_condition_voltage', 'key', 'location']
+        # 注意：各元素之间必须有逗号，漏写会被 Python 拼成一个不存在的字段名
         fields_optional = ['best_condition_tem', 'best_condition_voltage',
                            'low_condition_tem', 'low_condition_voltage', 'typical_condition_tem',
-                           'typical_condition_voltage' 'grade']
+                           'typical_condition_voltage', 'grade']
 
 # influence_item return
 class InfluenceItemOutSchema(ModelSchema):

@@ -182,8 +182,8 @@ class DesignController(ControllerBase):
         check_project_access_by_id(payload.project_id, self.context.request.user)
         design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident,
                                               round__key=payload.round_key)
-        # 判断是否和同项目同轮次的标识重复
-        if len(design_search) > 1 and payload.ident != '':
+        # 判断是否和同项目同轮次的标识重复（先判空标识，避免无意义的全量查询）
+        if payload.ident != '' and design_search.count() > 1:
             return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
 
         # 查到当前

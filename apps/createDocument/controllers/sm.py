@@ -16,7 +16,7 @@ from utils.chen_response import ChenResponse
 from utils.util import get_ident, get_case_ident, get_testType
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from apps.createDocument.extensions import util
-from apps.createDocument.extensions.util import create_sm_docx
+from apps.createDocument.extensions.util import create_sm_docx, build_testtype_output
 from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
@@ -24,7 +24,7 @@ from apps.createDocument.extensions.documentTime import DocTime
 # @api_controller("/generateSM", tags=['生成说明文档系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
 @api_controller("/generateSM", tags=['生成说明文档系列'])
 class GenerateControllerSM(ControllerBase):
-    @route.get("/create/techyiju", url_name="create-techyiju")
+    @route.get("/create/techyiju", url_name="create-techyiju-sm")
     @transaction.atomic
     def create_techyiju(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
@@ -51,7 +51,7 @@ class GenerateControllerSM(ControllerBase):
         }
         return create_sm_docx("技术依据文件.docx", context, id)
 
-    @route.get('/create/caseList', url_name='create-caseList')
+    @route.get('/create/caseList', url_name='create-caseList-sm')
     @transaction.atomic
     def create_caseList(self, id: int):
         """创建第一轮文档"""
@@ -116,22 +116,9 @@ class GenerateControllerSM(ControllerBase):
                 demand_dict['item'].append(case_dict)
 
             list_list[type_index].append(demand_dict)
-        # 定义渲染上下文
+        # 定义渲染上下文（组装并按测试类型排序，一次取出字典项避免循环内查库）
         context = {}
-        output_list = []
-        for (index, li) in enumerate(list_list):
-            qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))
-            context_str = qs.title
-            sort = qs.sort
-            table = {
-                "type": context_str,
-                "item": li,
-                "sort": sort
-            }
-            output_list.append(table)
-        # 排序
-        output_list = sorted(output_list, key=(lambda x: x["sort"]))
-        context["data"] = output_list
+        context["data"] = build_testtype_output(list_list)
         doc.render(context, autoescape=True)
         try:
             doc.save(Path.cwd() / "media" / project_path_str / "output_dir/sm" / "测试用例.docx")
@@ -169,19 +156,9 @@ class GenerateControllerSM(ControllerBase):
                 }
                 demand_dict['item'].append(case_dict)
             list_list[type_index].append(demand_dict)
-        # 定义渲染上下文
+        # 定义渲染上下文（组装并按测试类型排序，一次取出字典项避免循环内查库）
         context = {}
-        output_list = []
-        for (index, li) in enumerate(list_list):
-            qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))
-            sort = qs.sort
-            table = {
-                "item": li,
-                "sort": sort
-            }
-            output_list.append(table)
-        output_list = sorted(output_list, key=(lambda x: x["sort"]))
-        context["data"] = output_list
+        context["data"] = build_testtype_output(list_list, include_type=False)
         return create_sm_docx("用例说明.docx", context, id)
 
     @route.get('/create/smtrack', url_name='create-smtrack')

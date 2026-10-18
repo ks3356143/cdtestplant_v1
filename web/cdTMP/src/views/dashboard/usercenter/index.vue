@@ -58,10 +58,10 @@ import useFetchData from "@/hooks/fetchData"
 const { loadingData, isDataLoading } = useFetchData([], logApi.getLoginLog)
 const userStore = useUserStore()
 const loginLogList = computed(() => {
-    return loadingData.value.map((item) => {
-        item.create_datetime = item.create_datetime.split(".")[0].replace("T", " ")
-        return item
-    })
+    return loadingData.value.map((item) => ({
+        ...item,
+        create_datetime: item.create_datetime.split(".")[0].replace("T", " ")
+    }))
 })
 // 操作日志不用hook
 const isLoading = ref(true)
@@ -70,16 +70,16 @@ logApi.getOperationLog()
     .then((res) => {
         data.value = res.data
     })
-    .catch((e) => console.log("获取操作日志失败：", e))
+    .catch(() => {})
     .finally(() => {
         isLoading.value = false
     })
 
 const operationLogList = computed(() => {
-    return data.value.map((item) => {
-        item.create_datetime = item.create_datetime.split(".")[0].replace("T", " ")
-        return item
-    })
+    return data.value.map((item) => ({
+        ...item,
+        create_datetime: item.create_datetime.split(".")[0].replace("T", " ")
+    }))
 })
 
 // 组件命名

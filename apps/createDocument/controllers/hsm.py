@@ -16,7 +16,7 @@ from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from utils.chen_response import ChenResponse
 from apps.createDocument.extensions import util
 from utils.path_utils import project_path
-from apps.createDocument.extensions.util import delete_dir_files
+from apps.createDocument.extensions.util import delete_dir_files, build_testtype_output, require_project_begin_time
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
 # 导入生成日志记录模块
@@ -56,7 +56,7 @@ class GenerateControllerHSM(ControllerBase):
         return uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx',
                                                '静态硬件和固件项.docx',
                                                StaticSoftHardware,
-                                               current_round)
+                                               current_round, isHsm=True)
 
     # 动态软件项
     @route.get('/create/dynamic_soft', url_name='create-dynamic_soft-hsm')
@@ -76,7 +76,7 @@ class GenerateControllerHSM(ControllerBase):
                                                '测评数据.docx', EvaluateData, current_round, isHsm=True)
 
     # ~~~5个接口：end~~~
-    @route.get("/create/basicInformation", url_name="create-basicInformation")
+    @route.get("/create/basicInformation", url_name="create-basicInformation-hsm")
     @transaction.atomic
     def create_basicInformation(self, id: int):
         """生成回归测试说明的被测软件基本信息"""
@@ -110,7 +110,7 @@ class GenerateControllerHSM(ControllerBase):
             'security_level': get_str_dict(project_obj.security_level, 'security_level'),
             'runtime': "、".join(runtime_list),
             'devplant': "、".join(devplant_list),
-            'recv_date': project_obj.beginTime.strftime("%Y-%m-%d"),
+            'recv_date': require_project_begin_time(project_obj).strftime("%Y-%m-%d"),
             'dev_unit': project_obj.dev_unit,
         }
         version_info = [{
@@ -316,11 +316,12 @@ class GenerateControllerHSM(ControllerBase):
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
+        # 一次取出 testType 数量与 testMethod 字典项，避免在轮次/测试项循环内反复查库（N+1）
+        test_type_len = Dict.objects.get(code='testType').dictItem.count()
+        testmethod_items = list(Dict.objects.get(code="testMethod").dictItem.all())
         # 遍历非第一轮的轮次
         for hround in hround_list:
             cname = chinese_round_name[int(hround.key)]  # var：输出二、三字样
-            # 先查询dict字典，查出总共有多少个testType
-            test_type_len = Dict.objects.get(code='testType').dictItem.count()
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
 
@@ -345,7 +346,7 @@ class GenerateControllerHSM(ControllerBase):
                     }
                     content_list.append(content_dict)
                 testmethod_str = ''
-                for dict_item_qs in Dict.objects.get(code="testMethod").dictItem.all():
+                for dict_item_qs in testmethod_items:
                     for tm_item in demand.testMethod:
                         if tm_item == dict_item_qs.key:
                             testmethod_str += dict_item_qs.title + " "
@@ -376,20 +377,8 @@ class GenerateControllerHSM(ControllerBase):
             context = {
                 "project_name": project_obj.name
             }
-            output_list = []
-            for (index, li) in enumerate(list_list):
-                qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))
-                context_str = qs.title
-                sort = qs.sort
-                table = {
-                    "type": context_str,
-                    "item": li,
-                    "sort": sort
-                }
-                output_list.append(table)
-                # 排序
-            output_list = sorted(output_list, key=(lambda x: x["sort"]))
-            context["data"] = output_list
+            # 组装并按测试类型排序（一次取出字典项，避免循环内查库）
+            context["data"] = build_testtype_output(list_list)
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮回归测试需求.docx"
             doc.render(context, autoescape=True)
             try:
@@ -412,9 +401,9 @@ class GenerateControllerHSM(ControllerBase):
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
+        # 一次取出 testType 数量，避免在轮次循环内反复查库
+        test_type_len = Dict.objects.get(code='testType').dictItem.count()
         for hround in hround_list:
-            # 先查询dict字典，查出总共有多少个testType
-            test_type_len = Dict.objects.get(code='testType').dictItem.count()
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
@@ -434,19 +423,9 @@ class GenerateControllerHSM(ControllerBase):
                     }
                     demand_dict['item'].append(case_dict)
                 list_list[type_index].append(demand_dict)
-            # 定义渲染上下文
+            # 定义渲染上下文（组装并按测试类型排序，一次取出字典项避免循环内查库）
             context = {}
-            output_list = []
-            for (index, li) in enumerate(list_list):
-                qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))
-                sort = qs.sort
-                table = {
-                    "item": li,
-                    "sort": sort
-                }
-                output_list.append(table)
-            output_list = sorted(output_list, key=(lambda x: x["sort"]))
-            context["data"] = output_list
+            context["data"] = build_testtype_output(list_list, include_type=False)
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮回归测试用例概述.docx"
             doc.render(context=context, autoescape=True)
             try:
@@ -455,7 +434,7 @@ class GenerateControllerHSM(ControllerBase):
                 return ChenResponse(code=400, status=400, message='您打开了生成的文档，请关闭后重试')
         return ChenResponse(code=200, status=200, message='多轮回归测试用例概述生成完毕')
 
-    @route.get("/create/caseList", url_name="create-caseList")
+    @route.get("/create/caseList", url_name="create-caseList-hsm")
     @transaction.atomic
     def create_caseList(self, id: int):
         """
@@ -469,10 +448,10 @@ class GenerateControllerHSM(ControllerBase):
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
+        # 一次取出 testType 数量，避免在轮次循环内反复查库
+        test_type_len = Dict.objects.get(code='testType').dictItem.count()
         for hround in hround_list:
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
-            # 先查询dict字典，查出总共有多少个testType
-            test_type_len = Dict.objects.get(code='testType').dictItem.count()
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
             demand_prefix = '3.1'
@@ -521,22 +500,9 @@ class GenerateControllerHSM(ControllerBase):
                     demand_dict['item'].append(case_dict)
 
                 list_list[type_index].append(demand_dict)
-            # 定义渲染上下文
+            # 定义渲染上下文（组装并按测试类型排序，一次取出字典项避免循环内查库）
             context = {}
-            output_list = []
-            for (index, li) in enumerate(list_list):
-                qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))
-                context_str = qs.title
-                sort = qs.sort
-                table = {
-                    "type": context_str,
-                    "item": li,
-                    "sort": sort
-                }
-                output_list.append(table)
-            # 排序
-            output_list = sorted(output_list, key=(lambda x: x["sort"]))
-            context["data"] = output_list
+            context["data"] = build_testtype_output(list_list)
             context["round_han"] = cname
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm' / f"第{cname}轮测试用例.docx"
             doc.render(context=context, autoescape=True)

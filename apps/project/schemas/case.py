@@ -17,27 +17,10 @@ class CaseStepSchema(ModelSchema):
         model = CaseStep
         fields = ["operation", 'expect', 'result', 'passed', 'case', 'id']
 
-# 测试用例的步骤输出schema，输出isPassed和isExe转换后的
-class CaseStepWithTransitionSchema(ModelSchema):
-    class Meta:
-        model = CaseStep
-        fields = ["operation", 'expect', 'result', 'passed', 'case', 'id']
-
 # 输出case：不关联问题单和步骤
 class CaseModelOutSchemaWithoutProblem(ModelSchema):
-    testStep: List[CaseStepWithTransitionSchema]
-    testType: str  # 用例额外字段，用于测试类型FT的标识给前端
-
-    class Meta:
-        model = Case
-        exclude = ['project', 'round', 'dut', 'design', 'test', 'remark', 'sort']
-
-# 输出case：关联问题单
-class CaseModelOutSchemaOrigin(ModelSchema):
     testStep: List[CaseStepSchema]
     testType: str  # 用例额外字段，用于测试类型FT的标识给前端
-    # 新增：关联的问题单
-    problem: Optional[ProblemModelOutSchema] = None
 
     class Meta:
         model = Case

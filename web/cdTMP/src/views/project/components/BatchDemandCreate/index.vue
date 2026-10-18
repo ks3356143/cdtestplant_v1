@@ -204,8 +204,7 @@ const handleSubmit = async () => {
                 }
                 return false
             }
-        } catch (e) {
-            console.log("录入事后前端报错，报错信息如下:", e)
+        } catch {
             return false
         }
     }

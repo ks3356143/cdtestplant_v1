@@ -22,6 +22,9 @@ log_manager = TableOperationLog.objects
 
 _thread_local = local()
 
+# 记录操作日志时需要排除的模型（日志模块、用例步骤表、测试项步骤表、用户表）
+_SKIP_LOG_SENDERS = {TableOperationLog, CaseStep, TestDemandContent, LoginLog, OperationLog, Users}
+
 def get_current_user():
     """
     获取当前用户对象，调用则从local对象里面获取user
@@ -65,8 +68,7 @@ def set_request_locals(sender, **kwargs):
 def post_save_handler(sender, instance, created, **kwargs):
     """模型新增-操作日志填写"""
     # 注意排除日志模块、用例步骤表、测试项步骤表
-    if (sender == TableOperationLog or sender == CaseStep or sender == TestDemandContent or sender == LoginLog or sender == OperationLog or sender
-            == Users):
+    if sender in _SKIP_LOG_SENDERS:
         return
     user = get_current_user()
     ope_dict = {
@@ -82,8 +84,7 @@ def post_save_handler(sender, instance, created, **kwargs):
 def post_delete_handler(sender, instance, **kwargs):
     """模型删除-操作日志填写"""
     # 注意排除日志模块、用例步骤表、测试项步骤表
-    if (sender == TableOperationLog or sender == CaseStep or sender == TestDemandContent or sender == LoginLog or sender == OperationLog or sender
-            == Users):
+    if sender in _SKIP_LOG_SENDERS:
         return
     user = get_current_user()
     ope_dict = {

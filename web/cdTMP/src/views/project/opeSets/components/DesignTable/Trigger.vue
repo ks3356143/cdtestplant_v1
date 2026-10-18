@@ -52,8 +52,6 @@ const columns = computed(() => {
     // 判断是否为源代码被测件
     return quUploadColumns
 })
-
-// 2.异步获取数据
 </script>
 
 <style lang="less" scoped>

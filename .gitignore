@@ -8,3 +8,28 @@
 .idea
 /打包后配置
 /packagesInitialize
+
+# 凭据配置：含 LDAP 密码，不入库（样例见 .env.example）
+.env
+
+# Python 编译产物
+__pycache__/
+*.py[cod]
+
+# 运行时日志
+/logs/
+
+# 运行期生成物
+# 注意：media/*/form_template/ 是文档模板（输入资产），保留在版本库中；
+# 下列目录均为程序生成结果，可随时重建，不入库
+media/*/output_dir/
+media/*/final_seitai/
+media/*/temp/
+media/*/reuse/
+media/**/temporary/
+
+# Office 临时锁文件
+~$*
+
+# 手工备份（如追踪表改列前的 .bak-日期）
+*.bak-*

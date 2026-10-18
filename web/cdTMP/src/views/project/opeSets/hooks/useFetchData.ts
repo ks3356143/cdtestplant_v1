@@ -1,4 +1,4 @@
-import { onMounted, Ref, ref } from "vue"
+import { onMounted, Ref, ref, shallowRef } from "vue"
 import { useRoute } from "vue-router"
 
 /**
@@ -18,7 +18,7 @@ export default function useFetchData(fetchFn: Function, columns: Ref<any>) {
     const route = useRoute()
     const projectId = route.query.id
     const round = route.query.key
-    const tableData = ref([]) // 表格数据
+    const tableData = shallowRef([]) // 表格数据（整表替换、无需深层响应式）
     const total = ref(0)
     const isFetching = ref(false)
     const fetchData = async (isSearch: boolean = false) => {

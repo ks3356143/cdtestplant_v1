@@ -1,4 +1,3 @@
-import base64
 import io
 from typing import Any
 from datetime import datetime
@@ -22,8 +21,8 @@ from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
-from apps.createDocument.extensions.util import create_dg_docx
-from apps.createDocument.extensions.parse_rich_text import RichParser
+from apps.createDocument.extensions.util import create_dg_docx, build_testtype_output, require_project_begin_time
+from apps.createDocument.extensions.parse_rich_text import RichParser, image_payload
 from apps.createDocument.extensions.documentTime import DocTime
 from utils.path_utils import project_path
 # 记录生成日志
@@ -61,6 +60,11 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 按照自己key排序，这样可以按照design的key排序
         sorted_demand_qs = sorted(testDemand_qs, key=demand_sort_by_designKey)
 
+        # 一次取出 testMethod 字典项，避免在测试项循环内反复查库（N+1）
+        testmethod_items = list(Dict.objects.get(code="testMethod").dictItem.all())
+        # 被测件类型排序顺序（常量提到循环外，避免每次迭代重建）
+        type_order = {'YZ': 0, 'XQ': 1, 'XY': 2, 'SJ': 3, None: 99, '': 999}
+
         # 遍历第一轮测试项：默认是ID排序
         for single_qs in sorted_demand_qs:
             type_index = type_number_list.index(int(single_qs.testType))
@@ -81,7 +85,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 content_list.append(content_dict)
             # 查询测试项中testMethod
             testmethod_str = ''
-            for dict_item_qs in Dict.objects.get(code="testMethod").dictItem.all():
+            for dict_item_qs in testmethod_items:
                 for tm_item in single_qs.testMethod:
                     if tm_item == dict_item_qs.key:
                         testmethod_str += dict_item_qs.title + " "
@@ -109,8 +113,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 }
                 doc_list.append(ddict)
             # 定义排序顺序映射
-            TYPE_ORDER = {'YZ': 0, 'XQ': 1, 'XY': 2, 'SJ': 3, None: 99, '': 999}
-            doc_list.sort(key=lambda x: TYPE_ORDER.get(x.get('dut_type'), 999))
+            doc_list.sort(key=lambda x: type_order.get(x.get('dut_type'), 999))
 
             # 组装单个测试项
             ## 打印本项目是FPGA还是CPU
@@ -130,21 +133,8 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             }
             list_list[type_index].append(testdemand_dict)
 
-        output_list = []
-
-        for (index, li) in enumerate(list_list):
-            qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))
-            context_str = qs.title
-            sort = qs.sort
-            table = {
-                "type": context_str,
-                "item": li,
-                "sort": sort
-            }
-            output_list.append(table)
-
-        # 排序1：测试类型排序
-        output_list = sorted(output_list, key=(lambda x: x["sort"]))
+        # 组装并按测试类型排序（一次取出字典项，避免循环内查库）
+        output_list = build_testtype_output(list_list)
 
         # 定义渲染context字典
         context = {
@@ -173,7 +163,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         }
         return create_dg_docx('标准依据文件.docx', context, id)
 
-    @route.get("/create/techyiju", url_name='create-techyiju')
+    @route.get("/create/techyiju", url_name='create-techyiju-dg')
     @transaction.atomic
     def create_techyiju(self, id: int):
         # 找出所属项目
@@ -328,10 +318,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                     for row in range(rows):
                         for col in range(cols):
                             cell = table.cell(row, col)
-                            cell.text = data_obj.content[row][col]
                             # 第一行设置居中
                             if row == 0:
-                                # 黑体设置
+                                # 表头：清空后按黑体、居中重新写入
                                 cell.text = ""
                                 pa = cell.paragraphs[0]
                                 run = pa.add_run(str(data_obj.content[row][col]))
@@ -341,13 +330,15 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                                 pa.alignment = WD_ALIGN_PARAGRAPH.CENTER
                                 # 垂直居中
                                 cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+                            else:
+                                cell.text = data_obj.content[row][col]
                     # 表格居中
                     table.alignment = WD_ALIGN_PARAGRAPH.CENTER
                     # 设置边框
                     set_table_border_by_cell_position(table)
                     item_context['content'] = subdoc
                 elif data_obj.type == 'image':
-                    base64_bytes = base64.b64decode(data_obj.content.replace("data:image/png;base64,", ""))
+                    base64_bytes = image_payload(data_obj.content)
                     item_context['content'] = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(120))
                 data_list.append(item_context)
             context = {
@@ -435,7 +426,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         image_render = None
         fontnote = None
         if image_obj.exists():
-            base64_bytes = base64.b64decode(image_obj.first().content.replace("data:image/png;base64,", "")) # type:ignore
+            base64_bytes = image_payload(image_obj.first().content) # type:ignore
             image_render = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(120))
             fontnote = image_obj.first().fontnote # type:ignore
         context = {
@@ -634,7 +625,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         return create_dg_docx("环境差异性分析.docx", context, id)
 
     # 生成被测软件-基本信息
-    @route.get('/create/baseInformation', url_name='create-baseInformation')
+    @route.get('/create/baseInformation', url_name='create-baseInformation-dg')
     def create_information(self, id: int):
         project_qs = get_object_or_404(Project, id=id)
         security = get_str_dict(project_qs.security_level, 'security_level')
@@ -663,7 +654,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             'version': version,
             'line_count': line_count,
             'effective_line': int(first_round_SO.effective_lines),
-            'recv_date': project_qs.beginTime.strftime("%Y-%m-%d"),
+            'recv_date': require_project_begin_time(project_qs).strftime("%Y-%m-%d"),
             'dev_unit': dev_unit,
             'soft_type': project_qs.get_soft_type_display(),
             'runtime': "\a".join(runtime_list),
@@ -694,11 +685,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             word_types = ['文档审查', '静态分析', '代码审查', '逻辑测试', '功能测试', '性能测试', '边界测试',
                           '恢复性测试', '安装性测试', '数据处理测试', '余量测试', '强度测试', '接口测试',
                           '人机交互界面测试', '兼容性测试']
-            type_index = []
-            for index, test_type in enumerate(word_types):
-                for exist_type in type_name_list:
-                    if exist_type == test_type:
-                        type_index.append(str(index))
+            type_index = [str(index) for index, test_type in enumerate(word_types) if test_type in type_name_list]
             context = {
                 "security_level": get_str_dict(project_qs.security_level, 'security_level'),
                 "testTypes": "、".join(type_name_list),
@@ -723,7 +710,9 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             project_qs = get_object_or_404(Project, id=id)
             # 根据关键等级检查是否有代码审查
             security = project_qs.security_level
-            isDmsc = True if int(security) <= 2 else False
+            if security is None:
+                return ChenResponse(status=400, code=400, message='项目安全等级未填写，请在项目设置中补充后再生成')
+            isDmsc = int(security) <= 2
             # 获取第一轮所有测试项QuerySet
             project_round_one = project_qs.pField.filter(key=0).first()
             if not project_round_one:
@@ -761,11 +750,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         for testDemand in testDemands:
             # 获取每个测试项测试类型
             test_type = get_list_dict('testType', [testDemand.testType])[0].get('ident_version')
-            # 如果字典没有该key，则创建并value=1
-            if not test_type in type_dict:
-                type_dict[test_type] = 1
-            else:
-                type_dict[test_type] += 1
+            type_dict[test_type] = type_dict.get(test_type, 0) + 1
         length = len(type_dict)
         type_str_list = []
         for key, value in type_dict.items():

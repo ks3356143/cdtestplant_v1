@@ -1,9 +1,11 @@
 from pathlib import Path
 from docxtpl import DocxTemplate
 from docx.table import Table
+from ninja.errors import HttpError
 from utils.chen_response import ChenResponse
 from typing import Any
 from apps.project.models import Project
+from apps.dict.models import Dict
 from utils.path_utils import project_path
 
 def merge_all_cell(table: Table) -> None:
@@ -42,10 +44,6 @@ def create_sm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终说明文档工具函数"""
     return _create_docx(template_name, context, id, 'sm', 'output_dir/sm')
 
-def create_hsm_docx(template_name: str, context: dict, id: int) -> ChenResponse:
-    """生成最终回归测试说明文档工具函数"""
-    return _create_docx(template_name, context, id, 'hsm', 'output_dir/hsm')
-
 def create_dg_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终大纲文档工具函数"""
     return _create_docx(template_name, context, id, 'dg', 'output_dir')
@@ -54,9 +52,31 @@ def create_bg_docx(template_name: str, context: dict, id: int) -> ChenResponse:
     """生成最终报告文档工具函数"""
     return _create_docx(template_name, context, id, 'bg', 'output_dir/bg')
 
-def create_wtd_docx(template_name: str, context: dict, id: int) -> ChenResponse:
-    """生成最终问题单文档工具函数"""
-    return _create_docx(template_name, context, id, 'wtd', 'output_dir/wtd')
+def build_testtype_output(list_list: list, *, include_type: bool = True) -> list:
+    """
+    把“按 testType 分组”的 list_list 组装成模版渲染用的 output_list，并按 sort 排序。
+    一次性取出 testType 字典项，避免在循环内逐个查库（原实现的 N+1）。
+    include_type：部分文档（如用例概述）不需要 type 字段，可通过该开关控制。
+    """
+    dict_items = {item.key: item for item in Dict.objects.get(code='testType').dictItem.all()}
+    output_list = []
+    for index, li in enumerate(list_list):
+        item = dict_items[str(index + 1)]
+        if include_type:
+            output_list.append({"type": item.title, "item": li, "sort": item.sort})
+        else:
+            output_list.append({"item": li, "sort": item.sort})
+    return sorted(output_list, key=lambda x: x["sort"])
+
+def require_project_begin_time(project: Project):
+    """
+    取项目开始时间（各文档中的“被测件接收时间”）。
+    该字段允许为空；未填写时给出明确业务提示，避免 None.strftime / None.year 直接抛 500。
+    """
+    if not project.beginTime:
+        raise HttpError(400, '项目开始时间（被测件接收时间）未填写，请在项目设置中补充后再生成')
+    return project.beginTime
+
 
 def get_round1_problem(project: Project) -> Any:
     """

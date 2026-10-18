@@ -25,8 +25,8 @@ const viewChildRef = ref(null)
 const refresh = () => {
     try {
         viewChildRef.value.refreshCrudTable()
-    } catch (err) {
-        console.log("无法找到router-view动态组件的刷新函数")
+    } catch {
+        // 当前页面没有 refreshCrudTable 方法，忽略
     }
 }
 defineExpose({ refresh })

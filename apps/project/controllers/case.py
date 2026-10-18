@@ -19,14 +19,13 @@ from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, 
 from apps.project.tools.access_control import check_project_access, check_project_access_by_id
 from apps.project.schemas.case import DeleteSchema, CaseModelOutSchema, CaseFilterSchema, \
     CaseTreeReturnSchema, ReplaceCaseSchema, PersonReplaceSchema, ExetimeReplaceSchema, \
-    CaseTreeInputSchema, CaseCreateOutSchema, CaseCreateInputSchema, DemandNodeSchema
+    CaseTreeInputSchema, CaseCreateOutSchema, CaseCreateInputSchema, DemandNodeSchema, \
+    CaseModelOutSchemaWithoutProblem, BatchCreateCaseInputSchema
 from utils.util import get_testType
 from utils.codes import HTTP_INDEX_ERROR, HTTP_EXISTS_CASES
 from apps.project.tools.copyCase import case_move_to_test, case_copy_to_test, case_to_case_copy_or_move
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tool.batchTools import parse_case_content_string
-# 导入case的schema
-from apps.project.schemas.case import CaseModelOutSchemaWithoutProblem, BatchCreateCaseInputSchema
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试用例接口'])
 class CaseController(ControllerBase):
@@ -41,7 +40,7 @@ class CaseController(ControllerBase):
         check_project_access_by_id(data.project_id, self.context.request.user)
         if case_id:
             # 当传入了id，则查询单个
-            qs = Case.objects.filter(id=case_id)  # type:ignore
+            qs = Case.objects.filter(id=case_id).select_related('test')  # type:ignore
         else:
             conditionNoneToBlank(data)
             query_params = {
@@ -60,7 +59,7 @@ class CaseController(ControllerBase):
             else:
                 # 汇总界面只查round
                 query_params['round__key'] = data.round_id
-            qs = Case.objects.filter(**query_params).order_by("key")
+            qs = Case.objects.filter(**query_params).order_by("key").select_related('test')
         # 由于有嵌套query_set存在，把每个用例的schema加上一个字段
         query_list = []
         for query_single in qs:
@@ -69,7 +68,7 @@ class CaseController(ControllerBase):
             setattr(query_single, 'testType', get_testType(query_single.test.testType, dict_code='testType'))
             # 如果有问题单字段则添加上
             related_problem: Problem = query_single.caseField.first()
-            if query_single.caseField.all():
+            if related_problem:
                 setattr(query_single, 'problem', related_problem)
             # 2025年5月10日在test字段加上testContent
             test_obj = query_single.test
@@ -388,11 +387,11 @@ class CaseController(ControllerBase):
     @transaction.atomic
     def bulk_replace_person(self, payload: PersonReplaceSchema):
         # 访问控制：对整批选中的用例逐一校验，避免只检查第一行造成跨项目篡改（自主访问控制 7.1.3）
-        selected_case_qs = Case.objects.filter(id__in=payload.selectRows)
+        selected_case_qs = Case.objects.filter(id__in=payload.selectRows).select_related('project')
         for project in {c.project for c in selected_case_qs}:
             check_project_access(project, self.context.request.user)
         # 替换设计人员
-        case_qs = Case.objects.filter(id__in=payload.selectRows)
+        case_qs = selected_case_qs
         if payload.designPerson != '不替换' and payload.designPerson != '':
             case_qs.update(designPerson=payload.designPerson)
         if payload.testPerson != '不替换' and payload.testPerson != '':
@@ -408,7 +407,7 @@ class CaseController(ControllerBase):
         if not selected_case_ids:
             return ChenResponse(status=500, code=50999, message='未选择行!', data="")
         # 访问控制：对整批选中的用例逐一校验，避免只检查第一行造成跨项目篡改（自主访问控制 7.1.3）
-        selected_case_qs = Case.objects.filter(id__in=payload.selectRows)
+        selected_case_qs = Case.objects.filter(id__in=payload.selectRows).select_related('project')
         for project in {c.project for c in selected_case_qs}:
             check_project_access(project, self.context.request.user)
         # 随机日期
@@ -418,7 +417,7 @@ class CaseController(ControllerBase):
         # 更新的case的id列表
         updated_cases = []
         # 替换设计人员
-        case_qs = Case.objects.filter(id__in=payload.selectRows)
+        case_qs = selected_case_qs
         faker = Faker()
         # 逐个更新
         for case in case_qs:

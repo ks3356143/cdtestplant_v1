@@ -10,6 +10,28 @@ from docxtpl import InlineImage
 from docx.shared import Mm
 import re
 
+# TinyMCE 富文本里的图片以 data URI 形式保存，png / jpeg / jpg 三种都可能出现。
+# 统一按首个逗号切出 base64 负载：早期实现只剥离了 png 前缀，jpeg/jpg 会把
+# “data:image/jpeg;base64” 里的字母一并当作 base64 解码，得到损坏的图片字节。
+_IMAGE_DATA_URI_PREFIXES = (
+    "data:image/png;base64,",
+    "data:image/jpeg;base64,",
+    "data:image/jpg;base64,",
+)
+
+
+def is_image_data_uri(text: str) -> bool:
+    """判断一行内容是否为内嵌图片的 data URI"""
+    return text.startswith(_IMAGE_DATA_URI_PREFIXES)
+
+
+def image_payload(text: str) -> bytes:
+    """从图片 data URI 中取出纯 base64 负载并解码；不带前缀时按原样解码"""
+    if is_image_data_uri(text):
+        text = text.split(",", 1)[1]
+    return base64.b64decode(text)
+
+
 # text.replace('\xa0', ' '))
 class RichParser:
     def __init__(self, rich_text):
@@ -70,11 +92,6 @@ class RichParser:
         # return df.values.tolist()
         return df.fillna('').T.reset_index().T.values.tolist()
 
-    # 3.2.辅助方法，打印解析后列表
-    def print_content(self):
-        for line in self.data_list:
-            print(line)
-
     # 4.1.最终方法，生成给docxtpl可用的列表 -> 注意需要传递DocxTemplate对象，在接口函数里面初始化的
     def get_final_list(self, doc, /, *, img_size=100, height=80):
         """注意关键字传参可修改图片大小img_size:int=100"""
@@ -84,9 +101,8 @@ class RichParser:
             if isinstance(oneline, list):
                 final_list.append({'isTable': True, 'data': oneline})
                 continue
-            if oneline.startswith("data:image/png;base64") or oneline.startswith("data:image/jpeg;base64,") or oneline.startswith(
-                    "data:image/jpg;base64,"):
-                base64_bytes = base64.b64decode(oneline.replace("data:image/png;base64,", ""))
+            if is_image_data_uri(oneline):
+                base64_bytes = image_payload(oneline)
                 # ~~~设置了固定宽度、高度~~~
                 inline_image = InlineImage(doc, io.BytesIO(base64_bytes), width=Mm(img_size), height=Mm(height))
                 final_list.append(inline_image)
@@ -110,8 +126,8 @@ class RichParser:
             if isinstance(oneline, list):
                 final_list.append({'isTable': True, 'data': oneline})
                 continue
-            if oneline.startswith("data:image/png;base64"):
-                base64_bytes = base64.b64decode(oneline.replace("data:image/png;base64,", ""))
+            if is_image_data_uri(oneline):
+                base64_bytes = image_payload(oneline)
                 # 1.和上面函数变化：图片更改为dict然后isCenter属性居中
                 final_list.append(
                     {'isCenter': True,
@@ -130,7 +146,7 @@ class RichParser:
     def get_final_p_list(self):
         final_list = []
         for oneline in self.data_list:
-            if isinstance(oneline, list) or oneline.startswith("data:image/png;base64"):
+            if isinstance(oneline, list) or is_image_data_uri(oneline):
                 continue
             cleaned_line = oneline
             cleaned_line = re.sub(r'\s+', '', cleaned_line)

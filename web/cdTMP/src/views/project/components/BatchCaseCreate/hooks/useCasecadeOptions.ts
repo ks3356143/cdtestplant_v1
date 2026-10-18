@@ -15,7 +15,6 @@ interface OriginHouType {
 
 export default function () {
     const route = useRoute()
-    const casecadeLoading = ref(false)
     const originOptions = ref<OriginHouType[]>([])
     const casecadeOptions = computed(() => {
         return originOptions.value.map(({ children, ...rest }) => ({
@@ -29,7 +28,6 @@ export default function () {
     })
     // 初始化时候直接获取数据
     const fetchOptionsData = async () => {
-        casecadeLoading.value = true
         try {
             // 获取轮次key
             const rawKey = Array.isArray(route.query.key) ? route.query.key[0] : route.query.key
@@ -39,11 +37,8 @@ export default function () {
                 round: round_key
             })
             originOptions.value = res.data
-        } catch (e) {
-            console.log(e)
+        } catch {
             Message.error("级联数据获取失败，请重新打开此页面!")
-        } finally {
-            casecadeLoading.value = false
         }
     }
     return { fetchOptionsData, casecadeOptions }

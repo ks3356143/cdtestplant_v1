@@ -11,6 +11,7 @@ from django.db import transaction
 from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
+from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.dict.schema import DictOut, DictIndexInput, ChangeStautsSchemaInput, DictItemInput, DictItemOut, \
     DictItemChangeSrotInput, DictItemCreateInputSchema, DictItemUpdateInputSchema, DeleteSchema, \
     DictItemFastCreateInputSchema, DictStdItemCreateInputSchema
@@ -31,9 +32,7 @@ class DictController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_dict_index(self, payload: DictIndexInput = Query(...)):
-        for attr, value in payload.__dict__.items():
-            if getattr(payload, attr) is None:
-                setattr(payload, attr, '')
+        conditionNoneToBlank(payload)
         # 处理时间
         if payload.update_datetime_start == '':
             payload.update_datetime_start = "2000-01-01"
@@ -66,9 +65,7 @@ class DictController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_dictItem_list(self, payload: DictItemInput = Query(...)):
-        for attr, value in payload.__dict__.items():
-            if getattr(payload, attr) is None:
-                setattr(payload, attr, '')
+        conditionNoneToBlank(payload)
         # 处理时间
         if payload.update_datetime_start == '':
             payload.update_datetime_start = "2000-01-01"
@@ -164,7 +161,7 @@ class DictController(ControllerBase):
         return ChenResponse(message="新增成功")
 
     # 快速新增依据标准dictItem数据 - 输入更变为code
-    @route.post("/dataDict/saveStdItem", response=DictItemOut, url_name="dictitem-save")
+    @route.post("/dataDict/saveStdItem", response=DictItemOut, url_name="dictitem-save-std")
     @transaction.atomic
     def save(self, payload: DictStdItemCreateInputSchema):
         # 先根据dict_id查询出dict

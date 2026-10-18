@@ -213,7 +213,7 @@
 </template>
 
 <script setup>
-import { ref, inject, onMounted, nextTick, watch, computed } from "vue"
+import { ref, inject, nextTick, watch, computed } from "vue"
 import MaFormItem from "./form-item.vue"
 import { get, isUndefined, set, xor, isObject, isBoolean } from "lodash-es"
 import { runEvent } from "../js/event.js"
@@ -533,7 +533,6 @@ const handleCascaderChangeEvent = async (value) => {
 }
 
 rv("onCreated")
-onMounted(() => {})
 </script>
 <style lang="less" scoped>
 .arco-checkbox-group {

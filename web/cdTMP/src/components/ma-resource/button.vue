@@ -32,7 +32,7 @@
 </template>
 
 <script setup>
-  import { onMounted, ref, watch } from 'vue'
+  import { ref, watch } from 'vue'
   import MaResource from '@cps/ma-resource/index.vue'
   import { isArray } from 'lodash-es'
 
@@ -50,7 +50,6 @@
   })
 
   list.value = props.modelValue
-  // onMounted(() =>  )
 
   watch(
     () => list.value,

@@ -126,20 +126,6 @@ const props = defineProps({
 const topMenu = computed(() => appStore.topMenu && appStore.menu)
 // 全屏设置,使用了@vueuse/core
 const { isFullscreen, toggle: toggleFullScreen } = useFullscreen()
-// appStore里面设置
-const setVisible = () => {
-    console.log("在appStore里面设置全局{ globalSettings: true }，暂无做")
-    appStore.updateSettings({ globalSettings: true })
-}
-// 右上角下拉
-const setDropDownVisible = () => {
-    const event = new MouseEvent("click", {
-        view: window,
-        bubbles: true,
-        cancelable: true
-    })
-    triggerBtn.value.dispatchEvent(event)
-}
 /// 切换角色
 const switchRoles = async () => {
     Message.success("模拟切换角色")

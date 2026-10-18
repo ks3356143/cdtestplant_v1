@@ -23,7 +23,6 @@
             v-bind="options"
             hoverable
             column-resizable
-            ref="tableRef"
             row-key="id"
             :columns="columns"
             :loading="isFetching || problemStatusLoading || problemGradeLoading"

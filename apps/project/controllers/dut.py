@@ -1,6 +1,5 @@
 import os
 import tempfile
-from copy import deepcopy
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query, File, UploadedFile
 from ninja.errors import HttpError
@@ -131,14 +130,11 @@ class DutController(ControllerBase):
         round_key = dut_single.round.key
         # blink1->>>>>> 这里不仅重排key，还要重排ident中编号,先取出前面的RXXXX-RX等信息,这里必须要在删除之前
         # 查询出当前轮次所有dut
-        ids = deepcopy(data.ids)
-        message = '被测件删除成功'
-        for id in data.ids:
-            dut_obj = Dut.objects.filter(type='SO', id=id).first()
-            if dut_obj:
-                ids.remove(id)
-                message = '源代码被测件不能删除'
-        multi_delete_dut(ids, Dut)
+        # 源代码类被测件不可删除：一次查询筛出，避免逐个 id 查库
+        so_ids = set(Dut.objects.filter(type='SO', id__in=data.ids).values_list('id', flat=True))
+        message = '源代码被测件不能删除' if so_ids else '被测件删除成功'
+        deletable_ids = [item_id for item_id in data.ids if item_id not in so_ids]
+        multi_delete_dut(deletable_ids, Dut)
         dut_all_qs = Dut.objects.filter(round__id=round_id).order_by('id')
         # 整轮被测件被删空时无需重排，直接返回，避免 IndexError
         if not dut_all_qs.exists():
@@ -240,10 +236,8 @@ class UploadController(ControllerBase):
             # 判断是否录入了metrics，并且去掉ORM不需要字段
             key_to_remove = {'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'}
             create_results = {k: v for k, v in results.items() if k not in key_to_remove}
-            # 这是判断反向外键是否存在的关键
-            if not hasattr(dut_qs, 'metrics'):
-                DutMetrics.objects.create(**create_results, dut=dut_qs)
-            DutMetrics.objects.filter(dut=dut_qs).update(**create_results)
+            # 存在则更新、不存在则创建（一次往返，替代原来的 hasattr + create + update）
+            DutMetrics.objects.update_or_create(dut=dut_qs, defaults=create_results)
             # 进行储存
             dut_qs.total_lines = results['total_lines']
             dut_qs.effective_lines = results['effective_lines']

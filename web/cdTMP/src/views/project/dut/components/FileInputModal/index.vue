@@ -53,7 +53,7 @@
                                         <a-input placeholder="标题" v-model="item.title" :style="{ width: '300px' }" @click.stop.prevent></a-input>
                                         <a-input placeholder="标识" v-model="item.ident" :style="{ width: '200px' }" @click.stop.prevent></a-input>
                                         <a-select :style="{ width: '150px' }" placeholder="请选择设计需求类型" @click.stop.prevent v-model="item.demandType">
-                                            <a-option v-for="it in demandType" :value="it.key">{{ it.title }}</a-option>
+                                            <a-option v-for="it in demandType" :key="it.key" :value="it.key">{{ it.title }}</a-option>
                                         </a-select>
                                     </a-input-group>
                                     <a-button-group>

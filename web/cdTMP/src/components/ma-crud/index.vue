@@ -136,9 +136,6 @@
                     <a-tooltip content="显隐搜索"
                         ><a-button shape="circle" @click="toggleSearch"><icon-search /></a-button
                     ></a-tooltip>
-                    <!-- <a-tooltip content="打印表格"
-                        ><a-button shape="circle" @click="printTable"><icon-printer /></a-button
-                    ></a-tooltip> -->
                     <a-tooltip content="设置"
                         ><a-button shape="circle" @click="tableSetting"><icon-settings /></a-button
                     ></a-tooltip>
@@ -294,7 +291,6 @@ import checkAuth from "@/directives/auth/auth"
 import { Message } from "@arco-design/web-vue"
 import { request } from "@/utils/request"
 import tool from "@/utils/tool"
-import Print from "@/utils/print"
 import { isArray, isFunction, isObject, isUndefined } from "lodash-es"
 import { runEvent } from "@cps/ma-form/js/event.js"
 import globalColumn from "@/config/column.js"
@@ -324,8 +320,6 @@ const imgVisible = ref(false)
 const imgUrl = ref(import.meta.env.VITE_APP_BASE + "not-image.png")
 const total = ref(0)
 const requestParams = ref({})
-const slots = ref([])
-const searchSlots = ref([])
 const isRecovery = ref(false)
 const expandState = ref(false)
 
@@ -816,10 +810,6 @@ const tabChange = async (value) => {
     await refresh()
 }
 
-// const printTable = () => {
-//     new Print(crudContentRef.value)
-// }
-
 const openContextMenu = (ev, record) => {
     options.value?.contextMenu?.enabled === true && crudContextMenuRef.value.openContextMenu(ev, record)
 }
@@ -828,9 +818,6 @@ const execContextMenuCommand = async (args) => {
     const item = args.contextItem
     const record = args.record
     switch (item.operation) {
-        // case "print":
-        //     await printTable()
-        //     break
         case "refresh":
             await refresh()
             break

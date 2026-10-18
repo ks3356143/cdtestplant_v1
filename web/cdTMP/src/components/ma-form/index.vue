@@ -249,15 +249,11 @@ const setDialogRef = async (ref) => {
     })
 }
 
-// maEvent.handleCommonEvent(options.value, 'onCreated')
-
 onMounted(async () => {
     updateOptions()
     insertGlobalCssToHead(options.value.globalCss)
     insertGlobalFunctionsToHtml(options.value.globalFunction)
-    // maEvent.handleCommonEvent(options.value, 'onMounted')
     options.value.init && (await init())
-    // maEvent.handleCommonEvent(options.value, 'onInit')
 })
 
 const done = (status) => (formLoading.value = status)

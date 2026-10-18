@@ -76,7 +76,6 @@ def parse_case_content_string(content: str):
     if not content or not content.strip():
         return []
     create_step = []  # 储存测试子项内容
-    current_step: None | dict = None
     lines = content.strip().split("\n")
     line_number = 0
     for i, line in enumerate(lines):
@@ -103,12 +102,9 @@ def parse_case_content_string(content: str):
             message = f"第{line_number}行@符号后面的预期为空，请检查!"
             return ChenResponse(status=200, code=60003, data=line_number, message=message)
         # 组装当前步骤行
-        current_step = {
+        create_step.append({
             "operation": operation,
             "expect": expect
-        }
-        if current_step:
-            create_step.append(current_step)
-
+        })
 
     return create_step

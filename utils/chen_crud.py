@@ -13,16 +13,7 @@ def createWithOutRequestParam(data, model):
     query_set = model.objects.create(**data)
     return query_set
 
-# 2.1)更新便捷函数，特别注意参数0为request后面有用，参数1：id，参数2：schema，参数3：ORM模型
-def update(request, id, data, model):
-    dict_data = data.model_dump()
-    instance = get_object_or_404(model, id=id)
-    for attr, value in dict_data.items():
-        setattr(instance, attr, value)
-    instance.save()
-    return instance
-
-# 2.2)更新便捷函数-无request参数 -> data参数为schema对象
+# 2)更新便捷函数-无request参数 -> data参数为schema对象
 def updateWithoutRequestParam(id, data, model):
     dict_data = data.model_dump(exclude_none=True)
     instance = get_object_or_404(model, id=id)

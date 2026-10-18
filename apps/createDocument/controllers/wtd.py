@@ -31,7 +31,8 @@ class GenerateControllerWtd(ControllerBase):
         doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         problem_list = list(project_obj.projField.distinct())  # 去掉重复，因为和case是多对多
-        problem_list.sort(key=lambda x: int(x.ident))
+        # ident 允许为空（历史数据），空值按 0 参与排序，避免 int(None) 抛异常
+        problem_list.sort(key=lambda x: int(x.ident or 0))
         data_list = []
         for problem in problem_list:
             problem_dict = {'ident': problem.ident, 'name': problem.name}

@@ -29,7 +29,6 @@ const open = (record) => {
     previewRecord.value = record
 }
 defineExpose({ open })
-// MA-INFO的columns
 </script>
 
 <style lang="less" scoped>

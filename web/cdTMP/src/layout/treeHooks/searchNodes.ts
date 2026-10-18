@@ -37,7 +37,6 @@ export default function useSearchNodes() {
         // 返回过滤后的treeData
         // treeDataStore.originTreeData
         if (searchKey.value) {
-            treeData.value = treeDataStore.originTreeData
             ;(treeData as Ref<any[]>).value = loop(treeDataStore.treeData, searchKey)
         } else {
             treeData.value = treeDataStore.originTreeData

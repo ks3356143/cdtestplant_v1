@@ -37,7 +37,6 @@
                         v-model:expanded-keys="expandedKeys"
                         v-model:selected-keys="selectedKeys"
                         v-model:checked-keys="checkedKeys"
-                        ref="treeRef"
                         border
                         @contextmenu="displayRightMenu"
                         :default-selected-keys="[currentNode ? currentNode : route.query.key]"
@@ -48,7 +47,7 @@
                                 <a-tooltip content="点击新增轮次">
                                     <IconPlus
                                         style="position: absolute; right: 8px; font-size: 12px; top: 8px; color: #3370ff"
-                                        @click="() => handleRoundAddClick(nodeData)"
+                                        @click="handleRoundAddClick(nodeData)"
                                     />
                                 </a-tooltip>
                                 <a-tooltip content="点击删除轮次">
@@ -59,7 +58,7 @@
                                 <a-tooltip content="点击编辑当前轮次"
                                     ><IconEdit
                                         style="position: absolute; right: 42px; font-size: 12px; top: 8px; color: #3370ff"
-                                        @click="() => handleRoundEditClick(nodeData)"
+                                        @click="handleRoundEditClick(nodeData)"
                                 /></a-tooltip>
                                 <a-tooltip content="综合阅览该轮次下问题单"
                                     ><icon-bug
@@ -72,17 +71,7 @@
                                         :style="{
                                             color: isOpeSetsRoute && nodeData.key === route.query.key ? 'red' : '#3370ff'
                                         }"
-                                        @click="
-                                            () => {
-                                                router.push({
-                                                    name: 'opeSets',
-                                                    query: {
-                                                        ...route.query,
-                                                        key: nodeData.key
-                                                    }
-                                                })
-                                            }
-                                        "
+                                        @click="handleOpenOpeSets(nodeData)"
                                 /></a-tooltip>
                                 <template v-if="nodeData.key !== '0'">
                                     <Influence :node-data="nodeData"></Influence>
@@ -281,9 +270,13 @@ const treeDataStore = useTreeDataStore()
 const { treeData, currentNode } = storeToRefs(treeDataStore)
 const route = useRoute()
 const router = useRouter()
-const treeRef = ref()
 const projectInfo = ref({ ...route.query })
 const projectId = ref(route.query.id)
+
+// 打开轮次数据管理视图（opeSets）
+const handleOpenOpeSets = (nodeData) => {
+    router.push({ name: "opeSets", query: { ...route.query, key: nodeData.key } })
+}
 
 //~~~~~~大模块：选择同一节点新建复制到下一轮~~~~~~
 const { checkedKeys, visible, isComplete, ptext, handleCopyNode, handleModalConfirmClick } = useNodeCopy(projectId)
@@ -309,16 +302,16 @@ const { selectedKeys, pointNode, dutSubFormRef, designSubFormRef, testDemandSubF
 //~~~~~~小功能：路由中key绑定selectedKeys：好像有点非性能~~~~~~
 const isOpeSetsRoute = ref(false)
 watch(
-    () => route,
-    (newRoute) => {
-        isOpeSetsRoute.value = newRoute.matched.some((it) => it.name === "opeSets")
+    () => route.fullPath,
+    () => {
+        isOpeSetsRoute.value = route.matched.some((it) => it.name === "opeSets")
         if (isOpeSetsRoute.value) {
             selectedKeys.value = []
         } else {
-            selectedKeys.value = [newRoute.query.key]
+            selectedKeys.value = [route.query.key]
         }
     },
-    { immediate: true, deep: true }
+    { immediate: true }
 )
 
 //~~~~~~大功能：动态加载a-tree节点函数~~~~~~

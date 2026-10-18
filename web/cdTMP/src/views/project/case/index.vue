@@ -25,11 +25,10 @@
 import { ref } from "vue"
 import { useRoute } from "vue-router"
 import problemApi from "@/api/project/problem"
-import { useTreeDataStore } from "@/store"
+import { useTreeDataStore, useUserStore } from "@/store"
 import ProblemChoose from "./components/ProblemChoose.vue"
 import { Message } from "@arco-design/web-vue"
 import getCaseInfoHook from "@/hooks/workarea/currentCasePage"
-import { useUserStore } from "@/store"
 
 const treeDataStore = useTreeDataStore()
 const userStore = useUserStore()
@@ -37,7 +36,6 @@ const route = useRoute()
 // hook-获取当前用例信息
 const { tempCaseInfo, caseIsNotPassedOrNotExe, fetchCaseOneStatus } = getCaseInfoHook()
 
-// const router = useRouter()
 const roundNumber = route.query.key.split("-")[0]
 const dutNumber = route.query.key.split("-")[1]
 const designDemandNumber = route.query.key.split("-")[2]
@@ -125,7 +123,6 @@ const crudOptions = ref({
         return tableData
     },
     showIndex: false,
-    operationColumnAlign: "center",
     rowSelection: { showCheckedAll: true },
     searchColNumber: 3,
     tablePagination: false,

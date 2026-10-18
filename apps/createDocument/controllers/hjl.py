@@ -13,7 +13,7 @@ from apps.project.models import Dut, Project, Round
 from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from utils.path_utils import project_path
-from apps.createDocument.extensions.util import delete_dir_files
+from apps.createDocument.extensions.util import delete_dir_files, build_testtype_output, require_project_begin_time
 from apps.createDocument.extensions.parse_rich_text import RichParser
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
@@ -32,7 +32,7 @@ class GenerateControllerHJL(ControllerBase):
         save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hjl'
         delete_dir_files(save_path)
 
-    @route.get("/create/basicInformation", url_name="create-basicInformation")
+    @route.get("/create/basicInformation", url_name="create-basicInformation-hjl")
     @transaction.atomic
     def create_basicInformation(self, id: int):
         """生成回归测试记录的被测软件基本信息"""
@@ -66,7 +66,7 @@ class GenerateControllerHJL(ControllerBase):
             'security_level': get_str_dict(project_obj.security_level, 'security_level'),
             'runtime': "、".join(runtime_list),
             'devplant': "、".join(devplant_list),
-            'recv_date': project_obj.beginTime.strftime("%Y-%m-%d"),
+            'recv_date': require_project_begin_time(project_obj).strftime("%Y-%m-%d"),
             'dev_unit': project_obj.dev_unit,
         }
 
@@ -108,10 +108,11 @@ class GenerateControllerHJL(ControllerBase):
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         demand_prefix = '3.1'
+        # 一次取出 testType 数量，避免在轮次循环内反复查库
+        test_type_len = Dict.objects.get(code='testType').dictItem.count()  # 测试类型的个数
         # 循环每轮轮次对象
         for hround in hround_list:
             cname = chinese_round_name[int(hround.key)]  # var：输出二、三字样
-            test_type_len = Dict.objects.get(code='testType').dictItem.count()  # 测试类型的个数
             type_number_list = [i for i in range(1, test_type_len + 1)]  # 测试类型编号对应的列表
             list_list = [[] for j in range(1, test_type_len + 1)]  # 每个测试类型组合为一个列表[[],[],[],[]]
             testType_list, last_chapter_items = create_csx_chapter_dict(hround)
@@ -188,22 +189,9 @@ class GenerateControllerHJL(ControllerBase):
                     demand_dict['item'].append(case_dict)
 
                 list_list[type_index].append(demand_dict)
-            # 定义渲染上下文
+            # 定义渲染上下文（组装并按测试类型排序，一次取出字典项避免循环内查库）
             context = {}
-            output_list = []
-            for (index, li) in enumerate(list_list):
-                qs = Dict.objects.get(code="testType").dictItem.get(key=str(index + 1))
-                context_str = qs.title
-                sort = qs.sort
-                table = {
-                    "type": context_str,
-                    "item": li,
-                    "sort": sort
-                }
-                output_list.append(table)
-            # 排序
-            output_list = sorted(output_list, key=(lambda x: x["sort"]))
-            context["data"] = output_list
+            context["data"] = build_testtype_output(list_list)
             # 最后渲染
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hjl' / f"第{cname}轮测试用例记录.docx"
             doc.render(context, autoescape=True)

@@ -106,7 +106,7 @@
                                     <span class="arco-table-th-title">序号</span>
                                 </span>
                             </th>
-                            <template v-for="component in viewFormList[0]">
+                            <template v-for="component in viewFormList[0]" :key="component.dataIndex">
                                 <th class="arco-table-th" :width="component.width">
                                     <span class="arco-table-cell arco-table-cell-align-center">
                                         <span class="arco-table-th-title">{{ component.title }}</span>
@@ -138,7 +138,7 @@
                                         <span class="arco-table-td-content">{{ index + 1 }}</span>
                                     </span>
                                 </td>
-                                <template v-for="component in viewFormList[index]">
+                                <template v-for="component in viewFormList[index]" :key="component.dataIndex">
                                     <td class="arco-table-td">
                                         {{ component.hideLabel = true ? "" : "" }}
                                         <span class="arco-table-cell">
@@ -270,7 +270,6 @@ function updateChongFen() {
 
 // 修改源码：上移动和下移动
 const moveUp = (itemIndex) => {
-    const itemLength = formModel.value[props.component.dataIndex].length
     // 如果是第一个，不做操作
     if (itemIndex === 0) {
         return

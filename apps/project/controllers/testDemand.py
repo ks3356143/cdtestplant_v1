@@ -14,14 +14,12 @@ from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_testDemand
 from utils.codes import HTTP_INDEX_ERROR
 from apps.project.tools.access_control import check_project_access, check_project_access_by_id
-from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep
+from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep, Project
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
     TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, \
     TestDemandCreateInputSchema, ReplaceDemandContentSchema, PriorityReplaceSchema, \
     TestDemandRelatedSchema, TestDemandExistRelatedSchema, DemandCopyToDesignSchema, \
     TestDemandMultiCreateInputSchema
-# 导入ORM
-from apps.project.models import Project
 # 导入工具
 from apps.project.tools.copyDemand import demand_copy_to_design
 from apps.project.tools.delete_change_key import demand_delete_sub_node_key
@@ -54,7 +52,7 @@ class TestDemandController(ControllerBase):
         # 判断是否存在testDesciption有则表示是大表查询
         if datafilter.testDesciption:
             query_params['testDesciption__icontains'] = datafilter.testDesciption
-        qs = TestDemand.objects.filter(**query_params).order_by("key")
+        qs = TestDemand.objects.filter(**query_params).order_by("key").prefetch_related('testQField')
         # 判断是否存在testContent有则表示是大表查询，这里需要查询子字段
         if datafilter.testContent:
             qs = qs.filter(Q(testQField__subName__icontains=datafilter.testContent) |

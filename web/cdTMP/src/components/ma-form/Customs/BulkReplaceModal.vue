@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, ref } from "vue"
-import { Modal, Form, FormItem, Input, Space, Button, Alert, Message } from "@arco-design/web-vue"
+import { Modal, Form, FormItem, Input, Space, Button, Alert } from "@arco-design/web-vue"
 // 导入替换白名单
 import handleSubmit from "./replaceFieldName"
 

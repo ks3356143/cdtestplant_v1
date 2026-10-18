@@ -76,7 +76,6 @@ const handleSyncOk = async () => {
         visible.value = false
         Message.success("保存成功")
     } catch (e) {
-        console.log(e);
         Message.error("提交时发送错误，请联系管理员")
     }
     return false

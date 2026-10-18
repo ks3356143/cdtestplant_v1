@@ -9,6 +9,7 @@ from django.db import transaction
 from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
+from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.dict.schema import DeleteSchema, AbbreviationOut, AbbreviationListInputSchema
 
 @api_controller("/system", tags=['缩略语接口'], auth=JWTAuth(), permissions=[IsAuthenticated])
@@ -17,9 +18,7 @@ class AbbreviationController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_abbreviation_list(self, payload: AbbreviationListInputSchema = Query(...)):
-        for attr, value in payload.__dict__.items():
-            if getattr(payload, attr) is None:
-                setattr(payload, attr, '')
+        conditionNoneToBlank(payload)
         qs = Abbreviation.objects.filter(title__icontains=payload.title, des__icontains=payload.des)
         return qs
 
@@ -33,9 +32,7 @@ class AbbreviationController(ControllerBase):
     @route.post("/abbreviation/save", response=AbbreviationOut, url_name='abbreviation-create')
     @transaction.atomic
     def create_abbreviation(self, data: AbbreviationListInputSchema):
-        for attr, value in data.__dict__.items():
-            if getattr(data, attr) is None:
-                setattr(data, attr, '')
+        conditionNoneToBlank(data)
         # 判重key
         assert_dict = data.dict()
         key_qs = Abbreviation.objects.filter(title=data.title)
@@ -48,9 +45,7 @@ class AbbreviationController(ControllerBase):
     @route.put("/abbreviation/update/{id}", response=AbbreviationOut, url_name='abbreviation-update')
     @transaction.atomic
     def update_contact(self, id: int, data: AbbreviationListInputSchema):
-        for attr, value in data.__dict__.items():
-            if getattr(data, attr) is None:
-                setattr(data, attr, '')
+        conditionNoneToBlank(data)
         # 判重时排除自身，避免恰好只有一条同名记录（自身）时校验被跳过而造出重复项
         key_qs = Abbreviation.objects.filter(title=data.title).exclude(id=id)
         if key_qs.exists():

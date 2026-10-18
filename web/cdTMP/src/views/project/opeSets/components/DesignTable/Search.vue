@@ -97,8 +97,8 @@ const loadColumnDicts = async () => {
                 }))
             })
         )
-    } catch (e) {
-        console.log("加载搜索字典失败：", e)
+    } catch {
+        // 字典加载失败时静默处理，不阻塞搜索
     } finally {
         searchLoading.value = false
     }

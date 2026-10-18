@@ -26,7 +26,7 @@
                         </a-tag>
                         <span style="font-size: 12px">{{ lastCheck.recovery_hint }}</span>
                     </a-alert>
-                    <a-table v-if="lastCheck.broken" :data="lastCheck.items.filter(i => !i.intact)"
+                    <a-table v-if="lastCheck.broken" :data="brokenItems"
                              :pagination="false" size="small" :bordered="{ cell: true }">
                         <template #columns>
                             <a-table-column title="受保护数据" data-index="label" :width="180"></a-table-column>
@@ -131,8 +131,10 @@ import auditLogApi from "@/api/monitor/auditLog"
 
 // 事件类型清单（code/label/alert 由后端唯一提供：utils.audit.get_event_types）
 const eventTypes = ref([])
-const labelOf = (t) => eventTypes.value.find(e => e.code === t)?.label || t
-const isAlert = (t) => eventTypes.value.find(e => e.code === t)?.alert || false
+// code → 事件类型对象，供 O(1) 查询（避免每个单元格 find 遍历）
+const typeMap = computed(() => Object.fromEntries(eventTypes.value.map(e => [e.code, e])))
+const labelOf = (t) => typeMap.value[t]?.label || t
+const isAlert = (t) => typeMap.value[t]?.alert || false
 const allTypes = computed(() => eventTypes.value.map(e => e.code))
 
 // 筛选状态
@@ -188,6 +190,8 @@ const loadEventTypes = async () => {
 // 数据完整性核查（7.1.7）
 const checking = ref(false)
 const lastCheck = ref(null)
+// 完整性破损条目（避免模板内联过滤重复计算）
+const brokenItems = computed(() => (lastCheck.value?.items || []).filter(i => !i.intact))
 const runIntegrityCheck = async () => {
     checking.value = true
     try {

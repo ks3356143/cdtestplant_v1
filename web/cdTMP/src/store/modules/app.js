@@ -7,12 +7,6 @@ const useAppStore = defineStore("app", {
         ...defaultSettings
     }),
     getters: {
-        appCurrentSetting(state) {
-            return { ...state }
-        },
-        appDevice(state) {
-            return state.device
-        },
         appAsyncMenus(state) {
             return state.serverMenu
         }

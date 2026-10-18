@@ -140,10 +140,6 @@ const getAttachmentList = async (params = {}) => {
     resourceLoading.value = false
 }
 
-const handlerItemClick = (e) => {
-    console.log(e)
-}
-
 const handlerClick = async (item) => {
     defaultKey.value = item
     const type = item[0] === "all" ? undefined : item[0]

@@ -1,9 +1,7 @@
 import { useRoute } from "vue-router"
-import { useUserStore } from "@/store"
 
 export default function () {
     const route = useRoute()
-    const userStore = useUserStore()
     const columns = [
         {
             title: "id",

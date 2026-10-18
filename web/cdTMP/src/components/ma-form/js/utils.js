@@ -1,4 +1,4 @@
-import { isEmpty, isFunction, get } from "lodash-es"
+import { isFunction, get } from "lodash-es"
 
 export const containerItems = ["tabs", "table", "card", "grid", "grid-tailwind", "children-form"]
 export const inputType = ["input", "input-password", "input-search"]
@@ -37,11 +37,6 @@ export const interactiveControl = (form, columns, maFormObject) => {
             }
         })
     })
-}
-
-export const upperCaseFirst = (str) => {
-    if (isEmpty(str)) return ""
-    return str[0].toUpperCase() + str.substr(1)
 }
 
 export const toHump = (str) => {

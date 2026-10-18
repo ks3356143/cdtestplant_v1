@@ -12,7 +12,7 @@ from apps.project.models import Project, Dut, TestDemand, Problem
 # 工具类函数
 from apps.createDocument.extensions import util
 from utils.chen_response import ChenResponse
-from apps.createDocument.extensions.util import create_bg_docx, get_round1_problem
+from apps.createDocument.extensions.util import create_bg_docx, get_round1_problem, require_project_begin_time
 from utils.util import get_str_dict, get_list_dict, create_problem_grade_str, create_str_testType_list, \
     create_demand_summary, create_problem_type_str, create_problem_table, create_problem_type_table, \
     get_str_abbr
@@ -52,7 +52,7 @@ class GenerateControllerBG(ControllerBase):
         save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/bg'
         delete_dir_files(save_path)
 
-    @route.get("/create/techyiju", url_name="create-techyiju")
+    @route.get("/create/techyiju", url_name="create-techyiju-bg")
     @transaction.atomic
     def create_techyiju(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
@@ -109,7 +109,7 @@ class GenerateControllerBG(ControllerBase):
         return create_bg_docx('测评时间和地点.docx', context, id)
 
     # 在报告生成多个版本被测软件基本信息
-    @route.get('/create/baseInformation', url_name='create-baseInformation')
+    @route.get('/create/baseInformation', url_name='create-baseInformation-bg')
     def create_information(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
         languages = get_list_dict('language', project_obj.language)
@@ -141,7 +141,7 @@ class GenerateControllerBG(ControllerBase):
             'runtime': "\a".join(runtime_list),
             'devplant': "\a".join(devplant_list),
             'language': "\a".join(language_list),
-            'recv_date': project_obj.beginTime.strftime("%Y-%m-%d"),
+            'recv_date': require_project_begin_time(project_obj).strftime("%Y-%m-%d"),
             'dev_unit': project_obj.dev_unit,
             'version_info': round_list
         }
@@ -157,7 +157,7 @@ class GenerateControllerBG(ControllerBase):
         if not round1:
             return ChenResponse(code=400, status=400, message='未找到首轮测试信息，请先创建轮次')
         # 第一轮测试项个数
-        round1_demand_qs = round1 and round1.rtField.all()
+        round1_demand_qs = round1.rtField.all()
         # 第一轮用例个数
         round1_case_qs = round1.rcField.all()  # type:ignore
         # 这部分找出第一轮的所有测试类型，输出字符串，并排序
@@ -204,8 +204,8 @@ class GenerateControllerBG(ControllerBase):
         context = {
             'is_JD': True if project_obj.report_type == '9' else False,
             'project_name': project_obj.name,
-            'start_time_year': project_obj.beginTime.year,
-            'start_time_month': project_obj.beginTime.month,
+            'start_time_year': require_project_begin_time(project_obj).year,
+            'start_time_month': require_project_begin_time(project_obj).month,
             'round1_case_count': round1_case_qs.count(),
             'round1_demand_count': round1_demand_qs.count(),  # type:ignore
             'round1_testType_str': '、'.join(round1_testType_list),
@@ -404,9 +404,7 @@ class GenerateControllerBG(ControllerBase):
     def create_effect_and_adquacy(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
         # 判断是否为鉴定
-        is_JD = False
-        if project_obj.report_type == '9':
-            is_JD = True
+        is_JD = project_obj.report_type == '9'
         # 统计测试项数量
         demand_qs = project_obj.ptField
         # 统计用例个数
@@ -556,9 +554,7 @@ class GenerateControllerBG(ControllerBase):
     def create_entire(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
         # 是否鉴定
-        is_JD = False
-        if project_obj.report_type == '9':
-            is_JD = True
+        is_JD = project_obj.report_type == '9'
         # 找出最后一轮并且有源代码的dut
         last_dut_so = get_last_so_dut(project_obj)
         # 找出所有被测件协议（XY）、需求规格说明（XQ）、设计说明（SJ）
@@ -591,9 +587,7 @@ class GenerateControllerBG(ControllerBase):
     def create_yzxq_track(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
         # 是否是鉴定的变量，如果为鉴定，则需要研总的追踪
-        is_JD = False
-        if project_obj.report_type == '9':
-            is_JD = True
+        is_JD = project_obj.report_type == '9'
         # 查询多少个轮次
         round_count = project_obj.pField.count()
         round_str_list = [str(i) for i in range(round_count)]

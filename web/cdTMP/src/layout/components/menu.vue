@@ -7,7 +7,6 @@ import { openWindow, regexUrl } from "@/utils"
 import useMenuTree from "./use-menu-tree"
 
 export default defineComponent({
-    emit: ["collapse"],
     setup() {
         const appStore = useAppStore()
         const router = useRouter()

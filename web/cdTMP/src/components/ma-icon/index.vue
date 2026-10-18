@@ -5,7 +5,7 @@
       <div class="icon-container" v-if="props.preview">
         <component :is="currentIcon" v-if="currentIcon" />
       </div>
-      <a-button type="primary" @click="() => visible = true">选择图标</a-button>
+      <a-button type="primary" @click="visible = true">选择图标</a-button>
     </a-input-group>
 
     <a-modal v-model:visible="visible" width="800px" draggable :footer="false">
@@ -80,10 +80,6 @@
   const selectIcon = (icon, className) => {
     currentIcon.value = icon
     visible.value = false
-  }
-
-  const handlerChange = (value) => {
-    selectIcon(value, '')
   }
 </script>
 

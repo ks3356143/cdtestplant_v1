@@ -6,15 +6,7 @@
     <div class="flex flex-col w-full h-full">
         <a-input-group class="mb-2 w-full" size="mini">
             <a-input :placeholder="props?.searchPlaceholder" allow-clear @input="changeKeyword" @clear="resetData" />
-            <a-button
-                @click="
-                    () => {
-                        isExpand ? maTree.expandAll(false) : maTree.expandAll(true)
-                        isExpand = !isExpand
-                    }
-                "
-                >{{ isExpand ? "折叠" : "展开" }}</a-button
-            >
+            <a-button @click="toggleExpand">{{ isExpand ? "折叠" : "展开" }}</a-button>
         </a-input-group>
         <a-tree
             blockNode
@@ -75,11 +67,17 @@ const handlerSelect = (item, data) => {
     emit("click", ...[item, data])
 }
 
+// 展开/折叠全部节点
+const toggleExpand = () => {
+    isExpand.value ? maTree.value.expandAll(false) : maTree.value.expandAll(true)
+    isExpand.value = !isExpand.value
+}
+
 const resetData = () => (treeData.value = props.data)
 
 const changeKeyword = (keyword) => {
     if (!keyword || keyword === "") {
-        treeData.value = Object.assign(props.data, [])
+        treeData.value = props.data
         return false
     }
     treeData.value = searchNode(keyword)

@@ -3,7 +3,6 @@ import dictApi from "@/api/system/dict"
 import { Message } from "@arco-design/web-vue"
 
 export default function () {
-    const loading = ref(false)
     const originOption = ref([])
     const testMethodOptions = computed(() => {
         return originOption.value.map(({ title, key }) => ({
@@ -16,12 +15,9 @@ export default function () {
         try {
             const res = await dictApi.getDictByCode({ code: "testMethod" })
             originOption.value = res.data
-            loading.value = true
         } catch (e) {
             Message.error("获取测试手段选项失败，请关闭后重新打开!")
-        } finally {
-            loading.value = false
         }
     }
-    return { fetchDictData, loading, testMethodOptions }
+    return { fetchDictData, testMethodOptions }
 }

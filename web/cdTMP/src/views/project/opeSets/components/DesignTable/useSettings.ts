@@ -14,13 +14,11 @@ export default function useSettings() {
     })
     provide("options", options)
     // 处理函数
-    const tableIsShow = ref(true)
     const clickSetting = () => {
         settingRef.value!.open()
     }
     const changeColumn = async () => {
-        tableIsShow.value = false
-        await nextTick(() => (tableIsShow.value = true))
+        await nextTick()
     }
     return { options, clickSetting, changeColumn, settingRef }
 }

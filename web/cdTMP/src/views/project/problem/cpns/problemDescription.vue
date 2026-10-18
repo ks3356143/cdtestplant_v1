@@ -41,7 +41,7 @@
                             <a-typography-paragraph>
                                 <a-space size="mini">
                                     <template v-if="problem_method.length > 0">
-                                        <template v-for="item of problem_method">
+                                        <template v-for="item of problem_method" :key="item">
                                             <a-tag :color="item === '修改文档' ? 'blue' : 'green'">{{ item }} </a-tag>
                                         </template>
                                     </template>

@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { onMounted, getCurrentInstance, inject } from "vue"
+import { onMounted, getCurrentInstance } from "vue"
 import MaFormItem from "./form-item.vue"
 import { runEvent } from "../js/event.js"
 
@@ -23,12 +23,6 @@ const props = defineProps({
     component: Object,
     customField: { type: String, default: undefined }
 })
-
-const formModel = inject("formModel")
-const getColumnService = inject("getColumnService")
-const columns = inject("columns")
-const rv = async (ev, value = undefined) =>
-    await runEvent(props.component, ev, { formModel, getColumnService, columns }, value)
 
 const app = getCurrentInstance().appContext.app
 

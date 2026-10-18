@@ -22,7 +22,7 @@
     </a-input-group>
 </template>
 <script setup>
-import { reactive, computed } from "vue"
+import { computed } from "vue"
 import { ColorPicker } from "vue-color-kit"
 import "vue-color-kit/dist/vue-color-kit.css"
 import useClipboard from "vue-clipboard3"
@@ -57,7 +57,7 @@ const copyColor = async () => {
     }
 }
 
-const defaultColorList = reactive([
+const defaultColorList = [
     "#165DFF",
     "#F53F3F",
     "#F77234",
@@ -74,5 +74,5 @@ const defaultColorList = reactive([
     "#c0ca33",
     "#86909c",
     "#6d4c41"
-])
+]
 </script>

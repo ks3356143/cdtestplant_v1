@@ -158,10 +158,6 @@
                 </div>
             </div>
 
-            <!--            <div class="example">-->
-            <!--                <h4 class="title">数据格式</h4>-->
-            <!--                <textarea class="code-area" :value="JSON.stringify(childProductArray)"></textarea>-->
-            <!--            </div>-->
         </slot>
     </ma-form-item>
 </template>
@@ -230,29 +226,16 @@ watch(
     { immediate: true, deep: true }
 )
 
+// specification / childProductArray 任一变化都同步到表单
 watch(
-    () => specification,
-    (v) => {
+    [() => specification, () => childProductArray],
+    () => {
         let json = {
             sku: childProductArray,
             spec: specification
         }
 
         set(formModel.value, index, json)
-    },
-    { immediate: true, deep: true }
-)
-
-watch(
-    () => childProductArray,
-    (v) => {
-        let json = {
-            sku: childProductArray,
-            spec: specification
-        }
-
-        set(formModel.value, index, json)
-        // set(formModel.value, index, v)
     },
     { immediate: true, deep: true }
 )
@@ -311,7 +294,6 @@ function handleNo(index, attr) {
         alert("不允许输入重复的商品编号")
 
         childProductArray[index].childProductNo = makeProductNoNotRepet(index)
-        // this.$set(this.childProductArray[index], 'childProductNo', this.)
     }
 }
 
@@ -463,9 +445,7 @@ function changeStock(option, index, stockCopy) {
     const spec = childProduct.childProductSpec
     if (option === "add") {
         // 如果此id不存在，说明为新增属性，则向 childProductArray 中添加一条数据
-        // if (stockSpecArr.value.findIndex((item) => objEquals(spec, item)) === -1) {
         childProductArray[index] = childProduct
-        // }
     } else if (option === "del") {
         // 因为是删除操作，理论上所有数据都能从stockCopy中获取到
         let origin = ""

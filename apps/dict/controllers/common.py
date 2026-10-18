@@ -45,14 +45,12 @@ class CommonController(ControllerBase):
 
     @route.get("/getNoticeList")
     def get_notice(self, pageSize, orderBy, orderType):
-        item_list = []
-        item1 = {"title": "测试管理平台V0.0.2测试发布", "created_at": "2023-09-23",
-                 "content": "测试管理平台V0.0.2发布，正在进行内部测试.."}
-        item_list.append(item1)
-        item2 = {"title": "测试管理平台更新公共", "created_at": "2024-06-17",
-                 "content": "<p>1.修改大纲和报告模版<p><p>2.修复多个bug<p>"}
-        item_list.append(item2)
-        return item_list
+        return [
+            {"title": "测试管理平台V0.0.2测试发布", "created_at": "2023-09-23",
+             "content": "测试管理平台V0.0.2发布，正在进行内部测试.."},
+            {"title": "测试管理平台更新公共", "created_at": "2024-06-17",
+             "content": "<p>1.修改大纲和报告模版<p><p>2.修复多个bug<p>"},
+        ]
 
     @route.get('/workplace/statistics')
     @transaction.atomic

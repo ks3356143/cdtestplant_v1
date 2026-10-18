@@ -9,6 +9,7 @@ from django.db import transaction
 from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
+from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.dict.schema import DeleteSchema, ContactListInputSchema, ContactOut
 
 # 公司信息处理接口
@@ -18,9 +19,7 @@ class ContactController(ControllerBase):
     @transaction.atomic
     @paginate(MyPagination)
     def get_contact_list(self, payload: ContactListInputSchema = Query(...)):
-        for attr, value in payload.__dict__.items():
-            if getattr(payload, attr) is None:
-                setattr(payload, attr, '')
+        conditionNoneToBlank(payload)
         if payload.key == '':
             qs = Contact.objects.filter(name__icontains=payload.name, entrust_person__icontains=payload.entrust_person,
                                         addr__icontains=payload.addr)
@@ -39,9 +38,7 @@ class ContactController(ControllerBase):
     @route.post("/contact/save", response=ContactOut, url_name='contact-create')
     @transaction.atomic
     def create_contact(self, data: ContactListInputSchema):
-        for attr, value in data.__dict__.items():
-            if getattr(data, attr) is None:
-                setattr(data, attr, '')
+        conditionNoneToBlank(data)
         # 判重key -> key可能为空
         if data.key == '':
             data.key = 0

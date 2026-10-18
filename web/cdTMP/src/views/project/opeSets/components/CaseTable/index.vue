@@ -37,7 +37,6 @@
             v-bind="options"
             hoverable
             column-resizable
-            ref="tableRef"
             :scroll="{ x: '100%' }"
             :row-selection="{ type: 'checkbox', showCheckedAll: true, onlyCurrent: true }"
             row-key="id"
@@ -92,7 +91,7 @@
                 </template>
                 <!-- 上级节点列 -->
                 <a-table-column title="对应测试项" align="center" :width="120" fixed="right">
-                    <template #cell="{ record, column, rowIndex }">
+                    <template #cell="{ record }">
                         <Trigger :demandInfo="record.test" @refresh="fetchData()" />
                     </template>
                 </a-table-column>
@@ -122,7 +121,7 @@
             ref="replaceModal"
             :selectRows="selecteds"
             :api="caseApi.replace"
-            :columns="columns.filter((it) => it.dataIndex !== 'ident')"
+            :columns="replaceColumns"
             key="modal-case"
             popup-key="case"
             @replaceSuccess="replaceSuccessHandle"
@@ -135,7 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, provide } from "vue"
+import { computed, ref, provide } from "vue"
 import caseApi from "@/api/project/case"
 import type { ISearchFormCase } from "@/views/project/opeSets/components/DesignTable/types"
 import useSettings from "@/views/project/opeSets/components/DesignTable/useSettings"
@@ -220,6 +219,8 @@ const { deletesMultipleAction } = useDelete(caseApi.delete, fetchData, selecteds
 
 // 7.2.批量替换相关
 const replaceModal = ref<InstanceType<typeof ReplaceModal> | null>(null)
+// 供批量替换弹窗使用的列（去掉标识列）
+const replaceColumns = computed(() => columns.value.filter((it) => it.dataIndex !== "ident"))
 const handleOpenReplaceModal = () => {
     replaceModal.value?.open(undefined)
 }

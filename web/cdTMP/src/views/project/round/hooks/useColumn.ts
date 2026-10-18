@@ -14,7 +14,6 @@ export default function (crudOrFormRef: any) {
             const { total_lines, comment_lines } = formData
             formData.comment_percent = `${(comment_lines / total_lines).toFixed(2).toString()}%`
         }
-        return "无法计算注释率"
     }
     const crudColumns = ref([
         {

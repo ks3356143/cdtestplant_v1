@@ -23,6 +23,7 @@ from apps.user.models import TableOperationLog, Users as UserClass
 from apps.project.models import Project
 # 工具函数
 from utils.chen_crud import multi_delete
+from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.user.tools.ldap_tools import load_ldap_users
 from utils.audit import audit_log, EVENT_USER_CHANGE
 from utils.permissions import PRIVILEGED_ROLES
@@ -138,9 +139,7 @@ class UserManageController(ControllerBase):
     @paginate(MyPagination)
     def index_user(self, filters: UserRetrieveInputSchema = Query(...)):
         # 重要，处理前端不传值为None的情况
-        for attr, value in filters.__dict__.items():
-            if getattr(filters, attr) is None:
-                setattr(filters, attr, '')
+        conditionNoneToBlank(filters)
         start_time = self.context.request.GET.get('create_datetime[0]')
         if start_time is None:
             start_time = "2000-01-01"
@@ -228,9 +227,7 @@ class LogController(ControllerBase):
                permissions=[IsAuthenticated, IsAuditor])
     @paginate(MyPagination)
     def log_list(self, data: Query[LogInputSchema]):
-        for attr, value in data.model_dump().items():
-            if getattr(data, attr) is None:
-                setattr(data, attr, '')
+        conditionNoneToBlank(data)
         logs = TableOperationLog.objects.values('id', 'user__username', 'operate_obj', 'create_datetime',
                                                 'operate_des').order_by(
             '-create_datetime')

@@ -196,8 +196,7 @@ const handleSubmit = async () => {
                 }
             }
             return false
-        } catch (e) {
-            console.log("录入用例时后前端报错，报错信息如下:", e)
+        } catch {
             return false
         }
     }

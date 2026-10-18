@@ -17,6 +17,21 @@ import {
 } from "@/views/testmanage/projFragment/constants"
 import { TestStrategyHTML } from "@/views/testmanage/projFragment/constantsExtra"
 
+// 片段名 → 预制内容模版（与 fragmentName 枚举一一对应）
+const fragmentTemplateMap: Record<string, string> = {
+    [fragmentName.TestObject]: TestObjectHTML,
+    [fragmentName.StaticEnv]: StaticEnvHTML,
+    [fragmentName.StaticSoft]: StaticSoftHTML,
+    [fragmentName.StaticHard]: StaticHardHTML,
+    [fragmentName.DynamicEnv]: DynamicEnvHTML,
+    [fragmentName.DynamicSoft]: DynamicSoftHTML,
+    [fragmentName.DynamicHard]: DynamicHardHTML,
+    [fragmentName.TestData]: TestDataHTML,
+    [fragmentName.EnvDiff]: EnvDiffHTML,
+    [fragmentName.TestLevelAndType]: TestLevelAndTypeHTML,
+    [fragmentName.TestStrategy]: TestStrategyHTML
+}
+
 const useCrudOption = () => {
     // global
     const route = useRoute()
@@ -32,59 +47,11 @@ const useCrudOption = () => {
         // 功能：预制文档片段数据
         beforeOpenAdd: () => {
             const columnsService = crudRef.value.getColumnService()
-            //
-            switch (selectedValue.value) {
-                case fragmentName.NotSelect:
-                    columnsService.get("name").setAttr("addDefaultValue", "")
-                    columnsService.get("content").setAttr("addDefaultValue", "")
-                    break
-                case fragmentName.TestObject:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.TestObject)
-                    columnsService.get("content").setAttr("addDefaultValue", TestObjectHTML)
-                    break
-                case fragmentName.StaticEnv:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.StaticEnv)
-                    columnsService.get("content").setAttr("addDefaultValue", StaticEnvHTML)
-                    break
-                case fragmentName.StaticSoft:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.StaticSoft)
-                    columnsService.get("content").setAttr("addDefaultValue", StaticSoftHTML)
-                    break
-                case fragmentName.StaticHard:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.StaticHard)
-                    columnsService.get("content").setAttr("addDefaultValue", StaticHardHTML)
-                    break
-                case fragmentName.DynamicEnv:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.DynamicEnv)
-                    columnsService.get("content").setAttr("addDefaultValue", DynamicEnvHTML)
-                    break
-                case fragmentName.DynamicSoft:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.DynamicSoft)
-                    columnsService.get("content").setAttr("addDefaultValue", DynamicSoftHTML)
-                    break
-                case fragmentName.DynamicHard:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.DynamicHard)
-                    columnsService.get("content").setAttr("addDefaultValue", DynamicHardHTML)
-                    break
-                case fragmentName.TestData:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.TestData)
-                    columnsService.get("content").setAttr("addDefaultValue", TestDataHTML)
-                    break
-                case fragmentName.EnvDiff:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.EnvDiff)
-                    columnsService.get("content").setAttr("addDefaultValue", EnvDiffHTML)
-                    break
-                case fragmentName.TestLevelAndType:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.TestLevelAndType)
-                    columnsService.get("content").setAttr("addDefaultValue", TestLevelAndTypeHTML)
-                    break
-                case fragmentName.TestStrategy:
-                    columnsService.get("name").setAttr("addDefaultValue", fragmentName.TestStrategy)
-                    columnsService.get("content").setAttr("addDefaultValue", TestStrategyHTML)
-                    break
-                default:
-                    break
-            }
+            // 根据所选片段预制「名称」与「内容」默认值
+            const name = selectedValue.value === fragmentName.NotSelect ? "" : selectedValue.value
+            const content = fragmentTemplateMap[selectedValue.value] ?? ""
+            columnsService.get("name").setAttr("addDefaultValue", name)
+            columnsService.get("content").setAttr("addDefaultValue", content)
             return true
         },
         // 新增需要项目id

@@ -50,47 +50,6 @@ class DocxChapterExtractor(object):
                 directory.append((num, content))
         return directory
 
-    def build_hierarchy(self, chapter_body_list):
-        """将线性章节列表转换为嵌套结构"""
-        hierarchy = {}
-        path = []  # 当前路径栈，存储章节号的字符串部分（如 ["4", "2"]）
-        for item in chapter_body_list:
-            # 处理不同格式的输入数据
-            if len(item) == 3:
-                num, content, _ = item  # 忽略第三个元素
-            elif len(item) == 2:
-                num, content = item
-            else:
-                continue  # 跳过无效数据
-            # 切割章节号为字符串列表（如 '4.2.1' -> ["4", "2", "1"]）
-            parts = num.split('.')
-            # 1. 回溯路径找到当前层级
-            while len(path) >= len(parts):
-                path.pop()
-            # 2. 逐级构建或定位父节点
-            current_level = hierarchy
-            for i in range(len(path)):
-                part = path[i]
-                # 如果父节点不存在，自动创建占位节点
-                if part not in current_level:
-                    current_level[part] = {
-                        "number": ".".join(parts[:i + 1]),
-                        "title": "[未命名章节]",  # 占位节点标题
-                        "children": {}
-                    }
-                current_level = current_level[part]["children"]
-            # 3. 插入当前节点
-            current_part = parts[len(path)]  # 当前层级的部分（如 "1"）
-            if current_part not in current_level:
-                current_level[current_part] = {
-                    "number": num,
-                    "title": content,
-                    "children": {}
-                }
-            # 4. 更新路径栈
-            path = parts.copy()
-        return hierarchy
-
     def extract_title_ordinal(self, s):
         # 正则表达式匹配以括号结尾的字符串
         pattern = r'^(.*?)\s*[(（](.*?)[)）]$'
@@ -249,12 +208,8 @@ class DocxChapterExtractor(object):
 
     def main(self, chapter_name):
         directory = self.get_chapter_number(chapter_name)
-        # print(directory)
         chapter_body_list = self.iter_block_items(self.doc, directory)
-        # print(chapter_body_list)
-        # 构建层级结构
-        # hierarchy = self.build_hierarchy(chapter_body_list)
-        # print(hierarchy)
+        # 构建树形JSON结构
         json_tree = self.build_json_tree(chapter_body_list)
         return json_tree
 

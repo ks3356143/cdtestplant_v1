@@ -65,18 +65,16 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import tool from "@/utils/tool"
 import { get, isArray, isBoolean, isEmpty, isFunction } from "lodash-es"
 import { loadDict } from "@cps/ma-form/js/networkRequest.js"
 import globalColumn from "@/config/column.js"
 
 const dictList = {}
-const app = getCurrentInstance().appContext.app
 const columns = ref([])
 const data = ref({})
 const descriptions = ref([])
-const dictData = ref([])
 const props = defineProps({
     columns: { type: Array, default: [] },
     data: {},

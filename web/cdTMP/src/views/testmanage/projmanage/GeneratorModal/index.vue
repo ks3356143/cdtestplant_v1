@@ -49,7 +49,7 @@
                                     </template>
                                 </a-popover>
                             </template>
-                            <template v-else="frag.isLock">
+                            <template v-else>
                                 <icon-unlock style="color: green" size="20" />
                             </template>
                             <a-divider direction="vertical" />

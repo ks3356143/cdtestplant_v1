@@ -28,8 +28,6 @@ const { isPending, data, isError } = useQuery({
 
 // vue-data-ui图表
 const { chartData, chartConfig } = useVueDataUI(data)
-
-// 暗黑模式配置
 </script>
 
 <style lang="less" scoped>

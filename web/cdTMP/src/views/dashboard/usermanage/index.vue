@@ -19,7 +19,6 @@
 <script setup>
 import { reactive, ref } from "vue"
 import userApi from "@/api/system/user"
-import user from "@/api/system/user"
 import { Message } from "@arco-design/web-vue"
 // 切换状态按钮
 const changeStatusWrapper = (record) => {
@@ -65,9 +64,9 @@ const crudOptions = reactive({
     delete: {
         show: true,
         api: userApi.delete,
-        realApi: user.realDeletes
+        realApi: userApi.realDeletes
     },
-    recovery: { show: true, api: user.recoverys },
+    recovery: { show: true, api: userApi.recoverys },
     // 是否开启双击编辑行
     isDbClickEdit: true,
     // 表单布局

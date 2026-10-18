@@ -3,7 +3,6 @@ request工具类
 """
 import json
 from apps.system.models import LoginLog
-from django.urls.resolvers import ResolverMatch
 from user_agents import parse
 
 def get_request_ip(request):
@@ -66,29 +65,6 @@ def get_request_path(request, *args, **kwargs):
     path: str = request.path
     for value in values:
         path = path.replace('/' + value, '/' + '{id}')
-    return path
-
-def get_request_canonical_path(request, ):
-    """
-    获取请求路径
-    :param request:
-    :param args:
-    :param kwargs:
-    :return:
-    """
-    request_path = getattr(request, 'request_canonical_path', None)
-    if request_path:
-        return request_path
-    path: str = request.path
-    resolver_match: ResolverMatch = request.resolver_match
-    for value in resolver_match.args:
-        path = path.replace(f"/{value}", "/{id}")
-    for key, value in resolver_match.kwargs.items():
-        if key == 'pk':
-            path = path.replace(f"/{value}", f"/{{id}}")
-            continue
-        path = path.replace(f"/{value}", f"/{{{key}}}")
-
     return path
 
 def get_browser(request, ):

@@ -34,7 +34,6 @@
             v-bind="options"
             hoverable
             column-resizable
-            ref="tableRef"
             :scroll="{ x: '100%' }"
             :row-selection="{ type: 'checkbox', showCheckedAll: true, onlyCurrent: true }"
             row-key="id"
@@ -71,7 +70,7 @@
                 </template>
                 <!-- 上级节点列 -->
                 <a-table-column title="对应被测件" align="center" :width="150" fixed="right">
-                    <template #cell="{ record, column, rowIndex }">
+                    <template #cell="{ record }">
                         <Trigger :dutInfo="record.dut" @refresh="fetchData()" />
                     </template>
                 </a-table-column>
@@ -116,7 +115,7 @@ import designApi from "@/api/project/designDemand"
 import useShowType from "@/views/project/opeSets/components/DesignTable/useShowType"
 import useFetchData from "@/views/project/opeSets/hooks/useFetchData"
 import Form from "./form.vue" // 表单组件
-import Trigger from "./Trigger.vue" // 查看上级节点的触发器组件\
+import Trigger from "./Trigger.vue" // 查看上级节点的触发器组件
 // 表格用户设置相关
 import useSettings from "@/views/project/opeSets/components/DesignTable/useSettings"
 import MySetting from "@/views/project/opeSets/components/TableCommonComponent/Setting.vue"

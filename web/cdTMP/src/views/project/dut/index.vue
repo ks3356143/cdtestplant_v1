@@ -159,8 +159,8 @@ const handleCopyCurrentNode = async (_, record) => {
         Message.success("复制成功!")
         refreshCrudTable()
         treeDataStore.updateDesignDemandTreeData({ key: record.key }, projectId.value)
-    } catch (e) {
-        console.log("复制失败，后台打印错误：", e)
+    } catch {
+        // 复制失败，无需额外处理
     } finally {
         copyLoading.value = false
     }

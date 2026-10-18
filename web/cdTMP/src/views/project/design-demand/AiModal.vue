@@ -169,7 +169,6 @@ const getDesign = async () => {
         const resResult = await designApi.getDesignDemandOne({ project_id: route.query.id, key: route.query.key })
         designObj.value = resResult.data
     } catch (e) {
-        console.log("调试错误信息：", e)
         Message.error("初始化设计需求信息错误，请检查网络后重试!")
     }
 }
@@ -192,7 +191,6 @@ const generateClick = async () => {
         // 请求后处理结果
         const res = await aiApi.getAiTestItemBackend({ question: question, project_type: isFPGA ? "fpga" : "cpu" })
         const solveRes = JSON.parse(res.data.history[0].at(-1))
-        console.log("AI生成测试项结果：", solveRes)
         // 给Vue渲染测试项
         dataList.value = solveRes
         dataList.value.forEach((it: any) => {
@@ -204,7 +202,6 @@ const generateClick = async () => {
         percent.value = 1.0 // 完成进度
         Message.success("生成测试项成功，请完善信息后录入数据")
     } catch (e) {
-        console.log(e)
         percent.value = 0.0
     } finally {
         stopProgressSimulation()
@@ -218,10 +215,10 @@ const generateClick = async () => {
 // 生成的AI测试项数据
 const dataList = ref([])
 
-// 进度条模拟变量和函数
-const progressInterval = ref<NodeJS.Timeout>()
+// 进度条模拟变量和函数（定时器句柄无需响应式）
+let progressInterval: NodeJS.Timeout | undefined
 const startProgressSimulation = () => {
-    progressInterval.value = setInterval(() => {
+    progressInterval = setInterval(() => {
         if (percent.value < 0.8) {
             percent.value += (0.8 - percent.value) * 0.1
         }
@@ -229,9 +226,9 @@ const startProgressSimulation = () => {
 }
 
 const stopProgressSimulation = () => {
-    if (progressInterval.value) {
-        clearInterval(progressInterval.value)
-        progressInterval.value = undefined
+    if (progressInterval) {
+        clearInterval(progressInterval)
+        progressInterval = undefined
     }
 }
 

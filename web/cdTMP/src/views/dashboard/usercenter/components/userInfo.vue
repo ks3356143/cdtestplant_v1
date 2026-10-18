@@ -22,14 +22,13 @@
 import { reactive } from "vue"
 import { useUserStore } from "@/store"
 import { Message } from "@arco-design/web-vue"
-// import user from "@/api/system/user"
 
 const userStore = useUserStore()
 const userInfo = reactive({
     ...userStore.$state
 })
 
-const modifyInfo = async (data: any) => {
+const modifyInfo = async () => {
     Message.warning("请联系内网管理员进行修改")
 }
 </script>

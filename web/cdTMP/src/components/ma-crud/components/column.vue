@@ -21,7 +21,7 @@
                 v-if="row.children && row.children.length > 0"
             >
                 <column
-                    @refresh="() => refresh()"
+                    @refresh="refresh"
                     :isRecovery="props.isRecovery"
                     :crudFormRef="props.crudFormRef"
                     :columns="row.children"

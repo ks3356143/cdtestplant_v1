@@ -4,7 +4,7 @@ import designDemandApi from "@/api/project/designDemand"
 import { useRoute } from "vue-router"
 import { useTreeDataStore } from "@/store"
 /**
- * Dut被测件的crud选项
+ * 设计需求的crud选项
  */
 export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
     // globals
