@@ -26,10 +26,12 @@
 后端（根目录）：
 ```bash
 uv sync                        # 安装依赖
-python manage.py runserver     # 开发服务器
-python run.py                  # 生产 waitress 服务器（127.0.0.1:8000）
+python manage.py runserver     # 开发服务器（走 dev_settings，DEBUG=True，库端口 3306）
+python run.py                  # 生产 waitress 服务器（127.0.0.1:8000，走 settings.py，DEBUG=False）
 python manage.py makemigrations
 python manage.py migrate
+python manage.py auto_backup [--kind full|incremental] [--project ID]   # 定时备份（7.1.9）
+python manage.py purge_residue [--hours 24]                              # 清理过期临时文件（7.1.8）
 ```
 
 前端（web/cdTMP/）：
@@ -40,6 +42,15 @@ npm run build:dev    # 开发环境构建
 npm run build:prod   # 生产环境构建
 npm run prettier     # 格式化
 ```
+
+## 配置与环境变量
+
+凭据与部署参数**不写死在源码**，统一由 `.env` 提供（样例 `.env.example`，`.env` 已 gitignore）。
+`conf/env.py` 用 django-environ 读取，缺省值保证本地开发开箱可用：
+
+`DJANGO_SECRET_KEY`（应用密钥）、`FIELD_ENCRYPTION_KEY`（用户电话/邮箱落库加密密钥，
+**变更会导致历史密文无法解密**）、`ALLOWED_HOSTS`、`DATABASE_HOST/PORT/USER/PASSWORD/NAME`、
+`AUTH_LDAP_*`/`BASE_DN`/`FILTER_STR`。
 
 ## 本地运行（Windows 本机，无安装服务）
 
