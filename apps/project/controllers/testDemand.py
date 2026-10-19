@@ -13,7 +13,8 @@ from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_testDemand
 from utils.codes import HTTP_INDEX_ERROR
-from apps.project.tools.access_control import check_project_access, check_project_access_by_id
+from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
+                                               check_objects_access, get_object_in_project)
 from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep, Project
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
     TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, \
@@ -25,6 +26,9 @@ from apps.project.tools.copyDemand import demand_copy_to_design
 from apps.project.tools.delete_change_key import demand_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tool.batchTools import parse_test_content_string
+
+# 批量替换允许的文本字段白名单
+DEMAND_REPLACE_FIELDS = {'ident', 'name', 'title', 'adequacy', 'testDesciption'}
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试项接口'])
 class TestDemandController(ControllerBase):
@@ -229,10 +233,9 @@ class TestDemandController(ControllerBase):
     @route.put("/testDemand/update/{id}", response=TestDemandCreateOutSchema, url_name="testDemand-update")
     @transaction.atomic
     def update_testDemand(self, id: int, payload: TestDemandCreateInputSchema):
-        check_project_access_by_id(payload.project_id, self.context.request.user)
+        # 目标测试项必须属于 payload 指定的项目
+        testDemand_qs = get_object_in_project(TestDemand, id, payload.project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=payload.project_id)
-        # 查到当前
-        testDemand_qs = TestDemand.objects.get(id=id)
         old_ident = testDemand_qs.ident  # 用于判断是否要集体修改case的ident
         for attr, value in payload.dict().items():
             # 判重复
@@ -282,22 +285,19 @@ class TestDemandController(ControllerBase):
     @route.delete("/testDemand/delete", url_name="testDemand-delete")
     @transaction.atomic
     def delete_testDemand(self, data: DeleteSchema):
-        # 根据其中一个id查询出dut_id
-        try:
-            test_demand_single = TestDemand.objects.filter(id=data.ids[0])[0]
-        except IndexError:
-            return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选择需要删除的内容')
-        design_id = test_demand_single.design.id
-        design_key = test_demand_single.design.key
-        multi_delete_testDemand(data.ids, TestDemand)
-        index = 0
-        test_demand_all_qs = TestDemand.objects.filter(design__id=design_id).order_by('id')
-        for single_qs in test_demand_all_qs:
-            test_demand_key = "".join([design_key, '-', str(index)])
-            single_qs.key = test_demand_key
-            index = index + 1
-            single_qs.save()
-            demand_delete_sub_node_key(single_qs)  # 删除后需重排子节点
+        # 逐个校验每条选中测试项的项目归属（原先只校验第一行，其余行可跨项目删除）
+        demand_objs = check_objects_access(TestDemand, data.ids, self.context.request.user)
+        affected = {(obj.design_id, obj.design.key) for obj in demand_objs}
+        multi_delete_testDemand([obj.id for obj in demand_objs], TestDemand)
+        for design_id, design_key in affected:
+            index = 0
+            test_demand_all_qs = TestDemand.objects.filter(design__id=design_id).order_by('id')
+            for single_qs in test_demand_all_qs:
+                test_demand_key = "".join([design_key, '-', str(index)])
+                single_qs.key = test_demand_key
+                index = index + 1
+                single_qs.save()
+                demand_delete_sub_node_key(single_qs)  # 删除后需重排子节点
         return ChenResponse(message="测试需求删除成功！")
 
     # 查询一个项目的所有测试项【当前轮次】
@@ -331,6 +331,13 @@ class TestDemandController(ControllerBase):
         key_str = "-".join([data.round_key, data.dut_key, data.design_key])
         design_item = project_qs.psField.filter(key=key_str).first()
         if design_item:
+            # 只允许关联当前项目内的测试项，防止把别的项目的测试项挂到本项目
+            valid_ids = set(TestDemand.objects.filter(project=project_qs, id__in=test_item_ids)
+                            .values_list('id', flat=True))
+            invalid_ids = [i for i in test_item_ids if i not in valid_ids]
+            if invalid_ids:
+                return ChenResponse(status=400, code=400,
+                                    message=f'测试项不属于当前项目或不存在，已拒绝：{invalid_ids}')
             # 将test_item_ids中本身具有的测试项从id数组中移除
             for test_id in test_item_ids:
                 for ti in design_item.dtField.all():
@@ -346,10 +353,11 @@ class TestDemandController(ControllerBase):
                     test_item_obj = TestDemand.objects.filter(id=item_id).first()
                     design_item.odField.remove(test_item_obj)
             for test_item_id in non_exist_ids:
-                test_items = design_item.odField.filter(id=test_item_id)
-                if len(test_items) <= 0:
-                    # 查询testDemand
-                    design_item.odField.add(TestDemand.objects.filter(id=test_item_id).first())
+                if design_item.odField.filter(id=test_item_id).exists():
+                    continue
+                test_item_obj = TestDemand.objects.filter(id=test_item_id, project=project_qs).first()
+                if test_item_obj is not None:
+                    design_item.odField.add(test_item_obj)
             return ChenResponse(status=200, code=200, message='添加关联测试项成功...')
         else:
             return ChenResponse(status=400, code=400, message='设计需求不存在，请检查...')
@@ -388,6 +396,9 @@ class TestDemandController(ControllerBase):
         demand_qs = project_obj.ptField.filter(id__in=payload.selectRows, round__key=payload.round_key)
         # 3.批量替换里面文本（解构不影响老数组）
         selectColumn = [x for x in payload.selectColumn if x != 'testContent']
+        unknown = [x for x in selectColumn if x not in DEMAND_REPLACE_FIELDS]
+        if unknown:
+            return ChenResponse(status=400, code=400, message=f'不支持替换的字段：{unknown}')
         replace_kwargs = {
             field_name: Replace(F(field_name), Value(payload.originText), Value(payload.replaceText))
             for field_name in selectColumn
@@ -412,6 +423,10 @@ class TestDemandController(ControllerBase):
     @transaction.atomic
     def multiple_modify_demand_priority(self, payload: PriorityReplaceSchema):
         check_project_access_by_id(payload.project_id, self.context.request.user)
-        # 替换优先级
-        demand_qs = TestDemand.objects.filter(id__in=payload.selectRows)
+        # 只改当前项目内的测试项，防止跨项目批量改优先级
+        demand_qs = TestDemand.objects.filter(id__in=payload.selectRows, project_id=payload.project_id)
+        affected = demand_qs.count()
+        if affected != len(set(payload.selectRows)):
+            return ChenResponse(status=400, code=400,
+                                message='部分测试项不属于当前项目或已被删除，已拒绝批量修改')
         demand_qs.update(priority=payload.priority)

@@ -81,11 +81,13 @@ function createService() {
                         err("登录状态已过期，需要重新登录")
                         // 清除本地localStorage
                         tool.local.clear()
-                        // 移动到网站的根目录-这里不需要因为导航守卫可以返回login页面
+                        // 登录接口自身返回 401（账号口令错误）时留在登录页，其余 401 跳回登录
                         if (
-                            error.response.data.data.code === 40001 ||
-                            error.response.data.data.detail === "No active account found with the given credentials"
+                            error.response.data?.data?.code === 40001 ||
+                            error.response.data?.data?.detail ===
+                                "No active account found with the given credentials"
                         ) {
+                            // 账号或口令错误，不跳转
                         } else {
                             window.location.href = "/"
                         }

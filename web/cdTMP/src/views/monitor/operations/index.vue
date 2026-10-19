@@ -6,9 +6,14 @@
                     {{ record.create_datetime.split(".")[0].replace("T", " ") }}
                 </template>
                 <template #tableBeforeButtons>
-                    <a-button type="primary" status="warning" @click="handleDeleteLogButton">
-                        <template #icon> <icon-delete /> </template>删除30天前数据
-                    </a-button>
+                    <a-popconfirm
+                        content="仅清理 30 天前的日志，保留期内日志不可删除。确定继续？"
+                        @ok="handleDeleteLogButton"
+                    >
+                        <a-button type="primary" status="warning">
+                            <template #icon> <icon-delete /> </template>删除30天前数据
+                        </a-button>
+                    </a-popconfirm>
                 </template>
                 <!-- 操作列 -->
                 <template #operationCell="{ record }">
@@ -28,10 +33,18 @@ import { Message, Notification } from "@arco-design/web-vue"
 const crudRef = ref({})
 // 删除日志按钮事件处理函数（审计日志保护：仅可清理30天前数据，禁全清）
 const handleDeleteLogButton = async () => {
-    const res = await logApi.operationsDelete() // 不传 day，后端按 30 天保留期默认清理
-    if (res.data || res.message) Message.success(res.message || "清理成功")
-    else Message.error("清理被拒绝")
-    crudRef.value.refresh()
+    try {
+        const res = await logApi.operationsDelete() // 不传 day，后端按 30 天保留期默认清理
+        if (res?.success === false) {
+            Message.error(res.message || "清理被拒绝")
+            return
+        }
+        Message.success(res?.message || "清理成功")
+    } catch {
+        // 清理被拒绝时接口层已提示，这里保留列表状态
+    } finally {
+        crudRef.value.refresh?.()
+    }
 }
 // 点击操作：查看【思路打开编辑窗口】
 const handleSee = (record) => {

@@ -65,21 +65,9 @@
                     </a-avatar>
                     <template #content>
                         <a-doption>
-                            <a-space @click="switchRoles">
-                                <icon-tag />
-                                <span> 切换角色 </span>
-                            </a-space>
-                        </a-doption>
-                        <a-doption>
                             <a-space @click="$router.push({ name: 'usercenter' })">
                                 <icon-user />
                                 <span> 用户中心 </span>
-                            </a-space>
-                        </a-doption>
-                        <a-doption>
-                            <a-space @click="$router.push({ name: 'usercenter' })">
-                                <icon-settings />
-                                <span> 用户设置 </span>
                             </a-space>
                         </a-doption>
                         <a-doption>
@@ -101,7 +89,6 @@ import { useAppStore } from "@/store"
 import { useFullscreen } from "@vueuse/core"
 // 这个hook就是退出登录跳转的
 import useUser from "@/hooks/logout"
-import { Message } from "@arco-design/web-vue"
 import Menu from "@/layout/components/menu.vue"
 import { useRouter, useRoute } from "vue-router"
 // 项目信息录入组件
@@ -126,10 +113,6 @@ const props = defineProps({
 const topMenu = computed(() => appStore.topMenu && appStore.menu)
 // 全屏设置,使用了@vueuse/core
 const { isFullscreen, toggle: toggleFullScreen } = useFullscreen()
-/// 切换角色
-const switchRoles = async () => {
-    Message.success("模拟切换角色")
-}
 /// 退出登录
 const { logout } = useUser()
 const handleLogout = () => {
@@ -163,6 +146,23 @@ const handleClickLogo = () => {
 .logo-container:hover {
     .logo {
         transform: rotateX(-25deg) rotateY(1440deg);
+    }
+}
+
+// 窄屏：隐藏版本号、压缩标题，避免标题被挤成多行
+.title div {
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .version {
+        display: none;
+    }
+    .title div {
+        font-size: 15px;
+    }
+    .right-side li .nav-btn {
+        display: none;
     }
 }
 

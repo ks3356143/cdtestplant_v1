@@ -54,7 +54,7 @@ const DATAMANAGE = {
             component: () => import("@/views/datamanage/backup/index.vue"),
             meta: {
                 requiresAuth: true,
-                roles: ["*"],
+                roles: ["admin"], // 备份涉及全局业务数据，仅系统管理员可见
                 locale: "数据备份与恢复",
                 icon: "icon-cloud",
                 title: "数据备份与恢复"

@@ -14,6 +14,7 @@ from apps.project.models import Project, Case
 # 导入工具
 from utils.util import get_str_abbr, get_str_dict
 from utils.chen_response import ChenResponse
+from apps.project.tools.access_control import check_project_access_by_id
 from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
 # 导入生成日志记录模块
@@ -27,6 +28,7 @@ class GenerateControllerWtd(ControllerBase):
     @route.get("/create/problem", url_name="create-problem")
     @transaction.atomic
     def create_problem(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """生成问题单"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/wtd' / '问题详情表.docx'

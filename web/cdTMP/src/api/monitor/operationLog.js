@@ -18,7 +18,7 @@ export default {
     deleteOperationLogs(params = {}) {
         return request({
             url: `/system/log/operation_delete`,
-            method: "get",
+            method: "post",
             params
         })
     }

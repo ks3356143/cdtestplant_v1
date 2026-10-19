@@ -28,8 +28,9 @@ export default {
      */
     getDemandOneById(id) {
         return request({
-            url: `project/getTestDemandOneById?id=${id}`,
-            method: "get"
+            url: "project/getTestDemandOneById",
+            method: "get",
+            params: { id }
         })
     },
     /**

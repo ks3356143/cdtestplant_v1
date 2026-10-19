@@ -73,20 +73,13 @@ class CommonController(ControllerBase):
     def get_chart(self):
         """该接口返回当前年份下，每月的项目统计，返回横坐标12个月的字符串以及12个月数据"""
         current_year = date.today().year
-        month_list = []
-        # 构造数组，里面是字典
-        for i in range(12):
-            month_dict = {'month': i + 1, 'count': 0}
-            month_list.append(month_dict)
-        project_qs = Project.objects.all()
-        for project in project_qs:
-            begin_time = project.beginTime
-            if not begin_time:
-                continue
-            # 年份判断提到月份循环外：非当前年份的项目不再空跑 12 个月
-            if begin_time.year != current_year:
-                continue
-            for m in month_list:
-                if m['month'] == begin_time.month:
-                    m['count'] += 1
+        # 用数据库聚合一次算出每月项目数，避免把全年项目全部取到内存里逐条比较
+        from django.db.models import Count
+        from django.db.models.functions import ExtractMonth
+        counts = (Project.objects.filter(beginTime__year=current_year)
+                  .annotate(month=ExtractMonth('beginTime'))
+                  .values('month')
+                  .annotate(count=Count('id')))
+        month_map = {row['month']: row['count'] for row in counts}
+        month_list = [{'month': i, 'count': month_map.get(i, 0)} for i in range(1, 13)]
         return ChenResponse(status=200, code=200, data=month_list)

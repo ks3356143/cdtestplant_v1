@@ -15,7 +15,8 @@ from utils.codes import HTTP_INDEX_ERROR
 from apps.project.models import Dut, Round, Project, DutMetrics
 from django.shortcuts import get_object_or_404
 # 自主访问控制（GB/T 28452-2012 7.1.3）
-from apps.project.tools.access_control import check_project_access, check_project_access_by_id
+from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
+                                               check_objects_access, get_object_in_project)
 from apps.project.schemas.dut import DutModelOutSchema, DutFilterSchema, DutTreeReturnSchema, DutTreeInputSchema, \
     DutCreateInputSchema, DutCreateOutSchema, DeleteSchema, DutCreateR1SoDutSchema
 # 导入自动生成design、demand、case的辅助函数
@@ -93,15 +94,14 @@ class DutController(ControllerBase):
     @route.put("/dut/update/{id}", url_name="dut-update", response=DutCreateOutSchema)
     @transaction.atomic
     def update_dut(self, id: int, payload: DutCreateInputSchema):
-        check_project_access_by_id(payload.project_id, self.context.request.user)
+        # 目标被测件必须属于 payload 指定的项目
+        dut_qs = get_object_in_project(Dut, id, payload.project_id, self.context.request.user)
         dut_search = Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
                                         ident=payload.ident)
         # 判断是否和同项目同轮次的标识重复
         if len(dut_search) > 1:
             return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
-        # 查到当前
         # 两个分支（SO / 非SO）逻辑一致，仅非源代码被测件需清空代码统计字段，这里合并处理
-        dut_qs = Dut.objects.get(id=id)
         for attr, value in payload.dict().items():
             if attr == 'project_id' or attr == 'round_key':
                 continue
@@ -119,36 +119,28 @@ class DutController(ControllerBase):
     @route.delete("/dut/delete", url_name="dut-delete")
     @transaction.atomic
     def delete_dut(self, data: DeleteSchema):
-        # 查询某一个dut对象
-        try:
-            dut_single = Dut.objects.filter(id=data.ids[0])[0]
-        except IndexError:
-            return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选择需要删除的内容')
-        check_project_access(dut_single.project, self.context.request.user)
-        # 查询出dut所属的轮次id、key
-        round_id = dut_single.round.id
-        round_key = dut_single.round.key
-        # blink1->>>>>> 这里不仅重排key，还要重排ident中编号,先取出前面的RXXXX-RX等信息,这里必须要在删除之前
-        # 查询出当前轮次所有dut
-        # 源代码类被测件不可删除：一次查询筛出，避免逐个 id 查库
-        so_ids = set(Dut.objects.filter(type='SO', id__in=data.ids).values_list('id', flat=True))
+        # 逐个校验每条选中被测件的项目归属（防止只校验第一行、其余行跨项目删除）
+        dut_objs = check_objects_access(Dut, data.ids, self.context.request.user)
+        # 源代码类被测件不可删除
+        so_ids = {obj.id for obj in dut_objs if obj.type == 'SO'}
         message = '源代码被测件不能删除' if so_ids else '被测件删除成功'
-        deletable_ids = [item_id for item_id in data.ids if item_id not in so_ids]
-        multi_delete_dut(deletable_ids, Dut)
-        dut_all_qs = Dut.objects.filter(round__id=round_id).order_by('id')
-        # 整轮被测件被删空时无需重排，直接返回，避免 IndexError
-        if not dut_all_qs.exists():
-            return ChenResponse(message=message)
-        ident_before_string = dut_all_qs[0].ident.split("UT")[0]  # 输出类似于“R2233-R1-”
-        index = 0
-        for single_qs in dut_all_qs:
-            dut_key = "".join([round_key, '-', str(index)])  # 重排现有的dut的key
-            single_qs.key = dut_key
-            single_qs.ident = ident_before_string + "UT" + str(index + 1)
-            index = index + 1
-            single_qs.save()
-            # 不仅重排自己的还要改所有子类的key，因为还是之前的key
-            dut_delete_sub_node_key(single_qs)
+        deletable = [obj for obj in dut_objs if obj.id not in so_ids]
+        affected = {(obj.round_id, obj.round.key) for obj in deletable}
+        multi_delete_dut([obj.id for obj in deletable], Dut)
+        # 每个受影响的轮次都重排 key 与 ident 尾号
+        for round_id, round_key in affected:
+            dut_all_qs = Dut.objects.filter(round__id=round_id).order_by('id')
+            if not dut_all_qs.exists():
+                continue
+            ident_before_string = dut_all_qs[0].ident.split("UT")[0]  # 输出类似于“R2233-R1-”
+            index = 0
+            for single_qs in dut_all_qs:
+                single_qs.key = "".join([round_key, '-', str(index)])
+                single_qs.ident = ident_before_string + "UT" + str(index + 1)
+                index = index + 1
+                single_qs.save()
+                # 不仅重排自己的还要改所有子类的key，因为还是之前的key
+                dut_delete_sub_node_key(single_qs)
 
         return ChenResponse(message=message)
 

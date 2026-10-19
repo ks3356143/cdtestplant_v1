@@ -116,37 +116,45 @@ const handleSubmit = async ({ values, errors }) => {
         return
     }
     loading.value = true
-    if (!errors) {
-        // 登录逻辑需要用到userStore
-        try {
-            const login_res = await userStore.login(form)
-            if (login_res && login_res.ok) {
-                const { redirect, ...otherQuery } = router.currentRoute.value.query
-                router.push({
-                    name: redirect || "workplace",
-                    query: {
-                        ...otherQuery // 将退出时的查询参数放入，这样就不会错误
-                    }
-                })
-                // 加载LDAP数据/内网/暂定
-                await userApi.loadLDAPUsers()
-                return
-            }
-            // 特权账号首次登录：后端要求图形验证码，此时才显示输入框并拉取图片
-            if (login_res && login_res.needCaptcha) {
-                needCaptcha.value = true
-                await refreshCaptcha()
-            } else if (needCaptcha.value) {
-                // 验证码一次性使用，已显示时失败需刷新
-                refreshCaptcha()
-            }
-        } catch {
-            // 登录失败原因由接口层统一提示
-        } finally {
-            loading.value = false
-        }
+    if (errors) {
+        loading.value = false
+        return
     }
-    loading.value = false
+    // 登录逻辑需要用到userStore
+    try {
+        const login_res = await userStore.login(form)
+        if (login_res && login_res.ok) {
+            const { redirect, ...otherQuery } = router.currentRoute.value.query
+            router.push({
+                name: redirect || "workplace",
+                query: {
+                    ...otherQuery // 将退出时的查询参数放入，这样就不会错误
+                }
+            })
+            // 加载LDAP数据：仅系统管理员有同步权限，内网不可用时静默忽略
+            try {
+                await userStore.info()
+                if (userStore.role === "admin") {
+                    await userApi.loadLDAPUsers()
+                }
+            } catch {
+                // 非内网环境或非管理员：不影响正常登录
+            }
+            return
+        }
+        // 特权账号首次登录：后端要求图形验证码，此时才显示输入框并拉取图片
+        if (login_res && login_res.needCaptcha) {
+            needCaptcha.value = true
+            await refreshCaptcha()
+        } else if (needCaptcha.value) {
+            // 验证码一次性使用，已显示时失败需刷新
+            refreshCaptcha()
+        }
+    } catch {
+        // 登录失败原因由接口层统一提示
+    } finally {
+        loading.value = false
+    }
 }
 </script>
 

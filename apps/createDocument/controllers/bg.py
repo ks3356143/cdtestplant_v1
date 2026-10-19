@@ -14,6 +14,7 @@ from apps.project.models import Project, Dut, TestDemand, Problem
 # 工具类函数
 from apps.createDocument.extensions import util
 from utils.chen_response import ChenResponse
+from apps.project.tools.access_control import check_project_access_by_id
 from apps.createDocument.extensions.util import create_bg_docx, get_round1_problem, require_project_begin_time
 from utils.util import get_str_dict, get_list_dict, create_problem_grade_str, create_str_testType_list, \
     create_demand_summary, create_problem_type_str, create_problem_table, create_problem_type_table, \
@@ -57,11 +58,12 @@ class GenerateControllerBG(ControllerBase):
     @route.get("/create/techyiju", url_name="create-techyiju-bg")
     @transaction.atomic
     def create_techyiju(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         duties_qs = project_obj.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY'))
         std_documents = []
         for duty in duties_qs:
-            one_duty = {'doc_name': duty.name, 'ident_version': duty.ref + '-' + duty.version,
+            one_duty = {'doc_name': duty.name, 'ident_version': f"{(duty.ref or '').strip()}-{(duty.version or '').strip()}",
                         'publish_date': duty.release_date, 'source': duty.release_union}
             std_documents.append(one_duty)
         # 添加大纲到这里
@@ -106,6 +108,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/timeaddress')
     @transaction.atomic
     def create_timeaddress(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         timer = DocTime(id)
         context = timer.bg_address_time()
         return create_bg_docx('测评时间和地点.docx', context, id)
@@ -113,6 +116,7 @@ class GenerateControllerBG(ControllerBase):
     # 在报告生成多个版本被测软件基本信息
     @route.get('/create/baseInformation', url_name='create-baseInformation-bg')
     def create_information(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         languages = get_list_dict('language', project_obj.language)
         language_list = []
@@ -152,6 +156,7 @@ class GenerateControllerBG(ControllerBase):
     # 生成测评完成情况
     @route.get('/create/completionstatus', url_name='create-completionstatus')
     def create_completionstatus(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 找到第一轮轮次对象、第二轮轮次对象
         round1 = project_obj.pField.filter(key='0').first()
@@ -226,6 +231,7 @@ class GenerateControllerBG(ControllerBase):
     # 生成综述
     @route.get('/create/summary', url_name='create-summary')
     def create_summary(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 找出所有问题单
         problem_qs = project_obj.projField.all()
@@ -281,6 +287,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/contentandresults_1', url_name='create-contentandresults_1')
     @transaction.atomic
     def create_content_results_1(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         project_ident = project_obj.ident
         # ~~~~首轮信息~~~~
@@ -367,6 +374,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/contentandresults_2', url_name='create-contentandresults_2')
     @transaction.atomic
     def create_content_results_2(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 查询除第一轮，其他有几轮
         round_qs = project_obj.pField.filter(~Q(key='0'))
@@ -390,6 +398,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/problem_statistics')
     @transaction.atomic
     def create_problem_statistics(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         problems = project_obj.projField.all().distinct()  # 项目所有问题单
         context = {
@@ -404,6 +413,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/effect_and_adquacy', url_name='create-effect_and_adquacy')
     @transaction.atomic
     def create_effect_and_adquacy(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 判断是否为鉴定
         is_JD = project_obj.report_type == '9'
@@ -431,6 +441,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/demand_effective', url_name='create-demand_effective')
     @transaction.atomic
     def create_demand_effective(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 查询所有需求规格说明的 - 设计需求
         round1_design_qs = project_obj.psField.filter(round__key='0', dut__type='XQ')  # qs:第一轮需求文档的设计需求
@@ -518,6 +529,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/quality_evaluate', url_name='create-quality_evaluate')
     @transaction.atomic
     def create_quality_evaluate(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 找出最后一轮（含源代码被测件）
         last_dut_so = get_last_so_dut(project_obj)
@@ -554,6 +566,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/entire', url_name='create-entire')
     @transaction.atomic
     def create_entire(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 是否鉴定
         is_JD = project_obj.report_type == '9'
@@ -587,6 +600,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/yzxq_track', url_name='create-yzxq_track')
     @transaction.atomic
     def create_yzxq_track(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 是否是鉴定的变量，如果为鉴定，则需要研总的追踪
         is_JD = project_obj.report_type == '9'
@@ -655,6 +669,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/problems_summary', url_name='create-problem_summary')
     @transaction.atomic
     def create_problem_summary(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         tpl_doc = Path.cwd() / "media" / project_path(id) / "form_template" / "bg" / "问题汇总表.docx"
         doc = DocxTemplate(tpl_doc)
         project_obj = get_object_or_404(Project, id=id)
@@ -702,6 +717,7 @@ class GenerateControllerBG(ControllerBase):
     @route.get('/create/modi_list', url_name='create-modi-list')
     @transaction.atomic
     def create_modi_list(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         tpl_doc = Path.cwd() / "media" / project_path(id) / "form_template" / "bg" / "摸底清单.docx"
         doc = DocxTemplate(tpl_doc)
         project_obj = get_object_or_404(Project, id=id)

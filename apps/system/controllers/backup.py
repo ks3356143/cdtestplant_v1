@@ -69,7 +69,16 @@ class BackupController(ControllerBase):
 
     @route.get("/list", response=list[BackupRecordOutSchema], url_name="backup-list")
     def list_backup(self):
-        return [_to_out(r) for r in BackupRecord.objects.select_related('creator').all()]
+        user = self.context.request.user
+        qs = BackupRecord.objects.select_related('creator').all()
+        # 列表只返回有权查看的备份：项目备份按项目访问权限过滤；全量备份仅管理员或创建者本人
+        if getattr(user, 'role', None) != 'admin':
+            from django.db.models import Q
+            from apps.project.tools.access_control import accessible_project_ids
+            allowed = accessible_project_ids(user)
+            qs = qs.filter(Q(scope_project_id__in=allowed) |
+                           Q(scope_project_id__isnull=True, creator_id=getattr(user, 'id', None)))
+        return [_to_out(r) for r in qs]
 
     # ------------------------------ 备份 ------------------------------
 
@@ -121,7 +130,13 @@ class BackupController(ControllerBase):
 
     @route.get("/{record_id}/download", url_name="backup-download")
     def download(self, record_id: int):
+        user = self.context.request.user
         record = get_object_or_404(BackupRecord, id=record_id)
+        # 与恢复同一授权口径：项目备份校验项目访问权；全量备份仅管理员或创建者
+        if record.scope_project_id is not None:
+            check_project_access_by_id(record.scope_project_id, user)
+        elif getattr(user, 'role', None) != 'admin' and record.creator_id != getattr(user, 'id', None):
+            return ChenResponse(code=403, status=403, message='全量备份的下载仅限系统管理员或备份创建者本人')
         path = backup_dir() / record.file_name
         if not path.is_file():
             return ChenResponse(code=404, status=404, message='备份文件已不存在')

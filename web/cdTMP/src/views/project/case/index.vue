@@ -36,11 +36,13 @@ const route = useRoute()
 // hook-获取当前用例信息
 const { tempCaseInfo, caseIsNotPassedOrNotExe, fetchCaseOneStatus } = getCaseInfoHook()
 
-const roundNumber = route.query.key.split("-")[0]
-const dutNumber = route.query.key.split("-")[1]
-const designDemandNumber = route.query.key.split("-")[2]
-const testDemandNumber = route.query.key.split("-")[3]
-const caseNumber = route.query.key.split("-")[4]
+// key 可能缺失（刷新/直链），统一解析一次并兜底，避免 setup 阶段抛错
+const keyParts = String(route.query.key || "").split("-")
+const roundNumber = keyParts[0]
+const dutNumber = keyParts[1]
+const designDemandNumber = keyParts[2]
+const testDemandNumber = keyParts[3]
+const caseNumber = keyParts[4]
 const crudRef = ref()
 const projectId = ref(route.query.id)
 const problemchoose = ref()

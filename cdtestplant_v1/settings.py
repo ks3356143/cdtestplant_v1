@@ -91,6 +91,14 @@ DATABASES = {
 # 调试模式
 DEBUG = False
 
+# 生产启动校验：关键安全配置缺失时拒绝启动，避免带可预测密钥/未加密配置上线
+if not DEBUG:
+    from django.core.exceptions import ImproperlyConfigured
+    if SECRET_KEY.startswith('django-insecure-'):
+        raise ImproperlyConfigured('生产环境必须在 .env 中配置随机的 DJANGO_SECRET_KEY')
+    if not FIELD_ENCRYPTION_KEY:
+        raise ImproperlyConfigured('生产环境必须在 .env 中配置 FIELD_ENCRYPTION_KEY（变更会导致历史密文无法解密）')
+
 # 配置缓存
 CACHES = {
     "default": {

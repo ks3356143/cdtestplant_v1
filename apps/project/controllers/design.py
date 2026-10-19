@@ -15,7 +15,8 @@ from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_design
 from utils.codes import HTTP_INDEX_ERROR
-from apps.project.tools.access_control import check_project_access, check_project_access_by_id
+from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
+                                               check_objects_access, get_object_in_project)
 from apps.project.models import Design, Dut, Round, Project, JKDesignInfo
 from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, DesignModelOutSchema, \
     DesignTreeReturnSchema, \
@@ -25,6 +26,9 @@ from apps.project.tools.delete_change_key import design_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tools.auto_create_data import auto_create_renji
 from apps.project.tool.dragAndDrop import DesignDrapAtoB
+
+# 批量替换允许的文本字段白名单
+DESIGN_REPLACE_FIELDS = {'ident', 'name', 'title', 'chapter'}
 
 def _save_jk_direction_info(design: Design, direction: str, source: str, destination: str, description: str):
     """保存或更新 JKDesignInfo 记录"""
@@ -179,15 +183,14 @@ class DesignController(ControllerBase):
     @route.put("/editDesignDemand/{id}", response=DesignCreateOutSchema, url_name="design-update")
     @transaction.atomic
     def update_design(self, id: int, payload: DesignCreateInputSchema):
-        check_project_access_by_id(payload.project_id, self.context.request.user)
+        # 目标设计需求必须属于 payload 指定的项目
+        design_qs = get_object_in_project(Design, id, payload.project_id, self.context.request.user)
         design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident,
                                               round__key=payload.round_key)
         # 判断是否和同项目同轮次的标识重复（先判空标识，避免无意义的全量查询）
         if payload.ident != '' and design_search.count() > 1:
             return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
 
-        # 查到当前
-        design_qs = Design.objects.get(id=id)
         for attr, value in payload.dict().items():
             if attr in ('project_id', 'round_key', 'dut_key'):
                 continue
@@ -221,23 +224,19 @@ class DesignController(ControllerBase):
     @route.delete("/designDemand/delete", url_name="design-delete")
     @transaction.atomic
     def delete_design(self, data: DeleteSchema):
-        # 根据其中一个id查询出dut_id
-        try:
-            design_single = Design.objects.filter(id=data.ids[0])[0]
-        except IndexError:
-            return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选择需要删除的内容')
-        check_project_access(design_single.project, self.context.request.user)
-        dut_id = design_single.dut.id
-        dut_key = design_single.dut.key
-        multi_delete_design(data.ids, Design)
-        index = 0
-        design_all_qs = Design.objects.filter(dut__id=dut_id).order_by('id')
-        for single_qs in design_all_qs:
-            design_key = "".join([dut_key, '-', str(index)])
-            single_qs.key = design_key
-            index = index + 1
-            single_qs.save()
-            design_delete_sub_node_key(single_qs)
+        # 逐个校验每条选中设计需求的项目归属
+        design_objs = check_objects_access(Design, data.ids, self.context.request.user)
+        affected = {(obj.dut_id, obj.dut.key) for obj in design_objs}
+        multi_delete_design([obj.id for obj in design_objs], Design)
+        for dut_id, dut_key in affected:
+            index = 0
+            design_all_qs = Design.objects.filter(dut__id=dut_id).order_by('id')
+            for single_qs in design_all_qs:
+                design_key = "".join([dut_key, '-', str(index)])
+                single_qs.key = design_key
+                index = index + 1
+                single_qs.save()
+                design_delete_sub_node_key(single_qs)
         return ChenResponse(message="设计需求删除成功！")
 
     # 给复制功能级联选择器查询所有的设计需求【这是查项目所有的设计需求】
@@ -269,6 +268,9 @@ class DesignController(ControllerBase):
         # 2.查询[所有轮次]的selectRows的id
         design_qs = project_obj.psField.filter(id__in=payload.selectRows, round__key=payload.round_key)
         # 3.批量替换里面文本
+        unknown = [x for x in payload.selectColumn if x not in DESIGN_REPLACE_FIELDS]
+        if unknown:
+            return ChenResponse(status=400, code=400, message=f'不支持替换的字段：{unknown}')
         replace_kwargs = {
             field_name: Replace(F(field_name), Value(payload.originText), Value(payload.replaceText))
             for field_name in payload.selectColumn

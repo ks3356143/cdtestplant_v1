@@ -1,83 +1,21 @@
 <template>
     <div class="w-full mx-auto">
-        <div class="lg:grid lg:grid-cols-4 lg:gap-1">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <a-card
-                style="height: 65px"
-                class="rounded-xs mt-3"
-                :body-style="{ padding: 0, height: '65px' }"
+                v-for="item in cards"
+                :key="item.key"
                 :bordered="false"
+                class="stat-card"
+                :body-style="{ padding: '16px' }"
                 hoverable
             >
-                <div class="flex justify-between h-full">
-                    <div class="en-title bg-blue-600">NU</div>
-                    <div class="w-full ml-3.5 flex justify-between items-center">
-                        用户统计
-                        <a-space size="large" class="mr-3">
-                            <div class="text-right">
-                                <div>总数</div>
-                                <div>{{ statistics.ucount }}</div>
-                            </div>
-                        </a-space>
+                <div class="flex items-center gap-3">
+                    <div class="stat-icon" :style="{ background: item.bg, color: item.color }">
+                        <component :is="item.icon" />
                     </div>
-                </div>
-            </a-card>
-            <a-card
-                style="height: 65px"
-                class="rounded-xs mt-3 lg:ml-2"
-                :body-style="{ padding: 0, height: '65px' }"
-                :bordered="false"
-                hoverable
-            >
-                <div class="flex justify-between h-full">
-                    <div class="en-title bg-red-600">NA</div>
-                    <div class="w-full ml-3.5 flex justify-between items-center">
-                        进行中项目数
-                        <a-space size="large" class="mr-3">
-                            <div class="text-right">
-                                <div>总数</div>
-                                <div>{{ statistics.ppcount }}</div>
-                            </div>
-                        </a-space>
-                    </div>
-                </div>
-            </a-card>
-            <a-card
-                style="height: 65px"
-                class="rounded-xs mt-3 lg:ml-2"
-                :body-style="{ padding: 0, height: '65px' }"
-                :bordered="false"
-                hoverable
-            >
-                <div class="flex justify-between h-full">
-                    <div class="en-title bg-pink-600">LC</div>
-                    <div class="w-full ml-3.5 flex justify-between items-center">
-                        项目总数
-                        <a-space size="large" class="mr-3">
-                            <div class="text-right">
-                                <div>总数</div>
-                                <div>{{ statistics.pcount }}</div>
-                            </div>
-                        </a-space>
-                    </div>
-                </div>
-            </a-card>
-            <a-card
-                style="height: 65px"
-                class="rounded-xs mt-3 lg:ml-2"
-                :body-style="{ padding: 0, height: '65px' }"
-                :bordered="false"
-                hoverable
-            >
-                <div class="flex justify-between h-full">
-                    <div class="en-title bg-green-600">OC</div>
-                    <div class="w-full ml-3.5 flex justify-between items-center">
-                        完成的项目数
-                        <a-space size="large" class="mr-3">
-                            <div class="text-right">
-                                <div>总数</div>
-                                <div>{{ statistics.pdcount }}</div>
-                            </div>
-                        </a-space>
+                    <div class="min-w-0">
+                        <div class="stat-label">{{ item.label }}</div>
+                        <div class="stat-value">{{ statistics[item.key] ?? 0 }}</div>
                     </div>
                 </div>
             </a-card>
@@ -88,27 +26,61 @@
 <script setup>
 import { ref, onMounted } from "vue"
 import workplaceApi from "@/api/system/workplace"
+
 const statistics = ref({
     ucount: 0,
     pcount: 0,
     pdcount: 0,
     ppcount: 0
 })
+
+const cards = [
+    { key: "ucount", label: "用户统计", icon: "icon-user-group", color: "#2563eb", bg: "#eff6ff" },
+    { key: "ppcount", label: "进行中项目数", icon: "icon-clock-circle", color: "#b45309", bg: "#fffbeb" },
+    { key: "pcount", label: "项目总数", icon: "icon-file", color: "#be185d", bg: "#fdf2f8" },
+    { key: "pdcount", label: "完成的项目数", icon: "icon-check-circle", color: "#047857", bg: "#ecfdf5" }
+]
+
 onMounted(async () => {
-    const statisticsRes = await workplaceApi.getStatistics()
-    statistics.value = statisticsRes.data
+    try {
+        const res = await workplaceApi.getStatistics()
+        if (res?.data) statistics.value = res.data
+    } catch {
+        // 统计失败时保留 0，不影响页面其余内容
+    }
 })
 </script>
 
 <style scoped>
-.en-title {
-    width: 75px;
-    color: #fff;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.3em;
+.stat-card {
+    border-radius: 8px;
+    border: 1px solid var(--color-border-2);
+    background: var(--color-bg-2);
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--color-text-3);
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+.stat-value {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-text-1);
+    font-variant-numeric: tabular-nums;
 }
 </style>

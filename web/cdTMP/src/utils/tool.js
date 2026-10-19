@@ -112,4 +112,66 @@ tool.checkForCpuOrFPGA = (input_value) => {
     return false
 }
 
+// 触发浏览器下载（支持后端返回的 Blob 或普通数据）
+tool.download = (data, filename = "下载文件") => {
+    const blob = data instanceof Blob ? data : new Blob([data])
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement("a")
+    link.href = url
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.setTimeout(() => window.URL.revokeObjectURL(url), 1000)
+}
+
+// 拼接附件访问地址：绝对地址原样返回，相对地址按存储模式补全前缀
+tool.attachUrl = (url, mode = "LOCAL") => {
+    if (!url) return ""
+    if (/^(https?:|blob:|data:)/i.test(url)) return url
+    const bases = {
+        LOCAL: "http://127.0.0.1:8000",
+        OSS: "",
+        COS: "",
+        QINIU: ""
+    }
+    return (bases[mode] || "") + (url.startsWith("/") ? url : "/" + url)
+}
+
+// 查看图片：兼容相对路径与哈希
+tool.viewImage = (value) => tool.attachUrl(value)
+
+// 查看附件
+tool.showFile = (value) => tool.attachUrl(value)
+
+// 千分位格式化
+tool.groupSeparator = (num) => {
+    const [integer, decimal] = String(num).split(".")
+    const withSeparator = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    return decimal === undefined ? withSeparator : `${withSeparator}.${decimal}`
+}
+
+// 把对象拼成 URL 查询串
+tool.httpBuild = (params = {}, withPrefix = false) => {
+    const search = new URLSearchParams()
+    Object.entries(params || {}).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== "") {
+            search.append(key, value)
+        }
+    })
+    const query = search.toString()
+    if (!query) return ""
+    return (withPrefix ? "?" : "") + query
+}
+
+// 解析 URL 中的查询参数
+tool.getRequestParams = (url = "") => {
+    const query = url.includes("?") ? url.slice(url.indexOf("?") + 1) : ""
+    const result = {}
+    new URLSearchParams(query).forEach((value, key) => {
+        result[key] = value
+    })
+    return result
+}
+
 export default tool

@@ -16,6 +16,7 @@ from apps.dict.models import Dict
 from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, get_testType
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from utils.chen_response import ChenResponse
+from apps.project.tools.access_control import check_project_access_by_id
 from apps.createDocument.extensions import util
 from utils.path_utils import project_path
 from apps.createDocument.extensions.util import delete_dir_files, build_testtype_output, require_project_begin_time
@@ -50,11 +51,13 @@ class GenerateControllerHSM(ControllerBase):
     # 静态软件项
     @route.get('/create/static_soft', url_name='create-static_soft-hsm')
     def create_hsm_static_soft(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         return uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem, current_round, isHsm=True)
 
     # 静态硬件和固件项
     @route.get('/create/static_hard', url_name='create-static_hard-hsm')
     def create_hsm_static_hard(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         return uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx',
                                                '静态硬件和固件项.docx',
                                                StaticSoftHardware,
@@ -63,17 +66,20 @@ class GenerateControllerHSM(ControllerBase):
     # 动态软件项
     @route.get('/create/dynamic_soft', url_name='create-dynamic_soft-hsm')
     def create_hsm_dynamic_soft(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         return uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable, current_round, isHsm=True)
 
     # 动态硬件项
     @route.get('/create/dynamic_hard', url_name='create-dynamic_hard-hsm')
     def create_hsm_dynamic_hard(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         return uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
                                                '动态硬件和固件项.docx', DynamicHardwareTable, current_round, isHsm=True)
 
     # 测试数据
     @route.get('/create/test_data', url_name='create-test_data-hsm')
     def create_hsm_test_data(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         return uniform_static_dynamic_response(id, '测评数据_2.docx',
                                                '测评数据.docx', EvaluateData, current_round, isHsm=True)
 
@@ -81,6 +87,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/basicInformation", url_name="create-basicInformation-hsm")
     @transaction.atomic
     def create_basicInformation(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """生成回归测试说明的被测软件基本信息"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '被测软件基本信息.docx'
@@ -150,6 +157,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/docsummary", url_name="create-docsummary")
     @transaction.atomic
     def create_docsummary(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """生成回归测试说明的文档概述"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '文档概述.docx'
@@ -192,6 +200,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/jstech", url_name="create-jstech")
     @transaction.atomic
     def create_jstech(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """生成回归测试说明的技术依据文件"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '技术依据文件.docx'
@@ -200,7 +209,7 @@ class GenerateControllerHSM(ControllerBase):
         duties_qs = project_obj.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY'))
         std_documents = []
         for duty in duties_qs:
-            one_duty = {'doc_name': duty.name, 'ident_version': duty.ref + '-' + duty.version,
+            one_duty = {'doc_name': duty.name, 'ident_version': f"{(duty.ref or '').strip()}-{(duty.version or '').strip()}",
                         'publish_date': duty.release_date, 'source': duty.release_union}
             std_documents.append(one_duty)
         doc_name = f'{project_obj.name}软件测评大纲'
@@ -249,6 +258,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/changePart", url_name="create-changePart")
     @transaction.atomic
     def create_changePart(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """
             生成回归测试说明的软件更改部分
             暂时没想到如何处理和报告里面软件更改部分关系
@@ -309,6 +319,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/hdemand", url_name="create-hdemand")
     @transaction.atomic
     def create_hdemand(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """生成非第一轮的多个测试需求"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '回归测试需求.docx'
@@ -392,6 +403,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/caseListDesc", url_name="create-caseListDesc")
     @transaction.atomic
     def create_caseListDesc(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """
             生成非第一轮的用例说明
         """
@@ -439,6 +451,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/caseList", url_name="create-caseList-hsm")
     @transaction.atomic
     def create_caseList(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """
             生成非第一轮的测试用例
         """
@@ -517,6 +530,7 @@ class GenerateControllerHSM(ControllerBase):
     @route.get("/create/track", url_name="create-track")
     @transaction.atomic
     def create_track(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """
             生成非第一轮的用例追踪
         """

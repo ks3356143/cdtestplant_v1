@@ -27,10 +27,17 @@ def updateWithoutRequestParam(id, data, model):
 # 加事务：中途某个 id 不存在时整体回滚，避免部分删除的不一致状态
 @transaction.atomic
 def multi_delete(ids, model):
-    for item in ids:
-        # 删除多对多关系 - project
-        instance = get_object_or_404(model, pk=item)
-        instance.delete()
+    ids = list(ids or [])
+    if not ids:
+        from ninja.errors import HttpError
+        raise HttpError(400, '请选择要删除的数据')
+    found = set(model.objects.filter(pk__in=ids).values_list('pk', flat=True))
+    missing = [item for item in ids if item not in found]
+    if missing:
+        from ninja.errors import HttpError
+        raise HttpError(404, f'数据不存在或已被删除：{missing}')
+    # 一次性删除，避免逐个 id 查库 + 逐条删除
+    model.objects.filter(pk__in=ids).delete()
 
 # project删除，对应problem问题单多对多关系也要删除
 def multi_delete_project(ids, model):

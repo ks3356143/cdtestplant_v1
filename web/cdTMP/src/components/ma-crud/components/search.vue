@@ -62,7 +62,12 @@ const options = inject("options")
 const columns = inject("columns")
 const requestParams = inject("requestParams")
 
-const gridClass = ref(["ma-search-grid", "w-full", "grid", "lg:grid-cols-" + options.searchColNumber ?? 4])
+const gridClass = ref([
+    "ma-search-grid",
+    "w-full",
+    "grid",
+    "lg:grid-cols-" + (options.searchColNumber ?? 4)
+])
 
 const searchLoading = ref(false)
 const showSearch = ref(true)

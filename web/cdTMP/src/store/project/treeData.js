@@ -1,8 +1,11 @@
 import { defineStore } from "pinia"
 import projectApi from "@/api/project/project"
 
-const useTreeDataStore = defineStore("treeDataStore", {
-    state: () => {
+// beforeunload 监听只注册一次：initTreeData 每次进入工作区都会调用，
+// 原先每次追加一个匿名监听器，长期使用会不断累积
+let unloadListenerBound = false
+
+const useTreeDataStore = defineStore("treeDataStore", {    state: () => {
         return {
             treeData: [],
             originTreeData: [],
@@ -44,9 +47,16 @@ const useTreeDataStore = defineStore("treeDataStore", {
             }
             // 将用户关闭页面数据储存于localStorage中 -> 注意用户打开其他项目 -> 务必清除localStorage的tree_local_data数据
             // 暂定在点击进入工作台时清除!!!
-            window.addEventListener("beforeunload", () => {
-                localStorage.setItem("tree_local_data", JSON.stringify(this.treeData))
-            })
+            if (!unloadListenerBound) {
+                unloadListenerBound = true
+                window.addEventListener("beforeunload", () => {
+                    try {
+                        localStorage.setItem("tree_local_data", JSON.stringify(this.treeData))
+                    } catch {
+                        // 树数据过大或浏览器禁用存储时忽略，不影响正常使用
+                    }
+                })
+            }
         },
         // 用于新增轮次后显示
         async resetTreeData(projectId) {

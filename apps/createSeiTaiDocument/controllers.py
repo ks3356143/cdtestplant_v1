@@ -1,4 +1,5 @@
 from io import BytesIO
+import logging
 import copy
 import zipfile
 from docx.parts.image import ImagePart
@@ -22,12 +23,15 @@ from apps.createSeiTaiDocument.docXmlUtils import generate_temp_doc, get_frag_fr
 from apps.createSeiTaiDocument.schema import SeitaiInputSchema
 from utils.chen_response import ChenResponse
 from apps.project.models import Project, Dut
+from apps.project.tools.access_control import check_project_access_by_id
 from apps.createDocument.extensions.documentTime import DocTime
 from utils.util import get_str_dict
 # 图片工具docx
 from apps.createSeiTaiDocument.extensions.shape_size_tool import set_shape_size
 # 修改temp文本片段工具
 from apps.createSeiTaiDocument.docXmlUtils import get_jinja_stdContent_element, stdContent_modify
+
+logger = logging.getLogger(__name__)
 
 main_download_path = Path.cwd() / 'media'
 
@@ -128,6 +132,7 @@ class GenerateSeitaiController(ControllerBase):
     @route.post("/dgDocument", url_name="create-dgDocument")
     @transaction.atomic
     def create_dgDocument(self, payload: SeitaiInputSchema):
+        check_project_access_by_id(payload.id, self.context.request.user)
         # 获取项目Model
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # 生成大纲需要的文本片段信息储存在字典里面
@@ -169,6 +174,7 @@ class GenerateSeitaiController(ControllerBase):
     @route.post('/smDocument', url_name='create-smDocument')
     @transaction.atomic
     def create_smDocument(self, payload: SeitaiInputSchema):
+        check_project_access_by_id(payload.id, self.context.request.user)
         """生成最后说明文档"""
         # 获取项目对象
         self.project_obj = get_object_or_404(Project, id=payload.id)
@@ -205,6 +211,7 @@ class GenerateSeitaiController(ControllerBase):
     @route.post('/jlDocument', url_name='create-jlDocument')
     @transaction.atomic
     def create_jlDocument(self, payload: SeitaiInputSchema):
+        check_project_access_by_id(payload.id, self.context.request.user)
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
         is_jd = self.project_obj.report_type == '9'
@@ -238,6 +245,7 @@ class GenerateSeitaiController(ControllerBase):
     @route.post('/hsmDocument', url_name='create-hsmDocument')
     @transaction.atomic
     def create_hsmDocument(self, payload: SeitaiInputSchema):
+        check_project_access_by_id(payload.id, self.context.request.user)
         """生成最后的回归测试说明-（多个文档）"""
         return self._build_regression_docs(
             payload, doc_type='hsm', doc_kind='说明',
@@ -249,6 +257,7 @@ class GenerateSeitaiController(ControllerBase):
     @route.post('/hjlDocument', url_name='create-hjlDocument')
     @transaction.atomic
     def create_hjlDocument(self, payload: SeitaiInputSchema):
+        check_project_access_by_id(payload.id, self.context.request.user)
         """生成最后的回归测试记录-（多个文档）"""
         return self._build_regression_docs(
             payload, doc_type='hjl', doc_kind='记录',
@@ -260,6 +269,7 @@ class GenerateSeitaiController(ControllerBase):
     @route.post('/wtdDocument', url_name='create-wtdDocument')
     @transaction.atomic
     def create_wtdDocument(self, payload: SeitaiInputSchema):
+        check_project_access_by_id(payload.id, self.context.request.user)
         """生成最后的问题单"""
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
@@ -290,6 +300,7 @@ class GenerateSeitaiController(ControllerBase):
     @route.post('/bgDocument', url_name='create-bgDocument')
     @transaction.atomic
     def create_bgDocument(self, payload: SeitaiInputSchema):
+        check_project_access_by_id(payload.id, self.context.request.user)
         """生成最后的报告文档"""
         self.project_obj = get_object_or_404(Project, id=payload.id)
         # seitai文档所需变量
@@ -331,7 +342,7 @@ class GenerateSeitaiController(ControllerBase):
                 sdtContent = text_frag['sdtContent']
                 stdContent_modify(self.temp_context[alias], doc_docx, sdtContent)
             else:
-                print('未查找的文本片段变量：', alias)
+                logger.warning('未查找的文本片段变量：%s', alias)
 
     # 二段式非阻塞下载文件接口（只读流式响应，无 DB 写，无需事务）
     # 该接口由前端 iframe 直接发起，浏览器不会带上 Authorization 头，
@@ -393,6 +404,7 @@ documentType_to_dir = {
 class CreateFragmentController(ControllerBase):
     @route.get("/get_fragments", url_name='get-fragments')
     def get_fragements(self, id: int, documentType: str):
+        check_project_access_by_id(id, self.context.request.user)
         """根据项目id和文档类型获取有哪些文档片段"""
         # 获取文档片段的字符串列表
         frags = self.get_fragment_name_by_document_name(id, documentType)
@@ -440,6 +452,7 @@ class CreateFragmentController(ControllerBase):
 
     @route.get("/get_round_exit", url_name='get-round-exit')
     def get_round_exit(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """该函数主要识别有几轮回归测试说明、几轮回归测试记录"""
         project_obj: Project = get_object_or_404(Project, id=id)
         # 取非第一轮次的轮次的个数
@@ -492,6 +505,13 @@ class UploadDocumentController(ControllerBase):
 
     @route.post("/file", url_name='upload-file')
     def upload_file(self, id: int, documentType: str, file: File[UploadedFile], round_num: int = None):
+        # 项目访问控制：不得向未授权项目上传/覆盖模板
+        check_project_access_by_id(id, self.context.request.user)
+        # documentType 白名单：防止 ../ 路径穿越覆盖任意文件
+        if documentType not in documentType_to_dir:
+            raise HttpError(400, f'不支持的文档类型：{documentType}')
+        if round_num is not None and round_num < 1:
+            raise HttpError(400, '轮次必须为正整数')
         self.upload_file = file
         # 1.获取储存路径
         target_dir = main_download_path / project_path(id) / 'form_template' / 'products'

@@ -25,7 +25,6 @@ class ApiLoggingMiddleware(MiddlewareMixin):
         super().__init__(get_response)
         self.enable = getattr(settings, 'API_LOG_ENABLE', None) or False
         self.methods = getattr(settings, 'API_LOG_METHODS', None) or set()
-        self.operation_log_id = None
 
     @classmethod
     def __handle_request(cls, request):
@@ -69,11 +68,10 @@ class ApiLoggingMiddleware(MiddlewareMixin):
             # 'request_msg': request.session.get('request_msg'),
             'status': True if response.data.get('code') in [200, ] else False,
             'json_result': {"code": response.data.get('code'), "msg": response.data.get('result')},
+            # 接口所属模块直接落库（原实现用 update_or_create(id=None) 永远走新增分支）
+            'request_modular': settings.API_MODEL_MAP.get(request.request_path, ''),
         }
-        operation_log, creat = OperationLog.objects.update_or_create(defaults=info, id=self.operation_log_id)
-        if not operation_log.request_modular and settings.API_MODEL_MAP.get(request.request_path, None):
-            operation_log.request_modular = settings.API_MODEL_MAP[request.request_path]
-            operation_log.save()
+        OperationLog.objects.create(**info)
 
     def process_request(self, request):
         self.__handle_request(request)

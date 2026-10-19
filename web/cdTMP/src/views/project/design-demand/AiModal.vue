@@ -250,24 +250,26 @@ const luButtonClick = async () => {
     }
     // 2.检查测试项标识、测试项名称、优先级、测试类型、测试手段是否填写
     const testItem: any = dataList.value.at(0)
-    if (!testItem.title.trim()) {
+    if (!testItem.title?.trim()) {
         Message.warning("请先填写测试项名称!")
         return
     }
-    if (!testItem.demandDescription.trim()) {
+    if (!testItem.demandDescription?.trim()) {
         Message.warning("请填写测试项描述后再试!")
         return
     }
-    if (testItem.testMethod.length === 0) {
+    if (!testItem.testMethod?.length) {
         Message.warning("请先选择测试手段后再试!")
         return
     }
     // 3.组装接口需要的数据
     const projectId = route.query.id
-    const splitKey: string[] = (route.query.key as any).split("-")
+    // key 可能缺失（直接访问/刷新），先兜底成空串，避免 setup 阶段抛错
+    const splitKey: string[] = String(route.query.key || "").split("-")
     const round = splitKey[0]
     const dut = splitKey[1]
-    const designDemand = splitKey.at(-1)
+    // key 结构为 round-dut-design(-test-case)，设计需求固定取第 3 段
+    const designDemand = splitKey[2] ?? splitKey.at(-1)
     const adequacy: string = "测试用例覆盖测试子项要求的全部内容。\n所有用例执行完毕，对于未执行用例说明未执行原因。"
     const ident = testItem.ident
     const name = testItem.title

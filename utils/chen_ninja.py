@@ -16,21 +16,25 @@ class ChenNinjaAPI(NinjaExtraAPI):
             "success": True
         }
         # 因为extra的APIException会添加到data['detail']里面的，所以做一致性处理转换
-        if std_data['data'] is not None:
-            if 'detail' in std_data['data']:
-                std_data['message'] = std_data['data']['detail']
+        if isinstance(std_data['data'], dict) and 'detail' in std_data['data']:
+            std_data['message'] = std_data['data']['detail']
         # ~~~~~~~~~~正常异常,status进行通用处理:TODO:后续规划~~~~~~~~~~
         # 1.当状态码为403时候，给前端提示message
         if status == 403:
             std_data['message'] = '您没有权限这样做'
         # 2.当状态码为401时候，根据APIException处理
         elif status == 401:
-            if (std_data['data']['detail'] == '找不到指定凭据对应的有效用户' or
-                    std_data['data']['detail'] == 'No active account found with the given credentials'):
+            detail = ''
+            if isinstance(std_data['data'], dict):
+                detail = str(std_data['data'].get('detail') or '')
+            if detail in ('找不到指定凭据对应的有效用户',
+                          'No active account found with the given credentials'):
                 std_data['message'] = '账号或密码错误，如果是内网登录检查密码是否过期...'
                 std_data['data']['code'] = HTTP_USER_PASSWORD_ERROR_CODE  # TODO:后续单独以枚举方式定义code
+            elif detail:
+                std_data['message'] = detail
             else:
-                std_data['message'] = '您的token已过期，请重新登录'
+                std_data['message'] = '身份认证失败或登录状态已失效，请重新登录'
         # 3.因为前端是获取message，所以这里处理（404/422 判断需排在通用失败分支之前，否则永远不可达）
         elif status == 404:
             std_data['message'] = '未找到相应的内容，请检查参数'

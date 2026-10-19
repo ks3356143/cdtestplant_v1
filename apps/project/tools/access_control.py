@@ -109,3 +109,39 @@ def check_project_manage(project, user):
     """非负责人/管理员修改或删除项目 → 403（防止成员自我提权）"""
     if not is_project_manageable(project, user):
         raise PermissionDenied('仅项目负责人或系统管理员可执行此操作（自主访问控制）')
+
+
+def check_objects_access(model, ids, user, project_field='project'):
+    """批量操作统一鉴权：逐个对象校验所属项目，任一不可访问即整体拒绝。
+
+    同时校验 id 是否全部存在——避免"只校验第一行、其余行跨项目删除"的横向越权。
+    返回对象列表（保持传入顺序）。
+    """
+    from django.shortcuts import get_object_or_404
+    ids = list(ids or [])
+    if not ids:
+        from ninja.errors import HttpError
+        raise HttpError(400, '请选择要操作的数据')
+    objs = list(model.objects.filter(id__in=ids).select_related(project_field))
+    found = {obj.id for obj in objs}
+    missing = [i for i in ids if i not in found]
+    if missing:
+        from ninja.errors import HttpError
+        raise HttpError(404, f'数据不存在或已被删除：{missing}')
+    for obj in objs:
+        check_project_access(getattr(obj, project_field), user)
+    order = {obj_id: idx for idx, obj_id in enumerate(ids)}
+    return sorted(objs, key=lambda o: order.get(o.id, 0))
+
+
+def get_object_in_project(model, object_id, project_id, user):
+    """按 id 取对象并校验：用户可访问该项目，且对象确实属于该项目。
+
+    防止 update 类接口只校验 payload.project_id、却把别的项目的对象改掉/挪用。
+    """
+    project = check_project_access_by_id(project_id, user)
+    from django.shortcuts import get_object_or_404
+    obj = get_object_or_404(model, id=object_id)
+    if getattr(obj, 'project_id', None) != project.id:
+        raise PermissionDenied('数据不属于该测试项目，已拒绝操作（自主访问控制）')
+    return obj

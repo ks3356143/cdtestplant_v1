@@ -1,4 +1,5 @@
 import jwt
+import logging
 from django.conf import settings
 from threading import local
 from django.db.models.signals import post_save, post_delete
@@ -17,6 +18,8 @@ from utils.chen_response import ChenResponse
 # 导入中间件记录日志模型
 from apps.system.models import LoginLog
 from apps.system.models import OperationLog
+
+logger = logging.getLogger(__name__)
 
 log_manager = TableOperationLog.objects
 
@@ -142,4 +145,4 @@ def clean_up_deleted_case_reference_from_influence(sender, instance, **kwargs):
     if updated_items:
         InfluenceItem.objects.bulk_update(updated_items, ['effect_cases'])
     else:
-        print("⚠️ 查询到记录但未发生变更，可能数据有误")
+        logger.warning("影响域分析刷新：查询到记录但未发生变更，可能数据有误")

@@ -291,7 +291,10 @@ import checkAuth from "@/directives/auth/auth"
 import { Message } from "@arco-design/web-vue"
 import { request } from "@/utils/request"
 import tool from "@/utils/tool"
-import { isArray, isFunction, isObject, isUndefined } from "lodash-es"
+import { cloneDeep, isArray, isFunction, isObject, isUndefined } from "lodash-es"
+
+// 同页面多个 ma-crud 实例的自增序号（与时间戳一起生成唯一 id）
+let crudSeed = 0
 import { runEvent } from "@cps/ma-form/js/event.js"
 import globalColumn from "@/config/column.js"
 import { useFormStore } from "@/store/index"
@@ -336,18 +339,23 @@ const crudContextMenuRef = ref()
 
 const options = ref(Object.assign(JSON.parse(JSON.stringify(defaultOptions)), props.options, props.crud))
 
-const columns = ref(props.columns)
+// 深拷贝父组件传入的列配置：ma-crud 会就地插入 __index/__operation 等列，
+// 直接引用会反向污染父组件的 columns（重复打开时出现重复列）
+const columns = ref(cloneDeep(props.columns))
 const headerHeight = ref(0)
 const selecteds = ref([])
 const tableData = ref([])
 const tableRef = ref()
 const currentApi = ref()
+// 请求序号：快速翻页/搜索时丢弃过期响应，避免旧数据覆盖新数据
+let requestSeq = 0
 
 // 初始化
 const init = async () => {
     // 设置 组件id
     if (isUndefined(options.value.id)) {
-        options.value.id = "MaCrud_" + Math.floor(Math.random() * 100000 + Math.random() * 20000 + Math.random() * 5000)
+        // 递增序号 + 时间戳，避免同页多个表格随机 id 碰撞
+        options.value.id = `MaCrud_${Date.now()}_${++crudSeed}`
     }
 
     // 收集数据
@@ -357,15 +365,16 @@ const init = async () => {
         }
     })
 
-    await columns.value.map(async (item) => {
-        // 字典
-        if (!cascaders.value.includes(item.dataIndex) && item.dict) {
-            await loadDict(dicts.value, item)
-        }
-    })
-    setTimeout(async () => {
-        await tabsHandler()
-    }, 500)
+    // 等待所有字典加载完成（map 返回的是 Promise 数组，不能直接 await）
+    await Promise.all(
+        columns.value.map(async (item) => {
+            // 字典
+            if (!cascaders.value.includes(item.dataIndex) && item.dict) {
+                await loadDict(dicts.value, item)
+            }
+        })
+    )
+    await tabsHandler()
 }
 
 const dictTrans = (dataIndex, value) => {
@@ -508,30 +517,37 @@ const initRequestParams = () => {
 }
 
 const requestHandle = async () => {
+    const seq = ++requestSeq
     loading.value = true
-    isFunction(options.value.beforeRequest) && options.value.beforeRequest(requestParams.value)
-    if (isFunction(currentApi.value)) {
-        // 修改源码：添加options.prameters参数
-        if (options.value.parameters) {
-            requestParams.value = { ...requestParams.value, ...options.value.parameters }
-        }
-        const response = config.parseResponseData(await currentApi.value(requestParams.value))
-        if (response.rows) {
-            tableData.value = response.rows
-            if (response.pageInfo) {
-                total.value = response.pageInfo.total
-                openPagination.value = true
+    try {
+        isFunction(options.value.beforeRequest) && options.value.beforeRequest(requestParams.value)
+        if (isFunction(currentApi.value)) {
+            // 修改源码：添加options.prameters参数
+            if (options.value.parameters) {
+                requestParams.value = { ...requestParams.value, ...options.value.parameters }
+            }
+            const response = config.parseResponseData(await currentApi.value(requestParams.value))
+            // 请求期间又有新的请求发出：当前结果已过期，直接丢弃
+            if (seq !== requestSeq) return
+            if (response.rows) {
+                tableData.value = response.rows
+                if (response.pageInfo) {
+                    total.value = response.pageInfo.total
+                    openPagination.value = true
+                } else {
+                    openPagination.value = false
+                }
             } else {
-                openPagination.value = false
+                tableData.value = response
             }
         } else {
-            tableData.value = response
+            console.error(`ma-crud error：您传递的api属性不是一个函数.`)
         }
-    } else {
-        console.error(`ma-crud error：您传递的api属性不是一个函数.`)
+        isFunction(options.value.afterRequest) && (tableData.value = options.value.afterRequest(tableData.value))
+    } finally {
+        // 只有最新一次请求结束时才关闭 loading，避免旧请求提前复位
+        if (seq === requestSeq) loading.value = false
     }
-    isFunction(options.value.afterRequest) && (tableData.value = options.value.afterRequest(tableData.value))
-    loading.value = false
 }
 
 const refresh = async () => {

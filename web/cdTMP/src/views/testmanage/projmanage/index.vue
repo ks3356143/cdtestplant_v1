@@ -27,9 +27,14 @@
                         </template>
                     </a-popover>
                     <a-button @click="enterWorkPlant(record)" size="mini" status="warning" type="outline"> 工作区 </a-button>
-                    <a-link @click="previewRef.open(record)"><icon-eye />预览</a-link>
-                    <a-link @click="handleFragmentClick(record)"><icon-file />片段</a-link>
-                    <a-link @click="handleBoardClick(record)"><icon-dashboard />看板</a-link>
+                    <a-dropdown trigger="click">
+                        <a-button size="mini">更多<icon-down /></a-button>
+                        <template #content>
+                            <a-doption @click="previewRef.open(record)"><icon-eye /> 预览项目</a-doption>
+                            <a-doption @click="handleFragmentClick(record)"><icon-file /> 文档片段</a-doption>
+                            <a-doption @click="handleBoardClick(record)"><icon-dashboard /> 项目看板</a-doption>
+                        </template>
+                    </a-dropdown>
                 </template>
             </ma-crud>
             <GeneratorModal ref="generatorModalRef" />

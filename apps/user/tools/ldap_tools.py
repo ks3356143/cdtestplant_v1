@@ -1,15 +1,14 @@
+import secrets
+
 import ldap
+from django.conf import settings
 from django.contrib.auth import get_user_model
-import environ
 
-# 1. 环境变量读取
-env = environ.Env()
-
-# 2. LDAP服务器host和port
-server_uri = env('AUTH_LDAP_SERVER_URI', default='ldap://dns.paisat.cn:389')
-dn = env('AUTH_LDAP_BIND_DN',default='CN=Administrator,CN=Users,DC=sstc,DC=ctu')
-password = env('AUTH_LDAP_BIND_PASSWORD',default='WXWX2019!!!!!!')
-base_dn = env('BASE_DN',default='OU=all,DC=sstc,DC=ctu')
+# 1. 连接参数统一由 settings/.env 提供，避免在此重复硬编码凭据
+server_uri = settings.AUTH_LDAP_SERVER_URI
+dn = settings.AUTH_LDAP_BIND_DN
+password = settings.AUTH_LDAP_BIND_PASSWORD
+base_dn = getattr(settings, 'BASE_DN', 'OU=all,DC=sstc,DC=ctu')
 
 # 3. 连接LDAP服务器进行操作
 def load_ldap_users(url=server_uri,
@@ -42,13 +41,9 @@ def load_ldap_users(url=server_uri,
         db_user = Users.objects.filter(username=user_dict['username'])
         exsits = db_user.exists()
         if exsits:
-            # 如果存在则更新
+            # 如果存在则更新资料；绝不能重置本地口令（LDAP 用户走 LDAP 认证，重置会覆盖本地密码）
             update_flag = False
             c_user = db_user.first()
-            # 与字符串比较（原实现拿模型实例与字符串比较恒为 True，导致每次同步都重置密码）
-            if c_user.username != user_dict['username']:
-                c_user.username = user_dict['username']
-                update_flag = True
             if c_user.name != user_dict['name']:
                 c_user.name = user_dict['name']
                 update_flag = True
@@ -56,7 +51,6 @@ def load_ldap_users(url=server_uri,
                 c_user.email = user_dict['email']
                 update_flag = True
             if update_flag:
-                c_user.set_password('wxwx2018!!!')
                 c_user.save()
         else:
             user_dict['remark'] = '自动同步LDAP数据用户'
@@ -65,7 +59,8 @@ def load_ldap_users(url=server_uri,
             user_dict['role'] = 'user'
             user_dict['accountId'] = 'user'
             user_single = Users.objects.create(**user_dict)
-            user_single.set_password('wxwx2018!!!')
+            # 随机初始口令：LDAP 用户通过 LDAP 认证，本地口令不对外使用
+            user_single.set_password(secrets.token_urlsafe(24))
             user_single.save()
             # 6月3日新增组别
 

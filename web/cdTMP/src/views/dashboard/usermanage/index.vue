@@ -121,7 +121,7 @@ const crudColumns = reactive([
         align: "center",
         width: 130,
         formType: "select",
-        dict: { name: "user_role", props: { label: "title", value: "key" } },
+        dict: { name: "user_role", props: { label: "title", value: "key" }, translation: true },
         addDefaultValue: "user",
         addRules: [{ required: true, message: "角色必选" }]
     },
@@ -131,7 +131,7 @@ const crudColumns = reactive([
         align: "center",
         width: 130,
         formType: "select",
-        dict: { name: "secret", props: { label: "title", value: "key" } },
+        dict: { name: "secret", props: { label: "title", value: "key" }, translation: true },
         // 密级标记由系统安全员在"安全策略"页统一配置（三权分立），管理员仅可查看
         addDisplay: false,
         editDisplay: false

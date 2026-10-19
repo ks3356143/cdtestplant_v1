@@ -1,5 +1,4 @@
 import datetime
-import numpy as np
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
 from ninja_jwt.authentication import JWTAuth
@@ -13,7 +12,8 @@ from utils.chen_response import ChenResponse
 from utils.codes import HTTP_INDEX_ERROR
 from django.shortcuts import get_object_or_404
 from apps.project.models import Case, Problem, Project, TestDemand, NonrepudiationEvidence
-from apps.project.tools.access_control import check_project_access, check_project_access_by_id
+from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
+                                               check_objects_access, get_object_in_project)
 from apps.project.schemas.problem import (
     DeleteSchema,
     ProblemModelOutSchema,
@@ -26,6 +26,13 @@ from apps.project.schemas.problem import (
 )
 from utils.util import get_str_abbr
 from utils.smallTools.interfaceTools import conditionNoneToBlank
+
+def _match_close_method(problem, close_method_1, close_method_2):
+    """问题单的关闭方式筛选：未传条件时全量；否则命中任一条件即保留"""
+    if close_method_1 is None and close_method_2 is None:
+        return True
+    methods = problem.closeMethod or []
+    return close_method_1 in methods or close_method_2 in methods
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['问题单系列'])
 class ProblemController(ControllerBase):
@@ -73,19 +80,8 @@ class ProblemController(ControllerBase):
         # 遍历通过代码不通过ORM查询闭环方式-巧妙使用numpy中array对象的in方法来判断
         closeMethod1 = self.context.request.GET.get("closeMethod[0]")
         closeMethod2 = self.context.request.GET.get("closeMethod[1]")
-        query_add_closeMethod = []
-        for query in qs:
-            arr = np.array(query.closeMethod)
-            if closeMethod1 is None and closeMethod2 is None:
-                query_add_closeMethod.append(query)
-                continue
-            if closeMethod1 in arr:
-                query_add_closeMethod.append(query)
-                continue
-            if closeMethod2 in arr:
-                query_add_closeMethod.append(query)
-                continue
-        return query_add_closeMethod
+        return [query for query in qs
+                if _match_close_method(query, closeMethod1, closeMethod2)]
 
     # 搜索全部问题单/或查询轮次下的问题单
     @route.get('/problem/searchAllProblem', response=List[ProblemModelOutSchema], exclude_none=True,
@@ -108,18 +104,8 @@ class ProblemController(ControllerBase):
                                     ).order_by("id").prefetch_related('case__round')
         closeMethod1 = self.context.request.GET.get("closeMethod[0]")
         closeMethod2 = self.context.request.GET.get("closeMethod[1]")
-        query_final = []
-        for query in qs:
-            arr = np.array(query.closeMethod)
-            if closeMethod1 is None and closeMethod2 is None:
-                query_final.append(query)
-                continue
-            if closeMethod1 in arr:
-                query_final.append(query)
-                continue
-            if closeMethod2 in arr:
-                query_final.append(query)
-                continue
+        query_final = [query for query in qs
+                       if _match_close_method(query, closeMethod1, closeMethod2)]
         # 遍历所有problem，查询是有否有关联case，如果有则设置为非悬挂，否则悬挂
         # 关联用例已预取，避免逐条 exists()/filter() 查询（N+1）
         deleted_ids = set()
@@ -220,10 +206,11 @@ class ProblemController(ControllerBase):
     @route.put("/problem/update/{id}", response=ProblemCreateOutSchema, url_name="problem-update")
     @transaction.atomic
     def update_problem(self, id: int, payload: ProblemCreateInputSchema):
-        check_project_access_by_id(payload.project_id, self.context.request.user)
-        # 查到当前
-        problem_qs = Problem.objects.get(id=id)
+        # 目标问题单必须属于 payload 指定的项目；project_id 不允许通过本接口挪动
+        problem_qs = get_object_in_project(Problem, id, payload.project_id, self.context.request.user)
         for attr, value in payload.dict().items():
+            if attr == 'project_id':
+                continue
             setattr(problem_qs, attr, value)
         problem_qs.save()
         self._record_problem_feedback_evidence(problem_qs)
@@ -233,10 +220,10 @@ class ProblemController(ControllerBase):
     @route.put("/problem/modalupdate/{id}", response=ProblemCreateOutSchema, url_name="problem-modal-update")
     @transaction.atomic
     def update_modal_problem(self, id: int, payload: ProblemUpdateInputSchema):
-        check_project_access_by_id(payload.project_id, self.context.request.user)
-        # 查到当前
-        problem_qs = Problem.objects.get(id=id)
+        problem_qs = get_object_in_project(Problem, id, payload.project_id, self.context.request.user)
         for attr, value in payload.dict().items():
+            if attr == 'project_id':
+                continue
             setattr(problem_qs, attr, value)
         problem_qs.save()
         self._record_problem_feedback_evidence(problem_qs)
@@ -297,7 +284,7 @@ class ProblemController(ControllerBase):
         key_string = "".join(
             [data.round_id, '-', data.dut_id, '-', data.design_id, '-', data.test_id, '-', data.case_id, '-',
              data.problem_id])
-        qs = Problem.objects.get(project__id=data.project_id, key=key_string)
+        qs = get_object_or_404(Problem, project__id=data.project_id, key=key_string)
         return qs
 
     # 让测试用例关联/取消问题单

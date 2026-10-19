@@ -84,16 +84,21 @@
             <!-- 审计日志表 -->
             <a-card class="general-card">
                 <a-table :data="rows" :loading="loading" :pagination="pagination" row-key="id"
+                         :scroll="{ x: 1180 }"
                          @page-change="onPageChange" @page-size-change="onPageSizeChange"
                          :bordered="{ wrapper: true, cell: true }">
                     <template #columns>
                         <a-table-column title="ID" data-index="id" :width="70"></a-table-column>
-                        <a-table-column title="时间" :width="160">
-                            <template #cell="{ record }">{{ fmtTime(record.create_datetime) }}</template>
+                        <a-table-column title="时间" :width="180">
+                            <template #cell="{ record }">
+                                <span style="white-space: nowrap">{{ fmtTime(record.create_datetime) }}</span>
+                            </template>
                         </a-table-column>
                         <a-table-column title="主体账号" data-index="username" :width="110"></a-table-column>
-                        <a-table-column title="角色" :width="100">
-                            <template #cell="{ record }">{{ roleLabel(record.role) }}</template>
+                        <a-table-column title="角色" :width="115">
+                            <template #cell="{ record }">
+                                <span style="white-space: nowrap">{{ roleLabel(record.role) }}</span>
+                            </template>
                         </a-table-column>
                         <a-table-column title="事件类型" :width="130">
                             <template #cell="{ record }">

@@ -14,6 +14,7 @@ from django.db.models import Q
 from docxtpl import DocxTemplate, InlineImage
 from pathlib import Path
 from utils.chen_response import ChenResponse
+from apps.project.tools.access_control import check_project_access_by_id
 # 导入数据库ORM
 from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, \
     DynamicSoftTable, DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis
@@ -43,6 +44,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get("/create/testdemand", url_name="create-testdemand")
     @transaction.atomic
     def create_testdemand(self, id: int):  # type:ignore
+        check_project_access_by_id(id, self.context.request.user)
         """目前生成第一轮测试项"""
         tplTestDemandGenerate_path = Path.cwd() / "media" / project_path(
             id) / "form_template" / "dg" / "测试项及方法.docx"
@@ -156,6 +158,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get("/create/yiju", url_name='create-yiju')
     @transaction.atomic
     def create_yiju(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         # 先找出所属项目
         project_qs = get_object_or_404(Project, id=id)
         # 找出该项目的真实依据文件qs
@@ -168,6 +171,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get("/create/techyiju", url_name='create-techyiju-dg')
     @transaction.atomic
     def create_techyiju(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         # 找出所属项目
         project_qs = get_object_or_404(Project, id=id)
         # 根据项目找出被测件-只找第一轮次
@@ -177,7 +181,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 先定义个字典
         std_documents = []
         for duty in duties_qs:
-            one_duty = {'doc_name': duty.name, 'ident_version': duty.ref + '-' + duty.version,
+            one_duty = {'doc_name': duty.name, 'ident_version': f"{(duty.ref or '').strip()}-{(duty.version or '').strip()}",
                         'publish_date': duty.release_date, 'source': duty.release_union}
             std_documents.append(one_duty)
 
@@ -190,6 +194,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get("/create/contact", url_name='create-contact')
     @transaction.atomic
     def create_contact(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         # 先找出所属项目
         project_qs = get_object_or_404(Project, id=id)
         contact_dict = model_to_dict(project_qs,
@@ -216,6 +221,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get('/create/timeaddress', url_name='create-timeaddress')
     @transaction.atomic
     def create_timeaddress(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         doc_timer = DocTime(id)
         context = doc_timer.dg_address_time()
         context = self.change_time_to_another(context, ['beginTime_strf', 'dgCompileStart', 'dgCompileEnd',
@@ -234,6 +240,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get('/create/indicators', url_name='create-indicators')
     @transaction.atomic
     def create_indicators(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         # 获取文档片段模版路径
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '主要功能和性能指标.docx'
         doc = DocxTemplate(input_path)
@@ -371,6 +378,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     @route.get('/create/softComposition', url_name='create-softComposition')
     @transaction.atomic
     def create_softComposition(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         # 首先判断是否包含 - 项目信息-软件概述
         res = self.uniform_res_from_mul_data_schemas(id, '测评对象_2.docx', '测评对象.docx', ProjectSoftSummary)
         if res is not None:
@@ -393,6 +401,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成被测软件接口章节
     @route.get('/create/interface', url_name='create-interface')
     def create_interface(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '被测软件接口.docx'
         doc = DocxTemplate(input_path)
         project_qs = get_object_or_404(Project, id=id)
@@ -448,6 +457,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成顶层技术文件
     @route.get('/create/top_file', url_name='create-performance')
     def create_top_file(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj: Project = get_object_or_404(Project, id=id)
         is_JD = True if project_obj.report_type == '9' else False
         dut_qs = project_obj.pdField.filter(type='YZ')
@@ -468,6 +478,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 静态测试环境说明
     @route.get('/create/static_env', url_name='create-static_env')
     def create_static_env(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '静态测试环境说明.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '静态测试环境说明')
@@ -485,6 +496,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 静态软件项
     @route.get('/create/static_soft', url_name='create-static_soft')
     def create_static_soft(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         res = uniform_static_dynamic_response(id, '静态软件项_2.docx', '静态软件项.docx', StaticSoftItem, current_round)
         if res is not None:
             return res
@@ -501,6 +513,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 静态硬件和固件项
     @route.get('/create/static_hard', url_name='create-static_hard')
     def create_static_hard(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         res = uniform_static_dynamic_response(id, '静态硬件和固件项_2.docx',
                                               '静态硬件和固件项.docx',
                                               StaticSoftHardware,
@@ -520,6 +533,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 动态测评环境说明 - 多dataSchemas格式
     @route.get('/create/dynamic_env', url_name='create-dynamic_env')
     def create_dynamic_env(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         res = self.uniform_res_from_mul_data_schemas(id, '动态测试环境说明_2.docx',
                                                      '动态测试环境说明.docx', ProjectDynamicDescription)
         if res is not None:
@@ -544,6 +558,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 动态软件项
     @route.get('/create/dynamic_soft', url_name='create-dynamic_soft')
     def create_dynamic_soft(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         res = uniform_static_dynamic_response(id, '动态软件项_2.docx', '动态软件项.docx', DynamicSoftTable, current_round)
         if res is not None:
             return res
@@ -562,6 +577,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 动态硬件项
     @route.get('/create/dynamic_hard', url_name='create-dynamic_hard')
     def create_dynamic_hard(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         res = uniform_static_dynamic_response(id, '动态硬件和固件项_2.docx',
                                               '动态硬件和固件项.docx', DynamicHardwareTable, current_round)
         if res is not None:
@@ -579,6 +595,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 测试数据
     @route.get('/create/test_data', url_name='create-test_data')
     def create_test_data(self, id: int, current_round: RoundType = "0"):
+        check_project_access_by_id(id, self.context.request.user)
         res = uniform_static_dynamic_response(id, '测评数据_2.docx',
                                               '测评数据.docx', EvaluateData, current_round)
         if res is not None:
@@ -596,6 +613,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 环境差异性分析
     @route.get('/create/env_diff', url_name='create-env_diff')
     def create_env_diff(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj: Project = get_object_or_404(Project, id=id)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '环境差异性分析_2.docx'
         doc = DocxTemplate(input_path)
@@ -629,6 +647,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成被测软件-基本信息
     @route.get('/create/baseInformation', url_name='create-baseInformation-dg')
     def create_information(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         security = get_str_dict(project_qs.security_level, 'security_level')
         languages = get_list_dict('language', project_qs.language)
@@ -667,6 +686,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成测试级别和测试类型
     @route.get('/create/levelAndType', url_name='create-levelAndType')
     def create_levelAndType(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测试级别和测试类型.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '测试级别和测试类型')
@@ -699,6 +719,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成测试策略
     @route.get('/create/strategy', url_name='create-strategy')
     def create_strategy(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         input_path = Path.cwd() / 'media' / project_path(id) / 'form_template' / 'dg' / '测试策略.docx'
         doc = DocxTemplate(input_path)
         replace, frag, rich_text_list = self._generate_frag(id, doc, '测试策略')
@@ -741,6 +762,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成-测试内容充分性及测试方法有效性
     @route.get('/create/adequacy_effectiveness', url_name='create-adequacy_effectiveness')
     def create_adequacy_effectiveness(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         # 统计测试种类数量-只统计第一轮测试
         project_round_one = project_qs.pField.filter(key=0).first()
@@ -768,6 +790,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成-测评项目组组成和分工
     @route.get('/create/group', url_name='create_group')
     def create_group(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         context = {
             'duty_person': project_qs.duty_person,
@@ -782,6 +805,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成-测评条件保障
     @route.get('/create/guarantee', url_name='create-guarantee')
     def create_guarantee(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         context = {
             'project': project_qs
@@ -791,6 +815,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成-缩略语
     @route.get('/create/abbreviation', url_name='create-abbreviation')
     def create_abbreviation(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         abbreviations = []
         for abbr in project_qs.abbreviation:
@@ -804,6 +829,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成研制总要求-测试项追踪关系表
     @route.get('/create/yzComparison', url_name='create-yzComparison')
     def create_yzComparison(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """目前追踪需求项的章节号是硬编码，按6.2章节起步，6.2.1~x.x.x依次排序"""
         # 规定测试项的章节号开头
         test_item_prefix = '6.2'
@@ -853,6 +879,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成需求规格说明-测试项追踪关系表
     @route.get('/create/xqComparison', url_name='create-xqComparison')
     def create_xqComparison(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         test_item_prefix = '6.2'
         design_list = []
@@ -925,6 +952,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成测试项-需求规格说明关系表【反向】
     @route.get('/create/fanXqComparison', url_name='create-fanXqComparison')
     def create_fanXqComparison(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         test_item_prefix = '6.2'
         # 取出第一轮所有测试项的章节处理列表和字典
@@ -968,6 +996,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     # 生成代码质量度量分析表
     @route.get('/create/codeQuality', url_name='create-codeQuality')
     def create_codeQuality(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         project_round_one = project_qs.pField.filter(key=0).first()
         context = {}

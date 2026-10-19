@@ -16,7 +16,8 @@ from django.utils import timezone
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_case
 from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, Project, Problem, NonrepudiationEvidence
-from apps.project.tools.access_control import check_project_access, check_project_access_by_id
+from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
+                                               check_objects_access, get_object_in_project)
 from apps.project.schemas.case import DeleteSchema, CaseModelOutSchema, CaseFilterSchema, \
     CaseTreeReturnSchema, ReplaceCaseSchema, PersonReplaceSchema, ExetimeReplaceSchema, \
     CaseTreeInputSchema, CaseCreateOutSchema, CaseCreateInputSchema, DemandNodeSchema, \
@@ -26,6 +27,12 @@ from utils.codes import HTTP_INDEX_ERROR, HTTP_EXISTS_CASES
 from apps.project.tools.copyCase import case_move_to_test, case_copy_to_test, case_to_case_copy_or_move
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tool.batchTools import parse_case_content_string
+
+# 批量替换允许的文本字段白名单：防止前端传入任意字段名导致 ORM 异常或越权改写
+CASE_REPLACE_FIELDS = {
+    'ident', 'name', 'title', 'initialization', 'premise', 'summarize',
+    'designPerson', 'testPerson', 'monitorPerson',
+}
 
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试用例接口'])
 class CaseController(ControllerBase):
@@ -40,7 +47,7 @@ class CaseController(ControllerBase):
         check_project_access_by_id(data.project_id, self.context.request.user)
         if case_id:
             # 当传入了id，则查询单个
-            qs = Case.objects.filter(id=case_id).select_related('test')  # type:ignore
+            qs = Case.objects.filter(id=case_id).select_related('test').prefetch_related('caseField', 'test__testQField')  # type:ignore
         else:
             conditionNoneToBlank(data)
             query_params = {
@@ -59,7 +66,8 @@ class CaseController(ControllerBase):
             else:
                 # 汇总界面只查round
                 query_params['round__key'] = data.round_id
-            qs = Case.objects.filter(**query_params).order_by("key").select_related('test')
+            qs = (Case.objects.filter(**query_params).order_by("key").select_related('test')
+                  .prefetch_related('caseField', 'test__testQField'))
         # 由于有嵌套query_set存在，把每个用例的schema加上一个字段
         query_list = []
         for query_single in qs:
@@ -92,7 +100,7 @@ class CaseController(ControllerBase):
             setattr(case, "testStep", case.step.all().values())
             setattr(case, 'testType', get_testType(case.test.testType, dict_code='testType'))
             return case
-        raise HttpError(500, "您获取的数据不存在")
+        raise HttpError(404, "您获取的数据不存在")
 
     @route.get("/getCaseOneById", response=CaseModelOutSchemaWithoutProblem, url_name='case-one-by-id')
     @transaction.atomic
@@ -104,7 +112,7 @@ class CaseController(ControllerBase):
             setattr(case, "testStep", case.step.all().values())
             setattr(case, 'testType', get_testType(case.test.testType, dict_code='testType'))
             return case
-        raise HttpError(500, "您获取的数据不存在")
+        raise HttpError(404, "您获取的数据不存在")
 
     # 处理树状数据
     @route.get("/getCaseInfo", response=List[CaseTreeReturnSchema], url_name="case-info")
@@ -219,9 +227,8 @@ class CaseController(ControllerBase):
     @route.put("/case/update/{id}", response=CaseCreateOutSchema, url_name="case-update")
     @transaction.atomic
     def update_case(self, id: int, payload: CaseCreateInputSchema):
-        check_project_access_by_id(payload.project_id, self.context.request.user)
-        # 查到当前
-        case_qs = Case.objects.get(id=id)  # type:ignore
+        # 目标用例必须属于 payload 指定的项目，防止拿 A 项目权限改 B 项目数据
+        case_qs = get_object_in_project(Case, id, payload.project_id, self.context.request.user)
         for attr, value in payload.dict().items():
             if attr == 'project_id' or attr == 'round_key' or attr == 'dut_key' or attr == 'design_key' or attr == 'test_key':
                 continue
@@ -262,22 +269,19 @@ class CaseController(ControllerBase):
     @route.delete("/case/delete", url_name="case-delete")
     @transaction.atomic
     def delete_case(self, data: DeleteSchema):
-        # 根据其中一个id查询出dut_id，注意这里解决前端框架问题：删除后还报错选择的行id
-        try:
-            case_single = Case.objects.filter(id=data.ids[0])[0]  # type:ignore
-        except IndexError:
-            return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选择需要删除的内容')
-        check_project_access(case_single.project, self.context.request.user)
-        test_id = case_single.test.id
-        test_key = case_single.test.key
-        multi_delete_case(data.ids, Case)
-        index = 0
-        case_all_qs = Case.objects.filter(test__id=test_id).order_by('id')  # type:ignore
-        for single_qs in case_all_qs:
-            case_key = "".join([test_key, '-', str(index)])
-            single_qs.key = case_key
-            index = index + 1
-            single_qs.save()
+        # 逐个校验每条选中用例的项目归属（防止只校验第一行、其余行跨项目删除）
+        case_objs = check_objects_access(Case, data.ids, self.context.request.user)
+        affected = {(obj.test_id, obj.test.key) for obj in case_objs}
+        multi_delete_case([obj.id for obj in case_objs], Case)
+        # 每个受影响的测试项都重排 key（批量删除可能跨多个测试项）
+        for test_id, test_key in affected:
+            index = 0
+            case_all_qs = Case.objects.filter(test__id=test_id).order_by('id')  # type:ignore
+            for single_qs in case_all_qs:
+                case_key = "".join([test_key, '-', str(index)])
+                single_qs.key = case_key
+                index = index + 1
+                single_qs.save()
         return ChenResponse(message="测试用例删除成功！影响域分析中如果有该关联用例则被删除。")
 
     # 右键测试项，根据测试子项生成用例
@@ -363,6 +367,9 @@ class CaseController(ControllerBase):
         case_qs = project_obj.pcField.filter(id__in=payload.selectRows, round__key=payload.round_key)
         # 3.批量替换里面文本（解构不影响老数组）
         selectColumn = [x for x in payload.selectColumn if x != 'testStep']
+        unknown = [x for x in selectColumn if x not in CASE_REPLACE_FIELDS]
+        if unknown:
+            return ChenResponse(status=400, code=400, message=f'不支持替换的字段：{unknown}')
         replace_kwargs = {
             field_name: Replace(F(field_name), Value(payload.originText), Value(payload.replaceText))
             for field_name in selectColumn

@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta
+import logging
 from ninja_extra import api_controller, ControllerBase, route
 from ninja.errors import HttpError
 from ninja.pagination import paginate
@@ -25,13 +26,14 @@ from apps.project.models import Project
 from utils.chen_crud import multi_delete
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.user.tools.ldap_tools import load_ldap_users
-from utils.audit import audit_log, EVENT_USER_CHANGE
+from utils.audit import audit_log, EVENT_USER_CHANGE, EVENT_LOG_PURGE, EVENT_LOG_PURGE_DENIED
 from utils.permissions import PRIVILEGED_ROLES
 from utils.crypto import blind_index
 from apps.system.tools.residue import clear_user_transient
 from utils.codes import HTTP_CAPTCHA_REQUIRED
 
 Users = get_user_model()
+logger = logging.getLogger(__name__)
 
 
 def _generate_captcha_svg(code: str) -> str:
@@ -138,6 +140,13 @@ class UserManageController(ControllerBase):
             if project_obj.duty_person not in all_member:
                 all_member.append(project_obj.duty_person)
             qs = qs.filter(name__in=all_member)
+        # 该接口供业务选择人员使用：非管理员只返回脱敏后的联系方式，避免全员明文电话/邮箱外泄
+        current = self.context.request.user
+        if getattr(current, 'role', None) != 'admin':
+            from utils.sensitive import mask_phone, mask_email
+            for u in qs:
+                u.phone = mask_phone(u.phone)
+                u.email = mask_email(u.email)
         return qs
 
     # 用户检索接口（仅系统管理员：三权分立，普通用户/安全员/审计员无账号管理权）
@@ -191,7 +200,7 @@ class UserManageController(ControllerBase):
         return ChenResponse(code=200, status=200, message="删除成功")
 
     # 管理员改变用户状态是否停用/启用
-    @route.get('/change_status', auth=JWTAuth(), permissions=[IsAuthenticated, IsSystemAdmin],
+    @route.put('/change_status', auth=JWTAuth(), permissions=[IsAuthenticated, IsSystemAdmin],
                url_name='user-change')
     def change_user_status(self, user_status: str, userId: int):
         user = Users.objects.filter(id=userId).first()
@@ -214,19 +223,19 @@ class UserManageController(ControllerBase):
             # 判断就密码是否正确
             user_old = authenticate(username=user.username, password=payload.oldPassword)
             if not user_old:
-                return ChenResponse(status=500, code=500, message='旧密码错误，请检查')
+                return ChenResponse(status=400, code=400, message='旧密码错误，请检查')
             user.set_password(payload.newPassword)
             user.save()
             return ChenResponse(status=200, code=200, message='管理员修改密码成功')
 
-    # 用户登录后动态读取LDAP用户录入数据
-    @route.get("/ldap", url_name='user-ldap')
+    # 用户登录后动态读取LDAP用户录入数据（仅系统管理员可触发全量同步）
+    @route.get("/ldap", url_name='user-ldap', permissions=[IsAuthenticated, IsSystemAdmin])
     def load_ldap(self):
         try:
             load_ldap_users()
             return ChenResponse(status=200, code=200, message='连接LDAP服务器成功，同步用户数据')
         except Exception as exc:
-            print(exc)
+            logger.warning('LDAP 同步失败：%s', exc)
             return ChenResponse(status=200, code=200, message='欢迎您，正在外网访问')
 
 # 操作日志接口
@@ -244,13 +253,21 @@ class LogController(ControllerBase):
         logs = logs.filter(user__username__icontains=data.user, create_datetime__range=data.create_datetime)
         return logs
 
-    @route.get('/operation_delete', url_name='log_delete', permissions=[IsAuthenticated, IsAuditor],
+    @route.post('/operation_delete', url_name='log_delete', permissions=[IsAuthenticated, IsAuditor],
                auth=JWTAuth())
     def log_delete(self, data: LogDeleteInSchema = Query(...)):
-        time = datetime.now() - timedelta(days=data.day)
+        # 与统一审计日志同一保留期口径：禁止全清与清理保留期内日志，清理动作自身留痕
+        min_retention_days = 30
+        day = data.day or min_retention_days
+        if day < min_retention_days:
+            audit_log(self.context.request, EVENT_LOG_PURGE_DENIED,
+                      f'安全告警：越权日志删除尝试被拒绝（数据操作日志，day={day}，须≥{min_retention_days}天）',
+                      success=False)
+            return ChenResponse(status=403, code=403,
+                                message=f'审计日志受保护：仅能清理 {min_retention_days} 天前的日志，禁止全清')
+        time = datetime.now() - timedelta(days=day)
         log_qs = TableOperationLog.objects.filter(create_datetime__lt=time)
-        log_qs.delete()
-        if data.day > 0:
-            return ChenResponse(message=f'删除{data.day}天前数据成功')
-        else:
-            return ChenResponse(message='全部日志删除成功')
+        count, _ = log_qs.delete()
+        audit_log(self.context.request, EVENT_LOG_PURGE,
+                  f'数据操作日志按保留期清理：删除 {day} 天前数据 {count} 条（保留期内日志不可删）')
+        return ChenResponse(message=f'删除{day}天前数据成功（{count} 条）')

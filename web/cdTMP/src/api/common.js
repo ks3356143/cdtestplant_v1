@@ -17,8 +17,9 @@ export default {
      */
     getDict(code) {
         return request({
-            url: "system/dataDict/list?code=" + code,
-            method: "get"
+            url: "system/dataDict/list",
+            method: "get",
+            params: { code }
         })
     },
     /**

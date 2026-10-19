@@ -21,11 +21,13 @@ api = ChenNinjaAPI(
 # 捕获HttpError - 注意这种方式不过create_response函数，需自己定义
 @api.exception_handler(HttpError)
 def in_program_exception_handler(request, exc):
-    # HttpError的status_code这里处理为自定义码，而非HTTP协议的
+    # 合法的 HTTP 状态码原样返回（400/401/404/405…），自定义业务码统一落到 500
+    raw = getattr(exc, 'status_code', 500)
+    status = raw if isinstance(raw, int) and 400 <= raw <= 599 else 500
     data = {}
-    if exc.status_code is PROJECT_ENDTIME_ERROR_CODE:
+    if raw == PROJECT_ENDTIME_ERROR_CODE:
         data['flag'] = PROJECT_ENDTIME_ERROR_CODE
-    return api.create_response(request, status=500, message=exc.message, data=data)
+    return api.create_response(request, status=status, message=exc.message, data=data)
 
 # 越权拒绝统一审计告警（7.1.6）：所有 403（DAC/标记/管理权限）记为安全告警事件
 # 同一 主体+IP+路径 30 秒窗口去重——探测脚本批量触发时审计表不被刷爆（但每次仍拒绝）

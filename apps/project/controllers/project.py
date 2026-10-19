@@ -169,8 +169,11 @@ class ProjectController(ControllerBase):
             try:
                 rmtree(project_media_path)
             except FileNotFoundError:
-                transaction.set_rollback(True)  # 标记回滚，避免报错但数据已落库
-                return ChenResponse(status=400, code=400, message='项目模版目录可能不存在，可能之前已删除')
+                # 目录本就不存在视为已清理，不应因此回滚已删除的项目数据
+                continue
+            except PermissionError:
+                transaction.set_rollback(True)
+                return ChenResponse(status=500, code=500, message='文件被占用，请关闭文件资源管理器后重试')
         return ChenResponse(message="删除成功！")
 
     # 看板页面接口
@@ -244,12 +247,13 @@ class ProjectController(ControllerBase):
         for round in rounds:
             round_dict = {'name': f'第{int(round.key) + 1}轮次', 'desings': [], 'method_demand': {},
                           'method_case': {}}
-            designs = round.dsField.all()
+            # 预取测试项/用例，用 len 取代逐条 count（避免 N+1）
+            designs = round.dsField.prefetch_related('dtField', 'dcField')
             for design in designs:
                 design_dict = {
                     'name': design.name,
-                    'demand_count': design.dtField.count(),
-                    'case_count': design.dcField.count()
+                    'demand_count': len(design.dtField.all()),
+                    'case_count': len(design.dcField.all())
                 }
                 round_dict['desings'].append(design_dict)
             demands = round.rtField.all()
@@ -259,7 +263,7 @@ class ProjectController(ControllerBase):
                     round_dict['method_demand'][test_type] = 1
                 else:
                     round_dict['method_demand'][test_type] += 1
-            cases = round.rcField.all()
+            cases = round.rcField.select_related('test').all()
             for case in cases:
                 testDemand = case.test
                 case_type = get_str_dict(testDemand.testType, 'testType')

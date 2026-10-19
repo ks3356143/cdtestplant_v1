@@ -29,8 +29,9 @@ export default {
      */
     getDesignOneById(id) {
         return request({
-            url: `project/getDesignOneById?id=${id}`,
-            method: "get"
+            url: "project/getDesignOneById",
+            method: "get",
+            params: { id }
         })
     },
     /**

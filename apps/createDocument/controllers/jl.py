@@ -16,6 +16,7 @@ from docxtpl import DocxTemplate
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from utils.util import get_ident, get_case_ident
 from utils.chen_response import ChenResponse
+from apps.project.tools.access_control import check_project_access_by_id
 from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.util import build_testtype_output
@@ -26,6 +27,7 @@ class GenerateControllerJL(ControllerBase):
     @route.get("/create/caserecord", url_name="create-caserecord")
     @transaction.atomic
     def create_caserecord(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """生成测试记录表格"""
         project_path_str = project_path(id)
         project_obj = get_object_or_404(Project, id=id)

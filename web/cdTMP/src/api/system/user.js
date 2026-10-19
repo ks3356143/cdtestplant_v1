@@ -110,7 +110,7 @@ export default {
     changeUserStatus(params = {}) {
         return request({
             url: "system/user/change_status",
-            method: "get",
+            method: "put",
             params
         })
     }

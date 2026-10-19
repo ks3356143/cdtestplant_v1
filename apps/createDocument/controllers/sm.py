@@ -15,6 +15,7 @@ from docxtpl import DocxTemplate
 from docx import Document
 # 导入自己工具
 from utils.chen_response import ChenResponse
+from apps.project.tools.access_control import check_project_access_by_id
 from utils.util import get_ident, get_case_ident, get_testType
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
 from apps.createDocument.extensions import util
@@ -29,11 +30,12 @@ class GenerateControllerSM(ControllerBase):
     @route.get("/create/techyiju", url_name="create-techyiju-sm")
     @transaction.atomic
     def create_techyiju(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         duties_qs = project_obj.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY'))
         std_documents = []
         for duty in duties_qs:
-            one_duty = {'doc_name': duty.name, 'ident_version': duty.ref + '-' + duty.version,
+            one_duty = {'doc_name': duty.name, 'ident_version': f"{(duty.ref or '').strip()}-{(duty.version or '').strip()}",
                         'publish_date': duty.release_date, 'source': duty.release_union}
             std_documents.append(one_duty)
         # 添加大纲到这里
@@ -56,6 +58,7 @@ class GenerateControllerSM(ControllerBase):
     @route.get('/create/caseList', url_name='create-caseList-sm')
     @transaction.atomic
     def create_caseList(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """创建第一轮文档"""
         project_path_str = project_path(id)
         # 生成测试用例需要doc对象
@@ -131,6 +134,7 @@ class GenerateControllerSM(ControllerBase):
     @route.get('/create/caseBreifList', url_name='create-caseBreifList')
     @transaction.atomic
     def create_caseBreifList(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         # 生成第一轮的测试说明
         project_obj = get_object_or_404(Project, id=id)
         # 先查询dict字典，查出总共有多少个testType
@@ -166,6 +170,7 @@ class GenerateControllerSM(ControllerBase):
     @route.get('/create/smtrack', url_name='create-smtrack')
     @transaction.atomic
     def create_smtrack(self, id: int):
+        check_project_access_by_id(id, self.context.request.user)
         """生成说明的需求追踪表"""
         project_path_str = project_path(id)
         project_obj = get_object_or_404(Project, id=id)

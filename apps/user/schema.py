@@ -104,7 +104,7 @@ class LogInputSchema(Schema):
 
 # 操作日志的删除输入
 class LogDeleteInSchema(Schema):
-    day: int = Field(7, ge=0, description='删除多少天前的数据')
+    day: int = Field(30, ge=0, description='删除多少天前的数据（最小保留期 30 天）')
 
 # 管理员修改密码
 class AdminModifyPasswordSchema(Schema):

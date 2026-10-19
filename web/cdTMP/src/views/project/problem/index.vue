@@ -20,12 +20,14 @@ import { Message } from "@arco-design/web-vue"
 const route = useRoute()
 const data = ref([])
 const loading = ref(true)
-const roundNumber = route.query.key.split("-")[0]
-const dutNumber = route.query.key.split("-")[1]
-const designDemandNumber = route.query.key.split("-")[2]
-const testDemandNumber = route.query.key.split("-")[3]
-const caseNumber = route.query.key.split("-")[4]
-const problemNumber = route.query.key.split("-")[5]
+// key 可能缺失（刷新/直链），统一解析一次并兜底，避免 setup 阶段抛错
+const keyParts = String(route.query.key || "").split("-")
+const roundNumber = keyParts[0]
+const dutNumber = keyParts[1]
+const designDemandNumber = keyParts[2]
+const testDemandNumber = keyParts[3]
+const caseNumber = keyParts[4]
+const problemNumber = keyParts[5]
 // 请求展示problem数据函数
 const fetchProblemData = async (
     params = {

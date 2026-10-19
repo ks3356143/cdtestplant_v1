@@ -8,6 +8,7 @@ from ninja.pagination import paginate
 from ninja.errors import HttpError
 from utils.chen_pagination import MyPagination
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
@@ -47,7 +48,7 @@ class DictController(ControllerBase):
     @route.put("/dataDict/changeStatus", url_name="dict-changeStatus", permissions=[IsSystemAdmin])
     @transaction.atomic
     def change_dict_status(self, data: ChangeStautsSchemaInput):
-        qs = Dict.objects.get(id=data.id)
+        qs = get_object_or_404(Dict, id=data.id)
         qs.status = data.status
         qs.save()
         return ChenResponse(code=200, status=200, message="修改状态成功")
@@ -55,7 +56,7 @@ class DictController(ControllerBase):
     @route.put("/dataDict/changeItemStatus", url_name="dict-changeItemStatus", permissions=[IsSystemAdmin])
     @transaction.atomic
     def change_dict_item_status(self, data: ChangeStautsSchemaInput):
-        qs = DictItem.objects.get(id=data.id)
+        qs = get_object_or_404(DictItem, id=data.id)
         qs.status = data.status
         qs.save()
         return ChenResponse(code=200, status=200, message="修改状态成功")
@@ -73,7 +74,7 @@ class DictController(ControllerBase):
             payload.update_datetime_end = '5000-01-01'
         date_list = [payload.update_datetime_start, payload.update_datetime_end]
         # 先对dict_id进行查询
-        dict_qs = Dict.objects.get(id=payload.dict_id)
+        dict_qs = get_object_or_404(Dict, id=payload.dict_id)
         # 反向连接
         qs = dict_qs.dictItem.filter(update_datetime__range=date_list, status__icontains=payload.status,
                                      key__icontains=payload.key, title__icontains=payload.title,
@@ -84,7 +85,7 @@ class DictController(ControllerBase):
     @route.put("/dataDict/numberOperation", url_name="dictitem-changesort", permissions=[IsSystemAdmin])
     @transaction.atomic
     def change_item_sort(self, data: DictItemChangeSrotInput):
-        qs = DictItem.objects.get(id=data.id)
+        qs = get_object_or_404(DictItem, id=data.id)
         qs.sort = data.numberValue
         qs.save()
         return ChenResponse(code=200, status=200, message='排序序号更新成功')
@@ -94,7 +95,7 @@ class DictController(ControllerBase):
     @transaction.atomic
     def save_item(self, payload: DictItemCreateInputSchema):
         # 先根据dict_id查询出dict
-        dict_qs = Dict.objects.get(id=payload.dict_id)
+        dict_qs = get_object_or_404(Dict, id=payload.dict_id)
         qs1 = dict_qs.dictItem.filter(title=payload.title)
         if qs1.exists():
             return ChenResponse(code=400, status=400, message='字典标签重复，请检查')
@@ -111,7 +112,7 @@ class DictController(ControllerBase):
                permissions=[IsSystemAdmin])
     @transaction.atomic
     def update(self, id: int, payload: DictItemUpdateInputSchema):
-        dictitem_qs = DictItem.objects.get(id=id)
+        dictitem_qs = get_object_or_404(DictItem, id=id)
         # 部分更新：仅覆盖用户实际传入的字段，避免缺失字段被置为 None 清空原值
         for attr, value in payload.dict(exclude_none=True).items():
             setattr(dictitem_qs, attr, value)
@@ -131,7 +132,7 @@ class DictController(ControllerBase):
         dict_id = dictItem_single.dict.id
         multi_delete(data.ids, DictItem)
         index = 1
-        qs = Dict.objects.get(id=dict_id).dictItem.all()
+        qs = get_object_or_404(Dict, id=dict_id).dictItem.all()
         for qs_item in qs:
             qs_item.key = str(index)
             index = index + 1
@@ -165,7 +166,7 @@ class DictController(ControllerBase):
     @transaction.atomic
     def save(self, payload: DictStdItemCreateInputSchema):
         # 先根据dict_id查询出dict
-        dict_qs = Dict.objects.get(code=payload.code)
+        dict_qs = get_object_or_404(Dict, code=payload.code)
         qs1 = dict_qs.dictItem.filter(title=payload.title)
         if qs1.exists():
             return ChenResponse(code=400, status=400, message='字典标签重复，请检查')

@@ -6,6 +6,7 @@ from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
 from utils.chen_pagination import MyPagination
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from typing import List
 from utils.chen_crud import multi_delete
 from utils.chen_response import ChenResponse
@@ -51,7 +52,7 @@ class AbbreviationController(ControllerBase):
         if key_qs.exists():
             return ChenResponse(code=400, status=400, message="缩略语重复，请修改...")
         # 查询id
-        qs = Abbreviation.objects.get(id=id)
+        qs = get_object_or_404(Abbreviation, id=id)
         for attr, value in data.__dict__.items():
             setattr(qs, attr, value)
         qs.save()

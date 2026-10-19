@@ -13,7 +13,7 @@
                         type="round"
                         checked-color="green"
                         unchecked-color="#F53F3F"
-                        :loading="loading"
+                        :loading="!!loadingMap[record.id]"
                     >
                         <template #checked> 已关联 </template>
                         <template #unchecked> 未关联 </template>
@@ -62,44 +62,41 @@ const props = defineProps({
 const emits = defineEmits(["deleted", "relatedOrunrelated"])
 
 // ~~~定义关联的switch-值改变处理~~~ 该函数返回false或返回Promise[reject]则停止切换
-/// 定义个switch的加载loading属性
-const loading = ref(false)
+/// 定义个switch的加载状态：按行 id 记录，避免一行请求让所有开关一起转圈
+const loadingMap = ref({})
 /// 储存打开时赋值的caseInfo
 const caseInfo = ref(null)
 const handleRelatedChange = async (record) => {
-    // 因为switch绑定了record.related所以可以动态改变
-    loading.value = true
-    // 判断该用例是否是未通过，如果未执行或已通过则不允许关联问题单
-    // 修改：当用户取消关联时应该不判断是否caseIsPassed
-    if (record.related && !caseIsPassed(caseInfo.value)) {
-        Message.error("该用例没有缓存或无未通过步骤，请切换页面或设置未通过步骤后添加问题单!")
-        loading.value = false
-        record.related = !record.related
-        crudRef.value.refresh()
-        return false
-    }
-    const res = await problemApi
-        .relateProblem({
+    const rowId = record.id
+    // 同一行请求未完成时忽略重复点击
+    if (loadingMap.value[rowId]) return false
+    loadingMap.value = { ...loadingMap.value, [rowId]: true }
+    try {
+        // 判断该用例是否是未通过，如果未执行或已通过则不允许关联问题单
+        // 修改：当用户取消关联时应该不判断是否caseIsPassed
+        if (record.related && !caseIsPassed(caseInfo.value)) {
+            Message.error("该用例没有缓存或无未通过步骤，请切换页面或设置未通过步骤后添加问题单!")
+            record.related = !record.related
+            return false
+        }
+        const res = await problemApi.relateProblem({
             case_key: route.query.key,
             problem_id: record.id,
             val: record.related
         })
-        .catch((err) => {
-            // 如果出错则保持不变
-            record.related = !record.related
-            loading.value = false
-        })
-    if (res) {
-        if (!res.data.isOK) {
+        if (res && !res.data.isOK) {
             // 后端返回失败则回退switch状态
             record.related = !record.related
-            loading.value = false
         }
+    } catch {
+        // 请求失败保持原状态
+        record.related = !record.related
+    } finally {
+        loadingMap.value = { ...loadingMap.value, [rowId]: false }
+        emits("relatedOrunrelated")
+        // 重新刷新表格请求
+        crudRef.value.refresh()
     }
-    loading.value = false
-    emits("relatedOrunrelated")
-    // 重新刷新表格请求
-    crudRef.value.refresh()
 }
 
 // 数据定义

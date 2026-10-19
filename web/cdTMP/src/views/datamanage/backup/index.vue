@@ -36,7 +36,14 @@
         <a-button @click="loadAll">刷新</a-button>
       </a-space>
 
-      <a-table :columns="columns" :data="rows" :loading="loading" :pagination="{ pageSize: 10 }" row-key="id">
+      <a-table
+        :columns="columns"
+        :data="rows"
+        :loading="loading"
+        :pagination="{ pageSize: 10 }"
+        :scroll="{ x: 1360 }"
+        row-key="id"
+      >
         <template #kind="{ record }">
           <a-tag :color="record.kind === 'full' ? 'arcoblue' : 'green'">{{ record.kind_label }}</a-tag>
         </template>
@@ -97,6 +104,7 @@ import { onMounted, reactive, ref } from "vue"
 import { Message } from "@arco-design/web-vue"
 import backupApi from "@/api/system/backup"
 import projectApi from "@/api/testmanage/project"
+import tool from "@/utils/tool"
 
 const loading = ref(false)
 const creating = ref(false)
@@ -109,7 +117,7 @@ const form = reactive({ name: "", kind: "full", project_id: undefined })
 const descColumns = { xs: 1, sm: 2, md: 3, xl: 5 }
 
 const columns = [
-  { title: "备份名称", dataIndex: "name", ellipsis: true },
+  { title: "备份名称", dataIndex: "name", ellipsis: true, width: 200 },
   { title: "类型", slotName: "kind", width: 100 },
   { title: "备份范围", dataIndex: "scope_label", ellipsis: true, width: 200 },
   { title: "数据条数", dataIndex: "record_count", width: 100 },
@@ -117,7 +125,7 @@ const columns = [
   { title: "SHA-256 摘要", slotName: "digest", width: 180 },
   { title: "状态", slotName: "state", width: 90 },
   { title: "创建人", slotName: "creator", width: 100 },
-  { title: "创建时间", slotName: "time", width: 170 },
+  { title: "创建时间", slotName: "time", width: 185 },
   { title: "操作", slotName: "operations", width: 190, fixed: "right" }
 ]
 
@@ -179,36 +187,56 @@ const quickIncremental = async () => {
 }
 
 const doRestore = async (record) => {
-  const res = await backupApi.restore(record.id)
-  if (res.code === 200) {
-    Message.success(res.message || "恢复完成")
-  } else {
-    Message.error(res.message || "恢复失败")
+  try {
+    const res = await backupApi.restore(record.id)
+    if (res?.success === false || (res?.code && res.code !== 200)) {
+      Message.error(res.message || "恢复失败")
+      return
+    }
+    Message.success(res?.message || "恢复完成")
+  } catch {
+    // 摘要不一致/无权限等错误已由接口层提示
+  } finally {
+    await loadAll()
   }
-  await loadAll()
 }
 
 const doDownload = async (record) => {
-  const token = JSON.parse(localStorage.getItem("token") || "null")
-  const resp = await fetch(`/api/system/backup/${record.id}/download`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  if (!resp.ok) {
-    Message.error("下载失败，备份文件可能已不存在")
-    return
+  try {
+    const token = JSON.parse(localStorage.getItem("token") || "null")
+    const resp = await fetch(`/api/system/backup/${record.id}/download`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    if (!resp.ok) {
+      let msg = "下载失败，备份文件可能已不存在"
+      try {
+        const body = await resp.json()
+        msg = body?.message || msg
+      } catch {
+        // 非 JSON 错误响应，使用默认提示
+      }
+      Message.error(msg)
+      return
+    }
+    tool.download(await resp.blob(), record.file_name)
+  } catch {
+    Message.error("下载失败，请检查网络后重试")
   }
-  const blob = await resp.blob()
-  const a = document.createElement("a")
-  a.href = URL.createObjectURL(blob)
-  a.download = record.file_name
-  a.click()
-  URL.revokeObjectURL(a.href)
 }
 
 const doDelete = async (record) => {
-  await backupApi.remove(record.id)
-  Message.success("删除成功")
-  await loadAll()
+  try {
+    const res = await backupApi.remove(record.id)
+    if (res?.success === false) {
+      Message.error(res.message || "删除失败")
+      return
+    }
+    Message.success("删除成功")
+  } catch {
+    // 接口层已提示
+  } finally {
+    await loadAll()
+  }
 }
 
 onMounted(() => {
