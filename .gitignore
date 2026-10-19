@@ -35,3 +35,6 @@ media/backup/
 
 # 手工备份（如追踪表改列前的 .bak-日期）
 *.bak-*
+
+# Playwright MCP 运行产物（截图/快照/控制台日志）
+.playwright-mcp/

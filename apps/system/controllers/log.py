@@ -132,7 +132,7 @@ class LogController(ControllerBase):
         # 破损数据逐条审计告警（7.1.6 联动）；完好则记一次核查通过
         if broken:
             for r in broken:
-                audit_log(None, EVENT_INTEGRITY_BROKEN,
+                audit_log(self.context.request, EVENT_INTEGRITY_BROKEN,
                           f'安全告警：数据完整性校验失败 {r["label"]}（{r["table"]}#{r["id"]}），'
                           f'标签摘要 {r["stored"]}… ≠ 当前重算 {r["actual"]}…，疑似绕过应用直改数据库',
                           success=False)

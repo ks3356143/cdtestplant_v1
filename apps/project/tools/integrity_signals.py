@@ -33,8 +33,13 @@ def audit_on_delete(sender, instance, **kwargs):
         DataIntegrityTag.objects.filter(
             table_name=instance._meta.db_table, object_id=str(instance.pk)).delete()
         label = getattr(instance, 'ident', None) or getattr(instance, 'name', None) or instance.pk
+        # 审计记录必须带主体（7.1.6）：信号里没有 request，退回当前请求线程里的操作者；
+        # 后台任务（无请求上下文）记为「系统」
+        from apps.project.signals import get_current_user
+        actor = get_current_user()
         audit_log(None, EVENT_BUSINESS_CHANGE,
-                  f'重要数据删除：{instance._meta.verbose_name} {label}；关联完整性标签已同步清理')
+                  f'重要数据删除：{instance._meta.verbose_name} {label}；关联完整性标签已同步清理',
+                  user=actor, username=None if actor is not None else '系统')
     except Exception:
         pass
 

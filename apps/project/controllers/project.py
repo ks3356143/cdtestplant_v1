@@ -73,14 +73,12 @@ class ProjectController(ControllerBase):
             qs = qs.filter(soft_type=filters.soft_type)
 
         # ~~role:查询项目的负责人和成员：普通用户只能看到自己参加的项目~~
-        final_qs = []
+        # 与详情接口共用同一套 DAC + 密级判定（is_project_accessible），
+        # 避免出现"详情能进、列表却看不到"的两套口径
         auth_info: Users = self.context.request.auth
-        if auth_info:
-            if auth_info.role != 'admin':
-                for proj in qs:
-                    if proj.duty_person == auth_info.name or auth_info.name in proj.member:
-                        final_qs.append(proj)
-                return final_qs
+        if auth_info and auth_info.role != 'admin':
+            from apps.project.tools.access_control import is_project_accessible
+            return [proj for proj in qs if is_project_accessible(proj, auth_info)]
         return qs
 
     @route.get("/findOneById/{int:project_id}", response=ProjectRetrieveSchema)
