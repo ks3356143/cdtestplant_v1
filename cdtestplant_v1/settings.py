@@ -11,6 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-gng$@ebwaxy7bsc86r5pc&$(h8a8+to0v1rbzc9+vkopuv6j-g'
 
+# 用户敏感字段（电话/邮箱）落库加密密钥（GB/T 28452-2012 7.1.8 用户数据保密性保护）
+# 未配置时由 SECRET_KEY 派生；生产环境应在 .env 中显式配置并使用独立固定值
+FIELD_ENCRYPTION_KEY = env('FIELD_ENCRYPTION_KEY', default='')
+
 INSTALLED_APPS = [
     # 'simpleui',
     # 'django.contrib.admin',
@@ -90,6 +94,8 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/1",  # 这里直接使用redis别名作为host ip地址
+        # 剩余信息保护（7.1.8 c/f）：缓存键默认 5 分钟过期，避免临时/敏感数据长期驻留
+        "TIMEOUT": 300,
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             # Windows 绿色版 Redis 5.0.14 仅支持 RESP2；redis-py 8.x 需显式固定，否则 HELLO 命令报错

@@ -14,6 +14,7 @@ from utils.log_util.request_util import (
     get_request_ip,
     get_request_path,
 )
+from utils.sensitive import mask_sensitive
 
 class ApiLoggingMiddleware(MiddlewareMixin):
     """
@@ -35,9 +36,9 @@ class ApiLoggingMiddleware(MiddlewareMixin):
     def __handle_response(self, request, response):
         # request_data,request_ip由PermissionInterfaceMiddleware中间件中添加的属性
         body = getattr(request, 'request_data', {})
-        # 请求含有password则用*替换掉(暂时先用于所有接口的password请求参数)
-        if isinstance(body, dict) and body.get('password', ''):
-            body['password'] = '*' * len(body['password'])
+        # 敏感信息脱敏后再落库（7.1.8）：口令等全掩、手机/邮箱部分打码，
+        # 避免用户的敏感数据长期残留在操作日志这类动态记录介质中。
+        body = mask_sensitive(body)
         if not hasattr(response, 'data') or not isinstance(response.data, dict):
             response.data = {}
         try:

@@ -27,6 +27,8 @@ from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.user.tools.ldap_tools import load_ldap_users
 from utils.audit import audit_log, EVENT_USER_CHANGE
 from utils.permissions import PRIVILEGED_ROLES
+from utils.crypto import blind_index
+from apps.system.tools.residue import clear_user_transient
 from utils.codes import HTTP_CAPTCHA_REQUIRED
 
 Users = get_user_model()
@@ -103,7 +105,10 @@ class UserTokenController(TokenObtainPairController):
 
     @route.post("/logout", url_name="logout", auth=JWTAuth())
     def logout(self):
-        return ChenResponse(code=200, message='退出登录成功')
+        # 剩余信息保护（7.1.8 c/f）：登出即清除服务端为该账号保留的临时缓存键，
+        # 不让鉴别过程数据（失败计数/锁定标记）在用户"释放使用权"后继续驻留
+        cleared = clear_user_transient(getattr(self.context.request.user, 'username', ''))
+        return ChenResponse(code=200, message='退出登录成功', data={'cleared_keys': cleared})
 
 # 定义system/user用户管理接口
 @api_controller("/system/user", tags=['用户管理'], auth=JWTAuth())
@@ -148,8 +153,11 @@ class UserManageController(ControllerBase):
             end_time = '8000-01-01'
         date_list = [start_time, end_time]
         qs = Users.objects.filter(name__icontains=filters.name, username__icontains=filters.username,
-                                  phone__icontains=filters.phone, status__contains=filters.status,
+                                  status__contains=filters.status,
                                   create_datetime__range=date_list).order_by('-create_datetime')
+        # 电话字段已加密落库（7.1.8），无法做 LIKE 模糊匹配，改用 SHA-256 盲索引做等值检索
+        if filters.phone:
+            qs = qs.filter(phone_index=blind_index(filters.phone))
         return qs
 
     @route.put("/update/{user_id}", response=UpdateDeleteUserOutSchema,

@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from utils.crypto import EncryptedCharField, blind_index
 from utils.models import CoreModel
 
 class Users(AbstractUser, CoreModel):
@@ -19,7 +20,14 @@ class Users(AbstractUser, CoreModel):
                                     help_text='自我介绍')
     personalWebsite = models.CharField(max_length=255, verbose_name='个人网站', null=True, blank=True,
                                        help_text='个人网站')
-    phone = models.CharField(max_length=255, verbose_name="电话", null=True, blank=True, help_text="电话", default='18888888888')
+    phone = EncryptedCharField(max_length=255, verbose_name="电话", null=True, blank=True,
+                               help_text="电话（落库加密，7.1.8 用户数据保密性保护）", default='18888888888')
+    # 电话的 SHA-256 盲索引：加密后不能做 LIKE 模糊检索，用等值索引支撑"按电话查用户"
+    phone_index = models.CharField(max_length=64, verbose_name="电话盲索引", null=True, blank=True, default='',
+                                   db_index=True, help_text="电话 SHA-256 盲索引，仅用于等值检索")
+    # 邮箱同样属于用户重要数据，落库加密（覆盖 AbstractUser 的明文 EmailField）
+    email = EncryptedCharField(max_length=255, verbose_name="邮箱", null=True, blank=True,
+                               help_text="邮箱（落库加密，7.1.8 用户数据保密性保护）")
     accountId = models.CharField(max_length=255, verbose_name="用户标识", null=True, blank=True, help_text="用户标识", default='1')
     # 主体敏感标记：用户可访问的最高密级许可（GB/T 28452 7.1.4），由系统管理员配置
     clearance = models.CharField(max_length=30, verbose_name="密级许可", help_text="可访问的最高密级", default='1')
@@ -28,6 +36,14 @@ class Users(AbstractUser, CoreModel):
         max_length=64, verbose_name="角色", null=True, blank=True, help_text="角色", default='user',
         choices=(('admin', '系统管理员'), ('secadmin', '系统安全员'), ('auditadmin', '系统审计员'), ('user', '普通用户'))
     )
+
+    def save(self, *args, **kwargs):
+        # 维护电话盲索引：加密列无法 LIKE，改由 SHA-256 等值索引支撑检索（7.1.8）
+        self.phone_index = blind_index(self.phone)
+        update_fields = kwargs.get('update_fields')
+        if update_fields is not None and 'phone_index' not in update_fields:
+            kwargs['update_fields'] = list(update_fields) + ['phone_index']
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'用户账号:{self.username}-用户名:{self.name}'

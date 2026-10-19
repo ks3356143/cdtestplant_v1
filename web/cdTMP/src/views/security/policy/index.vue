@@ -21,7 +21,7 @@
         <a-form-item>
           <a-space>
             <a-button type="primary" :loading="saving" @click="savePolicy">保存策略</a-button>
-            <a-button @click="loadPolicy">重置</a-button>
+            <a-button @click="resetPolicy">重置</a-button>
             <a-button @click="loadPolicy">刷新</a-button>
           </a-space>
         </a-form-item>
@@ -66,6 +66,88 @@
         </template>
       </a-table>
     </a-card>
+
+    <a-card :bordered="false" class="policy-card" style="margin-top: 16px">
+      <template #title>
+        <icon-lock style="color: rgb(var(--primary-6))" />
+        数据保密性保护（落库加密 / 传输加密 / 剩余信息）
+      </template>
+      <a-alert type="info" style="margin-bottom: 16px">
+        用户重要数据（电话、邮箱）落库前加密，数据库直查只见密文；网络传输走 TLS 密文；
+        用户释放使用权后及时清除临时缓存与临时文件（GB/T 28452-2012 第三级 7.1.8）。
+      </a-alert>
+
+      <a-spin :loading="secrecyLoading" style="width: 100%">
+        <a-divider orientation="left">① 存储保密性 —— 已加密字段</a-divider>
+        <a-table :data="secrecy.encrypted_fields" :pagination="false" size="small">
+          <template #columns>
+            <a-table-column title="所属模型" data-index="model" :width="160"></a-table-column>
+            <a-table-column title="字段" data-index="field" :width="160"></a-table-column>
+            <a-table-column title="字段名" data-index="name" :width="160"></a-table-column>
+            <a-table-column title="加密算法" data-index="algorithm"></a-table-column>
+          </template>
+        </a-table>
+        <a-typography-text type="secondary" style="display: block; margin-top: 8px">
+          密文前缀 enc:v1:，采用带完整性校验的对称加密；密钥由环境变量 FIELD_ENCRYPTION_KEY 提供。
+          加密后无法 SQL 模糊匹配，按电话检索改用 SHA-256 盲索引做等值匹配。
+        </a-typography-text>
+
+        <a-divider orientation="left">② 传输保密性</a-divider>
+        <a-descriptions :column="2" bordered size="medium">
+          <a-descriptions-item label="是否已落实">
+            <a-tag :color="secrecy.transport?.enabled ? 'green' : 'red'">
+              {{ secrecy.transport?.enabled ? "已配置" : "未配置" }}
+            </a-tag>
+          </a-descriptions-item>
+          <a-descriptions-item label="协议版本">{{ secrecy.transport?.protocol || "—" }}</a-descriptions-item>
+          <a-descriptions-item label="配置文件">{{ secrecy.transport?.config_path || "—" }}</a-descriptions-item>
+          <a-descriptions-item label="说明">{{ secrecy.transport?.detail }}</a-descriptions-item>
+        </a-descriptions>
+
+        <a-divider orientation="left">③ 剩余信息保护措施</a-divider>
+        <a-table :data="secrecy.residue_measures" :pagination="false" size="small">
+          <template #columns>
+            <a-table-column title="措施" data-index="name" :width="240"></a-table-column>
+            <a-table-column title="承担方" data-index="owner" :width="200">
+              <template #cell="{ record }">
+                <a-tag :color="record.owner.includes('操作系统') ? 'gray' : 'arcoblue'">{{ record.owner }}</a-tag>
+              </template>
+            </a-table-column>
+            <a-table-column title="说明" data-index="detail"></a-table-column>
+          </template>
+        </a-table>
+
+        <a-divider orientation="left">④ 临时文件清理（剩余信息）</a-divider>
+        <a-space direction="vertical" fill>
+          <a-space>
+            <a-typography-text>
+              当前临时文件：<b>{{ secrecy.temp_usage?.file_count ?? 0 }}</b> 个，
+              合计 <b>{{ secrecy.temp_usage?.total_mb ?? 0 }}</b> MB
+            </a-typography-text>
+            <a-select v-model="purgeAge" size="small" style="width: 160px">
+              <a-option :value="0">全部清理</a-option>
+              <a-option :value="1">保留 1 小时</a-option>
+              <a-option :value="24">保留 24 小时</a-option>
+              <a-option :value="168">保留 7 天</a-option>
+            </a-select>
+            <a-button type="outline" size="small" :loading="purging" @click="doPurge">立即清理</a-button>
+            <a-button size="small" @click="loadSecrecy">刷新现状</a-button>
+          </a-space>
+          <a-typography-text type="secondary">
+            仅清理文档生成过程的中间产物目录（media/&lt;R号&gt;/temp、form_template/*/temporary）；
+            输入模板与最终交付文档不在清理范围。
+          </a-typography-text>
+        </a-space>
+
+        <a-divider orientation="left">⑤ 日志脱敏字段</a-divider>
+        <a-space wrap>
+          <a-tag v-for="key in secrecy.masked_log_keys" :key="key" color="orange">{{ key }}</a-tag>
+        </a-space>
+        <a-typography-text type="secondary" style="display: block; margin-top: 8px">
+          上述字段写入接口操作日志前自动脱敏（口令全掩码、手机号保留前 3 后 4、邮箱保留首字符与域名）。
+        </a-typography-text>
+      </a-spin>
+    </a-card>
   </div>
 </template>
 
@@ -82,16 +164,25 @@ const form = ref({
   login_window_minutes: 15,
   login_lock_minutes: 30
 })
+// 服务端已保存的策略快照：「重置」回到这份值（撤销未保存的编辑），「刷新」重新拉取
+const savedPolicy = ref({ ...form.value })
 
 const loadPolicy = async () => {
   const res = await policyApi.getPolicy()
   form.value = { ...form.value, ...res.data }
+  savedPolicy.value = { ...form.value }
+}
+
+const resetPolicy = () => {
+  form.value = { ...form.value, ...savedPolicy.value }
+  Message.info("已恢复为上次保存的策略")
 }
 
 const savePolicy = async () => {
   saving.value = true
   try {
     await policyApi.updatePolicy(form.value)
+    savedPolicy.value = { ...form.value }
     Message.success("策略已保存并实时生效")
   } finally {
     saving.value = false
@@ -126,8 +217,42 @@ const saveClearance = async (record) => {
   }
 }
 
+// 数据保密性保护（7.1.8）
+const secrecyLoading = ref(false)
+const secrecy = ref({
+  encrypted_fields: [],
+  residue_measures: [],
+  transport: {},
+  temp_usage: {},
+  masked_log_keys: []
+})
+const purgeAge = ref(24)
+const purging = ref(false)
+
+const loadSecrecy = async () => {
+  secrecyLoading.value = true
+  try {
+    const res = await policyApi.getConfidentiality()
+    secrecy.value = res.data || secrecy.value
+  } finally {
+    secrecyLoading.value = false
+  }
+}
+
+const doPurge = async () => {
+  purging.value = true
+  try {
+    const res = await policyApi.purgeResidue(purgeAge.value)
+    Message.success(res.message || "清理完成")
+    await loadSecrecy()
+  } finally {
+    purging.value = false
+  }
+}
+
 onMounted(() => {
   loadPolicy()
   loadUsers()
+  loadSecrecy()
 })
 </script>
