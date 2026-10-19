@@ -30,29 +30,44 @@ from utils.smallTools.interfaceTools import conditionNoneToBlank
 media_path = Path.cwd() / 'media'
 base_document_path = Path.cwd() / 'conf/base_document'
 
+
+def _icontains_or_null(qs, field: str, value: str):
+    """
+    可空文本字段的模糊检索：值为空时把 NULL 行也算进来。
+
+    项目表的 security_level / report_type / secret 等字段允许为空，
+    而 SQL 中 `NULL LIKE '%%'` 结果为 NULL（非真），默认空条件会把未填这些字段的
+    项目整条滤掉，表现为"列表空白"。
+    """
+    if value in (None, ''):
+        return qs.filter(Q(**{f'{field}__isnull': True}) | Q(**{f'{field}__icontains': ''}))
+    return qs.filter(**{f'{field}__icontains': value})
+
+
 @api_controller("/testmanage/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['项目表相关'])
 class ProjectController(ControllerBase):
     @route.get("/index", response=List[ProjectRetrieveSchema])
     @paginate(MyPagination)
     def list_project(self, filters: ProjectFilterSchema = Query(...)):
         conditionNoneToBlank(filters)
-        # 处理时间范围
+        # 处理时间范围：仅当前端**确实传了**区间时才按开始时间过滤。
+        # 注意 beginTime 允许为空，而 SQL 里 NULL 落在任何 range 之外，
+        # 若默认塞 2000~9999 的区间，未填开始时间的项目会从列表中消失。
         start_time = self.context.request.GET.get('searchOnlyTimeRange[0]')
-        if start_time is None:
-            start_time = "2000-01-01"
         end_time = self.context.request.GET.get('searchOnlyTimeRange[1]')
-        if end_time is None:
-            end_time = '9999-01-01'
-        date_list = [start_time, end_time]
         # 前端返回的member
         member_list = [value for key, value in self.context.request.GET.items() if 'member' in key]
         qs = Project.objects.filter(
             ident__icontains=filters.ident, name__icontains=filters.name,
-            beginTime__range=date_list, duty_person__icontains=filters.duty_person,
-            security_level__icontains=filters.security_level,
-            report_type__icontains=filters.report_type, step__icontains=filters.step,
-            member__contains=member_list, secret__icontains=filters.secret).order_by(
-            "-create_datetime")
+            duty_person__icontains=filters.duty_person, step__icontains=filters.step,
+            member__contains=member_list).order_by("-create_datetime")
+        if start_time or end_time:
+            qs = qs.filter(beginTime__range=[start_time or '2000-01-01', end_time or '9999-01-01'])
+        # 下面三个字段同样允许为空：LIKE '%%' 对 NULL 恒为假，会把未填的项目滤掉，
+        # 因此空条件时改为"包含 NULL"（用户填了具体值时才真正过滤）
+        qs = _icontains_or_null(qs, 'security_level', filters.security_level)
+        qs = _icontains_or_null(qs, 'report_type', filters.report_type)
+        qs = _icontains_or_null(qs, 'secret', filters.secret)
         # 对软件类型进行处理
         if filters.soft_type != '':
             qs = qs.filter(soft_type=filters.soft_type)
