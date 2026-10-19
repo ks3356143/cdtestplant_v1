@@ -25,6 +25,18 @@ _thread_local = local()
 # 记录操作日志时需要排除的模型（日志模块、用例步骤表、测试项步骤表、用户表）
 _SKIP_LOG_SENDERS = {TableOperationLog, CaseStep, TestDemandContent, LoginLog, OperationLog, Users}
 
+# 记录操作日志时需要排除的 Django 自带应用：迁移记录、内容类型、权限、会话等不属于业务对象。
+# 其中 django_migrations 尤其关键——迁移执行过程中会保存“迁移记录”模型，若这里再去写操作日志，
+# 而 operation_log 还没有建表（全新数据库上第一条迁移就会这样），migrate 会直接中断。
+_SKIP_LOG_APP_LABELS = {'migrations', 'contenttypes', 'auth', 'sessions', 'admin', 'staticfiles'}
+
+
+def should_skip_log(sender) -> bool:
+    """是否跳过操作日志埋点：业务日志模块/明细表，以及 Django 自带应用的对象"""
+    if sender in _SKIP_LOG_SENDERS:
+        return True
+    return getattr(getattr(sender, '_meta', None), 'app_label', '') in _SKIP_LOG_APP_LABELS
+
 def get_current_user():
     """
     获取当前用户对象，调用则从local对象里面获取user
@@ -67,8 +79,8 @@ def set_request_locals(sender, **kwargs):
 @receiver(post_save)
 def post_save_handler(sender, instance, created, **kwargs):
     """模型新增-操作日志填写"""
-    # 注意排除日志模块、用例步骤表、测试项步骤表
-    if sender in _SKIP_LOG_SENDERS:
+    # 注意排除日志模块、用例步骤表、测试项步骤表，以及 Django 自带应用的对象
+    if should_skip_log(sender):
         return
     user = get_current_user()
     ope_dict = {
@@ -83,8 +95,8 @@ def post_save_handler(sender, instance, created, **kwargs):
 @receiver(post_delete)
 def post_delete_handler(sender, instance, **kwargs):
     """模型删除-操作日志填写"""
-    # 注意排除日志模块、用例步骤表、测试项步骤表
-    if sender in _SKIP_LOG_SENDERS:
+    # 注意排除日志模块、用例步骤表、测试项步骤表，以及 Django 自带应用的对象
+    if should_skip_log(sender):
         return
     user = get_current_user()
     ope_dict = {
