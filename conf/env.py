@@ -12,16 +12,18 @@ env.read_env(env_file=Path(__file__).resolve().parent.parent / env_file)
 # ================================================= #
 # *************** mysql数据库 配置  *************** #
 # ================================================= #
+# 连接参数统一从环境变量读取，缺省值保持本地开发可用（GB/T 28452-2012 7.1.8 保密性 /
+# 7.1.10 检测分析：凭据不写死在源码里，生产环境在 .env 中配置专用账号与端口）
 # 数据库地址
-DATABASE_HOST = "127.0.0.1"
-# 数据库端口
-DATABASE_PORT = 3306  # 生成环境配置-注意打包时务必需改为3307!!!!!!
-# 数据库用户名
-DATABASE_USER = "root"
+DATABASE_HOST = env('DATABASE_HOST', default="127.0.0.1")
+# 数据库端口（打包生产环境在 .env 中设为 3307）
+DATABASE_PORT = env.int('DATABASE_PORT', default=3306)
+# 数据库用户名（生产环境应使用只对本库授权的应用账号，而非 root）
+DATABASE_USER = env('DATABASE_USER', default="root")
 # 数据库密码
-DATABASE_PASSWORD = "root"
+DATABASE_PASSWORD = env('DATABASE_PASSWORD', default="root")
 # 数据库名
-DATABASE_NAME = "chengdu_test_plant_v1"
+DATABASE_NAME = env('DATABASE_NAME', default="chengdu_test_plant_v1")
 
 # ================================================= #
 # ******************** celery配置  **************** #
@@ -41,7 +43,9 @@ CELERY_MAX_TASKS_PER_CHILD = 10  # 每worker最多执行5个任务自动销毁
 # ================================================= #
 # ******************  其他 配置  ****************** #
 # ================================================= #
-ALLOWED_HOSTS = ["*"]  # 线上环境设置
+# 允许的主机名（GB/T 28452-2012 7.1.10：主机头白名单，生产环境应收敛为实际域名/内网地址，
+# 在 .env 中用逗号分隔配置，如 ALLOWED_HOSTS=test.example.cn,10.0.0.12）
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=["*"])
 LOGIN_NO_CAPTCHA_AUTH = True  # 登录接口 /api/token/ 是否需要验证码认证，用于测试，正式环境建议取消
 ENABLE_LOGIN_ANALYSIS_LOG = True  # 启动登录详细概略获取(通过调用api获取ip详细地址)
 # ================================================= #

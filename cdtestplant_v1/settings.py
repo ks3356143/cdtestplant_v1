@@ -9,10 +9,12 @@ from conf.logConfig import LOGGING
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-gng$@ebwaxy7bsc86r5pc&$(h8a8+to0v1rbzc9+vkopuv6j-g'
+# 生产环境应在 .env 中配置随机生成的 DJANGO_SECRET_KEY；缺省值仅保证本地开发可用
+SECRET_KEY = env('DJANGO_SECRET_KEY', default='django-insecure-gng$@ebwaxy7bsc86r5pc&$(h8a8+to0v1rbzc9+vkopuv6j-g')
 
 # 用户敏感字段（电话/邮箱）落库加密密钥（GB/T 28452-2012 7.1.8 用户数据保密性保护）
-# 未配置时由 SECRET_KEY 派生；生产环境应在 .env 中显式配置并使用独立固定值
+# 未配置时由 SECRET_KEY 派生；生产环境应在 .env 中显式配置并使用独立固定值。
+# 注意：本值一旦变更，历史密文将无法解密，务必先备份再更换。
 FIELD_ENCRYPTION_KEY = env('FIELD_ENCRYPTION_KEY', default='')
 
 INSTALLED_APPS = [
@@ -141,7 +143,7 @@ NINJA_JWT = {
     "ACCESS_TOKEN_LIFETIME": datetime.timedelta(hours=14),
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
-ALLOWED_HOSTS = ["*"]  # 线上环境设置
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=["*"])  # 见 conf/env.py 说明，生产环境应收敛
 
 # 静态文件目录 - manage.py collectstatic
 # -> 会将所有app静态文件移动到STATIC_ROOT目录下面

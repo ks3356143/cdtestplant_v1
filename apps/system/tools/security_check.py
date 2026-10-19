@@ -59,8 +59,8 @@ def _check_secret_key():
     key = getattr(settings, 'SECRET_KEY', '') or ''
     if key.startswith('django-insecure-') or (key and KEY_MARKERS.search(key)):
         return _item('操作系统', '应用密钥', '比对 settings.SECRET_KEY', RISK,
-                     'SECRET_KEY 仍为源码内置值（django-insecure- 前缀），仓库泄漏即等价于密钥泄漏',
-                     '生产环境改为随机生成并放入环境变量/密钥管理，不入代码库')
+                     'SECRET_KEY 仍为源码内置的默认值（django-insecure- 前缀），仓库泄漏即等价于密钥泄漏',
+                     '在 .env 中配置随机生成的 DJANGO_SECRET_KEY，密钥不入代码库')
     return _item('操作系统', '应用密钥', '比对 settings.SECRET_KEY', PASS,
                  'SECRET_KEY 未使用框架默认值（长度 %d）' % len(key))
 
@@ -120,8 +120,8 @@ def _check_db_password():
     weak = {'', 'root', '123456', 'password', 'admin', 'mysql'}
     if pwd.lower() in weak:
         return _item('数据库', '数据库口令强度', '读取连接配置中的口令', RISK,
-                     '数据库口令为空或为常见弱口令，且写在源码配置文件中',
-                     '改用强口令并从环境变量读取，同时限制库的监听地址')
+                     '数据库口令为空或为常见弱口令',
+                     '改用强口令并在 .env 中配置，同时限制库的监听地址')
     return _item('数据库', '数据库口令强度', '读取连接配置中的口令', PASS, '未使用常见弱口令')
 
 
@@ -340,6 +340,19 @@ IMPROVEMENTS = [
         'finding': '文档生成过程的中间产物无清理机制，服务端缓存键无显式过期策略',
         'action': '新增剩余信息清理：按保留期清理临时文件（可计划任务定时执行）、登出即清本账号缓存键、'
                   '缓存键统一 5 分钟过期（详见 7.1.8）',
+        'date': '2026-10-19',
+    },
+    {
+        'item': '数据库账号与口令',
+        'finding': '应用以 MySQL 超级账号 root 连接，口令为常见弱口令，且账号与口令写死在源码配置文件中',
+        'action': '为应用单独创建只对本库授权、不具全局权限的账号（库连接参数、口令均改为从 .env 读取，'
+                  '源码只保留本地开发缺省值）',
+        'date': '2026-10-19',
+    },
+    {
+        'item': '密钥与主机头白名单',
+        'finding': '应用密钥为源码内置值（框架默认前缀），ALLOWED_HOSTS 为通配 *',
+        'action': '应用密钥与主机头白名单改为从 .env 读取；字段加密密钥显式固化，确保历史密文仍可解密',
         'date': '2026-10-19',
     },
 ]
