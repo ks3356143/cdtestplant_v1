@@ -7,6 +7,8 @@ from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.oxml.ns import qn
 from ninja.errors import HttpError
 from ninja_extra import ControllerBase, api_controller, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.db.models import Q
 from docxtpl import DocxTemplate, InlineImage
@@ -33,8 +35,8 @@ from apps.createDocument.extensions.mixins import FragementToolsMixin
 from apps.createDocument.extensions.tools import demand_sort_by_designKey, set_table_border_by_cell_position
 from apps.createDocument.extensions.table_creator import create_table_context, RoundType, uniform_static_dynamic_response
 
-# @api_controller("/generate", tags=['生成大纲文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller("/generate", tags=['生成大纲文档'])
+@api_controller("/generate", tags=['生成大纲文档'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateControllerDG(ControllerBase, FragementToolsMixin):
     logger = GenerateLogger('测评大纲')
 

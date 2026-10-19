@@ -3,6 +3,8 @@ from pathlib import Path
 from django.db.models import QuerySet
 # 导入django、ninja等模块
 from ninja_extra import api_controller, ControllerBase, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 # 导入文档处理模块
@@ -19,8 +21,8 @@ from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 
 gloger = GenerateLogger("问题单二段文档")
 
-# @api_controller("/generateWtd", tags=['生成问题单文档系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller('/generateWtd', tags=['生成问题单文档系列'])
+@api_controller('/generateWtd', tags=['生成问题单文档系列'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateControllerWtd(ControllerBase):
     @route.get("/create/problem", url_name="create-problem")
     @transaction.atomic

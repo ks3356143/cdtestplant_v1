@@ -1,5 +1,7 @@
 from datetime import date
 from ninja_extra import api_controller, ControllerBase, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 from typing import Literal
 from apps.project.models import Project
 from django.db import transaction
@@ -16,7 +18,8 @@ class AIPostSchema(Schema):
     project_type: Literal["cpu", "fpga"]
 
 # AI测试接口
-@api_controller("/local_doc_qa", tags=['AI测试接口'])
+@api_controller("/local_doc_qa", tags=['AI测试接口'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class AITestController(ControllerBase):
     """AI测试接口：自定义延迟"""
 
@@ -39,7 +42,8 @@ class AITestController(ControllerBase):
             return ChenResponse(data={}, message="调用大模型接口失败，请联系管理员", code=502, status=502)
 
 # 这是其他common内容接口
-@api_controller("/system", tags=['通用接口'])
+@api_controller("/system", tags=['通用接口'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class CommonController(ControllerBase):
     """通用接口类：工作台内的信息"""
 

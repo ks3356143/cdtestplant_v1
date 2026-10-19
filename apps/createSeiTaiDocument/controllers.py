@@ -31,8 +31,8 @@ from apps.createSeiTaiDocument.docXmlUtils import get_jinja_stdContent_element, 
 
 main_download_path = Path.cwd() / 'media'
 
-# @api_controller("/create", tags=['生成产品文档接口'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller("/create", tags=['生成产品文档接口'])
+@api_controller("/create", tags=['生成产品文档接口'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateSeitaiController(ControllerBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -334,7 +334,9 @@ class GenerateSeitaiController(ControllerBase):
                 print('未查找的文本片段变量：', alias)
 
     # 二段式非阻塞下载文件接口（只读流式响应，无 DB 写，无需事务）
-    @route.get('/download/{token}', url_name='download-with-token')
+    # 该接口由前端 iframe 直接发起，浏览器不会带上 Authorization 头，
+    # 因此按"一次性下载令牌"鉴权（令牌短时效、用后失效），在此显式关闭 JWT 校验。
+    @route.get('/download/{token}', url_name='download-with-token', auth=None)
     def download_file_with_token(self, token: str):
         file_path = get_file_by_token(token)
         if not file_path:
@@ -386,7 +388,8 @@ documentType_to_dir = {
 }
 
 # 处理文档片段相关请求
-@api_controller('/createfragment', tags=['生成文档-文档片段接口集合'])
+@api_controller('/createfragment', tags=['生成文档-文档片段接口集合'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class CreateFragmentController(ControllerBase):
     @route.get("/get_fragments", url_name='get-fragments')
     def get_fragements(self, id: int, documentType: str):
@@ -479,7 +482,8 @@ def digit_to_chinese(num):
     return ''.join(parts).rstrip('零')
 
 # 处理用户上传有文档片段的产品文档文件：注意回归测试说明、回归测试记录需要单独处理
-@api_controller('/documentUpload', tags=['生成文档-上传模版文档接口'])
+@api_controller('/documentUpload', tags=['生成文档-上传模版文档接口'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class UploadDocumentController(ControllerBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

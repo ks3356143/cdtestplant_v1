@@ -215,7 +215,8 @@ class DutController(ControllerBase):
             return ChenResponse(code=400, status=400, message='被测件不存在，请检查...')
         return ChenResponse(code=200, status=200, data={'dut_type': dut.type})
 
-@api_controller("/dut_upload", tags=['上传源代码/上传需求规格说明解析'])
+@api_controller("/dut_upload", tags=['上传源代码/上传需求规格说明解析'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class UploadController(ControllerBase):
     # 上传zip、7z、rar压缩文件然后计算圈复杂度等信息
     @route.post("/upload_file", url_name='dut-upload-file')

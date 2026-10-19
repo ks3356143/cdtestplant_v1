@@ -1,6 +1,8 @@
 from pathlib import Path
 # 导入框架东西
 from ninja_extra import ControllerBase, api_controller, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 # 框架组件
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -21,8 +23,8 @@ from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.documentTime import DocTime
 
-# @api_controller("/generateSM", tags=['生成说明文档系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller("/generateSM", tags=['生成说明文档系列'])
+@api_controller("/generateSM", tags=['生成说明文档系列'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateControllerSM(ControllerBase):
     @route.get("/create/techyiju", url_name="create-techyiju-sm")
     @transaction.atomic

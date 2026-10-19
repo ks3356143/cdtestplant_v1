@@ -1,6 +1,8 @@
 from copy import deepcopy
 from pathlib import Path
 from ninja_extra import api_controller, ControllerBase, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.db.models import QuerySet
 from docxtpl import DocxTemplate
@@ -20,8 +22,8 @@ from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 
 chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
-# @api_controller("/generateHSM", tags=['生成回归记录系列文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller("/generateHJL", tags=['生成回归记录系列文档'])
+@api_controller("/generateHJL", tags=['生成回归记录系列文档'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateControllerHJL(ControllerBase):
     logger = GenerateLogger('回归测试记录')
 

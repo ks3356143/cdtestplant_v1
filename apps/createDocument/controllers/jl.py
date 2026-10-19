@@ -4,6 +4,8 @@ from pathlib import Path
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from ninja_extra import api_controller, ControllerBase, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 # 导入数据库模型
 from apps.project.models import Project
 from apps.dict.models import Dict
@@ -18,8 +20,8 @@ from utils.path_utils import project_path
 from apps.createDocument.extensions.parse_rich_text import RichParser
 from apps.createDocument.extensions.util import build_testtype_output
 
-# @api_controller("/generateJL", tags=['生成测试记录系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller("/generateJL", tags=['生成测试记录系列'])
+@api_controller("/generateJL", tags=['生成测试记录系列'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateControllerJL(ControllerBase):
     @route.get("/create/caserecord", url_name="create-caserecord")
     @transaction.atomic

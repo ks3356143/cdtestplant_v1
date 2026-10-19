@@ -20,6 +20,7 @@ EVENT_LOG_PURGE = 'log_purge'
 EVENT_LOG_PURGE_DENIED = 'log_purge_denied'
 EVENT_INTEGRITY_CHECK = 'integrity_check'
 EVENT_INTEGRITY_BROKEN = 'integrity_broken'
+EVENT_SECURITY_SCAN = 'security_scan'
 
 # 告警类事件（审计页红色高亮 + "只看告警"筛选）
 ALERT_EVENTS = (EVENT_ACCOUNT_LOCK, EVENT_ACCESS_DENIED, EVENT_LOG_PURGE_DENIED, EVENT_INTEGRITY_BROKEN)
@@ -38,6 +39,7 @@ EVENT_LABELS = {
     EVENT_LOG_PURGE_DENIED: '日志删除告警',
     EVENT_INTEGRITY_CHECK: '完整性核查',
     EVENT_INTEGRITY_BROKEN: '数据篡改告警',
+    EVENT_SECURITY_SCAN: '安全性检测分析',
 }
 
 

@@ -124,7 +124,8 @@ class UserManageController(ControllerBase):
         return user
 
     # 给前端传所有用户当做字典
-    @route.get('/list', response=List[UserRetrieveOutSchema], url_name="user_list", auth=None)
+    # 注意：该接口返回含姓名/电话/角色/密级的用户清单，必须要求登录（原实现 auth=None 可匿名拉取）
+    @route.get('/list', response=List[UserRetrieveOutSchema], url_name="user_list")
     @transaction.atomic
     def list_user(self, project_id: int = None):
         """如果传了project_id则返回项目中的成员而非全部用户"""

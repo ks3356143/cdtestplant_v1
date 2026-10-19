@@ -1,6 +1,8 @@
 from datetime import date, timedelta
 from pathlib import Path
 from ninja_extra import api_controller, ControllerBase, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
@@ -40,8 +42,8 @@ def get_last_so_dut(project_obj: Project) -> Optional[Dut]:
             break
     return last_dut_so
 
-# @api_controller("/generateBG", tags=['生成报告文档系列'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller("/generateBG", tags=['生成报告文档系列'])
+@api_controller("/generateBG", tags=['生成报告文档系列'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateControllerBG(ControllerBase):
     logger = GenerateLogger('测评报告')
 

@@ -25,6 +25,18 @@ const SECURITY = {
                 title: "登录失败锁定策略",
                 roles: ["*"]
             }
+        },
+        {
+            path: "selfcheck",
+            name: "selfcheck",
+            component: () => import("@/views/security/selfcheck/index.vue"),
+            meta: {
+                requiresAuth: true,
+                locale: "安全性检测分析",
+                icon: "icon-search",
+                title: "安全性检测分析",
+                roles: ["*"]
+            }
         }
     ]
 }

@@ -2,6 +2,8 @@ from pathlib import Path
 from copy import deepcopy
 from typing import Union
 from ninja_extra import api_controller, ControllerBase, route
+from ninja_extra.permissions import IsAuthenticated
+from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from django.db.models import QuerySet, Q
@@ -29,8 +31,8 @@ from apps.project.models import StaticSoftItem, StaticSoftHardware, DynamicSoftT
 
 chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
-# @api_controller("/generateHSM", tags=['生成回归说明系列文档'], auth=JWTAuth(), permissions=[IsAuthenticated])
-@api_controller("/generateHSM", tags=['生成回归说明系列文档'])
+@api_controller("/generateHSM", tags=['生成回归说明系列文档'],
+                auth=JWTAuth(), permissions=[IsAuthenticated])
 class GenerateControllerHSM(ControllerBase):
     logger = GenerateLogger('回归测试说明')
 
