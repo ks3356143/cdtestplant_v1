@@ -27,6 +27,8 @@ media/*/final_seitai/
 media/*/temp/
 media/*/reuse/
 media/**/temporary/
+# 数据备份产物（7.1.9）：内含全量业务数据，不入库
+media/backup/
 
 # Office 临时锁文件
 ~$*

@@ -143,3 +143,39 @@ class SecurityPolicy(models.Model):
         """取单例策略行，不存在则按默认值创建（用 get_or_create 避免并发下建出两条单例行）"""
         obj, _ = cls.objects.get_or_create()
         return obj
+
+
+class BackupRecord(models.Model):
+    """数据备份记录（GB/T 28452-2012 第三级 7.1.9 备份与故障恢复）
+
+    备份文件落在 media/backup/ 下，记录 SHA-256 摘要与条数便于事后核对完整性；
+    记录本身只增不改，包含的数据内容由 file_name 指向的 JSON 文件承载。
+    """
+    KIND_CHOICES = (('full', '全量备份'), ('incremental', '增量备份'))
+
+    id = models.BigAutoField(primary_key=True, help_text="Id", verbose_name="Id")
+    name = models.CharField(max_length=200, verbose_name="备份名称", help_text="备份名称")
+    kind = models.CharField(max_length=16, choices=KIND_CHOICES, default='full', verbose_name="备份类型")
+    scope_label = models.CharField(max_length=200, default='全部数据', verbose_name="备份范围")
+    scope_project_id = models.BigIntegerField(null=True, blank=True, verbose_name="范围项目ID",
+                                              help_text="按项目备份时记录项目ID；全部数据为 NULL")
+    file_name = models.CharField(max_length=255, verbose_name="备份文件名")
+    size_bytes = models.BigIntegerField(default=0, verbose_name="文件大小")
+    record_count = models.IntegerField(default=0, verbose_name="数据条数")
+    digest = models.CharField(max_length=64, default='', verbose_name="SHA-256 摘要")
+    status = models.CharField(max_length=16, default='success', verbose_name="备份结果")
+    message = models.CharField(max_length=255, null=True, blank=True, verbose_name="说明")
+    creator = models.ForeignKey(to=settings.AUTH_USER_MODEL, null=True, blank=True, db_constraint=False,
+                                related_name='backup_records', verbose_name='创建人',
+                                on_delete=models.SET_NULL)
+    create_datetime = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+    update_datetime = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name="更新时间")
+
+    class Meta:
+        db_table = 'system_backup_record'
+        verbose_name = '数据备份记录'
+        verbose_name_plural = verbose_name
+        ordering = ('-create_datetime',)
+
+    def __str__(self):
+        return f'备份[{self.name}]{self.get_kind_display()}-{self.record_count}条'

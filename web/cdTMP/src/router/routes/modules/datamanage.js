@@ -47,6 +47,18 @@ const DATAMANAGE = {
                 icon: "icon-scissor",
                 title: "缩略语"
             }
+        },
+        {
+            path: "backup",
+            name: "backup",
+            component: () => import("@/views/datamanage/backup/index.vue"),
+            meta: {
+                requiresAuth: true,
+                roles: ["*"],
+                locale: "数据备份与恢复",
+                icon: "icon-cloud",
+                title: "数据备份与恢复"
+            }
         }
     ]
 }
