@@ -23,6 +23,7 @@ from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSche
     TestDemandMultiCreateInputSchema
 # 导入工具
 from apps.project.tools.copyDemand import demand_copy_to_design
+from apps.project.tools.integrity import refresh_tags
 from apps.project.tools.delete_change_key import demand_delete_sub_node_key
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tool.batchTools import parse_test_content_string
@@ -286,7 +287,6 @@ class TestDemandController(ControllerBase):
             for case in cases:
                 case.ident = testDemand_qs.ident
             if cases:
-                from apps.project.tools.integrity import refresh_tags
                 Case.objects.bulk_update(cases, ['ident'])
                 refresh_tags(cases)
         testDemand_qs.save()
@@ -414,6 +414,9 @@ class TestDemandController(ControllerBase):
             )
         # 5.提交更新
         replace_count = demand_qs.update(**replace_kwargs)
+        # 批量 update 不触发 post_save，需补刷完整性标签（7.1.7 写后自动刷新）
+        if replace_count:
+            refresh_tags(list(TestDemand.objects.filter(id__in=payload.selectRows)))
         return {'count': replace_count + step_count}
 
     # 批量替换优先级-priority
@@ -428,4 +431,5 @@ class TestDemandController(ControllerBase):
             return ChenResponse(status=400, code=400,
                                 message='部分测试项不属于当前项目或已被删除，已拒绝批量修改')
         demand_qs.update(priority=payload.priority)
+        refresh_tags(list(TestDemand.objects.filter(id__in=payload.selectRows)))
         return ChenResponse(message="批量替换优先级成功", data={'count': affected})

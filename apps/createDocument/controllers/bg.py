@@ -381,7 +381,7 @@ class GenerateControllerBG(ControllerBase):
         # 每个轮次都需要生成一个测试内容和标题
         project_path_str = project_path(id)
         for round_str in round_str_list:
-            context, round_obj = create_round_context(project_obj, round_str)
+            context, round_obj = create_round_context(project_obj, round_str, self.context.request)
             template_path = Path.cwd() / 'media' / project_path_str / 'form_template' / 'bg' / '测试内容和结果_第二轮次.docx'
             doc = DocxTemplate(template_path)
             # ~~~额外添加：除第一轮次的影响域分析~~~

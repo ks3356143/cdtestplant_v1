@@ -20,10 +20,17 @@ _PROTECTED_CACHE = None
 
 
 def protected_models():
-    """懒加载登记表（避免 app 加载期 import 循环）"""
+    """懒加载登记表（避免 app 加载期 import 循环）
+
+    数据分级（GB/T 28452-2012 7.1.7）：
+    - 重要数据：项目结论、用例及执行结果、问题单——直接决定测评结论，破损影响最大
+    - 一般数据：轮次、被测件、设计需求、测试项——业务过程数据，同样需要防篡改
+    - 公开数据：字典/公告/缩略语等参考数据，仅要求传输保护，不做存储标签
+    """
     global _PROTECTED_CACHE
     if _PROTECTED_CACHE is None:
-        from apps.project.models import Project, Case, CaseStep, Problem
+        from apps.project.models import Project, Case, CaseStep, Problem, Round, Dut, Design, TestDemand
+        # 重要数据
         register(Project, ['ident', 'name', 'beginTime', 'endTime', 'duty_person', 'member',
                            'secret', 'security_level', 'test_level', 'report_type', 'step',
                            'quality_person', 'vise_person', 'config_person', 'soft_type'])
@@ -32,12 +39,23 @@ def protected_models():
         register(CaseStep, ['expect', 'passed'])  # 用例步骤执行结果：关键业务判定数据
         register(Problem, ['ident', 'name', 'status', 'grade', 'type', 'closeMethod',
                            'postPerson', 'postDate', 'operation'])
+        # 一般数据
+        register(Round, ['ident', 'name', 'beginTime', 'endTime', 'grade', 'location',
+                         'best_condition_voltage', 'best_condition_tem',
+                         'typical_condition_voltage', 'typical_condition_tem',
+                         'low_condition_voltage', 'low_condition_tem'])
+        register(Dut, ['ident', 'type', 'name', 'version', 'release_union', 'release_date', 'ref',
+                       'total_lines', 'effective_lines', 'comment_lines'])
+        register(Design, ['ident', 'name', 'demandType', 'description', 'chapter', 'type',
+                          'is_bidirectional'])
+        register(TestDemand, ['ident', 'name', 'adequacy', 'priority', 'testType', 'testMethod',
+                              'testDesciption'])
         _PROTECTED_CACHE = PROTECTED_MODELS
     return _PROTECTED_CACHE
 
 
 def _normalize(value):
-    """参与摘要的值标准化：日期等对象转 str；None→''"""
+    """参与摘要的值标准化：日期等对象转 str；None→''（保持与既有标签一致的序列化方式）"""
     if value is None:
         return ''
     return str(value)
@@ -101,6 +119,87 @@ def refresh_tags(instances) -> int:
     if to_update:
         DataIntegrityTag.objects.bulk_update(to_update, ['digest', 'algorithm', 'update_datetime'])
     return len(to_create) + len(to_update)
+
+
+def verify_instance(instance):
+    """校验单条受保护数据（使用前检测用）。
+
+    返回 {intact, stored, actual, backfilled}；模型不受保护或没有主键时返回 None。
+    历史数据尚无标签时先补建基准并视为完好（下一次写入后即为真标签）。
+    """
+    from apps.system.models import DataIntegrityTag
+    entry = next((e for e in protected_models() if e['model'] is type(instance)), None)
+    if entry is None or not getattr(instance, 'pk', None):
+        return None
+    table = instance._meta.db_table
+    tag = DataIntegrityTag.objects.filter(table_name=table, object_id=str(instance.pk)).first()
+    actual = compute_digest(instance, entry['fields'])
+    if tag is None:
+        refresh_tag(instance)
+        return {'intact': True, 'stored': '', 'actual': actual[:16], 'backfilled': True}
+    return {'intact': actual == tag.digest, 'stored': tag.digest[:16], 'actual': actual[:16],
+            'backfilled': False}
+
+
+def ensure_intact(instance, request=None, action='使用'):
+    """使用前完整性校验：发现破损即审计告警并拒绝继续（7.1.7 b/e）"""
+    from ninja.errors import HttpError
+    result = verify_instance(instance)
+    if result is None or result['intact']:
+        return True
+    from utils.audit import audit_log, EVENT_INTEGRITY_BROKEN
+    label = getattr(instance, 'ident', None) or getattr(instance, 'name', None) or instance.pk
+    audit_log(request, EVENT_INTEGRITY_BROKEN,
+              f'安全告警：{action}前完整性校验失败 {instance._meta.verbose_name} {label}'
+              f'（{instance._meta.db_table}#{instance.pk}），'
+              f'标签 {result["stored"]}… ≠ 重算 {result["actual"]}…，已拒绝继续使用',
+              success=False)
+    raise HttpError(409, '数据完整性校验失败：该记录疑似被绕过应用篡改，已拒绝使用并记录告警')
+
+
+def verify_round(project_obj, round_key):
+    """报告生成前校验本轮涉及数据（项目/轮次/被测件/设计/测试项/用例/问题单）。
+
+    返回破损记录列表；空列表表示完好。历史数据无标签时按 verify_instance 规则补建基准。
+    """
+    from apps.project.models import Design, TestDemand, Case, CaseStep, Problem
+    broken = []
+    to_check = [project_obj]
+    round_obj = project_obj.pField.filter(key=str(round_key)).first()
+    if round_obj:
+        to_check.append(round_obj)
+        to_check.extend(round_obj.rdField.all())
+        to_check.extend(Design.objects.filter(round=round_obj))
+        to_check.extend(TestDemand.objects.filter(round=round_obj))
+        to_check.extend(Case.objects.filter(round=round_obj))
+        to_check.extend(CaseStep.objects.filter(case__round=round_obj))
+        to_check.extend(Problem.objects.filter(project=project_obj))
+    for instance in to_check:
+        result = verify_instance(instance)
+        if result is not None and not result['intact']:
+            broken.append({
+                'label': f'{instance._meta.verbose_name} '
+                         f'{getattr(instance, "ident", None) or getattr(instance, "name", None) or instance.pk}',
+                'table': instance._meta.db_table,
+                'id': instance.pk,
+                'stored': result['stored'],
+                'actual': result['actual'],
+            })
+    return broken
+
+
+def ensure_round_intact(project_obj, round_key, request=None, action='生成报告'):
+    """生成报告等使用场景前的整轮完整性校验：发现破损即告警并拒绝继续"""
+    from ninja.errors import HttpError
+    broken = verify_round(project_obj, round_key)
+    if not broken:
+        return True
+    from utils.audit import audit_log, EVENT_INTEGRITY_BROKEN
+    detail = '；'.join(f'{b["label"]}（{b["table"]}#{b["id"]}）' for b in broken[:5])
+    audit_log(request, EVENT_INTEGRITY_BROKEN,
+              f'安全告警：{action}前完整性校验失败，共 {len(broken)} 条数据破损：{detail}，已拒绝继续',
+              success=False)
+    raise HttpError(409, f'数据完整性校验失败：{len(broken)} 条数据疑似被篡改（{detail}），已拒绝继续并记录告警')
 
 
 def verify_all():

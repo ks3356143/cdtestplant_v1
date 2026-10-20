@@ -26,6 +26,7 @@ from apps.project.schemas.case import DeleteSchema, CaseModelOutSchema, CaseFilt
 from utils.util import get_testType
 from utils.codes import HTTP_INDEX_ERROR, HTTP_EXISTS_CASES
 from apps.project.tools.copyCase import case_move_to_test, case_copy_to_test, case_to_case_copy_or_move
+from apps.project.tools.integrity import ensure_intact, refresh_tags
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tool.batchTools import parse_case_content_string
 
@@ -130,6 +131,10 @@ class CaseController(ControllerBase):
         project_obj = get_object_or_404(Project, id=projectId)
         case = project_obj.pcField.filter(key=key).first()
         if case:
+            # 7.1.7：数据使用前做完整性检测，破损则拒绝返回并告警
+            ensure_intact(case, self.context.request, '读取用例')
+            for step in case.step.all():
+                ensure_intact(step, self.context.request, '读取用例步骤')
             setattr(case, "testStep", case.step.all().values())
             setattr(case, 'testType', get_testType(case.test.testType, dict_code='testType'))
             return case
@@ -142,6 +147,9 @@ class CaseController(ControllerBase):
         case = Case.objects.filter(id=id).first()
         if case:
             check_project_access(case.project, self.context.request.user)
+            ensure_intact(case, self.context.request, '读取用例')
+            for step in case.step.all():
+                ensure_intact(step, self.context.request, '读取用例步骤')
             setattr(case, "testStep", case.step.all().values())
             setattr(case, 'testType', get_testType(case.test.testType, dict_code='testType'))
             return case
@@ -454,6 +462,11 @@ class CaseController(ControllerBase):
             )
         # 5.提交更新
         replace_count = case_qs.update(**replace_kwargs)
+        # 批量 update 不触发 post_save，需补刷完整性标签（7.1.7 写后自动刷新）
+        if replace_count:
+            refresh_tags(list(Case.objects.filter(id__in=payload.selectRows)))
+        if step_count:
+            refresh_tags(list(CaseStep.objects.filter(case__id__in=payload.selectRows)))
         return {'count': replace_count + step_count}
 
     # 批量替换设计人员、执行人员、审核人员
@@ -473,6 +486,9 @@ class CaseController(ControllerBase):
             replace_count += case_qs.update(testPerson=payload.testPerson)
         if payload.monitorPerson != '不替换' and payload.monitorPerson != '':
             replace_count += case_qs.update(monitorPerson=payload.monitorPerson)
+        # 批量 update 不触发 post_save，需补刷完整性标签（7.1.7 写后自动刷新）
+        if replace_count:
+            refresh_tags(list(Case.objects.filter(id__in=payload.selectRows)))
         return ChenResponse(message="批量替换成功", data={'count': replace_count})
 
     # 批量替换时间
@@ -507,6 +523,7 @@ class CaseController(ControllerBase):
             case.exe_time = formatted_date
             updated_cases.append(case)
         Case.objects.bulk_update(updated_cases, ['exe_time'])
+        refresh_tags(updated_cases)
         return ChenResponse(status=200, code=200, data=len(updated_cases),
                             message=f"成功更新{len(updated_cases)}个用例执行时间")
 

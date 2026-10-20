@@ -5,7 +5,7 @@ from django.db.models import Q
 from ninja.errors import HttpError
 from apps.createDocument.extensions.parse_rich_text import RichParser
 
-def create_round_context(project_obj: Project, round_id: str):
+def create_round_context(project_obj: Project, round_id: str, request=None):
     """根据轮次，生成测评报告中的测评结果"""
     # 0. 首先定义个轮次对应中文
     round_id = int(round_id)
@@ -15,6 +15,9 @@ def create_round_context(project_obj: Project, round_id: str):
     # 如果没有轮次对象则抛出错误【契约统一：抛 HttpError，调用方按元组解包】
     if not round_obj:
         raise HttpError(400, f'注意您没有设置第{round_id}轮测试，请添加!')
+    # 1.1 报告生成属于对数据的“使用”，生成前整轮校验完整性（7.1.7 b/e）
+    from apps.project.tools.integrity import ensure_round_intact
+    ensure_round_intact(project_obj, round_str_id, request, '生成测评报告')
     dut_qs_r2 = round_obj.rdField  # 当前轮被测件dut对象qs
     dut_qs_r1 = project_obj.pdField.filter(round__key=str(round_id - 1))  # 上一个轮次被测件dut对象qs
 

@@ -23,6 +23,7 @@ from apps.project.schemas.design import DeleteSchema, DesignFilterSchema, Design
     DesignTreeInputSchema, DesignCreateOutSchema, DesignCreateInputSchema, MultiDesignCreateInputSchema, \
     ReplaceDesignContentSchema
 from apps.project.tools.delete_change_key import design_delete_sub_node_key
+from apps.project.tools.integrity import refresh_tags
 from utils.smallTools.interfaceTools import conditionNoneToBlank
 from apps.project.tools.auto_create_data import auto_create_renji
 from apps.project.tool.dragAndDrop import DesignDrapAtoB
@@ -282,6 +283,9 @@ class DesignController(ControllerBase):
         }
         # 4.提交更新
         replace_count = design_qs.update(**replace_kwargs)
+        # 批量 update 不触发 post_save，需补刷完整性标签（7.1.7 写后自动刷新）
+        if replace_count:
+            refresh_tags(list(Design.objects.filter(id__in=payload.selectRows)))
         return {'count': replace_count}
 
     # 点击生成人机交互界面测试-注意必须要有界面的软件
