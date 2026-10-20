@@ -13,19 +13,10 @@ import wtdGenerateApi from "@/api/generate/wtdGenerate"
 const useGenerateSecond = function () {
     // refs
     const isGenerating = ref(false) // 在二级文档生成过程中禁用按钮点击
-    // 用于显示是否正在加载（全部按钮各一个）
-    const isDgLoading = ref(false)
-    const isSmLoading = ref(false)
-    const isBgLoading = ref(false)
-    const isJlloading = ref(false)
-    const ishsmLoading = ref(false)
-    const ishjlLoading = ref(false)
-    const isWtdLoading = ref(false)
     // events
     // 大纲生成二级文档
     const createDgItem = async (id: number) => {
         isGenerating.value = true
-        isDgLoading.value = true
         await Promise.all([
             dgGenerateApi.createTestDemand({ id }), // 生成第一轮测试项
             dgGenerateApi.createYiju({ id }), // 生成依据文件
@@ -60,13 +51,11 @@ const useGenerateSecond = function () {
             dgGenerateApi.createIndicates({ id }) // 生成主要功能和性能指标（包括摸底）
         ]).finally(() => {
             isGenerating.value = false
-            isDgLoading.value = false
         })
     }
     // 说明生成二级文档
     const createSmItem = async (id: number) => {
         isGenerating.value = true
-        isSmLoading.value = true
         await Promise.all([
             dgGenerateApi.createSoftComposition({ id }), // 生成测评对象 - 和大纲一样
             dgGenerateApi.createInterface({ id }), // 生成被测软件接口 - 和大纲重复 - 可能会删除
@@ -88,13 +77,11 @@ const useGenerateSecond = function () {
             smGenerateApi.createSMTrack({ id }) // 生成说明追踪
         ]).finally(() => {
             isGenerating.value = false
-            isSmLoading.value = false
         })
     }
     // 记录生成二级文档
     const createJLItem = async (id: number) => {
         isGenerating.value = true
-        isJlloading.value = true
         await Promise.all([
             // 生成-被测软件基本信息 - 和大纲一样
             dgGenerateApi.createBaseInformation({ id }),
@@ -102,13 +89,11 @@ const useGenerateSecond = function () {
             jlGenerateApi.createJLcaserecord({ id })
         ]).finally(() => {
             isGenerating.value = false
-            isJlloading.value = false
         })
     }
     // 回归测试说明二级文档
     const createHsmItem = async (id: number) => {
         isGenerating.value = true
-        ishsmLoading.value = true
         await Promise.all([
             hsmGenerateApi.deleteHSMFiles({ id }), // 先删除以前文件
             hsmGenerateApi.createBasicInfo({ id }),
@@ -133,35 +118,29 @@ const useGenerateSecond = function () {
             dgGenerateApi.createEnvDiff({ id }) // 生成-环境差异性分析
         ]).finally(() => {
             isGenerating.value = false
-            ishsmLoading.value = false
         })
     }
     // 回归测试记录二级文档
     const createHjlItem = async (id: number) => {
         isGenerating.value = true
-        ishjlLoading.value = true
         await Promise.all([
             hjlGenerateApi.deleteHJLFiles({ id }), // 先调用删除文件夹里面文件
             hjlGenerateApi.createBasicInfo({ id }),
             hjlGenerateApi.createCaseinfo({ id })
         ]).finally(() => {
             isGenerating.value = false
-            ishjlLoading.value = false
         })
     }
     // 问题单二级文档
     const createWtdItem = async (id: number) => {
         isGenerating.value = true
-        isWtdLoading.value = true
         await wtdGenerateApi.createWtdTable({ id }).finally(() => {
             isGenerating.value = false
-            isWtdLoading.value = false
         })
     }
     // 报告生成二级文档
     const createBgItem = async (id: number) => {
         isGenerating.value = true
-        isBgLoading.value = true
         await Promise.all([
             bgGenerateApi.deleteBGFiles({ id }), // 删除output/bg文件夹下文件
             bgGenerateApi.createBgTechYiju({ id }),
@@ -198,18 +177,10 @@ const useGenerateSecond = function () {
             dgGenerateApi.createTopFile({ id }) // 生成顶层技术文件
         ]).finally(() => {
             isGenerating.value = false
-            isBgLoading.value = false
         })
     }
     return {
         isGenerating,
-        isDgLoading,
-        isSmLoading,
-        isBgLoading,
-        isJlloading,
-        ishsmLoading,
-        ishjlLoading,
-        isWtdLoading,
         createJLItem,
         createSmItem,
         createDgItem,
