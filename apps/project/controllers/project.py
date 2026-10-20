@@ -59,8 +59,10 @@ class ProjectController(ControllerBase):
         member_list = [value for key, value in self.context.request.GET.items() if 'member' in key]
         qs = Project.objects.filter(
             ident__icontains=filters.ident, name__icontains=filters.name,
-            duty_person__icontains=filters.duty_person, step__icontains=filters.step,
+            duty_person__icontains=filters.duty_person,
             member__contains=member_list).order_by("-create_datetime")
+        # step 允许为空：新建项目未填阶段时 NULL 会被 LIKE '%%' 过滤掉，这里补上 NULL 行
+        qs = _icontains_or_null(qs, 'step', filters.step)
         if start_time or end_time:
             qs = qs.filter(beginTime__range=[start_time or '2000-01-01', end_time or '9999-01-01'])
         # 下面三个字段同样允许为空：LIKE '%%' 对 NULL 恒为假，会把未填的项目滤掉，

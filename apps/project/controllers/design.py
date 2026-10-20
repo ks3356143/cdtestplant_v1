@@ -116,6 +116,8 @@ class DesignController(ControllerBase):
                                  dut__key=dut_key,
                                  ident=payload.ident).exists() and asert_dict['ident'] != "":
             return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
+        # 锁住父被测件行，串行分配设计需求 key，避免并发 count 冲突
+        Dut.objects.select_for_update().filter(project__id=payload.project_id, key=dut_key).first()
         # 查询当前key应该为多少
         design_count = Design.objects.filter(project__id=payload.project_id, dut__key=dut_key).count()
         key_string = ''.join([dut_key, "-", str(design_count)])

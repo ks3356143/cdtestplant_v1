@@ -174,6 +174,9 @@ class CaseController(ControllerBase):
         # 构造demand_key
         test_whole_key = "".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key])
+        # 锁住父测试项行，串行分配用例 key，避免并发创建拿到相同 count
+        TestDemand.objects.select_for_update().filter(
+            project__id=payload.project_id, key=test_whole_key).first()
         # 查询当前key应该为多少
         case_count = Case.objects.filter(project__id=payload.project_id,  # type:ignore
                                          test__key=test_whole_key).count()
@@ -231,6 +234,8 @@ class CaseController(ControllerBase):
             demand_obj = demands.filter(key=demand_key).first()
             if not demand_obj:
                 return ChenResponse(status=400, code=60004, message=f'测试项不存在：{demand_key}，请检查')
+            # 锁住父测试项行，批量创建时串行分配用例 key
+            TestDemand.objects.select_for_update().filter(pk=demand_obj.pk).first()
             case_count = demand_obj.tcField.count()
             key_string = ''.join([demand_key, "-", str(case_count)])
             keys.append(key_string)

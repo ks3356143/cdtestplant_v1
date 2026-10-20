@@ -65,7 +65,17 @@
                 </template>
                 <template #sequence="{ rowIndex }">
                     <a-form-item :field="`${rowIndex}.sequence`" hide-label>
-                        <ma-editor v-model="formData[rowIndex].sequence" style="width: 100%" :id="'sequence' + rowIndex"></ma-editor>
+                        <!-- 富文本编辑器较重，按需挂载：点击后才创建，避免每行一个 tinymce 实例 -->
+                        <ma-editor
+                            v-if="openedEditorRows.has(formData[rowIndex])"
+                            v-model="formData[rowIndex].sequence"
+                            style="width: 100%"
+                            :id="'sequence' + rowIndex"
+                        ></ma-editor>
+                        <a-button v-else type="text" long @click="openSequenceEditor(formData[rowIndex])">
+                            <template #icon><icon-edit /></template>
+                            点击编辑时序图
+                        </a-button>
                     </a-form-item>
                 </template>
                 <template #test_step="{ rowIndex }">
@@ -131,6 +141,13 @@ const handleDraggleChange = (_data: any) => {
 const formRef = ref<FormInstance>()
 const formData = ref<CaseUserType[]>([{ ...initCaseData }])
 const isLastOne = computed(() => formData.value.length <= 1)
+// 已展开富文本编辑器的行（按行对象记录，拖拽排序后仍能对应）
+const openedEditorRows = ref(new Set<CaseUserType>())
+const openSequenceEditor = (row: CaseUserType) => {
+    openedEditorRows.value.add(row)
+    // Set 的 add 不触发响应式更新，重新赋值一次
+    openedEditorRows.value = new Set(openedEditorRows.value)
+}
 
 // hooks-提前获取信息
 const { fetchOptionsData, casecadeOptions } = useCasecadeOptions() // 获取当前轮次归属测试项
@@ -158,6 +175,7 @@ const handleDelete = (index: number) => {
 }
 const handleDeleteAll = () => {
     formData.value = [{ ...initCaseData }]
+    openedEditorRows.value = new Set()
 }
 
 defineExpose({ open })

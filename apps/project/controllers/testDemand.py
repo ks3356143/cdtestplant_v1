@@ -131,6 +131,8 @@ class TestDemandController(ControllerBase):
             raise HttpError(400, '缺少归属轮次/被测件/设计需求参数，请刷新页面后重试')
         # 构造design_key
         design_key = "".join([payload.round_key, "-", payload.dut_key, '-', payload.design_key])
+        # 锁住父设计需求行，串行分配测试项 key，避免并发 count 冲突
+        Design.objects.select_for_update().filter(project__id=payload.project_id, key=design_key).first()
         # 查询当前key应该为多少
         test_demand_count = TestDemand.objects.filter(project__id=payload.project_id,
                                                       design__key=design_key).count()

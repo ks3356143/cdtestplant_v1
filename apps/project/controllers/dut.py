@@ -83,7 +83,8 @@ class DutController(ControllerBase):
         if Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
                               ident=payload.ident).exists():
             return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
-        # 查询当前key应该为多少
+        # 查询当前key应该为多少（先锁住轮次行，串行分配被测件 key，避免并发 count 冲突）
+        Round.objects.select_for_update().filter(project__id=payload.project_id, key=payload.round_key).first()
         dut_count = Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key).count()
         key_string = ''.join([payload.round_key, "-", str(dut_count)])
         # 然后在标识后面加上UT+KEY -> 注意删除时也改了key要对应修改blink1->>>>>>

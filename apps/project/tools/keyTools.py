@@ -9,7 +9,7 @@ def _fetch_or_raise(model, message: str, **filters):
     """按条件取第一条，取不到则抛出明确错误（统一判空，避免坏 key 直接 AttributeError 崩溃）"""
     obj = model.objects.filter(**filters).first()
     if obj is None:
-        raise HttpError(500, message=message)
+        raise HttpError(404, message=message)
     return obj
 
 class TreeKey(object):

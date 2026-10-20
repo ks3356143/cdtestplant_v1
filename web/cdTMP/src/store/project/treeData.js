@@ -66,48 +66,61 @@ const useTreeDataStore = defineStore("treeDataStore", {    state: () => {
         },
         // 新增删除dut后更新树状显示-注意传的key是dut下面的design的key
         async updateDutTreeData(data, projrctId) {
+            if (!data?.key) return
             let temp = data.key.split("-")
             temp.pop(-1)
             let roundKey = temp[0]
-            const nodeKey = temp.join("-")
-            const res = await projectApi.getDutInfo(projrctId, nodeKey, "0") // nodeKey:'0'
-            this.treeData[roundKey].children = res.data
+            const roundNode = this.treeData?.[roundKey]
+            // 直达链接或树未展开时层级可能不存在，回退为整树刷新，避免 undefined.xxx 报错
+            // 树未加载到该层级时无需更新，展开时会懒加载最新数据
+            if (!roundNode) return
+            const res = await projectApi.getDutInfo(projrctId, temp.join("-"), "0") // nodeKey:'0'
+            roundNode.children = res?.data ?? []
         },
         // 新增删除designDemand后tree显示-注意传的是测试项的key
         async updateDesignDemandTreeData(data, projrctId) {
+            if (!data?.key) return
             let temp = data.key.split("-")
             temp.pop(-1)
             let roundKey = temp[0]
             let dutKey = temp[1]
-            const nodeKey = temp.join("-")
-            const res = await projectApi.getDemandInfo(projrctId, nodeKey, "1")
-            this.treeData[roundKey].children[dutKey].children = res.data
+            const dutNode = this.treeData?.[roundKey]?.children?.[dutKey]
+            // 树未加载到该层级时无需更新，展开时会懒加载最新数据
+            if (!dutNode) return
+            const res = await projectApi.getDemandInfo(projrctId, temp.join("-"), "1")
+            dutNode.children = res?.data ?? []
         },
         // 新增删除testDemand后tree显示
         async updateTestDemandTreeData(data, projrctId) {
+            if (!data?.key) return
             let temp = data.key.split("-")
             temp.pop(-1)
             let roundKey = temp[0]
             let dutKey = temp[1]
             let designKey = temp[2]
-            const nodeKey = temp.join("-")
-            const res = await projectApi.getTestInfo(projrctId, nodeKey, "2")
-            this.treeData[roundKey].children[dutKey].children[designKey].children = res.data
+            const designNode = this.treeData?.[roundKey]?.children?.[dutKey]?.children?.[designKey]
+            // 树未加载到该层级时无需更新，展开时会懒加载最新数据
+            if (!designNode) return
+            const res = await projectApi.getTestInfo(projrctId, temp.join("-"), "2")
+            designNode.children = res?.data ?? []
         },
         // 新增删除case后tree显示
         /**
          * 第一个参数格式：data.key，data为用例数据，里面必须有key属性
          */
         async updateCaseTreeData(data, projrctId) {
+            if (!data?.key) return
             let temp = data.key.split("-")
             temp.pop(-1)
             let roundKey = temp[0]
             let dutKey = temp[1]
             let designKey = temp[2]
             let testKey = temp[3]
-            const nodeKey = temp.join("-")
-            const res = await projectApi.getCaseInfo(projrctId, nodeKey, "3")
-            this.treeData[roundKey].children[dutKey].children[designKey].children[testKey].children = res.data
+            const testNode = this.treeData?.[roundKey]?.children?.[dutKey]?.children?.[designKey]?.children?.[testKey]
+            // 树未加载到该层级时无需更新，展开时会懒加载最新数据
+            if (!testNode) return
+            const res = await projectApi.getCaseInfo(projrctId, temp.join("-"), "3")
+            testNode.children = res?.data ?? []
         },
         setCurrentNode(nodeKey) {
             this.currentNode = nodeKey

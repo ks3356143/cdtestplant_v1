@@ -1,156 +1,60 @@
 <template>
-    <div class="demand-table-container">
-        <search v-show="searchVisible" @submit="searchSubmit" />
-        <div class="lg:flex justify-between mb-2">
-            <a-space>
-                <a-popconfirm content="确定要删除数据吗? 这会删除全部下级数据!" position="bottom" @ok="deletesMultipleAction">
-                    <a-button type="primary" status="danger" :loading="isDeleting">
-                        批量删除
-                        <template #icon><icon-delete /></template>
-                    </a-button>
-                </a-popconfirm>
-                <a-button type="primary" @click="handleOpenReplaceModal">
-                    批量替换
-                    <template #icon><icon-swap /></template>
-                </a-button>
-                <a-divider direction="vertical"></a-divider>
-                <a-button type="outline" @click="handleOpenReplacePriority">批量修改优先级</a-button>
-            </a-space>
-            <a-space>
-                <a-space class="lg:mt-0 mt-2">
-                    <slot name="tools"></slot>
-                    <a-tooltip content="刷新表格">
-                        <a-button shape="circle" @click="fetchData()"><icon-refresh /></a-button>
-                    </a-tooltip>
-                    <a-tooltip content="显隐搜索" @click="searchVisible = !searchVisible">
-                        <a-button shape="circle"><icon-search /></a-button>
-                    </a-tooltip>
-                    <a-tooltip content="设置">
-                        <a-button shape="circle" @click="clickSetting"><icon-settings /></a-button>
-                    </a-tooltip>
-                </a-space>
-            </a-space>
-        </div>
-        <a-table
-            id="basic-table-demand"
-            v-bind="options"
-            hoverable
-            column-resizable
-            :scroll="{ x: '100%' }"
-            :row-selection="{ type: 'checkbox', showCheckedAll: true, onlyCurrent: true }"
-            row-key="id"
-            v-model:selectedKeys="selecteds"
-            :loading="isFetching"
-            :data="tableData"
-            :pagination="{
-                showTotal: true,
-                showPageSize: true,
-                total: total,
-                pageSizeOptions: [10, 20, 50, 1000],
-                hideOnSinglePage: false
-            }"
-            @page-change="pageChange"
-            @page-size-change="pageSizeChange"
-        >
-            <template #columns>
-                <!-- 数据列 -->
-                <template v-for="column in columns" :key="column.dataIndex">
-                    <template v-if="!column.hide">
-                        <!-- 正常的数据列 -->
-                        <a-table-column v-bind="column" v-if="!column.showType && column.dataIndex !== 'testContent'" tooltip>
-                            <!-- 如果column有isHyperText属性，则直接渲染html -->
-                            <template #cell="{ record }" v-if="column.isHyperText">
-                                <div v-html="record[column.dataIndex]"></div>
-                            </template>
-                        </a-table-column>
-                        <!-- 对testContent单独渲染，区别很大!!! -->
-                        <a-table-column v-bind="column" v-else-if="column.dataIndex === 'testContent'">
-                            <template #cell="{ record }">
-                                <div v-if="record[column.dataIndex].length > 0">
-                                    <!-- 如果有测试子项即subStep -->
-                                    <template v-for="(sub, idx) in record[column.dataIndex]" :key="idx">
-                                        <!-- 这是每个测试子项 -->
-                                        <div class="subTitle mt-3">{{ idx + 1 }}.{{ sub.subName }}</div>
-                                        <div>测试子项描述：{{ sub.subDescription }}</div>
-                                        <template v-for="(step, index) in sub.subStep" :key="index">
-                                            <span class="text-amber-700">步骤{{ index + 1 }}）</span>
-                                            <div class="operation"><span class="text-bold">操作：</span>{{ step.operation }}</div>
-                                            <div class="mb-1"><span class="text-bold">预期：</span>{{ step.expect }}</div>
-                                        </template>
-                                    </template>
-                                </div>
-                            </template>
-                        </a-table-column>
-                        <!-- 表示有showType字段 -->
-                        <a-table-column v-bind="column" v-else-if="column.dataIndex === 'priority'" ellipsis tooltip>
-                            <template #cell="{ record }">
-                                {{ showType(record) }}
-                            </template>
-                        </a-table-column>
-                        <a-table-column v-bind="column" v-else-if="column.dataIndex === 'testType'" ellipsis tooltip>
-                            <template #cell="{ record }">
-                                {{ showTestType(record) }}
-                            </template>
-                        </a-table-column>
+    <ope-sets-data-table
+        ref="tableRef"
+        class="demand-table-container"
+        table-id="basic-table-demand"
+        :api="demandApi.getTestDemandList"
+        :columns="columns"
+        :delete-api="demandApi.delete"
+        :replace-api="demandApi.replace"
+        :replace-columns="replaceColumns"
+        replace-key="demand"
+        parent-title="对应设计需求"
+        @edit="(record) => formRef?.open(record)"
+        @selection-change="(rows) => (selecteds = rows)"
+    >
+        <template #toolbar-extra>
+            <a-divider direction="vertical"></a-divider>
+            <a-button type="outline" @click="handleOpenReplacePriority">批量修改优先级</a-button>
+        </template>
+        <!-- 测试子项及步骤 -->
+        <template #cell-testContent="{ record }">
+            <div v-if="record.testContent?.length > 0">
+                <template v-for="(sub, idx) in record.testContent" :key="idx">
+                    <div class="subTitle mt-3">{{ idx + 1 }}.{{ sub.subName }}</div>
+                    <div>测试子项描述：{{ sub.subDescription }}</div>
+                    <template v-for="(step, index) in sub.subStep" :key="index">
+                        <span class="text-amber-700">步骤{{ index + 1 }}）</span>
+                        <div class="operation"><span class="text-bold">操作：</span>{{ step.operation }}</div>
+                        <div class="mb-1"><span class="text-bold">预期：</span>{{ step.expect }}</div>
                     </template>
                 </template>
-                <!-- 上级节点列 -->
-                <a-table-column title="对应设计需求" align="center" :width="120" fixed="right">
-                    <template #cell="{ record }">
-                        <Trigger :designInfo="record.design" @refresh="fetchData()" />
-                    </template>
-                </a-table-column>
-                <!-- 操作列 -->
-                <a-table-column title="操作" align="center" :width="100" fixed="right">
-                    <template #cell="{ record }">
-                        <a-scrollbar type="track" style="overflow: auto">
-                            <a-space size="mini">
-                                <a-link @click="(formRef as any).open(record)">
-                                    修改
-                                    <template #icon>
-                                        <icon-edit />
-                                    </template>
-                                </a-link>
-                            </a-space>
-                        </a-scrollbar>
-                    </template>
-                </a-table-column>
-            </template>
-        </a-table>
-        <!-- 测试项-表单页面 -->
-        <Form ref="formRef" @refresh="fetchData()"></Form>
-        <!-- 表格设置 -->
-        <my-setting ref="settingRef" @onChangeColumnHide="changeColumn"></my-setting>
-        <!-- 批量替换组件 -->
-        <replace-modal
-            ref="replaceModal"
-            :selectRows="selecteds"
-            :api="demandApi.replace"
-            :columns="replaceColumns"
-            key="modal-demand"
-            popup-key="demand"
-            @replaceSuccess="replaceSuccessHandle"
-        />
-        <!-- 批量修改优先级 -->
-        <ReplacePriority ref="replacePriorityRef" @modifySuccess="fetchData()" :selected-rows="selecteds" />
-    </div>
+            </div>
+        </template>
+        <template #cell-priority="{ record }">
+            {{ showType(record) }}
+        </template>
+        <template #cell-testType="{ record }">
+            {{ showTestType(record) }}
+        </template>
+        <template #parent-cell="{ record }">
+            <Trigger :designInfo="record.design" @refresh="tableRef?.refresh()" />
+        </template>
+    </ope-sets-data-table>
+    <!-- 测试项-表单页面 -->
+    <Form ref="formRef" @refresh="tableRef?.refresh()"></Form>
+    <!-- 批量修改优先级 -->
+    <ReplacePriority ref="replacePriorityRef" @modifySuccess="tableRef?.refresh()" :selected-rows="selecteds" />
 </template>
 
 <script setup lang="ts">
-import { computed, provide, ref, watch } from "vue"
-import type { ISearchFormDemand } from "@/views/project/opeSets/components/DesignTable/types"
-import useSettings from "@/views/project/opeSets/components/DesignTable/useSettings"
-import MySetting from "@/views/project/opeSets/components/TableCommonComponent/Setting.vue"
-import useFetchData from "@/views/project/opeSets/hooks/useFetchData"
+import { computed, provide, ref } from "vue"
 import demandApi from "@/api/project/testDemand"
 import useShowType from "@/views/project/opeSets/components/DesignTable/useShowType"
+import OpeSetsDataTable from "@/views/project/opeSets/components/TableCommonComponent/OpeSetsDataTable.vue"
 import Form from "./form.vue"
 import Trigger from "./Trigger.vue"
-import Search from "@/views/project/opeSets/components/DesignTable/Search.vue"
-import useDelete from "@/views/project/opeSets/components/DesignTable/useDelete"
-import ReplaceModal from "@/views/project/opeSets/components/DesignTable/ReplaceModal.vue"
 import ReplacePriority from "@/views/project/opeSets/components/DemandTable/ReplacePriority.vue"
-import { Message } from "@arco-design/web-vue"
 
 // 0.[不同]定义列字段
 const columns = ref([
@@ -186,10 +90,8 @@ const columns = ref([
         search: true,
         formType: "select",
         dict: true,
-        // 只是指明a-table-column渲染v-if
-        showType: (text: string) => {
-            return text
-        },
+        // 只是指明 a-table-column 需要单独渲染
+        showType: (text: string) => text,
         fixed: ""
     },
     {
@@ -202,9 +104,7 @@ const columns = ref([
         search: true,
         formType: "select",
         dict: true,
-        showType: (text: string) => {
-            return text
-        },
+        showType: (text: string) => text,
         fixed: ""
     },
     {
@@ -214,8 +114,8 @@ const columns = ref([
         width: 200,
         hide: false,
         ellipsis: false,
-        search: false, // 不搜索
-        formType: "input", // 搜索输入框形式
+        search: false,
+        formType: "input",
         isHyperText: false,
         bodyCellClass: "hyperTextCell-table-chen",
         fixed: ""
@@ -228,57 +128,30 @@ const columns = ref([
         width: 400,
         hide: false,
         ellipsis: false,
-        search: false, // 要搜索
-        formType: "input", // 搜索输入框形式
+        search: false,
+        formType: "input",
         bodyCellClass: "hyperTextCell-table-chen",
         fixed: ""
     }
 ])
 provide("columns", columns)
 
-// 2.获取demandType的名称
+const tableRef = ref<InstanceType<typeof OpeSetsDataTable> | null>(null)
+const formRef = ref<InstanceType<typeof Form> | null>(null)
+
+// 2.字典名称
 const showType = useShowType("priority")
 const showTestType = useShowType("testType")
 
-// 3.query查询和分页相关
-const { tableData, isFetching, fetchData, total, pageChange, pageSizeChange, searchParams } = useFetchData(demandApi.getTestDemandList, columns)
-
-// 4.表单相关
-const formRef = ref<InstanceType<typeof Form> | null>(null)
-
-// 5.表格设置相关
-const { options, clickSetting, changeColumn, settingRef } = useSettings()
-
-// 6.行选择器相关-表格数据变化（翻页/搜索/刷新）时清空勾选，避免批量操作作用到不可见行
-const selecteds = ref([])
-watch(tableData, () => {
-    selecteds.value = []
-})
-
-// 7.1.批量删除相关
-const { deletesMultipleAction, isDeleting } = useDelete(demandApi.delete, fetchData, selecteds)
-
-// 7.2.批量替换相关
-const replaceModal = ref<InstanceType<typeof ReplaceModal> | null>(null)
 // 供批量替换弹窗使用的列（去掉展示型字段）
-const replaceColumns = computed(() => columns.value.filter((it) => it.dataIndex !== "priority" && it.dataIndex !== "testType"))
-const handleOpenReplaceModal = () => {
-    replaceModal.value?.open(undefined)
-}
-const replaceSuccessHandle = async (count: number) => {
-    Message.success(`批量更新成功，尝试更新行数：${count}`)
-    // 批量更新后刷新表格（疑问？是否要清除行选择？）
-    await fetchData()
-}
+const replaceColumns = computed(() =>
+    columns.value.filter((it: any) => it.dataIndex !== "priority" && it.dataIndex !== "testType")
+)
 
-// 8.搜索组件相关-注意这里submit其实就是给维护的搜索参数传参
-const searchVisible = ref(true)
-const searchSubmit = (data: ISearchFormDemand) => {
-    searchParams.value = { ...data }
-    fetchData(true)
-}
+// 行选择：由公共表格同步过来，供批量修改优先级使用
+const selecteds = ref<any[]>([])
 
-// 9.批量修改优先级-priority
+// 批量修改优先级
 const replacePriorityRef = ref<InstanceType<typeof ReplacePriority> | null>(null)
 const handleOpenReplacePriority = () => {
     replacePriorityRef.value?.open(undefined)
@@ -286,35 +159,12 @@ const handleOpenReplacePriority = () => {
 </script>
 
 <style scoped lang="less">
-/* 下面让modal的蒙层不交互，让用户可以复制table的文字 */
-:deep(.arco-modal-container) {
-    pointer-events: none;
-}
-:deep(.arco-modal.arco-modal-draggable) {
-    pointer-events: auto;
-}
-
-// search根组件
 .search-container {
     margin-bottom: 10px;
 }
 </style>
 
 <style lang="less">
-.hyperTextCell-table-chen {
-    .arco-table-td-content {
-        max-height: 15em;
-        overflow-y: auto;
-        line-height: 1.5em;
-        word-break: break-word;
-    }
-}
-.arco-tabs-content-list {
-    height: 120%;
-}
-.arco-table-pagination {
-    margin-bottom: 40px;
-}
 // 对测试项子项步骤进行显示
 .subTitle {
     overflow: hidden;

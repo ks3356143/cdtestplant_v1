@@ -1,7 +1,7 @@
 from typing import Tuple, Any
 from copy import deepcopy
 from django.shortcuts import get_object_or_404
-from apps.project.models import Project
+from apps.project.models import Project, TestDemand
 from ninja.errors import HttpError
 
 # 1. case被移动到某测试项下面
@@ -12,20 +12,22 @@ def case_move_to_test(project_id: int, case_key: str, demand_key: str) -> Tuple[
         same_root_flag = True
     # 判断是否移动到自己所属的demand的，直接返回不操作
     if same_root_flag:
-        raise HttpError(500, message='无法移动到自己所属测试项里面')
+        raise HttpError(400, message='无法移动到自己所属测试项里面')
     project_qs = get_object_or_404(Project, id=project_id)
     case = project_qs.pcField.filter(key=case_key).first()
     if not case:
-        raise HttpError(500, message=f'用例不存在：{case_key}')
+        raise HttpError(404, message=f'用例不存在：{case_key}')
     demand_origin = case.test  # 未变化之前case对应的测试项
     demand = project_qs.ptField.filter(key=demand_key).first()  # 新的demand对象
     if not demand:
-        raise HttpError(500, message=f'测试项不存在：{demand_key}')
+        raise HttpError(404, message=f'测试项不存在：{demand_key}')
     case.ident = demand.ident
     case.test = demand
     case.round = demand.round
     case.dut = demand.dut
     case.design = demand.design
+    # 锁住目标测试项行，串行分配用例 key
+    TestDemand.objects.select_for_update().filter(pk=demand.pk).first()
     # 查询被拖拽到的demand有多少用例，用于设置key
     case.key = "".join([demand.key, '-', str(demand.tcField.count())])
     case.save()
@@ -43,11 +45,13 @@ def case_copy_to_test(project_id: int, case_key: str, demand_key: str) -> Tuple[
     project_qs = get_object_or_404(Project, id=project_id)
     case = project_qs.pcField.filter(key=case_key).first()
     if not case:
-        raise HttpError(500, message=f'用例不存在：{case_key}')
+        raise HttpError(404, message=f'用例不存在：{case_key}')
     demand = project_qs.ptField.filter(key=demand_key).first()
     if not demand:
-        raise HttpError(500, message=f'测试项不存在：{demand_key}')
+        raise HttpError(404, message=f'测试项不存在：{demand_key}')
     origin_case = deepcopy(case)
+    # 锁住目标测试项行，串行分配用例 key
+    TestDemand.objects.select_for_update().filter(pk=demand.pk).first()
     case.id = None
     case.ident = demand.ident
     case.test = demand
@@ -69,11 +73,11 @@ def case_to_case_copy_or_move(project_id: int, drag_key: str, drop_key: str, mov
     project_qs = get_object_or_404(Project, id=project_id)
     drag_case = project_qs.pcField.filter(key=drag_key).first()
     if not drag_case:
-        raise HttpError(500, message=f'被拖拽用例不存在：{drag_key}')
+        raise HttpError(404, message=f'被拖拽用例不存在：{drag_key}')
     drag_demand = drag_case.test
     drop_case = project_qs.pcField.filter(key=drop_key).first()
     if not drop_case:
-        raise HttpError(500, message=f'目标用例不存在：{drop_key}')
+        raise HttpError(404, message=f'目标用例不存在：{drop_key}')
     drop_demand = drop_case.test
     # 判断是否移动到同级
     same_root_flag = False

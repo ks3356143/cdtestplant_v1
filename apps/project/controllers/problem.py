@@ -277,11 +277,12 @@ class ProblemController(ControllerBase):
     @transaction.atomic
     def search_single_problem(self, data: ProblemSingleInputSchema = Query(...)):
         check_project_access_by_id(data.project_id, self.context.request.user)
-        key_string = "".join(
-            [data.round_id, '-', data.dut_id, '-', data.design_id, '-', data.test_id, '-', data.case_id, '-',
-             data.problem_id])
-        qs = get_object_or_404(Problem, project__id=data.project_id, key=key_string)
-        return qs
+        # Problem 模型没有 key 字段：路由末段传的是问题单标识（ident），按项目 + 标识查询
+        problem_ident = str(data.problem_id).rsplit('-', 1)[-1]
+        problem_obj = Problem.objects.filter(project__id=data.project_id, ident=problem_ident).first()
+        if problem_obj is None:
+            raise HttpError(404, '问题单不存在')
+        return problem_obj
 
     # 让测试用例关联/取消问题单
     @route.get('/problem/relateProblem', exclude_none=True, url_name="problem-relate-case")
