@@ -52,6 +52,7 @@ const crudOptions = reactive({
     tablePagination: false,
     operationColumn: props.showDetail,
     operationColumnAlign: "center",
+    operationColumnWidth: 80,
     bordered: { wrapper: true, cell: true },
     isDbClickEdit: false,
     formOption: {

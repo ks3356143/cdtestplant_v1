@@ -11,7 +11,7 @@ def parse_html(html_txt, a_list, doc):
 def create_one_problem_dit(problem: Problem, problem_prefix: str, doc) -> dict:
     """问题单汇总表每个问题作为一行的数据"""
     problem_dict = {
-        'ident': '_'.join([problem_prefix, problem.ident]),
+        'ident': '_'.join([problem_prefix, (problem.ident or '')]),
         'grade': get_str_dict(problem.grade, 'problemGrade'),
         'type': get_str_dict(problem.type, 'problemType'),
         'status': get_str_dict(problem.status, 'problemStatu')

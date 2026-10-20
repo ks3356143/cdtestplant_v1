@@ -81,7 +81,7 @@ class TreeKey(object):
             if round_v == 'all':
                 round_obj: Round = _fetch_or_raise(Round, f'轮次不存在：{round_k}', key=round_k, project=project_obj)
                 round_obj.remark = f"第{round_count + 1}轮测试"
-                round_obj.ident = round_obj.ident[:-1] + f'{round_count + 1}'
+                round_obj.ident = (round_obj.ident or '')[:-1] + f'{round_count + 1}'
                 round_obj.name = f"第{round_count + 1}轮测试"
                 round_obj.title = f"第{round_count + 1}轮测试"
                 round_obj.key = f"{round_count}"
@@ -143,7 +143,7 @@ class TreeKey(object):
                 # 2.1 如果字典，则先要创建轮次
                 round_obj: Round = _fetch_or_raise(Round, f'轮次不存在：{round_k}', key=round_k, project=project_obj)
                 round_obj.remark = f"第{round_count + 1}轮测试"
-                round_obj.ident = round_obj.ident[:-1] + f'{round_count + 1}'
+                round_obj.ident = (round_obj.ident or '')[:-1] + f'{round_count + 1}'
                 round_obj.name = f"第{round_count + 1}轮测试"
                 round_obj.title = f"第{round_count + 1}轮测试"
                 round_obj.key = f"{round_count}"
@@ -156,7 +156,7 @@ class TreeKey(object):
                     if dut_v == 'all':
                         # 查询原始dut
                         dut_obj = _fetch_or_raise(Dut, f'被测件不存在：{dut_key_origin}', key=dut_key_origin, project=project_obj)
-                        dut_obj.ident = dut_obj.ident[:11] + str(dut_index)
+                        dut_obj.ident = (dut_obj.ident or '')[:11] + str(dut_index)
                         dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', dut_obj.ident)
                         dut_obj.key = f"{round_count}-{dut_index - 1}"
                         dut_obj.round = round_obj
@@ -208,7 +208,7 @@ class TreeKey(object):
 
                     if isinstance(dut_v, dict):
                         dut_obj = _fetch_or_raise(Dut, f'被测件不存在：{dut_key_origin}', key=dut_key_origin, project=project_obj)
-                        dut_obj.ident = dut_obj.ident[:11] + str(dut_index)
+                        dut_obj.ident = (dut_obj.ident or '')[:11] + str(dut_index)
                         dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', dut_obj.ident)
                         dut_obj.key = f"{round_count}-{dut_index - 1}"
                         dut_obj.round = round_obj
@@ -320,7 +320,8 @@ class TreeKey(object):
                                                 step_obj.testDemandContent = content_obj
                                                 step_obj.id = None
                                                 step_obj.save()
-                                        case_index = 1
+                                        # 用例 key 与其他新增/复制分支保持一致：从 0 开始编号
+                                        case_index = 0
                                         for case_k, case_v in demand_v.items():
                                             case_key_origin = round_k + "-" + dut_k + "-" + design_k + "-" + demand_k + "-" + case_k
                                             if case_v == 'all':

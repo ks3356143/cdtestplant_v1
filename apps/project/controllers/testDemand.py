@@ -195,7 +195,11 @@ class TestDemandController(ControllerBase):
             else:
                 # 这说明解析成功了
                 # 首先查询所属design、dut、round，方便新增
-                design_obj: Design = designs.filter(key=demand.parent_key).first()  # 因为前端限制必然有
+                design_obj: Design = designs.filter(key=demand.parent_key).first()
+                # 前端传错/父级已被删除时给出明确 400，避免 None.dut 直接 500 并回滚整批
+                if design_obj is None:
+                    return ChenResponse(status=400, code=400,
+                                        message=f'第{index}个测试项的设计需求不存在（parent_key={demand.parent_key}）')
                 dut_obj = design_obj.dut
                 round_obj = design_obj.round
                 test_demand_count = TestDemand.objects.filter(project=project_qs,

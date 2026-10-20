@@ -486,10 +486,15 @@ class CaseController(ControllerBase):
         selected_case_qs = Case.objects.filter(id__in=payload.selectRows).select_related('project')
         for project in {c.project for c in selected_case_qs}:
             check_project_access(project, self.context.request.user)
-        # 随机日期
-        start, end = payload.exetime
-        start_date = datetime.strptime(start, "%Y-%m-%d").date()
-        end_date = datetime.strptime(end, "%Y-%m-%d").date()
+        # 随机日期：格式非法时返回 400，不能让 strptime 抛 500
+        try:
+            start, end = payload.exetime
+            start_date = datetime.strptime(start, "%Y-%m-%d").date()
+            end_date = datetime.strptime(end, "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            return ChenResponse(status=400, code=400, message='日期格式不正确，应为 YYYY-MM-DD')
+        if start_date > end_date:
+            return ChenResponse(status=400, code=400, message='开始日期不能晚于结束日期')
         # 更新的case的id列表
         updated_cases = []
         # 替换设计人员
@@ -516,7 +521,7 @@ class CaseController(ControllerBase):
             return ChenResponse(message='获取成功', data=[])
         # dut -> design
         data_list = []
-        for dut in previous_round_obj.rdField.all():
+        for dut in previous_round_obj.rdField.prefetch_related('rsField__dcField').all():
             dut_dict = {'label': dut.name, 'value': dut.id, 'key': dut.key, 'children': []}
             for design in dut.rsField.all():
                 design_dict = {'label': design.name, 'value': design.id, 'key': design.key, 'children': []}

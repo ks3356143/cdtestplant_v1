@@ -122,8 +122,8 @@ const open = async (documentType: DocumentType, id: number) => {
             id: projectId.value,
             documentType
         })
-        // 填充到fragmentList
-        fragmentList.value = data.map((it: { frag_name: string; isLock: boolean }) => ({
+        // 填充到fragmentList（后端空态可能返回 null）
+        fragmentList.value = (data ?? []).map((it: { frag_name: string; isLock: boolean }) => ({
             name: it.frag_name,
             isCover: false,
             isLock: it.isLock // 是否锁定

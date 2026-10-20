@@ -10,14 +10,14 @@ class DutModelOutSchema(ModelSchema):
         exclude = ['project', 'round', 'remark', 'sort']
 
 class DutFilterSchema(Schema):
-    project_id: int = Field(None, alias='projectId')
-    round_id: int = Field(None, alias='round')
-    ident: str = Field(None, alias='ident')
-    type: str = Field(None, alias='type')
-    name: str = Field(None, alias='name')
+    project_id: Optional[int] = Field(None, alias='projectId')
+    round_id: Optional[int] = Field(None, alias='round')
+    ident: Optional[str] = Field(None, alias='ident')
+    type: Optional[str] = Field(None, alias='type')
+    name: Optional[str] = Field(None, alias='name')
     # 新增版本、单位
-    version: str = Field(None, alias="version")
-    release_union: str = Field(None, alias="release_union")
+    version: Optional[str] = Field(None, alias="version")
+    release_union: Optional[str] = Field(None, alias="release_union")
 
 # 树状目录schema
 class DutTreeInputSchema(Schema):

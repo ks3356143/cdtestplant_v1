@@ -12,7 +12,9 @@ export default function (crudOrFormRef: any) {
         if (crudOrFormRef) {
             const formData = crudOrFormRef.value.getFormData()
             const { total_lines, comment_lines } = formData
-            formData.comment_percent = `${(comment_lines / total_lines).toFixed(2).toString()}%`
+            const totalLines = Number(total_lines) || 0
+            const commentLines = Number(comment_lines) || 0
+            formData.comment_percent = totalLines > 0 ? `${((commentLines / totalLines) * 100).toFixed(2)}%` : "不适用"
         }
     }
     const crudColumns = ref([

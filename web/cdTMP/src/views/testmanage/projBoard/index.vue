@@ -31,7 +31,8 @@ defineOptions({
 </script>
 
 <style lang="less" scoped>
+// 直角扁平风格：容器使用细线分隔，不再叠加阴影
 :deep(.ma-content-block) {
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
 }
 </style>

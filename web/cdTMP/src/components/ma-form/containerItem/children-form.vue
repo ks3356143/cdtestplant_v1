@@ -353,14 +353,15 @@ onMounted(async () => {
     width: 40px;
     height: 40px;
     font-size: 16px;
-    border-radius: 50%;
+    border-radius: 0;
     background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
     user-select: none;
     cursor: pointer;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--app-line, #e4e7eb);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
     transition: all 0.1s;
     overflow: hidden;
     position: relative;
@@ -371,7 +372,7 @@ onMounted(async () => {
 }
 .sticky-button:hover {
     transition: all 0.1s;
-    border: 1px solid rgb(64, 128, 255);
-    color: rgb(64, 128, 255);
+    border: 1px solid rgb(var(--primary-6));
+    color: rgb(var(--primary-6));
 }
 </style>

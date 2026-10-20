@@ -34,10 +34,13 @@ class GenerateControllerWtd(ControllerBase):
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/wtd' / '问题详情表.docx'
         doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
-        problem_list = list(project_obj.projField.distinct())  # 去掉重复，因为和case是多对多
+        problem_list = list(project_obj.projField.distinct().prefetch_related(
+            'case__round', 'case__dut', 'case__design', 'case__test'))  # 去掉重复，因为和case是多对多
         # ident 允许为空（历史数据），空值按 0 参与排序，避免 int(None) 抛异常
         problem_list.sort(key=lambda x: int(x.ident or 0))
         data_list = []
+        # 每轮源代码被测件只查一次，避免逐用例查询
+        so_dut_cache = {}
         for problem in problem_list:
             problem_dict = {'ident': problem.ident, 'name': problem.name}
             # 1.生成被测对象名称、被测对象标识、被测对象版本
@@ -62,7 +65,10 @@ class GenerateControllerWtd(ControllerBase):
                     case_design_list.append("".join([case.dut.name, case.design.chapter]))
                 else:
                     # 1.2.如果不为文档审查，则提取该轮次源代码dut的信息
-                    so_dut = case.round.rdField.filter(type='SO').first()
+                    round_id = case.round_id
+                    if round_id not in so_dut_cache:
+                        so_dut_cache[round_id] = case.round.rdField.filter(type='SO').first()
+                    so_dut = so_dut_cache[round_id]
                     if so_dut:
                         str_dut_name_list.append(project_obj.name + '软件')
                         str_dut_ident_list.append(so_dut.ref)
@@ -76,13 +82,13 @@ class GenerateControllerWtd(ControllerBase):
                                 continue
                             else:
                                 p_list.append(rich)
-                        case_design_list.append("-".join([case.dut.name, case.design.chapter + '章节' + ":" + ''.join(p_list)]))
+                        case_design_list.append("-".join([case.dut.name or '', (case.design.chapter or '') + '章节' + ":" + ''.join(p_list)]))
                 # 2.用例标识修改-YL_测试项类型_测试项标识_用例key+1
                 demand = case.test  # 中间变量
                 demand_testType = demand.testType  # 中间变量
                 testType_abbr = get_str_abbr(demand_testType, 'testType')  # 输出FT
                 case_ident_list.append("_".join(
-                    ['YL', testType_abbr, demand.ident, str(int(case.key.split("-")[-1]) + 1).rjust(3, '0')]))
+                    ['YL', testType_abbr, demand.ident or '', str(int(case.key.split("-")[-1]) + 1).rjust(3, '0')]))
             problem_dict['duts_name'] = "/".join(set(str_dut_name_list))
             problem_dict['duts_ref'] = "/".join(set(str_dut_ident_list))
             problem_dict['duts_version'] = "/".join(set(str_dut_version_list))

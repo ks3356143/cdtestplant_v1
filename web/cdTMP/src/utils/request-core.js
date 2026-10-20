@@ -107,12 +107,14 @@ export function createRequest(service, options = {}) {
     return function (config) {
         const env = import.meta.env
         const token = tool.local.get(env.VITE_APP_TOKEN_PREFIX)
+        const headers = {
+            "Accept-Language": "zh_CN",
+            "Content-Type": get(config, "headers.Content-Type", "application/json;charset=UTF-8")
+        }
+        // 登录页等未登录场景不发 "Bearer undefined"，避免后端把无效头当成凭证处理
+        if (token) headers.Authorization = "Bearer " + token
         const configDefault = {
-            headers: {
-                Authorization: "Bearer " + token,
-                "Accept-Language": "zh_CN",
-                "Content-Type": get(config, "headers.Content-Type", "application/json;charset=UTF-8")
-            },
+            headers,
             timeout,
             baseURL: env.VITE_APP_OPEN_PROXY === "true" ? env.VITE_APP_PROXY_PREFIX : env.VITE_APP_BASE_URL,
             data: {}

@@ -149,7 +149,7 @@ defineExpose({
     background: var(--color-bg-2);
     border: 1px solid var(--color-border-2);
     padding: 7px 0;
-    border-radius: 4px;
+    border-radius: 0;
     li .context-menu-item {
         cursor: pointer;
         padding: 5px 10px;

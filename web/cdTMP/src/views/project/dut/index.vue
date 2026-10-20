@@ -116,10 +116,10 @@ async function isXQdemand() {
 isXQdemand()
 
 const showType = (record) => {
-    let len = demandTypeDict.value.data.length
-    for (let i = 0; i < len; i++) {
-        if (demandTypeDict.value.data[i].key === record.demandType) {
-            let item = demandTypeDict.value.data[i]
+    const list = demandTypeDict.value.data ?? []
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].key === record.demandType) {
+            let item = list[i]
             return "SJ-" + item.show_title + "-" + record.ident
         }
     }

@@ -7,6 +7,51 @@ from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 
 logger = GenerateLogger(model='字典模块')
 
+
+def digit_to_chinese(num) -> str:
+    """把轮次数字转为规范中文（1→一 … 10→十、11→十一、20→二十、21→二十一），支持 1~9999。
+
+    原先各文档生成控制器使用固定 10 元素列表按下标取中文，轮次 ≥10 时会 IndexError；
+    统一改用本函数，和上传模板/文件命名使用同一套中文。
+    """
+    try:
+        num = int(num)
+    except (TypeError, ValueError):
+        return str(num)
+    if num <= 0:
+        return str(num)
+    digits = '零一二三四五六七八九'
+    units = ['', '十', '百', '千']
+    s = str(num)
+    n = len(s)
+    parts = []
+    for idx, ch in enumerate(s):
+        d = int(ch)
+        pos = n - idx - 1
+        if d == 0:
+            if parts and parts[-1] != '零':
+                parts.append('零')
+        else:
+            if pos == 1 and d == 1 and not parts:
+                parts.append('十')
+            else:
+                parts.append(digits[d] + units[pos])
+    return ''.join(parts).rstrip('零')
+
+
+def dict_items_of(dict_code: str):
+    """按 code 取字典项列表；字典不存在时返回空列表，避免 DoesNotExist 直接 500。"""
+    return list(DictItem.objects.filter(dict__code=dict_code).order_by('sort', 'id'))
+
+
+def safe_int(value, default=None):
+    """把可能为 None/空串/非数字的值转成 int，失败时返回默认值。"""
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
 # 传入一个字符串数字以及字典标志code，返回真实的title名字
 def get_str_dict(a, dict_code):
     dict_obj = DictItem.objects.filter(dict__code=dict_code, key=a).first()
@@ -160,6 +205,9 @@ def create_demand_summary(demands: QuerySet, project_ident: str):
             },
         ]
     """
+    # 预取用例、步骤、问题单，避免逐需求/逐用例的 N+1 查询
+    if hasattr(demands, 'prefetch_related'):
+        demands = demands.prefetch_related('tcField__step', 'tcField__caseField')
     summary_dict = {}  # 后面再变为数组
     # 1.首先根据testType字段生成一个一个dict
     for demand in demands:
@@ -204,7 +252,7 @@ def create_demand_summary(demands: QuerySet, project_ident: str):
                 demand_dict['not_exe_count'] += 1
             # 查询每个用例下面的问题单，将问题单的ident弄出来
             for problem in case.caseField.all():
-                problem_ident = 'PT_' + project_ident + '_' + problem.ident.rjust(3, '0')
+                problem_ident = 'PT_' + project_ident + '_' + str(problem.ident or '').rjust(3, '0')
                 demand_problem_list.add(problem_ident)
         if len(list(demand_problem_list)) > 0:
             demand_dict['problems'] = "\a".join(list(demand_problem_list))

@@ -250,7 +250,7 @@ class DesignController(ControllerBase):
         check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         # 依次找出round -> dut -> design
-        round_qs = project_qs.pField.all()
+        round_qs = project_qs.pField.prefetch_related('rdField__rsField')
         data_list = []
         for round in round_qs:
             round_dict = {'label': round.name, 'value': round.id, 'children': []}

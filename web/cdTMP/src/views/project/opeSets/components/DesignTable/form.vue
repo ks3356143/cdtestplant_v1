@@ -57,8 +57,9 @@ const handleBeforeOk = async () => {
         return false
     } else {
         // 成功 **变化**
-        const round = (form.value as any).key.split("-")[0]
-        const dut = (form.value as any).key.split("-")[1]
+        const keyParts = String((form.value as any)?.key ?? "").split("-")
+        const round = keyParts[0]
+        const dut = keyParts[1]
         await designApi.update((form.value as any).id, {
             project_id: route.query.id,
             ...form.value,

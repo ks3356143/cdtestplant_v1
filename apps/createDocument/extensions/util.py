@@ -5,7 +5,7 @@ from ninja.errors import HttpError
 from utils.chen_response import ChenResponse
 from typing import Any
 from apps.project.models import Project
-from apps.dict.models import Dict
+from apps.dict.models import Dict, DictItem
 from utils.path_utils import project_path
 
 def merge_all_cell(table: Table) -> None:
@@ -58,10 +58,13 @@ def build_testtype_output(list_list: list, *, include_type: bool = True) -> list
     一次性取出 testType 字典项，避免在循环内逐个查库（原实现的 N+1）。
     include_type：部分文档（如用例概述）不需要 type 字段，可通过该开关控制。
     """
-    dict_items = {item.key: item for item in Dict.objects.get(code='testType').dictItem.all()}
+    dict_items = {item.key: item for item in DictItem.objects.filter(dict__code='testType')}
     output_list = []
     for index, li in enumerate(list_list):
-        item = dict_items[str(index + 1)]
+        # 字典项可能被禁用/删除，缺失时跳过该组，避免 KeyError 使整份文档生成失败
+        item = dict_items.get(str(index + 1))
+        if item is None:
+            continue
         if include_type:
             output_list.append({"type": item.title, "item": li, "sort": item.sort})
         else:

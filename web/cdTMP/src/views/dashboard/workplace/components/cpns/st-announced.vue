@@ -48,7 +48,7 @@ const viewDetail = async (record) => {
 const getNoticeList = async () => {
     // 获取后台公告
     const res = await commonApi.getNoticeList({ pageSize: 5, orderBy: "id", orderType: "desc" })
-    data.value = res.data
+    data.value = res.data ?? []
 }
 
 getNoticeList()

@@ -58,10 +58,11 @@ const handleBeforeOk = async () => {
     } else {
         // 成功 **变化**
         // key 结构：round-dut-design-test-case
-        const round = (form.value as any).key.split("-")[0]
-        const dut = (form.value as any).key.split("-")[1]
-        const designDemand = (form.value as any).key.split("-")[2]
-        const testDemand = (form.value as any).key.split("-")[3]
+        const keyParts = String((form.value as any)?.key ?? "").split("-")
+        const round = keyParts[0]
+        const dut = keyParts[1]
+        const designDemand = keyParts[2]
+        const testDemand = keyParts[3]
         await caseApi.update((form.value as any).id, {
             project_id: route.query.id,
             ...form.value,

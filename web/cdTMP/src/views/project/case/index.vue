@@ -4,7 +4,7 @@
             <!-- CRUD组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #ident="{ record }">
-                    {{ "PT_" + route.query.ident + "_" + record.ident.padStart(3, "0") }}
+                    {{ "PT_" + route.query.ident + "_" + (record.ident ?? "").padStart(3, "0") }}
                 </template>
                 <!-- 表格前置扩展槽:添加关联按钮 -->
                 <template #tableAfterButtons>
@@ -102,7 +102,7 @@ const crudOptions = ref({
         case: caseNumber
     },
     afterDelete(response) {
-        crudRef.value.tableRef.selectAll(false)
+        crudRef.value.tableRef?.selectAll(false)
     },
     // 请求后置处理-用于新增/删除更新树状的用例关联问题单状态
     afterRequest(tableData) {
@@ -288,9 +288,11 @@ const crudColumns = ref([
             props: { label: "title", value: "key" }
         },
         customRender: ({ record }) => {
+            // 接口可能返回 null，先归一化为空对象，避免 hasOwnProperty 崩溃
+            const closeMethod = record.closeMethod ?? {}
             // 判断是否具有1：修改文档
-            if (!record.closeMethod.hasOwnProperty("0")) {
-                if (!record.closeMethod.hasOwnProperty("1")) {
+            if (!Object.prototype.hasOwnProperty.call(closeMethod, "0")) {
+                if (!Object.prototype.hasOwnProperty.call(closeMethod, "1")) {
                     return (
                         <a-tag size="small" bordered color="magenta">
                             未选择闭环
@@ -299,20 +301,20 @@ const crudColumns = ref([
                 }
             }
             const tagObj = []
-            for (let item in record.closeMethod) {
-                if (record.closeMethod[item] === "1") {
+            for (let item in closeMethod) {
+                if (closeMethod[item] === "1") {
                     tagObj.push(
                         <a-tag size="small" bordered color="blue">
                             修改文档
                         </a-tag>
                     )
-                } else if (record.closeMethod[item] === "2") {
+                } else if (closeMethod[item] === "2") {
                     tagObj.push(
                         <a-tag size="small" bordered color="green">
                             修改程序
                         </a-tag>
                     )
-                } else if (record.closeMethod[item] === "3") {
+                } else if (closeMethod[item] === "3") {
                     tagObj.push(
                         <a-tag size="small" bordered color="red">
                             其他方式闭环

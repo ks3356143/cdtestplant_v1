@@ -23,19 +23,21 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         delete: { show: true, api: designDemandApi.delete },
         // 处理添加后函数
         beforeOpenAdd: function () {
-            let key_split = route.query.key.split("-")
-            let round_key = key_split[0]
-            let dut_key = key_split[1]
-            let td = treeDataStore.treeData
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${(td[round_key] as any).title} > ${(td[round_key] as any).children[dut_key].title} > 设计需求-`
+            let round_key = keyParts[0]
+            let dut_key = keyParts[1]
+            let td: any = treeDataStore.treeData
+            const roundTitle = td?.[Number(round_key)]?.title ?? "-"
+            const dutTitle = td?.[Number(round_key)]?.children?.[Number(dut_key)]?.title ?? "-"
+            crudRef.value.crudFormRef.actionTitle = `${route.query.ident ?? ""} > ${roundTitle} > ${dutTitle} > 设计需求-`
             return true
         },
         beforeOpenEdit: function (record) {
-            let key_split = route.query.key.split("-")
-            let round_key = key_split[0]
-            let dut_key = key_split[1]
-            let td = treeDataStore.treeData
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${(td[round_key] as any).title} > ${(td[round_key] as any).children[dut_key].title} >设计需求[${record.name}]-`
+            let round_key = keyParts[0]
+            let dut_key = keyParts[1]
+            let td: any = treeDataStore.treeData
+            const roundTitle = td?.[Number(round_key)]?.title ?? "-"
+            const dutTitle = td?.[Number(round_key)]?.children?.[Number(dut_key)]?.title ?? "-"
+            crudRef.value.crudFormRef.actionTitle = `${route.query.ident ?? ""} > ${roundTitle} > ${dutTitle} >设计需求[${record.name}]-`
             return true
         },
         afterAdd: (res: any) => {
@@ -49,11 +51,11 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         afterDelete: (_: any, record: any) => {
             let id = projectId.value
             if (!record) {
-                record = { key: route.query.key + "-X" }
+                record = { key: String(route.query.key ?? "") + "-X" }
             }
             treeDataStore.updateDesignDemandTreeData(record, id)
             // 删除后情况行选择器
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         },
         parameters: {
             projectId: route.query.id,

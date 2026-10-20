@@ -4,13 +4,13 @@ button {
     padding: 10px 20px;
 
     border-radius: 0px;
-    border: 1px solid rgb(61, 106, 255);
+    border: 1px solid rgb(var(--primary-6));
     font-size: 14px;
     text-transform: uppercase;
     font-weight: 600;
-    letter-spacing: 2px;
+    letter-spacing: 0.06em;
     background: transparent;
-    color: rgb(61, 106, 255);
+    color: rgb(var(--primary-6));
     overflow: hidden;
     box-shadow: 0 0 0 0 transparent;
     -webkit-transition: all 0.2s ease-in;
@@ -19,8 +19,8 @@ button {
 }
 
 button:hover {
-    background: rgb(61, 106, 255);
-    box-shadow: 0 0 30px 5px rgba(0, 142, 236, 0.815);
+    background: rgb(var(--primary-6));
+    box-shadow: 0 6px 16px rgba(15, 118, 110, 0.22);
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;
     transition: all 0.2s ease-out;

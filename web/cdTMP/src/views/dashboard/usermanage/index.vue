@@ -45,7 +45,7 @@ const crudOptions = reactive({
         showCheckedAll: true
     },
     afterDelete(response) {
-        crudRef.value.tableRef.selectAll(false)
+        crudRef.value.tableRef?.selectAll(false)
     },
     // 是否显示操作列
     operationColumn: true,

@@ -8,16 +8,16 @@ import LogPage from "@/views/monitor/components/LogPage.vue"
 
 const crudColumns = [
     { title: "ID", dataIndex: "id", addDisplay: false, editDisplay: false, width: 50, hide: true },
-    { title: "登录用户", dataIndex: "username", search: true, align: "center" },
-    { title: "IP", dataIndex: "ip", align: "center" },
-    { title: "客户端信息", width: 215, dataIndex: "agent", align: "center" },
-    { title: "操作系统", dataIndex: "os", align: "center" },
-    { title: "浏览器", width: 110, dataIndex: "browser", align: "center" },
+    { title: "登录用户", dataIndex: "username", search: true, align: "center", width: 120 },
+    { title: "IP", dataIndex: "ip", align: "center", width: 120 },
+    { title: "客户端信息", width: 280, dataIndex: "agent", align: "center" },
+    { title: "操作系统", dataIndex: "os", align: "center", width: 120 },
+    { title: "浏览器", width: 130, dataIndex: "browser", align: "center" },
     {
         title: "创建时间",
         dataIndex: "create_datetime",
         align: "center",
-        width: 150,
+        width: 170,
         addDisplay: false,
         editDisplay: false
     }

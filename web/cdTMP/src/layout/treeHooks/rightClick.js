@@ -86,18 +86,23 @@ export function useRightClick(projectId, routeViewRef) {
         cascaderLoading.value = true
         modalVisible.value = true
         // 请求后端给级联选择器数据
-        const res = await designApi.getRelatedCasDesign({ id: projectId.value }).catch((err) => {
+        let res
+        try {
+            res = await designApi.getRelatedCasDesign({ id: projectId.value })
+        } catch (err) {
             Message.error("请求后端数据发生错误，请重试")
             cascaderLoading.value = false
-        })
-        options.value = res.data
+            modalVisible.value = false
+            return
+        }
+        options.value = res?.data ?? []
         // 先获取当前右击的需求的key -> 然后找到所属design的nodekey
         const currentDemandKey = rightClickNode.nodekey
         const belongDesignKey = currentDemandKey.substring(0, currentDemandKey.lastIndexOf("-"))
         // 默认赋值给demand的当前design，直接点击确定可以复制到当前
         options.value.forEach((item) => {
-            item.children.forEach((tem) => {
-                tem.children.forEach((design_obj) => {
+            item.children?.forEach((tem) => {
+                tem.children?.forEach((design_obj) => {
                     if (belongDesignKey === design_obj.key) {
                         relatedCopyData.value = design_obj.value
                     }

@@ -18,40 +18,45 @@ const useTreeDataStore = defineStore("treeDataStore", {    state: () => {
      */
     actions: {
         async initTreeData(projectId) {
-            // 判读是否有项目tree储存：pid为项目后端id
+            // 判断是否有项目树缓存：pid 为项目后端 id
             const pid = localStorage.getItem("pid")
-            // 如果不存在，则请求后台树状数据
-            if (!pid) {
-                const roundData = await projectApi.getRoundInfo(projectId)
-                this.treeData = roundData.data
-                this.originTreeData = roundData.data
+            const sameProject = pid !== null && String(pid) === String(projectId)
+            // tree_local_data 兼容旧格式（纯数组）与新格式（{ pid, data }）
+            let cachedData = null
+            try {
+                const raw = localStorage.getItem("tree_local_data")
+                const parsed = raw ? JSON.parse(raw) : null
+                cachedData = Array.isArray(parsed) ? parsed : parsed?.data ?? null
+                // 旧格式没有 pid，只有在 pid 与当前项目一致时才认为可用
+                if (!Array.isArray(parsed) && parsed?.pid !== undefined && String(parsed.pid) !== String(projectId)) {
+                    cachedData = null
+                }
+            } catch {
+                cachedData = null
             }
-            // 如果存在，但是项目变为了其他
-            if (pid && pid !== projectId) {
+            // 只有同一项目且缓存有数据时才复用缓存，避免 A 项目的树渲染到 B 项目下
+            if (sameProject && Array.isArray(cachedData) && cachedData.length > 0) {
+                this.treeData = cachedData
+                this.originTreeData = cachedData
+            } else {
+                // 切换项目或缓存无效：清掉旧缓存并重新请求
+                localStorage.removeItem("tree_local_data")
                 const roundData = await projectApi.getRoundInfo(projectId)
                 this.treeData = roundData.data
                 this.originTreeData = roundData.data
             }
             // 每次进入工作区存一个localStorage项目ID
             localStorage.setItem("pid", projectId)
-            // 获取localStorage的treeData数据-F5刷新问题解决
-            if (localStorage.getItem("tree_local_data")) {
-                this.treeData = JSON.parse(localStorage.getItem("tree_local_data"))
-                this.originTreeData = JSON.parse(localStorage.getItem("tree_local_data"))
-            }
-            /// 如果没有tree_local_data则请求后台数据
-            if (this.treeData.length === 0) {
-                const roundData = await projectApi.getRoundInfo(projectId)
-                this.treeData = roundData.data
-                this.originTreeData = roundData.data
-            }
-            // 将用户关闭页面数据储存于localStorage中 -> 注意用户打开其他项目 -> 务必清除localStorage的tree_local_data数据
-            // 暂定在点击进入工作台时清除!!!
+            // 将用户关闭页面数据储存于localStorage中
+            // 注意：监听只注册一次；保存时以当前的 pid 为准，避免闭包持有首次进入的项目 id
             if (!unloadListenerBound) {
                 unloadListenerBound = true
                 window.addEventListener("beforeunload", () => {
                     try {
-                        localStorage.setItem("tree_local_data", JSON.stringify(this.treeData))
+                        localStorage.setItem(
+                            "tree_local_data",
+                            JSON.stringify({ pid: localStorage.getItem("pid"), data: this.treeData })
+                        )
                     } catch {
                         // 树数据过大或浏览器禁用存储时忽略，不影响正常使用
                     }
@@ -127,9 +132,14 @@ const useTreeDataStore = defineStore("treeDataStore", {    state: () => {
         },
         // 获取轮次信息中差中间的是哪几个轮次
         getRoundMiddleInfo() {
-            let roundLength = this.treeData.length
+            // 树为空（切项目首次进入、接口失败或缓存被清）时直接返回 0，
+            // 避免 this.treeData[length - 1].key 抛 undefined 取值错误
+            const list = Array.isArray(this.treeData) ? this.treeData : []
+            if (list.length === 0) return 0
+            const roundLength = list.length
             // 取出最后一个key的值
-            let lastKey = parseInt(this.treeData[this.treeData.length - 1].key) + 1
+            const lastKey = parseInt(list[list.length - 1]?.key ?? "0", 10) + 1
+            if (!Number.isFinite(lastKey)) return roundLength
             if (roundLength !== lastKey) {
                 let cha = lastKey - roundLength
                 return lastKey - cha - 1

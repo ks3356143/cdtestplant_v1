@@ -20,7 +20,7 @@ const useCrudInit = function () {
         operationColumnWidth: 400, // 操作列宽度
         operationColumnAlign: "center", // 操作列对齐方式
         afterDelete(response: any) {
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         },
         // 处理弹窗的title
         beforeOpenAdd: function () {
@@ -345,7 +345,7 @@ const useCrudInit = function () {
             align: "center",
             addDefaultValue: "9",
             search: true,
-            width: 70,
+            width: 110,
             commonRules: [{ required: true, message: "报告类型必填" }],
             // 字典-report_type
             formType: "radio",

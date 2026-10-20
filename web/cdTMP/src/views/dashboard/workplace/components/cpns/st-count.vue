@@ -35,9 +35,9 @@ const statistics = ref({
 })
 
 const cards = [
-    { key: "ucount", label: "用户统计", icon: "icon-user-group", color: "#2563eb", bg: "#eff6ff" },
-    { key: "ppcount", label: "进行中项目数", icon: "icon-clock-circle", color: "#b45309", bg: "#fffbeb" },
-    { key: "pcount", label: "项目总数", icon: "icon-file", color: "#be185d", bg: "#fdf2f8" },
+    { key: "ucount", label: "用户统计", icon: "icon-user-group", color: "#0f766e", bg: "#e6f6f3" },
+    { key: "ppcount", label: "进行中项目数", icon: "icon-clock-circle", color: "#b45309", bg: "#fdf3e3" },
+    { key: "pcount", label: "项目总数", icon: "icon-file", color: "#334155", bg: "#eef1f4" },
     { key: "pdcount", label: "完成的项目数", icon: "icon-check-circle", color: "#047857", bg: "#ecfdf5" }
 ]
 
@@ -53,15 +53,15 @@ onMounted(async () => {
 
 <style scoped>
 .stat-card {
-    border-radius: 8px;
+    border-radius: 0;
     border: 1px solid var(--color-border-2);
     background: var(--color-bg-2);
 }
 
 .stat-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -29,7 +29,7 @@ export default function useDictCrud() {
         tablePagination: false,
         operationColumn: true,
         afterDelete() {
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         }
     })
     const crudColumns = ref([

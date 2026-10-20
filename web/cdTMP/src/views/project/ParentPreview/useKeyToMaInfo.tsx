@@ -36,8 +36,10 @@ export default function useKeyToMaInfo() {
                 const dutInfo = res.data
                 const dutInfoJudge = computed(() => {
                     if (dutInfo.type === "SO") {
-                        // 计算注释率：注释行/总行数
-                        dutInfo.comment_percent = (dutInfo.comment_lines / dutInfo.total_lines) * 100 + "%"
+                        // 计算注释率：注释行/总行数；分母为 0 或非数字时显示“不适用”
+                        const totalLines = Number(dutInfo.total_lines) || 0
+                        const commentLines = Number(dutInfo.comment_lines) || 0
+                        dutInfo.comment_percent = totalLines > 0 ? ((commentLines / totalLines) * 100).toFixed(2) + "%" : "不适用"
                     } else {
                         // 如果是非源代码被测件行数均填写：“不适用”
                         dutInfo.comment_lines = "不适用"

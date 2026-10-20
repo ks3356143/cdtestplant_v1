@@ -46,30 +46,30 @@
                             <template v-if="nodeData.level === '0'">
                                 <a-tooltip content="点击新增轮次">
                                     <IconPlus
-                                        style="position: absolute; right: 8px; font-size: 12px; top: 8px; color: #3370ff"
+                                        style="position: absolute; right: 8px; font-size: 12px; top: 8px; color: rgb(var(--primary-6))"
                                         @click="handleRoundAddClick(nodeData)"
                                     />
                                 </a-tooltip>
                                 <a-tooltip content="点击删除轮次">
                                     <a-popconfirm content="确定要删除该轮次吗?" position="bottom" @ok="handleRoundDelClick(nodeData)">
-                                        <icon-close style="position: absolute; right: 25px; font-size: 12px; top: 8px; color: #3370ff" />
+                                        <icon-close style="position: absolute; right: 25px; font-size: 12px; top: 8px; color: rgb(var(--primary-6))" />
                                     </a-popconfirm>
                                 </a-tooltip>
                                 <a-tooltip content="点击编辑当前轮次"
                                     ><IconEdit
-                                        style="position: absolute; right: 42px; font-size: 12px; top: 8px; color: #3370ff"
+                                        style="position: absolute; right: 42px; font-size: 12px; top: 8px; color: rgb(var(--primary-6))"
                                         @click="handleRoundEditClick(nodeData)"
                                 /></a-tooltip>
                                 <a-tooltip content="综合阅览该轮次下问题单"
                                     ><icon-bug
-                                        style="position: absolute; right: 60px; font-size: 12px; top: 8px; color: #3370ff"
+                                        style="position: absolute; right: 60px; font-size: 12px; top: 8px; color: rgb(var(--primary-6))"
                                         @click="handleProblemShowClick"
                                 /></a-tooltip>
                                 <a-tooltip content="轮次数据管理视图"
                                     ><icon-storage
-                                        style="position: absolute; right: 77px; font-size: 12px; top: 8px; color: #3370ff"
+                                        style="position: absolute; right: 77px; font-size: 12px; top: 8px; color: rgb(var(--primary-6))"
                                         :style="{
-                                            color: isOpeSetsRoute && nodeData.key === route.query.key ? 'red' : '#3370ff'
+                                            color: isOpeSetsRoute && nodeData.key === route.query.key ? '#c0392b' : 'rgb(var(--primary-6))'
                                         }"
                                         @click="handleOpenOpeSets(nodeData)"
                                 /></a-tooltip>
@@ -133,7 +133,7 @@
     </a-layout>
     <a-back-top target-container="#basic-scroll-container" :style="{ position: 'absolute' }">
         <a-popover title="回到顶部">
-            <a-button type="primary" shape="circle">
+            <a-button type="primary" shape="square">
                 <template #icon>
                     <icon-arrow-rise />
                 </template>
@@ -435,23 +435,21 @@ const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop,
 // 有右键菜单节点显示图标
 .small-right-context-tip {
     align-items: center;
-    background: linear-gradient(54.58deg, rgba(74, 228, 255, 0.12) -14.12%, rgba(66, 130, 255, 0.12) 47.61%, rgba(215, 104, 255, 0.12) 105.84%);
-    border: 1px solid #d5d7f9;
-    border-radius: 10px;
-    color: transparent;
+    background: #eef1f4;
+    border: 1px solid #d8dde3;
+    border-radius: 0;
+    color: #6b7280;
     display: inline-flex;
-    height: 10px;
+    height: 12px;
+    align-items: center;
     justify-content: center;
-    margin-left: 2px;
-    padding: 0 2.5px;
+    margin-left: 3px;
+    padding: 0 3px;
     position: absolute;
     top: 7px;
     i {
-        -webkit-text-fill-color: transparent !important;
         zoom: 0.7;
-        background: linear-gradient(85.2deg, #0062ff -3.15%, #cb50ff 98.89%) !important;
-        background-clip: text !important;
-        -webkit-background-clip: text !important;
+        color: #6b7280;
         font-size: 10px;
         font-style: normal;
     }

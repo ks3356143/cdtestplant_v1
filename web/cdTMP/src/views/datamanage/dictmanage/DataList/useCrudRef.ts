@@ -22,7 +22,7 @@ export default function useCrudRef(currentRow: Ref<{ id: number | string; name: 
         edit: { show: true, api: dictApi.updateDictItemData },
         delete: { show: true, api: dictApi.realDeleteItem },
         afterDelete() {
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         }
     })
 

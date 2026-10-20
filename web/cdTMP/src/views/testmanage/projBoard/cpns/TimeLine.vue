@@ -29,11 +29,11 @@
                         <span>结束时间</span>
                     </a-row>
                 </a-timeline-item>
-                <div class="info">
-                    <a-alert>测试人员填写的项目开始时间、结束时间、轮次时间均会影响生成文档的时间!</a-alert>
-                    <a-button type="primary" @click="handleModalVisible">展示目前文档生成的日期</a-button>
-                </div>
             </a-timeline>
+            <div class="info">
+                <a-alert>测试人员填写的项目开始时间、结束时间、轮次时间均会影响生成文档的时间!</a-alert>
+                <a-button type="primary" @click="handleModalVisible">展示目前文档生成的日期</a-button>
+            </div>
         </div>
         <!-- a-modal组件，展示生成文档的全部信息 -->
         <a-modal v-model:visible="visible" unmount-on-close hide-cancel :closable="false" width="auto">
@@ -87,17 +87,25 @@ defineExpose({
 }
 .timeline {
     position: relative;
-    padding: 50px;
+    padding: 36px 24px 12px;
     width: 100%;
-    .info {
-        width: 180px;
-        position: absolute;
-        right: 30px;
-        top: 1rem;
-        button {
-            width: 180px;
-            border-radius: 0;
-        }
+}
+
+// 说明与按钮移到时间轴下方，避免在窄屏/多轮次时和结束时间标签重叠
+.info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+
+    :deep(.arco-alert) {
+        flex: 1;
+    }
+
+    button {
+        flex-shrink: 0;
+        white-space: nowrap;
+        border-radius: 0;
     }
 }
 .a-col-title {

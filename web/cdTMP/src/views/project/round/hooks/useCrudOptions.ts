@@ -22,12 +22,12 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         delete: { show: true, api: dutApi.delete },
         // 处理添加后函数
         beforeOpenAdd: function () {
-            let round_str = Number(routeKey) + 1
+            let round_str = Number(roundNumber || 0) + 1
             crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件-`
             return true
         },
         beforeOpenEdit: function (record) {
-            let round_str = Number(routeKey) + 1
+            let round_str = Number(roundNumber || 0) + 1
             crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件[${record.name}]-`
             return true
         },
@@ -42,11 +42,11 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         afterDelete: (res, record) => {
             let id = projectId.value
             if (!record) {
-                record = { key: route.query.key + "-X" }
+                record = { key: String(route.query.key ?? "") + "-X" }
             }
             treeDataStore.updateDutTreeData(record, id)
             // 清空行选择器
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         },
 
         // 新增、编辑、删除均携带下面

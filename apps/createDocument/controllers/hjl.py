@@ -6,21 +6,20 @@ from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.db.models import QuerySet
 from docxtpl import DocxTemplate
-from apps.dict.models import Dict
+from apps.dict.models import Dict, DictItem
 from utils.chen_response import ChenResponse
 from django.shortcuts import get_object_or_404
 from typing import Union
 from docxtpl import InlineImage
 from apps.project.models import Dut, Project, Round
-from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident
-from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
+from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, digit_to_chinese
+from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
 from utils.path_utils import project_path
 from apps.createDocument.extensions.util import delete_dir_files, build_testtype_output, require_project_begin_time
 from apps.createDocument.extensions.parse_rich_text import RichParser
 # 导入生成日志记录模块
 from apps.createSeiTaiDocument.extensions.logger import GenerateLogger
 
-chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
 @api_controller("/generateHJL", tags=['生成回归记录系列文档'],
                 auth=JWTAuth(), permissions=[IsAuthenticated])
@@ -85,7 +84,7 @@ class GenerateControllerHJL(ControllerBase):
             # 每个轮次独立渲染context
             context_round = deepcopy(context)
             # 取中文名称
-            cname = chinese_round_name[int(hround.key)]  # 输出二、三...
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             # 取该轮次源代码版本放入版本列表
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
@@ -115,23 +114,28 @@ class GenerateControllerHJL(ControllerBase):
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         demand_prefix = '3.1'
         # 一次取出 testType 数量，避免在轮次循环内反复查库
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()  # 测试类型的个数
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()  # 测试类型的个数
         # 循环每轮轮次对象
         for hround in hround_list:
             # 每轮重新实例化模板（render 会消耗占位符，复用会导致后续轮次内容停留在第一轮）
             doc = DocxTemplate(tpl_path)
-            cname = chinese_round_name[int(hround.key)]  # var：输出二、三字样
+            cname = digit_to_chinese(int(hround.key) + 1)  # var：输出二、三字样
             type_number_list = [i for i in range(1, test_type_len + 1)]  # 测试类型编号对应的列表
             list_list = [[] for j in range(1, test_type_len + 1)]  # 每个测试类型组合为一个列表[[],[],[],[]]
             testType_list, last_chapter_items = create_csx_chapter_dict(hround)
             testDemands = hround.rtField.all()  # 本轮所有测试项
             for demand in testDemands:
-                type_index = type_number_list.index(int(demand.testType))
+                try:
+                    type_index = type_number_list.index(int(demand.testType))
+                except (TypeError, ValueError):
+                    continue
                 demand_ident = get_ident(demand)
                 # ~~~组装测试项~~~
-                demand_last_chapter = last_chapter_items[demand.testType].index(demand.key) + 1
-                demand_chapter = ".".join([demand_prefix, str(testType_list.index(demand.testType) + 1),
-                                           str(demand_last_chapter)])
+                chapter_no_res = chapter_no(testType_list, last_chapter_items, demand.testType, demand.key)
+                if chapter_no_res is None:
+                    continue
+                type_no, demand_last_chapter = chapter_no_res
+                demand_chapter = ".".join([demand_prefix, str(type_no), str(demand_last_chapter)])
                 demand_dict = {
                     'name': demand.name,
                     'ident': demand_ident,
@@ -168,7 +172,7 @@ class GenerateControllerHJL(ControllerBase):
                     problem_prefix = "PT"
                     proj_ident = project_obj.ident
                     for problem in case.caseField.all():
-                        problem_list.append("_".join([problem_prefix, proj_ident, problem.ident]))
+                        problem_list.append("_".join([problem_prefix, proj_ident, (problem.ident or '')]))
                     # fpga的时序图
                     rich_parser3 = RichParser(case.timing_diagram)
                     timing_diagram = rich_parser3.get_final_list(doc, img_size=115, height=50)

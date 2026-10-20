@@ -12,10 +12,21 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
     const route = useRoute() as any
     const projectId = ref(route.query.id)
     const treeDataStore = useTreeDataStore()
-    const roundNumber = route.query.key.split("-")[0]
-    const dutNumber = route.query.key.split("-")[1]
-    const designDemandNumber = route.query.key.split("-")[2]
-    const testDemandNumber = route.query.key.split("-")[3]
+    // 刷新/直链时 key 可能缺失，统一兜底，避免 setup 阶段抛错整页白屏
+    const keyParts = String(route.query.key ?? "").split("-")
+    const roundNumber = keyParts[0]
+    const dutNumber = keyParts[1]
+    const designDemandNumber = keyParts[2]
+    const testDemandNumber = keyParts[3]
+    // 按树节点下标取标题；树未加载到该层级时返回占位符，避免 undefined.title
+    const nodeTitle = (path: string[], fallback = "-") => {
+        let node: any = treeDataStore.treeData
+        for (const idx of path) {
+            node = node?.[Number(idx)]
+            if (!node) return fallback
+        }
+        return node.title ?? fallback
+    }
     // 辅助
     const app = getCurrentInstance()!.appContext.config.globalProperties
     let beforeFormStep = undefined
@@ -51,32 +62,28 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             // 1.新增则将form的content数据变为undifined以便判断
             beforeFormStep = undefined
             // 2.标识处理
-            let key_split = route.query.key.split("-")
-            let round_key = key_split[0]
-            let dut_key = key_split[1]
-            let design_key = key_split[2]
-            let test_key = key_split[3]
-            let td = treeDataStore.treeData
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
-            ${(td[round_key] as any).title} > ${(td[round_key] as any).children[dut_key].title} >
-            ${(td[round_key] as any).children[dut_key].children[design_key].title} >
-            ${(td[round_key] as any).children[dut_key].children[design_key].children[test_key].title} > 用例-`
+            let round_key = keyParts[0]
+            let dut_key = keyParts[1]
+            let design_key = keyParts[2]
+            let test_key = keyParts[3]
+            crudRef.value.crudFormRef.actionTitle = `${route.query.ident ?? ""} >
+            ${nodeTitle([round_key])} > ${nodeTitle([round_key, dut_key])} >
+            ${nodeTitle([round_key, dut_key, design_key])} >
+            ${nodeTitle([round_key, dut_key, design_key, test_key])} > 用例-`
             return true
         },
         beforeOpenEdit: function (record) {
             // 1.储存打开前form的content数据到ref中，以便后续比较
             beforeFormStep = cloneDeep(record.testStep)
             // 2.标识处理
-            let key_split = route.query.key.split("-")
-            let round_key = key_split[0]
-            let dut_key = key_split[1]
-            let design_key = key_split[2]
-            let test_key = key_split[3]
-            let td = treeDataStore.treeData
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
-            ${(td[round_key] as any).title} > ${(td[round_key] as any).children[dut_key].title} >
-            ${(td[round_key] as any).children[dut_key].children[design_key].title} >
-            ${(td[round_key] as any).children[dut_key].children[design_key].children[test_key].title}
+            let round_key = keyParts[0]
+            let dut_key = keyParts[1]
+            let design_key = keyParts[2]
+            let test_key = keyParts[3]
+            crudRef.value.crudFormRef.actionTitle = `${route.query.ident ?? ""} >
+            ${nodeTitle([round_key])} > ${nodeTitle([round_key, dut_key])} >
+            ${nodeTitle([round_key, dut_key, design_key])} >
+            ${nodeTitle([round_key, dut_key, design_key, test_key])}
             >用例[${record.name}]-`
             return true
         },
@@ -91,11 +98,11 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         afterDelete: (res, record) => {
             let id = projectId.value
             if (!record) {
-                record = { key: route.query.key + "-X" }
+                record = { key: String(route.query.key ?? "") + "-X" }
             }
             treeDataStore.updateCaseTreeData(record, id)
             // 被删除还是在选择里面
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         },
         parameters: {
             projectId: route.query.id,

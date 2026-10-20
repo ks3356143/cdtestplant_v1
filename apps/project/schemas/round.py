@@ -15,11 +15,11 @@ class RoundInfoOutSchema(ModelSchema):
         exclude = ('remark',)
 
 class EditSchemaIn(Schema):
-    beginTime: str
+    beginTime: Optional[str] = None
     best_condition_tem: Optional[str] = None
     best_condition_voltage: Optional[str] = None
     create_datetime: str
-    endTime: str
+    endTime: Optional[str] = None
     grade: str = '3'
     id: int
     ident: str

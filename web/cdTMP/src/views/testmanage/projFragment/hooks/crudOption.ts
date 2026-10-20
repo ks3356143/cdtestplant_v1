@@ -63,7 +63,7 @@ const useCrudOption = () => {
             params.projectId = route.params.projectId as string
         },
         afterDelete(response: any) {
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         },
         operationColumn: true,
         operationColumnWidth: 180,

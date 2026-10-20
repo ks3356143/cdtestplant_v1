@@ -1,12 +1,14 @@
 <template>
     <div class="block">
-        <div class="user-header rounded-xs text-center">
-            <div class="pt-6 mx-auto avatar-box top-box">
-                {{ userStore.name }}
+        <div class="user-header">
+            <div class="user-identity">
+                <div class="user-avatar">{{ (userStore.name || userStore.username || "U").slice(0, 1) }}</div>
+                <div class="user-meta">
+                    <div class="user-name">{{ userStore.name || userStore.username }}</div>
+                    <div class="user-account">账号：{{ userStore.username }}</div>
+                </div>
             </div>
-            <div>
-                <a-tag size="large" class="mt-3 rounded-full" color="#de53ff"> 账号：{{ userStore.username }} </a-tag>
-            </div>
+            <div class="user-header-note">个人资料 · 账号安全 · 登录日志</div>
         </div>
         <div class="block lg:flex lg:justify-between">
             <div class="ma-content-block w-full lg:w-6/12 mt-3 p-4">
@@ -91,22 +93,93 @@ defineOptions({
 </script>
 
 <style scoped>
-.avatar-box {
-    width: 130px;
-}
+/* 用户中心头部：墨黑底 + 青绿竖线 + 工程网格，与全站直角风格一致 */
 .user-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     width: 100%;
-    height: 150px;
-    background: url("@/assets/userBanner.jpg") no-repeat;
-    background-size: cover;
+    height: 136px;
+    padding: 0 32px;
+    color: #ffffff;
+    background-color: #0f172a;
+    background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+    background-size: 36px 36px;
+    border-left: 4px solid rgb(var(--primary-6));
 }
+
+.user-identity {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    background-color: rgb(var(--primary-6));
+    color: #ffffff;
+    font-size: 30px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.user-name {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-account {
+    margin-top: 6px;
+    color: #9aa7b8;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+}
+
+.user-header-note {
+    color: #64748b;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
 .nostatus {
     color: red;
 }
-.top-box {
-    font-size: 2rem;
-}
+
 :deep(.arco-form-item) {
     margin-bottom: 20px; /* 覆盖默认样式 */
+}
+
+@media (max-width: 768px) {
+    .user-header {
+        height: 112px;
+        padding: 0 18px;
+    }
+
+    .user-header-note {
+        display: none;
+    }
+
+    .user-avatar {
+        width: 56px;
+        height: 56px;
+        font-size: 24px;
+    }
+
+    .user-name {
+        font-size: 19px;
+    }
 }
 </style>

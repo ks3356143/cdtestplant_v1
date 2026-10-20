@@ -38,6 +38,7 @@
 
 <script setup>
 import { ref, computed, watch, provide, onMounted } from "vue"
+import { useRoute } from "vue-router"
 import { useAppStore, useUserStore } from "@/store"
 import NavBar from "@/layout/components/navbar.vue"
 import Menu from "@/layout/components/menu.vue"
@@ -48,6 +49,7 @@ import Footer from "@/layout/components/footer.vue"
 import useResponsive from "@/hooks/responsive"
 const appStore = useAppStore()
 const userStore = useUserStore()
+const route = useRoute()
 const permission = usePermission()
 // 响应式屏幕
 useResponsive(true)
@@ -122,6 +124,7 @@ const paddingStyle = computed(() => {
     left: 0;
     z-index: 99;
     height: 100%;
+    background-color: var(--app-sidebar, #0f172a);
     transition: all 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
     &::after {
         position: absolute;
@@ -130,7 +133,7 @@ const paddingStyle = computed(() => {
         display: block;
         width: 1px;
         height: 100%;
-        background-color: var(--color-border);
+        background-color: var(--app-sidebar-line, #263145);
         content: "";
     }
 
@@ -145,7 +148,12 @@ const paddingStyle = computed(() => {
     height: 100%;
     overflow: auto;
     overflow-x: hidden;
+
+    // 侧边栏：墨黑底 + 青绿选中块，全部直角
     :deep(.arco-menu) {
+        background-color: transparent;
+        color: var(--app-sidebar-text, #c7d0dd);
+
         ::-webkit-scrollbar {
             width: 12px;
             height: 4px;
@@ -154,20 +162,70 @@ const paddingStyle = computed(() => {
         ::-webkit-scrollbar-thumb {
             border: 4px solid transparent;
             background-clip: padding-box;
-            border-radius: 3px;
-            background-color: var(--color-text-4);
+            border-radius: 0;
+            background-color: #334155;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background-color: var(--color-text-3);
+            background-color: #475569;
         }
+    }
+
+    :deep(.arco-menu-item),
+    :deep(.arco-menu-inline-header) {
+        margin: 2px 8px;
+        width: auto;
+        border-radius: 0;
+        background-color: transparent;
+        color: var(--app-sidebar-text, #c7d0dd);
+        line-height: 40px;
+        height: 40px;
+    }
+
+    :deep(.arco-menu-inline-content) {
+        background-color: transparent;
+    }
+
+    :deep(.arco-menu-item:hover),
+    :deep(.arco-menu-inline-header:hover) {
+        background-color: var(--app-sidebar-2, #172033);
+        color: #ffffff;
+    }
+
+    :deep(.arco-menu-item.arco-menu-selected) {
+        background-color: rgb(var(--primary-6)) !important;
+        color: #ffffff !important;
+    }
+
+    :deep(.arco-menu-icon) {
+        color: var(--app-sidebar-muted, #8290a5);
+    }
+
+    :deep(.arco-menu-item.arco-menu-selected .arco-menu-icon),
+    :deep(.arco-menu-inline-header:hover .arco-menu-icon) {
+        color: #ffffff;
+    }
+
+    :deep(.arco-menu-icon-suffix) {
+        color: var(--app-sidebar-muted, #8290a5);
+    }
+
+    :deep(.arco-menu-collapse-button) {
+        background-color: var(--app-sidebar-2, #172033);
+        color: var(--app-sidebar-muted, #8290a5);
+        border-radius: 0;
+    }
+
+    :deep(.arco-menu-collapse-button:hover) {
+        background-color: rgb(var(--primary-6));
+        color: #ffffff;
     }
 }
 
 .layout-content {
     min-height: 100vh;
     overflow-y: auto;
-    background-color: var(--color-fill-2);
+    background-color: var(--app-canvas, #f2f4f6);
     transition: padding 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
 }
 </style>

@@ -11,10 +11,10 @@ export function useDocTimeShow(projectId: number, showError: Function) {
     const getTimeByBackend = async () => {
         try {
             const res = await projectApi.getDocumentTimeShow(projectId)
-            timeTemp.value = res.data
+            timeTemp.value = res.data ?? []
         } catch (e: any) {
             // 如果检测到项目时间错误，则处理一些东西
-            if (e.data.flag === PROJECT_ENDTIME_ERROR_CODE) {
+            if (e?.data?.flag === PROJECT_ENDTIME_ERROR_CODE) {
                 showError()
             }
         }
@@ -22,14 +22,13 @@ export function useDocTimeShow(projectId: number, showError: Function) {
     getTimeByBackend()
     const timeList = computed(() => {
         timeTemp.value.forEach((item) => {
+            if (!item || typeof item !== "object") return
             // 遍历所有属性，对值格式进行处理
             Object.keys(item).forEach((key) => {
                 if (Array.isArray(item[key])) {
-                    item[key] = item[key].join("~")
-                } else {
-                    if (item[key].includes("年")) {
-                        item[key] = item[key].replace("年", "").replace("月", "").replace("日", "")
-                    }
+                    item[key] = item[key].filter((it) => it != null).join("~")
+                } else if (typeof item[key] === "string" && item[key].includes("年")) {
+                    item[key] = item[key].replace("年", "").replace("月", "").replace("日", "")
                 }
             })
         })

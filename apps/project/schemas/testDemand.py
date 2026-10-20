@@ -41,18 +41,18 @@ class TestDemandModelOutSchema(ModelSchema):
 
 # 查询测试项
 class TestDemandFilterSchema(Schema):
-    project_id: int = Field(None, alias='projectId')
-    round_id: str = Field(None, alias='round')
-    dut_id: str = Field(None, alias='dut')
-    design_id: str = Field(None, alias='designDemand')
+    project_id: Optional[int] = Field(None, alias='projectId')
+    round_id: Optional[str] = Field(None, alias='round')
+    dut_id: Optional[str] = Field(None, alias='dut')
+    design_id: Optional[str] = Field(None, alias='designDemand')
     # 其他字段
-    ident: str = Field(None, alias='ident')
-    testType: str = Field(None, alias='testType')
-    name: str = Field(None, alias='name')
-    priority: str = Field(None, alias="priority")
+    ident: Optional[str] = Field(None, alias='ident')
+    testType: Optional[str] = Field(None, alias='testType')
+    name: Optional[str] = Field(None, alias='name')
+    priority: Optional[str] = Field(None, alias="priority")
     # 新增查询字段，给大表的查询
-    testDesciption: str = Field(None, alias="testDesciption")
-    testContent: str = Field(None, alias="testContent")
+    testDesciption: Optional[str] = Field(None, alias="testDesciption")
+    testContent: Optional[str] = Field(None, alias="testContent")
 
 # 处理树状结构的schema
 class TestDemandTreeReturnSchema(Schema):

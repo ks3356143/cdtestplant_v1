@@ -49,8 +49,9 @@ class Fragment(CoreModel):
     name = models.CharField(verbose_name='片段名称-必须和文件名一致', max_length=128)
     is_main = models.BooleanField(default=False, verbose_name='是否替换磁盘的片段')
     content = HTMLField(null=True, blank=True, verbose_name='片段富文本', help_text='文档片段的富文本')
-    # 关联的项目
-    project = models.ForeignKey(Project, related_name='frag', related_query_name='qFrag', on_delete=models.CASCADE)
+    # 关联的项目；为空表示全局文档片段（仅系统管理员可维护）
+    project = models.ForeignKey(Project, related_name='frag', related_query_name='qFrag',
+                                on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = 'fragment_core'

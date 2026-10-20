@@ -1,6 +1,6 @@
 <template>
     <!-- 组件：该组件显示一个正方体，可粘贴图片内容进去并展示，并生成base64到数据里面 -->
-    <div class="image-input-container flex flex-col gap-1">
+    <div class="image-input-container flex flex-col gap-1" ref="imageContainer">
         <div class="image-input-handle flex items-center justify-center" @paste="handlePaste">
             <!-- 加载状态 -->
             <div v-if="isLoading">
@@ -28,10 +28,12 @@ const imgData = defineModel<string>()
 const fontnote = defineModel<string>("fontnote")
 const isLoading = ref(false)
 
-// 全局粘贴处理函数
+const imageContainer = ref<HTMLElement | null>(null)
+
+// 全局粘贴处理函数：仅在焦点/事件位于本组件内时接管，避免拦截页面其它位置的文本粘贴
 const onGlobalPaste = (e: ClipboardEvent) => {
-    // 可以增加判断：只有当前组件所在的 modal 打开时才处理（通过 props 传入 visible 状态或使用 provide/inject）
-    // 简单起见，这里假设始终需要处理（父组件控制显示隐藏）
+    const target = e.target as Node | null
+    if (!target || !imageContainer.value?.contains(target)) return
     handlePaste(e)
 }
 

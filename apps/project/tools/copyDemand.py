@@ -8,10 +8,10 @@ def demand_copy_to_design(project_id: int, demand_key: str, design_id: int, dept
     project_qs = get_object_or_404(Project, id=project_id)
     design = project_qs.psField.filter(id=design_id).first()
     if not design:
-        raise HttpError(500, message=f'设计需求不存在：{design_id}')
+        raise HttpError(404, message=f'设计需求不存在：{design_id}')
     demand = project_qs.ptField.filter(key=demand_key).first()
     if not demand:
-        raise HttpError(500, message=f'测试项不存在：{demand_key}')
+        raise HttpError(404, message=f'测试项不存在：{demand_key}')
     # 1.这里先要根据老的demand取出其步骤，并深度复制
     origin_demand = deepcopy(demand)
     demand.id = None

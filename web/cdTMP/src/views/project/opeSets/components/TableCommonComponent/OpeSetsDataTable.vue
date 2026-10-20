@@ -50,7 +50,7 @@
                 showTotal: true,
                 showPageSize: true,
                 total: total,
-                pageSizeOptions: [10, 20, 50, 1000],
+                pageSizeOptions: [10, 20, 50, 100],
                 hideOnSinglePage: false
             }"
             @page-change="pageChange"

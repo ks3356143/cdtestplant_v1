@@ -140,6 +140,17 @@ def collect_rows(project_id=None, since=None) -> dict:
         if not changed:
             break
 
+    # 多对多关系：Problem ↔ Case 不随任一单表导出，这里按本次备份到的问题单单独导出关系行，
+    # 否则恢复后问题单全部变成“无关联用例”，报告与清单会失真。
+    problem_rows = result.get(_label(Problem)) or []
+    if problem_rows:
+        problem_ids = [row['id'] for row in problem_rows if row.get('id') is not None]
+        if problem_ids:
+            through = Problem.case.through
+            result['problem_case_relations'] = list(
+                through.objects.filter(problem_id__in=problem_ids).values('problem_id', 'case_id')
+            )
+
     return result
 
 
@@ -273,6 +284,26 @@ def restore_backup(record) -> dict:
         stats['models'][str(model._meta.verbose_name)] = {
             'created': created, 'updated': updated, 'failed': failed,
         }
+    # 恢复 Problem ↔ Case 多对多关系：只补不删，重复关系由 ignore_conflicts 忽略
+    relations = data.get('problem_case_relations') or []
+    if relations:
+        through = Problem.case.through
+        existing_problem_ids = set(Problem.objects.values_list('id', flat=True))
+        existing_case_ids = set(Case.objects.values_list('id', flat=True))
+        objs = [
+            through(problem_id=row['problem_id'], case_id=row['case_id'])
+            for row in relations
+            if row.get('problem_id') in existing_problem_ids and row.get('case_id') in existing_case_ids
+        ]
+        restored_links = 0
+        try:
+            with transaction.atomic():
+                through.objects.bulk_create(objs, ignore_conflicts=True)
+                restored_links = len(objs)
+        except Exception:
+            restored_links = 0
+        stats['relations'] = restored_links
+
     return stats
 
 

@@ -10,7 +10,7 @@
                     <div>
                         <icon-upload class="text-5xl text-gray-400" />
                         <div class="text-red-600 font-bold">导入Excel</div>
-                        将文件拖到此处，或<span style="color: #3370ff">点击上传</span>，只能上传 xls/xlsx 文件
+                        将文件拖到此处，或<span style="color: rgb(var(--primary-6))">点击上传</span>，只能上传 xls/xlsx 文件
                     </div>
                 </div>
             </template>

@@ -36,9 +36,14 @@ class RoundController(ControllerBase):
         if Round.objects.filter(project__id=payload.project, ident=payload.ident).exclude(id=int(id)).exists():
             return ChenResponse(code=400, status=400, message='标识和其他重复')
         for attr, value in payload.dict().items():
-            # 不知道为什么多个project
-            if attr != "project":
-                setattr(round, attr, value)
+            # project 不可改；id/时间戳由 ORM 维护，避免把前端回传值写回
+            if attr in ('project', 'id', 'create_datetime', 'update_datetime'):
+                continue
+            # DateField 收到空串会触发 DataError，统一转为 None
+            if attr in ('beginTime', 'endTime') and value in ('', None):
+                setattr(round, attr, None)
+                continue
+            setattr(round, attr, value)
         round.save()
         return ChenResponse(message="轮次信息更新成功")
 
@@ -61,8 +66,8 @@ class RoundController(ControllerBase):
         for single_qs in round_all_qs:
             old_key = single_qs.key
             single_qs.key = str(index)
-            single_qs.ident = single_qs.ident.replace(f'R{int(old_key) + 1}', f'R{index + 1}')
-            single_qs.name = single_qs.name.replace(str(int(old_key) + 1), str(index + 1))
+            single_qs.ident = (single_qs.ident or '').replace(f'R{int(old_key) + 1}', f'R{index + 1}')
+            single_qs.name = (single_qs.name or '').replace(str(int(old_key) + 1), str(index + 1))
             single_qs.title = single_qs.name
             index = index + 1
             single_qs.save()

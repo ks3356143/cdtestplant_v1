@@ -7,6 +7,7 @@ from docx.oxml.ns import qn
 from docx.shared import Mm
 from apps.createDocument.extensions.tools import set_table_border_by_cell_position, set_cell_margins
 from utils.path_utils import project_path
+from utils.util import digit_to_chinese
 from utils.chen_response import ChenResponse
 from django.shortcuts import get_object_or_404
 from apps.project.models import Project, Round
@@ -14,7 +15,6 @@ from django.db.models import QuerySet
 
 # 创建当前轮次别名
 RoundType = Literal["0", "not0", "last"]
-chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
 # 通用生成静态软件项、静态硬件项、动态软件项、动态硬件信息、测评数据的context，包含fontnote和table
 def create_table_context(table_data: list[list[str]], doc: DocxTemplate, rounds_map: list[list[str]] = None,
@@ -117,7 +117,7 @@ def uniform_static_dynamic_response(id: int, filename: str, r_filename: str, mod
             hround_list: QuerySet[Round] = project_obj.pField.exclude(key='0')
             for hround in hround_list:
                 round_key = hround.key
-                cname = chinese_round_name[int(round_key)]  # 取中文：一、二、三...
+                cname = digit_to_chinese(int(round_key) + 1)  # 取中文：一、二、三...
                 # key就是current_round，这里就解决文件名和那个的问题
                 subdoc = create_table_context(table_data, doc, obj.rounds_map, round_key)
                 context = {

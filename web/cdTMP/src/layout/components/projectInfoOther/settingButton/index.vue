@@ -1,7 +1,7 @@
 <template>
     <button class="button">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20" fill="none" class="svg-icon">
-            <g stroke-width="1.5" stroke-linecap="round" stroke="#5d41de">
+            <g stroke-width="1.5" stroke-linecap="round" stroke="currentColor">
                 <circle r="2.5" cy="10" cx="10"></circle>
                 <path
                     fill-rule="evenodd"
@@ -26,88 +26,85 @@ defineOptions({
 </script>
 
 <style scoped>
+/* 直角风格：深墨底 + 青绿描边，和顶栏/侧边栏保持同一套视觉语言 */
 .button {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 6px 12px;
+    padding: 0 14px;
     gap: 8px;
-    height: 36px;
-    width: 200px;
-    border: none;
-    background: #5e41de33;
-    border-radius: 20px;
+    height: 34px;
+    min-width: 148px;
+    border: 1px solid #263145;
+    background: #0f172a;
+    border-radius: 0;
+    color: #c7d0dd;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
 }
 
 .lable {
     line-height: 1.2;
-    font-size: 17px;
-    color: #5d41de;
-    font-family: sans-serif;
-    letter-spacing: 1px;
+    font-size: 14px;
+    color: inherit;
+    font-family: inherit;
+    letter-spacing: 0.06em;
 }
 
 .svg-icon {
     display: block;
-    width: 20px;
-    height: 20px;
+    width: 17px;
+    height: 17px;
+    color: rgb(var(--primary-4));
 }
 
 .button:hover {
-    background: #5e41de4d;
+    background: rgb(var(--primary-6));
+    border-color: rgb(var(--primary-6));
+    color: #ffffff;
 }
 
 .button:hover .svg-icon {
-    animation: spin 2s linear infinite;
+    color: #ffffff;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* 屏幕宽度 ≤1280px 时适度缩小 */
 @media (max-width: 1280px) {
     .button {
-        width: 170px;
+        min-width: 130px;
         height: 32px;
-        padding: 5px 10px;
+        padding: 0 10px;
         gap: 6px;
     }
 
     .lable {
-        font-size: 16px;
-    }
-
-    .svg-icon {
-        width: 18px;
-        height: 18px;
-    }
-}
-
-/* 屏幕宽度 ≤1024px 时进一步缩小 */
-@media (max-width: 1024px) {
-    .button {
-        width: 150px;
-        height: 30px;
-        padding: 4px 8px;
-        gap: 5px;
-    }
-
-    .lable {
-        font-size: 15px;
-        letter-spacing: 0.5px;
+        font-size: 13px;
     }
 
     .svg-icon {
         width: 16px;
         height: 16px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .button {
+        min-width: 118px;
+        height: 30px;
+        padding: 0 8px;
+        gap: 5px;
+    }
+
+    .lable {
+        font-size: 12px;
+        letter-spacing: 0.04em;
+    }
+
+    .svg-icon {
+        width: 15px;
+        height: 15px;
     }
 }
 </style>

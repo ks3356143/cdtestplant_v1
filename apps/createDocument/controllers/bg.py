@@ -16,7 +16,7 @@ from apps.createDocument.extensions import util
 from utils.chen_response import ChenResponse
 from apps.project.tools.access_control import check_project_access_by_id
 from apps.createDocument.extensions.util import create_bg_docx, get_round1_problem, require_project_begin_time
-from utils.util import get_str_dict, get_list_dict, create_problem_grade_str, create_str_testType_list, \
+from utils.util import get_str_dict, get_list_dict, create_problem_grade_str, create_str_testType_list, digit_to_chinese, \
     create_demand_summary, create_problem_type_str, create_problem_table, create_problem_type_table, \
     get_str_abbr
 # 根据轮次生成测评内容文档context
@@ -87,13 +87,12 @@ class GenerateControllerBG(ControllerBase):
         # 循环所有轮次，除了第一轮
         std_documents.extend([sm_duty, jl_duty])
         rounds = project_obj.pField.exclude(key='0')
-        name_list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
         index = 1
         for r in rounds:
-            hsm_duty = {'doc_name': f'{project_obj.name}软件第{name_list[index]}轮测试说明',
+            hsm_duty = {'doc_name': f'{project_obj.name}软件第{digit_to_chinese(index + 1)}轮测试说明',
                         'ident_version': f'PT-{project_obj.ident}-TD{str(index + 1)}-1.00',
                         'publish_date': r.beginTime, 'source': project_obj.test_unit}
-            hjl_duty = {'doc_name': f'{project_obj.name}软件第{name_list[index]}轮测试记录',
+            hjl_duty = {'doc_name': f'{project_obj.name}软件第{digit_to_chinese(index + 1)}轮测试记录',
                         'ident_version': f'PT-{project_obj.ident}-TN{str(index + 1)}',
                         'publish_date': r.endTime, 'source': project_obj.test_unit}
             std_documents.extend([hsm_duty, hjl_duty])
@@ -181,22 +180,22 @@ class GenerateControllerBG(ControllerBase):
             so_dut_verson = so_dut.version
         # 这里找出除第一轮的其他轮次
         rounds = project_obj.pField.exclude(key='0')
-        rounds_str_chinese = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
         round_list = []
         for r in rounds:
             # 找所属dut的so-dut
             so_dut = r.rdField.filter(type='SO').first()
             # 找出上一轮dut的so-dut
-            last_problem_count = Problem.objects.filter(
+            last_problem_count = project_obj.projField.filter(
                 case__round__key=str(int(r.key) - 1)).distinct().count()
-            current_round_problem_count = Problem.objects.filter(case__round__key=r.key).distinct().count()
+            current_round_problem_count = project_obj.projField.filter(
+                case__round__key=r.key).distinct().count()
             if current_round_problem_count > 0:
                 current_round_description = f'引入新问题{current_round_problem_count}个'
             else:
                 current_round_description = '经测试软件更改正确，并且未引入新的问题'
             r_dict = {
                 'version': so_dut.version if so_dut else '$请添加该轮次源代码信息$',
-                'round_index': rounds_str_chinese[int(r.key)],
+                'round_index': digit_to_chinese(int(r.key) + 1),
                 'last_problem_count': last_problem_count,
                 'current_round_description': current_round_description,
                 'start_year': r.beginTime.year,
@@ -612,7 +611,7 @@ class GenerateControllerBG(ControllerBase):
         for round_str in round_str_list:
             # 找寻轮次里面源代码版本
             dut_version = 'XXX'
-            dut_so = Dut.objects.filter(round__key=round_str, type='SO').first()
+            dut_so = Dut.objects.filter(round__project=project_obj, round__key=round_str, type='SO').first()
             if dut_so:
                 dut_version = dut_so.version
             if is_JD:
@@ -673,7 +672,7 @@ class GenerateControllerBG(ControllerBase):
         tpl_doc = Path.cwd() / "media" / project_path(id) / "form_template" / "bg" / "问题汇总表.docx"
         doc = DocxTemplate(tpl_doc)
         project_obj = get_object_or_404(Project, id=id)
-        problem_prefix = "_".join(['PT', project_obj.ident])
+        problem_prefix = "_".join(['PT', project_obj.ident or ''])
         problems = project_obj.projField
         # 先查询有多少轮次
         round_count = project_obj.pField.count()
@@ -681,7 +680,7 @@ class GenerateControllerBG(ControllerBase):
         data_list = []
         for round_str in round_str_list:
             # 查询所属当前轮次的SO-dut
-            so_dut = Dut.objects.filter(round__key=round_str, type='SO').first()
+            so_dut = Dut.objects.filter(round__project=project_obj, round__key=round_str, type='SO').first()
             round_dict = {
                 'static': [],
                 'dynamic': [],

@@ -115,6 +115,10 @@ class DutController(ControllerBase):
             if payload.type != 'SO' and attr in ('total_lines', 'effective_lines', 'comment_lines'):
                 setattr(dut_qs, attr, "")
                 continue
+            # DateField 收到空串会触发 MySQL DataError，统一转为 None
+            if attr in ('release_date',) and value in ('', None):
+                setattr(dut_qs, attr, None)
+                continue
             if attr == 'name':
                 setattr(dut_qs, "title", value)
             setattr(dut_qs, attr, value)
@@ -138,7 +142,7 @@ class DutController(ControllerBase):
             dut_all_qs = Dut.objects.filter(round__id=round_id).order_by('id')
             if not dut_all_qs.exists():
                 continue
-            ident_before_string = dut_all_qs[0].ident.split("UT")[0]  # 输出类似于“R2233-R1-”
+            ident_before_string = (dut_all_qs[0].ident or "").split("UT")[0]  # 输出类似于“R2233-R1-”
             index = 0
             for single_qs in dut_all_qs:
                 single_qs.key = "".join([round_key, '-', str(index)])
@@ -155,14 +159,14 @@ class DutController(ControllerBase):
     @transaction.atomic
     def delete_soExist(self, id: int):
         project_obj = get_object_or_404(Project, id=id)
-        # 先查询项目的所有轮次
-        round_qs = project_obj.pField.all()
+        # 先查询项目的所有轮次（预取被测件，避免逐轮 exists 查询）
+        round_qs = project_obj.pField.prefetch_related('rdField')
         data = {
             'round_count': round_qs.count(),
             'round_list': []
         }
         for round_obj in round_qs:
-            so_dut_exists = round_obj.rdField.filter(type='SO').exists()
+            so_dut_exists = any(dut.type == 'SO' for dut in round_obj.rdField.all())
             round_dict = {
                 'key': round_obj.key,
                 'isExists': so_dut_exists
@@ -229,8 +233,11 @@ class UploadController(ControllerBase):
             with open(zip_path, 'wb') as f:
                 for chunk in file.chunks():
                     f.write(chunk)
-            # 解压并获取文件路径
-            source_root = extract_and_get_paths(zip_path, tmp_dir)
+            # 解压并获取文件路径：损坏/非 zip 文件会抛 ValueError，转成业务 400
+            try:
+                source_root = extract_and_get_paths(zip_path, tmp_dir)
+            except (ValueError, RuntimeError) as e:
+                raise HttpError(400, f'压缩包解析失败：{e}')
             results = analyze_code_directory(source_root)
             # 判断是否录入了metrics，并且去掉ORM不需要字段
             key_to_remove = {'comment_rate', 'total_lines', 'effective_lines', 'comment_lines', 'code_ratio'}
@@ -255,4 +262,10 @@ class UploadController(ControllerBase):
                 for chunk in file.chunks():
                     f.write(chunk)
             extracter = DocxChapterExtractor(docx_path)
-            return extracter.main(parseChapter)
+            try:
+                result = extracter.main(parseChapter)
+            except ValueError as e:
+                raise HttpError(400, str(e))
+            if not result:
+                raise HttpError(400, f'未能从文档中解析出“{parseChapter}”章节，请检查目录与正文标题是否一致')
+            return result

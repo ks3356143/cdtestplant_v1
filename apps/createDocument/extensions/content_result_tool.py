@@ -8,7 +8,6 @@ from apps.createDocument.extensions.parse_rich_text import RichParser
 def create_round_context(project_obj: Project, round_id: str):
     """根据轮次，生成测评报告中的测评结果"""
     # 0. 首先定义个轮次对应中文
-    round_chinese = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
     round_id = int(round_id)
     round_str_id = str(round_id)
     # 1. 首先先查询给定轮次的round对向
@@ -65,7 +64,7 @@ def create_round_context(project_obj: Project, round_id: str):
     has_r2_dynamic = False
     if len(problems_dynamic_r2) > 0:
         has_r2_dynamic = True
-        r2_dynamic_str = (f"第{round_chinese[int(round_id)]}轮动态测试共发现问题{problems_dynamic_r2.count()}个，"
+        r2_dynamic_str = (f"第{digit_to_chinese(int(round_id) + 1)}轮动态测试共发现问题{problems_dynamic_r2.count()}个，"
                           f"其中{problem_dynamic_r2_type_str}；"
                           f"{problem_dynamic_r2_grade_str}。")
 
@@ -80,7 +79,7 @@ def create_round_context(project_obj: Project, round_id: str):
         'r2_exe_info_type': summry_r2_demandType_info,
         'has_r2_dynamic': has_r2_dynamic,
         'r2_dynamic_str': r2_dynamic_str,
-        'round_id': round_chinese[round_id],
+        'round_id': digit_to_chinese(int(round_id) + 1),
     }
     return context, round_obj
 
@@ -99,7 +98,7 @@ def create_influence_context(doc: DocxTemplate, round_obj: Round, project_obj: P
                 case_str_list = []
                 for case in project_obj.pcField.filter(key__in=item.effect_cases):
                     case_ident_index = str(int(case.key.split("-")[-1]) + 1).zfill(3)
-                    case_str_list.append("_".join(["YL", get_str_abbr(case.test.testType, "testType"), case.ident, case_ident_index]))
+                    case_str_list.append("_".join(["YL", get_str_abbr(case.test.testType, "testType"), (case.ident or ''), case_ident_index]))
                 # 2.处理富文本框
                 parser = RichParser(item.change_des)
                 item_dict = {

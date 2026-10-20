@@ -211,6 +211,8 @@ class DocxChapterExtractor(object):
         chapter_body_list = self.iter_block_items(self.doc, directory)
         # 构建树形JSON结构
         json_tree = self.build_json_tree(chapter_body_list)
+        if not json_tree:
+            raise ValueError(f'未能定位章节“{chapter_name}”的正文：请确认目录页与正文标题文本完全一致')
         return json_tree
 
 if __name__ == '__main__':

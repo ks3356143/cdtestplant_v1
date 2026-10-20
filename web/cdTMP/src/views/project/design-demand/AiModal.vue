@@ -196,7 +196,10 @@ const generateClick = async () => {
         // AI 返回格式异常时给出明确提示，避免静默失败
         let solveRes: any
         try {
-            solveRes = JSON.parse(res.data.history[0].at(-1))
+            const historyItem = res.data?.history?.[0]
+            const answer = Array.isArray(historyItem) ? historyItem.at(-1) : historyItem
+            if (!answer) throw new Error("empty")
+            solveRes = JSON.parse(answer)
         } catch {
             percent.value = 0.0
             Message.error("AI 返回内容格式异常，无法解析测试项，请重试")
@@ -289,7 +292,7 @@ const luButtonClick = async () => {
     const testMethod = testItem.testMethod
     const testDesciption = testItem.demandDescription
     const priority = testItem.priority
-    const testContent = testItem.children.map(({ name: subName, ...rest }) => ({
+    const testContent = (testItem.children ?? []).map(({ name: subName, ...rest }) => ({
         subName,
         ...rest
     }))

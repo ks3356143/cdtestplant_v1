@@ -255,20 +255,20 @@ class ProblemController(ControllerBase):
     def get_relative_cases(self, id: int):
         problem_qs = get_object_or_404(Problem, id=id)
         check_project_access(problem_qs.project, self.context.request.user)
-        cases = problem_qs.case.all()
+        cases = problem_qs.case.select_related('round', 'dut', 'design', 'test')
         case_list = []
         for case in cases:
             case_dict = {
                 'id': case.id,
                 'case': case.title,
-                'round': case.round.title,
-                'dut': case.dut.title,
-                'design': case.design.title,
+                'round': case.round.title or '',
+                'dut': case.dut.title or '',
+                'design': case.design.title or '',
             }
             demand = case.test
-            case_dict['demand'] = demand.title
+            case_dict['demand'] = demand.title or ''
             demand_testType_showtitle = get_str_abbr(demand.testType, 'testType')
-            case_dict['demand_ident'] = "-".join(['XQ', demand_testType_showtitle, demand.ident])
+            case_dict['demand_ident'] = "-".join(['XQ', demand_testType_showtitle, demand.ident or ''])
             case_list.append(case_dict)
         return case_list
 
@@ -330,11 +330,10 @@ class ProblemController(ControllerBase):
             if len(cases):
                 # 如果关联了case
                 belong_demand: TestDemand = cases[0].test
-                # 找到对应测试类型（字典缺失时与原实现一致地抛出）
-                try:
-                    test_type_sort = type_sort_map[belong_demand.testType]
-                except KeyError:
-                    raise DictItem.DoesNotExist
+                # 找到对应测试类型；字典项被删除时排到最后，避免整批重排 500
+                test_type_sort = type_sort_map.get(belong_demand.testType)
+                if test_type_sort is None:
+                    test_type_sort = 10 ** 6
                 # 找到测试类型的sort/找到轮次key
                 not_sorted_problems.append({
                     'problem': problem,

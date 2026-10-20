@@ -166,28 +166,32 @@ const problem_type = ref("")
 const problem_grade = ref("")
 const problem_method = ref([])
 const getDict = async () => {
-    let problemStatu = await commonApi.getDict("problemStatu")
-    let problemType = await commonApi.getDict("problemType")
-    let problemGrade = await commonApi.getDict("problemGrade")
-    let closeMethod = await commonApi.getDict("closeMethod")
-    problemStatu.data.forEach((item) => {
+    // 四个字典并发请求，首屏少 3 次串行往返
+    const [problemStatu, problemType, problemGrade, closeMethod] = await Promise.all([
+        commonApi.getDict("problemStatu"),
+        commonApi.getDict("problemType"),
+        commonApi.getDict("problemGrade"),
+        commonApi.getDict("closeMethod")
+    ])
+    ;(problemStatu.data ?? []).forEach((item) => {
         if (item.key === props.data.status) {
             problem_status.value = item.title
         }
     })
-    problemType.data.forEach((item) => {
+    ;(problemType.data ?? []).forEach((item) => {
         if (item.key === props.data.type) {
             problem_type.value = item.title
         }
     })
-    problemGrade.data.forEach((item) => {
+    ;(problemGrade.data ?? []).forEach((item) => {
         if (item.key === props.data.grade) {
             problem_grade.value = item.title
         }
     })
-    closeMethod.data.forEach((item) => {
-        for (let method in props.data.closeMethod) {
-            if (item.key == props.data.closeMethod[method]) {
+    ;(closeMethod.data ?? []).forEach((item) => {
+        const closeMethodValue = props.data.closeMethod ?? {}
+        for (let method in closeMethodValue) {
+            if (item.key == closeMethodValue[method]) {
                 problem_method.value.push(item.title)
             }
         }

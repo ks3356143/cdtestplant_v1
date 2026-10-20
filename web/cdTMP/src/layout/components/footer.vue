@@ -1,6 +1,10 @@
 <template>
-    <a-layout-footer class="flex items-center justify-center h-10 footer text-center">
-        <a-typography-title :heading="8"> 测试管理平台 </a-typography-title>
+    <a-layout-footer class="footer">
+        <span class="footer-brand">测试管理平台</span>
+        <span class="footer-divider"></span>
+        <span class="footer-meta">v{{ $version }}</span>
+        <span class="footer-divider"></span>
+        <span class="footer-meta">为测评服务 · 打造测评高地</span>
     </a-layout-footer>
 </template>
 
@@ -8,8 +12,30 @@
 
 <style lang="less" scoped>
 .footer {
-    border-top: 1px solid var(--color-border);
-    color: var(--color-text-2);
-    background-color: var(--color-bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 36px;
+    padding: 0 16px;
+    border-top: 1px solid var(--app-line, #e4e7eb);
+    background-color: var(--app-surface, #fff);
+    color: var(--app-muted, #6b7280);
+    font-size: 12px;
+}
+
+.footer-brand {
+    color: var(--app-ink-2, #374151);
+    font-weight: 600;
+}
+
+.footer-divider {
+    width: 1px;
+    height: 12px;
+    background-color: var(--app-line, #e4e7eb);
+}
+
+.footer-meta {
+    color: var(--app-muted, #6b7280);
 }
 </style>

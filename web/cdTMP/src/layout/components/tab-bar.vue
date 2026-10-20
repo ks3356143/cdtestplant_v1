@@ -51,18 +51,18 @@ onUnmounted(() => {
 <style scoped lang="less">
 .tab-bar-container {
     position: relative;
-    background-color: var(--color-bg-2);
+    background-color: var(--app-surface, #fff);
     .tab-bar-box {
         display: flex;
-        padding: 0 0 0 20px;
-        background-color: var(--color-bg-2);
-        border-bottom: 1px solid var(--color-border);
+        padding: 0 0 0 12px;
+        background-color: var(--app-surface, #fff);
+        border-bottom: 1px solid var(--app-line, #e4e7eb);
         .tab-bar-scroll {
-            height: 32px;
+            height: 34px;
             flex: 1;
             overflow: hidden;
             .tags-wrap {
-                padding: 4px 0;
+                padding: 5px 0;
                 height: 48px;
                 white-space: nowrap;
                 overflow-x: auto;
@@ -70,8 +70,24 @@ onUnmounted(() => {
                 :deep(.arco-tag) {
                     display: inline-flex;
                     align-items: center;
+                    height: 24px;
                     margin-right: 6px;
+                    padding: 0 8px;
+                    border: 1px solid var(--app-line, #e4e7eb);
+                    background-color: transparent;
+                    color: var(--app-muted, #6b7280);
+                    border-radius: 0;
                     cursor: pointer;
+                    transition:
+                        background-color 0.15s ease,
+                        border-color 0.15s ease,
+                        color 0.15s ease;
+
+                    &:hover {
+                        background-color: var(--app-surface-soft, #f7f8fa);
+                        color: var(--app-ink, #111827);
+                    }
+
                     &:first-child {
                         .arco-tag-close-btn {
                             display: none;
@@ -84,7 +100,7 @@ onUnmounted(() => {
 
     .tag-bar-operation {
         width: 100px;
-        height: 32px;
+        height: 34px;
     }
 }
 </style>

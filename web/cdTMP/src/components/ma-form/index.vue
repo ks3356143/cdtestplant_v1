@@ -96,10 +96,15 @@ const form = ref({})
 const replaceModalRef = ref()
 const containerRef = ref()
 const handleKeydown = (e) => {
-    if (e.ctrlKey && e.key === "f") {
-        e.preventDefault()
-        replaceModalRef.value && replaceModalRef.value.open()
-    }
+    if (!(e.ctrlKey && e.key === "f")) return
+    // 只有包含“替换”弹窗、且当前表单可见时才拦截，避免 keep-alive 缓存页/隐藏弹窗抢快捷键
+    const container = containerRef.value
+    if (!replaceModalRef.value || !container || container.offsetParent === null) return
+    // 焦点必须在本表单内（或页面无焦点），避免不同表单同时响应
+    const active = document.activeElement
+    if (active && active !== document.body && !container.contains(active)) return
+    e.preventDefault()
+    replaceModalRef.value.open()
 }
 onMounted(() => {
     document.addEventListener("keydown", handleKeydown)

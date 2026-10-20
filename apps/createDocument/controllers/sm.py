@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 # 导入模型
 from apps.project.models import Project
-from apps.dict.models import Dict
+from apps.dict.models import Dict, DictItem
 # 导入文档处理类
 from docxtpl import DocxTemplate
 from docx import Document
@@ -17,7 +17,7 @@ from docx import Document
 from utils.chen_response import ChenResponse
 from apps.project.tools.access_control import check_project_access_by_id
 from utils.util import get_ident, get_case_ident, get_testType
-from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
+from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
 from apps.createDocument.extensions import util
 from apps.createDocument.extensions.util import create_sm_docx, build_testtype_output
 from utils.path_utils import project_path
@@ -66,7 +66,7 @@ class GenerateControllerSM(ControllerBase):
         doc = DocxTemplate(case_template_doc_path)
         project_obj = get_object_or_404(Project, id=id)
         # 先查询dict字典，查出总共有多少个testType
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()
         type_number_list = [i for i in
                             range(1, test_type_len + 1)]  # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
         list_list = [[] for j in
@@ -82,13 +82,18 @@ class GenerateControllerSM(ControllerBase):
         testDemands = project_round_one.rtField.all()
         # 首先轮询所有测试需求
         for demand in testDemands:
-            type_index = type_number_list.index(int(demand.testType))
+            try:
+                type_index = type_number_list.index(int(demand.testType))
+            except (TypeError, ValueError):
+                continue
             demand_ident = get_ident(demand)
             # ~~~~~这里组装测试项~~~~~
             ## 确定测试需求章节号（后面可提取后进行复用）
-            demand_last_chapter = last_chapter_items[demand.testType].index(demand.key) + 1
-            demand_chapter = ".".join([demand_prefix, str(testType_list.index(demand.testType) + 1),
-                                       str(demand_last_chapter)])
+            chapter_no_res = chapter_no(testType_list, last_chapter_items, demand.testType, demand.key)
+            if chapter_no_res is None:
+                continue
+            type_no, demand_last_chapter = chapter_no_res
+            demand_chapter = ".".join([demand_prefix, str(type_no), str(demand_last_chapter)])
             demand_dict = {
                 'name': demand.name,
                 'ident': demand_ident,
@@ -140,7 +145,7 @@ class GenerateControllerSM(ControllerBase):
         # 生成第一轮的测试说明
         project_obj = get_object_or_404(Project, id=id)
         # 先查询dict字典，查出总共有多少个testType
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()
         type_number_list = [i for i in
                             range(1, test_type_len + 1)]  # [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
         list_list = [[] for j in
@@ -152,7 +157,10 @@ class GenerateControllerSM(ControllerBase):
         # 找到第一轮的全部测试项
         testDemands = project_round_one.rtField.all()
         for demand in testDemands:
-            type_index = type_number_list.index(int(demand.testType))
+            try:
+                type_index = type_number_list.index(int(demand.testType))
+            except (TypeError, ValueError):
+                continue
             demand_ident = get_ident(demand)
             demand_dict = {
                 'name': demand.name,
@@ -197,11 +205,13 @@ class GenerateControllerSM(ControllerBase):
                         if test_item.testType in ['2', '3', '15', '8']:
                             design_dict.update({'name': "/", 'chapter': "/"})
                         reveal_ident = "_".join(
-                            ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                            ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                         # 查字典方式确认章节号最后一位
-                        test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                        test_chapter = ".".join([demand_prefix, str(testType_list.index(test_item.testType) + 1),
-                                                 str(test_item_last_chapter)])
+                        chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                        if chapter_no_res is None:
+                            continue
+                        type_no, test_item_last_chapter = chapter_no_res
+                        test_chapter = ".".join([demand_prefix, str(type_no), str(test_item_last_chapter)])
                         test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident,
                                           'case_list': []}
                         for case in test_item.tcField.all():
@@ -226,11 +236,13 @@ class GenerateControllerSM(ControllerBase):
                     test_items.extend(design.odField.all())
                     for test_item in test_items:
                         reveal_ident = "_".join(
-                            ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                            ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                         # 查字典方式确认章节号最后一位
-                        test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                        test_chapter = ".".join([demand_prefix, str(testType_list.index(test_item.testType) + 1),
-                                                 str(test_item_last_chapter)])
+                        chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                        if chapter_no_res is None:
+                            continue
+                        type_no, test_item_last_chapter = chapter_no_res
+                        test_chapter = ".".join([demand_prefix, str(type_no), str(test_item_last_chapter)])
                         test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident,
                                           'case_list': []}
                         for case in test_item.tcField.all():

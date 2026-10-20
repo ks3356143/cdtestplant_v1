@@ -8,12 +8,12 @@ from ninja_extra.permissions import IsAuthenticated
 from ninja_jwt.authentication import JWTAuth
 # 导入数据库模型
 from apps.project.models import Project
-from apps.dict.models import Dict
+from apps.dict.models import Dict, DictItem
 from docxtpl import InlineImage
 # 导入文档处理相关
 from docxtpl import DocxTemplate
 # 导入自己工具
-from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
+from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
 from utils.util import get_ident, get_case_ident
 from utils.chen_response import ChenResponse
 from apps.project.tools.access_control import check_project_access_by_id
@@ -36,7 +36,7 @@ class GenerateControllerJL(ControllerBase):
         # 打开模版文档
         doc = DocxTemplate(record_template_path)
         # 准备返回的测试类型数组的嵌套
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()  # 测试类型的个数
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()  # 测试类型的个数
         type_number_list = [i for i in range(1, test_type_len + 1)]  # 测试类型编号对应的列表
         list_list = [[] for j in range(1, test_type_len + 1)]  # 每个测试类型组合为一个列表[[],[],[],[]]
         # 查询出第一轮次
@@ -51,12 +51,17 @@ class GenerateControllerJL(ControllerBase):
         proj_ident = project_obj.ident
         # 首先轮询所有测试需求
         for demand in testDemands:
-            type_index = type_number_list.index(int(demand.testType))
+            try:
+                type_index = type_number_list.index(int(demand.testType))
+            except (TypeError, ValueError):
+                continue
             demand_ident = get_ident(demand)
             # ~~~组装测试项~~~
-            demand_last_chapter = last_chapter_items[demand.testType].index(demand.key) + 1
-            demand_chapter = ".".join([demand_prefix, str(testType_list.index(demand.testType) + 1),
-                                       str(demand_last_chapter)])
+            chapter_no_res = chapter_no(testType_list, last_chapter_items, demand.testType, demand.key)
+            if chapter_no_res is None:
+                continue
+            type_no, demand_last_chapter = chapter_no_res
+            demand_chapter = ".".join([demand_prefix, str(type_no), str(demand_last_chapter)])
             demand_dict = {
                 'name': demand.name,
                 'ident': demand_ident,
@@ -103,7 +108,7 @@ class GenerateControllerJL(ControllerBase):
                 # 查询所有的problem
                 problem_list = []
                 for problem in case.caseField.all():
-                    problem_list.append("_".join([problem_prefix, proj_ident, problem.ident]))
+                    problem_list.append("_".join([problem_prefix, proj_ident, (problem.ident or '')]))
                 # 组装用例的dict
                 rich_parser3 = RichParser(case.timing_diagram)
                 timing_diagram = rich_parser3.get_final_list(doc, img_size=115, height=50)

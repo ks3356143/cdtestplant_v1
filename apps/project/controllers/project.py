@@ -142,10 +142,10 @@ class ProjectController(ControllerBase):
                 Path(media_path / old_ident).rename(media_path / project.ident)
                 # 同时要更改round和dut的标识
                 for r in project.pField.all():
-                    r.ident = r.ident.replace(old_ident, new_ident)
+                    r.ident = (r.ident or '').replace(old_ident, new_ident)
                     r.save()
                 for d in project.pdField.all():
-                    d.ident = d.ident.replace(old_ident, new_ident)
+                    d.ident = (d.ident or '').replace(old_ident, new_ident)
                     d.save()
             except PermissionError:
                 transaction.set_rollback(True)  # 标记回滚，避免报错但数据已落库
@@ -494,7 +494,10 @@ class ProjectController(ControllerBase):
             '动态硬件项': DynamicHardwareTable,
             '测评数据': EvaluateData
         }
-        return mapDict[category]
+        model = mapDict.get(category)
+        if model is None:
+            raise HttpError(400, f'不支持的类别：{category}')
+        return model
 
     # ~~~静态软件项、静态硬件项、动态软件项、动态硬件项 - 获取~~~
     @route.get("/get_static_dynamic_items/")

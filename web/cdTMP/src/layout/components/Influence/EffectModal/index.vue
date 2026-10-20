@@ -102,7 +102,7 @@ const { handleChange, addRow, deleteRow } = useDataOperation(datas)
 // events
 const handleOk = async () => {
     // 判断是否change_type是否填写
-    if (!datas.value.every((item) => item.change_type.trim().length > 0)) {
+    if (!datas.value.every((item) => (item.change_type ?? "").trim().length > 0)) {
         Message.error("请至少填写变更类型")
         return false
     }
@@ -119,8 +119,8 @@ const handleOk = async () => {
 }
 
 const handleCloseEnd = async () => {
-    // Iterator Helper
-    datas.value.values().forEach((item) => {
+    // 普通数组遍历（不使用 Iterator Helper，避免浏览器兼容问题）
+    datas.value.forEach((item) => {
         // 安全地检查并重置 change_des
         if (item && typeof item === "object" && "change_des" in item) {
             item.change_des = ""
@@ -137,7 +137,7 @@ const handleCloseEnd = async () => {
 const cascaderLoading = ref(false)
 const casOptions = ref([])
 const format = (options: CascaderOption[]) => {
-    return options.at(-1).label || "未获取用例名称"
+    return options.at(-1)?.label || "未获取用例名称"
 }
 const open = async () => {
     proxy?.$loading?.show("数据加载中...")
@@ -149,14 +149,12 @@ const open = async () => {
         // 获取影响域分析数据
         const res2 = await roundApi.getInfluence(route.query.id, nodeData?.key)
         if (res2.code !== 25002) {
-            // 有影响域分析 - 注意使用了Iterator Helper，老版本浏览器可能会不支持
-            datas.value = res2.data
-                .values()
-                .map((item: any) => ({
-                    ...item,
-                    id: item.id || `loaded_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
-                }))
-                .toArray()
+            // 有影响域分析：按普通数组处理，空数据时给空数组
+            const influenceList = Array.isArray(res2.data) ? res2.data : []
+            datas.value = influenceList.map((item: any) => ({
+                ...item,
+                id: item.id || `loaded_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`
+            }))
         } else {
             Message.info("暂未填写影响域分析，请填写")
         }

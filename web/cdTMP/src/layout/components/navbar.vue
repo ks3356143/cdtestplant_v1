@@ -6,9 +6,9 @@
                     <img src="@/assets/img/wxwx-logo.svg" class="logo" alt="logo" @click="handleClickLogo" />
                 </div>
                 <a-typography-title class="title" @click="handleClickLogo" :style="{ margin: 0, fontSize: '18px' }" :heading="5">
-                    <div class="font-extrabold bg-clip-text text-transparent bg-linear-to-r from-blue-500 to-purple-600">测试管理平台</div>
+                    <div class="brand-title">测试管理平台</div>
                 </a-typography-title>
-                <a-typography-title :heading="6" class="version">v{{ $version }}</a-typography-title>
+                <span class="version-chip">v{{ $version }}</span>
                 <icon-menu-fold v-if="!topMenu && appStore.device === 'mobile'" style="font-size: 22px; cursor: pointer" @click="toggleDrawerMenu" />
             </a-space>
         </div>
@@ -32,7 +32,7 @@
         <ul class="right-side">
             <li>
                 <a-tooltip content="搜索-暂无">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'">
+                    <a-button class="nav-btn" type="outline" shape="square">
                         <template #icon>
                             <icon-search />
                         </template>
@@ -41,7 +41,7 @@
             </li>
             <li>
                 <a-tooltip content="切换主题">
-                    <a-button @click="handleChangeTheme" class="nav-btn" type="outline" :shape="'circle'">
+                    <a-button @click="handleChangeTheme" class="nav-btn" type="outline" shape="square">
                         <template #icon>
                             <icon-moon-fill />
                         </template>
@@ -50,7 +50,7 @@
             </li>
             <li>
                 <a-tooltip :content="isFullscreen ? '退出全屏' : '进入全屏'">
-                    <a-button class="nav-btn" type="outline" :shape="'circle'" @click="toggleFullScreen">
+                    <a-button class="nav-btn" type="outline" shape="square" @click="toggleFullScreen">
                         <template #icon>
                             <icon-fullscreen-exit v-if="isFullscreen" />
                             <icon-fullscreen v-else />
@@ -134,19 +134,50 @@ const handleClickLogo = () => {
 }
 
 .logo-container {
-    perspective: 1000px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background-color: var(--app-sidebar, #0f172a);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
     .logo {
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-        transition: all 0.3s;
+        width: 24px;
+        height: 24px;
+        filter: brightness(0) invert(1);
+        transition: opacity 0.15s ease;
+    }
+
+    &:hover {
+        background-color: rgb(var(--primary-6));
+
+        .logo {
+            opacity: 0.9;
+        }
     }
 }
 
-.logo-container:hover {
-    .logo {
-        transform: rotateX(-25deg) rotateY(1440deg);
-    }
+.brand-title {
+    color: var(--app-ink, #111827);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.version-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 6px;
+    border: 1px solid var(--app-line, #e4e7eb);
+    color: var(--app-muted, #6b7280);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    user-select: none;
 }
 
 // 窄屏：隐藏版本号、压缩标题，避免标题被挤成多行
@@ -155,10 +186,10 @@ const handleClickLogo = () => {
 }
 
 @media (max-width: 576px) {
-    .version {
+    .version-chip {
         display: none;
     }
-    .title div {
+    .brand-title {
         font-size: 15px;
     }
     .right-side li .nav-btn {
@@ -170,14 +201,15 @@ const handleClickLogo = () => {
     display: flex;
     justify-content: space-between;
     height: 100%;
-    background-color: var(--color-bg-2);
-    border-bottom: 1px solid var(--color-border);
+    background-color: var(--app-surface, #fff);
+    border-bottom: 1px solid var(--app-line, #e4e7eb);
 }
 
 .left-side {
     display: flex;
     align-items: center;
-    padding-left: 20px;
+    gap: 10px;
+    padding-left: 16px;
 }
 
 .center-side {
@@ -186,26 +218,39 @@ const handleClickLogo = () => {
 
 .right-side {
     display: flex;
-    padding-right: 20px;
+    padding-right: 16px;
     list-style: none;
     :deep(.locale-select) {
-        border-radius: 20px;
+        border-radius: 0;
     }
     li {
         display: flex;
         align-items: center;
-        padding: 0 10px;
+        padding: 0 6px;
     }
 
     a {
-        color: var(--color-text-1);
+        color: var(--app-ink, #111827);
         text-decoration: none;
     }
     .nav-btn {
-        border-color: rgb(var(--gray-2));
-        color: rgb(var(--gray-8));
-        font-size: 16px;
+        width: 32px;
+        height: 32px;
+        border-color: var(--app-line, #e4e7eb);
+        color: var(--app-ink-2, #374151);
+        font-size: 15px;
     }
+
+    .nav-btn:hover {
+        border-color: rgb(var(--primary-6));
+        color: rgb(var(--primary-6));
+        background-color: rgb(var(--primary-1));
+    }
+
+    :deep(.arco-avatar) {
+        border-radius: 0;
+    }
+
     .trigger-btn,
     .ref-btn {
         position: absolute;
@@ -215,57 +260,37 @@ const handleClickLogo = () => {
         margin-left: 14px;
     }
 }
-.version {
-    color: #666;
-    user-select: none;
-}
 
 .title {
     cursor: pointer;
     font-weight: 700;
-    transition: all 0.3s;
-    text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.2);
+    transition: opacity 0.15s ease;
+
     &:hover {
-        color: #fff;
-        -webkit-animation: neon6 0.5s ease-in-out infinite alternate;
-        -moz-animation: neon6 0.5s ease-in-out infinite alternate;
-        animation: neon6 0.5s ease-in-out infinite alternate;
+        opacity: 0.72;
     }
 }
 
 // 根据浏览器宽度调整
 .project-name {
-    font-size: 1.2rem;
+    margin: 0 !important;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 60px;
     flex: 1;
     text-align: center;
+    color: var(--app-ink-2, #374151);
 }
 
 @media (max-width: 1024px) {
     .project-name {
-        font-size: 0.8rem;
+        font-size: 12px;
     }
 }
 
 @media (max-width: 1280px) {
     .project-name {
-        font-size: 1rem;
-    }
-}
-
-@keyframes neon6 {
-    from {
-        text-shadow:
-            0 0 10px #fff,
-            0 0 20px #2563eb,
-            0 0 30px #2563eb,
-            0 0 40px #2563eb;
-    }
-    to {
-        text-shadow:
-            0 0 5px #fff,
-            0 0 10px #2563eb,
-            0 0 15px #2563eb,
-            0 0 20px #2563eb;
+        font-size: 13px;
     }
 }
 </style>

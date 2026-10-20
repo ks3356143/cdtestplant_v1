@@ -18,10 +18,10 @@ from apps.project.tools.access_control import check_project_access_by_id
 # 导入数据库ORM
 from apps.project.models import Project, Contact, Abbreviation, ProjectSoftSummary, StuctSortData, StaticSoftItem, StaticSoftHardware, \
     DynamicSoftTable, DynamicHardwareTable, ProjectDynamicDescription, EvaluateData, EnvAnalysis
-from apps.dict.models import Dict
+from apps.dict.models import Dict, DictItem
 # 导入工具函数
 from utils.util import get_str_dict, get_list_dict, get_testType, get_ident, get_str_abbr
-from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
+from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
 from django.shortcuts import get_object_or_404
 from django.forms.models import model_to_dict
 from apps.createDocument.extensions.util import create_dg_docx, build_testtype_output, require_project_begin_time
@@ -52,7 +52,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         # 获取指定的项目对象
         project_qs = get_object_or_404(Project, id=id)
         # 先查询dict字典，查出总共有多少个testType
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()
         type_number_list = [i for i in range(1, test_type_len + 1)]
         list_list = [[] for _ in range(1, test_type_len + 1)]
 
@@ -65,13 +65,16 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         sorted_demand_qs = sorted(testDemand_qs, key=demand_sort_by_designKey)
 
         # 一次取出 testMethod 字典项，避免在测试项循环内反复查库（N+1）
-        testmethod_items = list(Dict.objects.get(code="testMethod").dictItem.all())
+        testmethod_items = list(DictItem.objects.filter(dict__code="testMethod"))
         # 被测件类型排序顺序（常量提到循环外，避免每次迭代重建）
         type_order = {'YZ': 0, 'XQ': 1, 'XY': 2, 'SJ': 3, None: 99, '': 999}
 
         # 遍历第一轮测试项：默认是ID排序
         for single_qs in sorted_demand_qs:
-            type_index = type_number_list.index(int(single_qs.testType))
+            try:
+                type_index = type_number_list.index(int(single_qs.testType))
+            except (TypeError, ValueError):
+                continue
             # 先查询其testDemandContent信息
             content_list = []
             for (index, content) in enumerate(single_qs.testQField.all()):
@@ -290,7 +293,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                     'xq_source': "隐含需求",
                     'desc': one_demand.testDesciption,
                     'demand_name': one_demand.name,
-                    'demand_ident': "".join(["XQ_MD_", one_demand.ident])
+                    'demand_ident': "".join(["XQ_MD_", (one_demand.ident or '')])
                 })
         # 上下文添加
         context = {
@@ -820,8 +823,10 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         check_project_access_by_id(id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=id)
         abbreviations = []
-        for abbr in project_qs.abbreviation:
-            abbr_dict = {'title': abbr, 'des': Abbreviation.objects.filter(title=abbr).first().des}
+        for abbr in (project_qs.abbreviation or []):
+            # 缩略语可能已从字典/缩略语表删除，查不到时保留标题、说明留空
+            abbr_obj = Abbreviation.objects.filter(title=abbr).first()
+            abbr_dict = {'title': abbr, 'des': abbr_obj.des if abbr_obj else ''}
             abbreviations.append(abbr_dict)
         context = {
             'abbreviations': abbreviations
@@ -858,13 +863,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                 test_items = test_items.union(design.odField.all())
                 for test_item in test_items:
                     reveal_ident = "_".join(
-                        ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                        ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                     # 查字典方式确认章节号最后一位
-                    test_item_last_chapter = last_chapter_items[test_item.testType].index(
-                        test_item.key) + 1
-                    test_chapter = ".".join(
-                        [test_item_prefix, str(testType_list.index(test_item.testType) + 1),
-                         str(test_item_last_chapter)])
+                    chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                    if chapter_no_res is None:
+                        continue
+                    type_no, test_item_last_chapter = chapter_no_res
+                    test_chapter = ".".join([test_item_prefix, str(type_no), str(test_item_last_chapter)])
                     test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
                                       'ident': reveal_ident}
                     design_dict['test_demand'].append(test_item_dict) # type:ignore
@@ -905,13 +910,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                         # 只对文档审查、静态分析、代码走查、代码审查进行处理
                         if test_item.testType in ['8', '15', '3', '2']:
                             reveal_ident = "_".join(
-                                ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                                ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                             # 查字典方式确认章节号最后一位
-                            test_item_last_chapter = last_chapter_items[test_item.testType].index(
-                                test_item.key) + 1
-                            test_chapter = ".".join(
-                                [test_item_prefix, str(testType_list.index(test_item.testType) + 1),
-                                 str(test_item_last_chapter)])
+                            chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                            if chapter_no_res is None:
+                                continue
+                            type_no, test_item_last_chapter = chapter_no_res
+                            test_chapter = ".".join([test_item_prefix, str(type_no), str(test_item_last_chapter)])
                             test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
                                               'ident': reveal_ident}
                             design_dict['test_demand'].append(test_item_dict) # type:ignore
@@ -928,13 +933,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
 
                     for test_item in test_items:
                         reveal_ident = "_".join(
-                            ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                            ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                         # 查字典方式确认章节号最后一位
-                        test_item_last_chapter = last_chapter_items[test_item.testType].index(
-                            test_item.key) + 1
-                        test_chapter = ".".join(
-                            [test_item_prefix, str(testType_list.index(test_item.testType) + 1),
-                             str(test_item_last_chapter)])
+                        chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                        if chapter_no_res is None:
+                            continue
+                        type_no, test_item_last_chapter = chapter_no_res
+                        test_chapter = ".".join([test_item_prefix, str(type_no), str(test_item_last_chapter)])
                         test_item_dict = {'name': test_item.name, 'chapter': test_chapter,
                                           'ident': reveal_ident}
                         design_dict['test_demand'].append(test_item_dict) # type:ignore
@@ -973,11 +978,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                     test_item.dut.type == 'SO' and test_item.testType in ['8', '15', '3',
                                                                           '2']):
                 reveal_ident = "_".join(
-                    ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                    ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                 # 查字典方式确认章节号最后一位
-                test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                test_chapter = ".".join([test_item_prefix, str(testType_list.index(test_item.testType) + 1),
-                                         str(test_item_last_chapter)])
+                chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                if chapter_no_res is None:
+                    continue
+                type_no, test_item_last_chapter = chapter_no_res
+                test_chapter = ".".join([test_item_prefix, str(type_no), str(test_item_last_chapter)])
                 # 如果是SO里面的
                 if test_item.testType in ['8', '15', '3', '2'] and test_item.dut.type == 'SO':
                     test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident,

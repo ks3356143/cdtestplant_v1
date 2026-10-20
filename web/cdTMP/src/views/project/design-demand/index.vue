@@ -128,10 +128,10 @@ const testTypeDict = ref([])
     })
 })()
 const showType = (record) => {
-    let len = testTypeDict.value.data.length
-    for (let i = 0; i < len; i++) {
-        if (testTypeDict.value.data[i].key === record.testType) {
-            let item = testTypeDict.value.data[i]
+    const list = testTypeDict.value.data ?? []
+    for (let i = 0; i < list.length; i++) {
+        if (list[i].key === record.testType) {
+            let item = list[i]
             return "XQ-" + item.show_title + "-" + record.ident
         }
     }
@@ -148,7 +148,7 @@ const handleAiRefresh = () => {
 // 暴露给route-view的刷新表格函数
 const refreshCrudTable = () => {
     crudRef.value.refresh()
-    treeDataStore.updateTestDemandTreeData({ key: route.query.key + "-0" }, projectId.value)
+    treeDataStore.updateTestDemandTreeData({ key: String(route.query.key ?? "") + "-0" }, projectId.value)
 }
 defineExpose({ refreshCrudTable })
 defineOptions({

@@ -20,7 +20,7 @@ function useVueDataUI(data: Ref<ResData>) {
             name: "项目数量",
             series: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             type: "line",
-            color: "rgb(95,139,238)",
+            color: "rgb(15,118,110)",
             scaleSteps: 10,
             suffix: "个",
             smooth: true
@@ -97,7 +97,7 @@ function useVueDataUI(data: Ref<ResData>) {
             legend: { show: false, fontSize: 16 },
             title: {
                 text: "项目每月统计",
-                fontSize: 18,
+                fontSize: 16,
                 bold: true,
                 textAlign: "left",
                 paddingLeft: 5,
@@ -109,7 +109,7 @@ function useVueDataUI(data: Ref<ResData>) {
                 show: true,
                 fontSize: 14,
                 customFormat: null,
-                borderRadius: 4,
+                borderRadius: 0,
                 borderWidth: 1,
                 backgroundOpacity: 30,
                 position: "center",

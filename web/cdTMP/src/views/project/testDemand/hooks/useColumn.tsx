@@ -49,8 +49,9 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
             customRender: ({ record }) => {
                 let passCount = 0
                 let failCount = 0
-                let stepCount = record.testStep.length
-                record.testStep.forEach((item) => {
+                const testStep = record.testStep ?? []
+                let stepCount = testStep.length
+                testStep.forEach((item) => {
                     if (item.passed === "1") {
                         passCount++
                     } else if (item.passed === "2") {
@@ -61,6 +62,13 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
                     return (
                         <a-tag bordered color="red">
                             未通过
+                        </a-tag>
+                    )
+                } else if (stepCount === 0) {
+                    // 没有测试步骤时不能判定为“已通过”
+                    return (
+                        <a-tag bordered color="orange">
+                            包含未执行
                         </a-tag>
                     )
                 } else {
@@ -221,10 +229,10 @@ export default function (crudOrFormRef: any, problemFormRef?: any) {
                     return (
                         <a-link
                             onClick={() => {
-                                title.value = `PT_${route.query.ident}_${record.problem.ident.padStart(3, 0)}`
+                                title.value = `PT_${route.query.ident}_${(record.problem.ident ?? "").padStart(3, "0")}`
                                 problemFormRef.value.open(record.problem)
                             }}
-                        >{`PT_${route.query.ident}_${record.problem.ident.padStart(3, 0)}`}</a-link>
+                        >{`PT_${route.query.ident}_${(record.problem.ident ?? "").padStart(3, "0")}`}</a-link>
                     )
                 } else {
                     return "无问题单"

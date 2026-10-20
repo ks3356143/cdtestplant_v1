@@ -377,7 +377,7 @@ class GenerateSeitaiController(ControllerBase):
                     'soft_version': code_dut_obj.version,
                 })
                 return
-        raise HttpError(500, "第一轮次未创建，或第一轮动态测试地点为填写，或源代码被测件未创建，请先创建")
+        raise HttpError(400, "第一轮次未创建，或第一轮动态测试地点未填写，或源代码被测件未创建，请先创建")
 
     # 2.获取第一轮次需求规格说明dut
     def get_xq_doc_informations(self):
@@ -385,7 +385,7 @@ class GenerateSeitaiController(ControllerBase):
         if round1_xq_dut:
             self.temp_context.update({'xq_version': round1_xq_dut.version})
             return
-        raise HttpError(500, "第一轮次被测件：需求规格说明可能未创建，生成文档失败")
+        raise HttpError(400, "第一轮次被测件：需求规格说明可能未创建，生成文档失败")
 
 # documentType - 对应的目录名称（其键同时作为 documentType 白名单，见 get_fragment_name_by_document_name）
 documentType_to_dir = {

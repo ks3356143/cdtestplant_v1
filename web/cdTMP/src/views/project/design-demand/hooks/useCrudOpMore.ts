@@ -21,6 +21,15 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
     const roundNumber = keyParts[0]
     const dutNumber = keyParts[1]
     const designDemandNumber = keyParts[2]
+    // 按树节点下标取标题；树未加载到该层级时返回占位符，避免 undefined.title
+    const nodeTitle = (path: string[], fallback = "-") => {
+        let node: any = treeDataStore.treeData
+        for (const idx of path) {
+            node = node?.[Number(idx)]
+            if (!node) return fallback
+        }
+        return node.title ?? fallback
+    }
     // refs
     const projectId = ref(route.query.id)
     // 处理弹窗关闭事件:处理用户数据是否保留
@@ -57,8 +66,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             let round_key = key_split[0]
             let dut_key = key_split[1]
             let design_key = key_split[2]
-            let td = treeDataStore.treeData
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > ${td[round_key].children[dut_key].children[design_key].title} > 测试项-`
+            crudRef.value.crudFormRef.actionTitle = `${route.query.ident ?? ""} > ${nodeTitle([round_key])} > ${nodeTitle([round_key, dut_key])} > ${nodeTitle([round_key, dut_key, design_key])} > 测试项-`
             return true
         },
         beforeOpenEdit: function (record: any) {
@@ -69,8 +77,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             let round_key = key_split[0]
             let dut_key = key_split[1]
             let design_key = key_split[2]
-            let td = treeDataStore.treeData
-            crudRef.value.crudFormRef.actionTitle = `${route.query.ident} > ${td[round_key].title} > ${td[round_key].children[dut_key].title} > ${td[round_key].children[dut_key].children[design_key].title} >测试项[${record.name}]-`
+            crudRef.value.crudFormRef.actionTitle = `${route.query.ident ?? ""} > ${nodeTitle([round_key])} > ${nodeTitle([round_key, dut_key])} > ${nodeTitle([round_key, dut_key, design_key])} >测试项[${record.name}]-`
             return true
         },
         afterAdd: (res: any) => {
@@ -88,7 +95,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             }
             treeDataStore.updateTestDemandTreeData(record, id)
             // 清空选择
-            crudRef.value.tableRef.selectAll(false)
+            crudRef.value.tableRef?.selectAll(false)
         },
         parameters: {
             projectId: route.query.id,

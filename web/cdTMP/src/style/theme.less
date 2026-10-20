@@ -1,0 +1,476 @@
+// ============================================================================
+// 直角风格主题（2026-10 视觉整改）
+// 方向：数据密集型后台 · 扁平 · 零圆角 · 细线分隔 · 墨黑侧边栏 + 青绿主色
+// 说明：只覆盖视觉表现，不改变任何业务组件的结构与人机交互逻辑。
+// ============================================================================
+
+// ---------- 设计令牌 ----------
+body {
+    // 主色：深青绿（替代 Arco 默认蓝），1~10 由 @arco-design/color 生成后微调
+    --primary-1: 230, 246, 243;
+    --primary-2: 194, 232, 226;
+    --primary-3: 143, 211, 201;
+    --primary-4: 85, 179, 168;
+    --primary-5: 43, 150, 140;
+    --primary-6: 15, 118, 110;
+    --primary-7: 10, 108, 103;
+    --primary-8: 6, 97, 96;
+    --primary-9: 3, 85, 87;
+    --primary-10: 0, 73, 77;
+
+    // 链接色跟随主色，避免页面里出现“蓝链接 + 青绿按钮”的割裂感
+    --link-1: 230, 246, 243;
+    --link-2: 194, 232, 226;
+    --link-3: 143, 211, 201;
+    --link-4: 85, 179, 168;
+    --link-5: 43, 150, 140;
+    --link-6: 15, 118, 110;
+    --link-7: 10, 108, 103;
+    --link-8: 6, 97, 96;
+    --link-9: 3, 85, 87;
+    --link-10: 0, 73, 77;
+
+    // 应用层语义色
+    --app-canvas: #f2f4f6;
+    --app-surface: #ffffff;
+    --app-surface-soft: #f7f8fa;
+    --app-ink: #111827;
+    --app-ink-2: #374151;
+    --app-muted: #6b7280;
+    --app-line: #e4e7eb;
+    --app-line-strong: #cfd5dc;
+    --app-accent: #d97706;
+    --app-accent-soft: #fdf3e3;
+    --app-sidebar: #0f172a;
+    --app-sidebar-2: #172033;
+    --app-sidebar-line: #263145;
+    --app-sidebar-text: #c7d0dd;
+    --app-sidebar-muted: #8290a5;
+
+    // 直角系列：全站零圆角（Arco 原生为 0/2/4/6px）
+    --border-radius-none: 0px;
+    --border-radius-small: 0px;
+    --border-radius-medium: 0px;
+    --border-radius-large: 0px;
+
+    font-family:
+        "Inter", "HarmonyOS Sans SC", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", system-ui, -apple-system,
+        "Segoe UI", sans-serif;
+    color: var(--app-ink);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+// 页面画布
+.work-area {
+    background-color: var(--app-canvas);
+}
+
+.work-area .ma-content-block {
+    background-color: var(--app-surface);
+    border: 1px solid var(--app-line);
+    border-radius: 0;
+}
+
+// ---------- 按钮 ----------
+.arco-btn {
+    border-radius: 0;
+    font-weight: 500;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.arco-btn-shape-circle,
+.arco-btn-shape-round,
+.arco-btn-shape-square {
+    border-radius: 0;
+}
+
+.arco-btn-primary:not(.arco-btn-disabled) {
+    background-color: rgb(var(--primary-6));
+    border-color: rgb(var(--primary-6));
+}
+
+.arco-btn-primary:not(.arco-btn-disabled):hover {
+    background-color: rgb(var(--primary-5));
+    border-color: rgb(var(--primary-5));
+}
+
+.arco-btn-primary:not(.arco-btn-disabled):active {
+    background-color: rgb(var(--primary-7));
+    border-color: rgb(var(--primary-7));
+}
+
+.arco-btn-secondary:not(.arco-btn-disabled) {
+    background-color: var(--app-surface-soft);
+    border: 1px solid var(--app-line);
+    color: var(--app-ink-2);
+}
+
+.arco-btn-secondary:not(.arco-btn-disabled):hover {
+    background-color: #eef1f4;
+    border-color: var(--app-line-strong);
+    color: var(--app-ink);
+}
+
+.arco-btn-outline:not(.arco-btn-disabled) {
+    border-color: var(--app-line-strong);
+    color: var(--app-ink-2);
+}
+
+.arco-btn-outline:not(.arco-btn-disabled):hover {
+    border-color: rgb(var(--primary-6));
+    color: rgb(var(--primary-6));
+    background-color: rgb(var(--primary-1));
+}
+
+.arco-btn-text:not(.arco-btn-disabled):hover {
+    background-color: rgb(var(--primary-1));
+    color: rgb(var(--primary-6));
+}
+
+// ---------- 输入类控件 ----------
+.arco-input-wrapper,
+.arco-textarea-wrapper,
+.arco-select-view,
+.arco-input-number,
+.arco-picker,
+.arco-cascader-view,
+.arco-tree-select-view {
+    border-radius: 0;
+    background-color: var(--app-surface);
+    border: 1px solid var(--app-line);
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.arco-input-wrapper:hover,
+.arco-textarea-wrapper:hover,
+.arco-select-view:hover,
+.arco-input-number:hover,
+.arco-picker:hover,
+.arco-cascader-view:hover,
+.arco-tree-select-view:hover {
+    border-color: var(--app-line-strong);
+}
+
+.arco-input-wrapper.arco-input-focus,
+.arco-textarea-wrapper.arco-textarea-focus,
+.arco-select-view.arco-select-view-focus,
+.arco-input-number.arco-input-number-focus,
+.arco-picker-focused,
+.arco-cascader-view-focus,
+.arco-tree-select-view-focus {
+    border-color: rgb(var(--primary-6));
+    box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.12);
+}
+
+.arco-input-group-addbefore,
+.arco-input-group-addafter,
+.arco-input-group-prefix,
+.arco-input-group-suffix {
+    border-radius: 0;
+}
+
+// 表单标签：统一为右对齐的说明性文本
+.arco-form-label-item > label {
+    color: var(--app-ink-2);
+    font-weight: 500;
+}
+
+// ---------- 卡片 ----------
+.arco-card {
+    border-radius: 0;
+    border: 1px solid var(--app-line);
+    box-shadow: none;
+    background-color: var(--app-surface);
+}
+
+.arco-card-header {
+    border-bottom: 1px solid var(--app-line);
+    border-radius: 0;
+}
+
+.arco-card-header-title {
+    font-weight: 600;
+    color: var(--app-ink);
+}
+
+// ---------- 表格 ----------
+.arco-table {
+    border-radius: 0;
+}
+
+.arco-table-container {
+    border-radius: 0;
+}
+
+.arco-table-th {
+    background-color: var(--app-surface-soft) !important;
+    color: var(--app-ink-2);
+    font-weight: 600;
+    border-bottom: 1px solid var(--app-line-strong) !important;
+}
+
+.arco-table-td {
+    border-bottom: 1px solid #eef0f2;
+    color: var(--app-ink-2);
+}
+
+.arco-table-hover .arco-table-tr:hover .arco-table-td {
+    background-color: #f0f7f6;
+}
+
+.arco-table-tr.arco-table-tr-checked .arco-table-td {
+    background-color: rgb(var(--primary-1));
+}
+
+.arco-table-border .arco-table-td,
+.arco-table-border .arco-table-th {
+    border-right-color: #eef0f2;
+}
+
+.arco-table-pagination {
+    padding: 12px 4px 0;
+}
+
+// ---------- 分页 ----------
+.arco-pagination-item {
+    border-radius: 0;
+    border: 1px solid transparent;
+}
+
+.arco-pagination-item:not(.arco-pagination-item-disabled):hover {
+    background-color: rgb(var(--primary-1));
+    border-color: rgb(var(--primary-2));
+    color: rgb(var(--primary-6));
+}
+
+.arco-pagination-item-active,
+.arco-pagination-item-active:hover {
+    background-color: rgb(var(--primary-6)) !important;
+    border-color: rgb(var(--primary-6)) !important;
+    color: #fff !important;
+}
+
+// ---------- 标签 ----------
+.arco-tag {
+    border-radius: 0;
+    font-weight: 500;
+    border: 1px solid transparent;
+}
+
+.arco-tag-checked {
+    border-color: rgba(15, 23, 42, 0.06);
+}
+
+// ---------- 页签 ----------
+.arco-tabs-tab {
+    border-radius: 0;
+    color: var(--app-muted);
+    font-weight: 500;
+}
+
+.arco-tabs-tab:hover {
+    color: rgb(var(--primary-6));
+}
+
+.arco-tabs-tab-active,
+.arco-tabs-tab-active:hover {
+    color: rgb(var(--primary-6));
+    font-weight: 600;
+}
+
+.arco-tabs-line .arco-tabs-tab-active::after,
+.arco-tabs-line .arco-tabs-tab:hover::after {
+    background-color: rgb(var(--primary-6));
+}
+
+// ---------- 弹窗 / 抽屉 / 下拉 ----------
+.arco-modal {
+    border-radius: 0;
+    box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
+}
+
+.arco-modal-header {
+    background-color: var(--app-surface);
+    border-bottom: 1px solid var(--app-line);
+}
+
+.arco-modal-footer {
+    border-top: 1px solid var(--app-line);
+}
+
+.arco-drawer {
+    border-radius: 0;
+}
+
+.arco-dropdown,
+.arco-select-dropdown,
+.arco-trigger-menu {
+    border-radius: 0;
+    border: 1px solid var(--app-line);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+.arco-doption {
+    border-radius: 0;
+}
+
+.arco-doption:hover {
+    background-color: rgb(var(--primary-1));
+    color: rgb(var(--primary-6));
+}
+
+.arco-popover-content {
+    border-radius: 0;
+    border: 1px solid var(--app-line);
+}
+
+// ---------- 消息 / 通知 ----------
+.arco-message,
+.arco-notification {
+    border-radius: 0;
+    border: 1px solid var(--app-line);
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.12);
+}
+
+// ---------- 树 ----------
+.arco-tree-node-selected .arco-tree-node-title {
+    background-color: rgb(var(--primary-1));
+    color: rgb(var(--primary-7));
+    border-radius: 0;
+}
+
+.arco-tree-node-title {
+    border-radius: 0;
+}
+
+.arco-tree-node-title:hover {
+    background-color: var(--app-surface-soft);
+}
+
+// ---------- 开关 / 复选框 / 单选 ----------
+.arco-switch {
+    border-radius: 0;
+}
+
+.arco-switch::after {
+    border-radius: 0;
+}
+
+.arco-checkbox-mask,
+.arco-radio-mask {
+    border-radius: 0;
+}
+
+// ---------- 滚动条 ----------
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #c7ced6;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #9aa4b1;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+// ---------- 暗色主题适配 ----------
+// 注意：arco-theme 属性挂在 body 自身，必须用 body[arco-theme="dark"]，
+// 写成 [arco-theme="dark"] body 永远匹配不到。
+body[arco-theme="dark"] {
+    // Arco 暗色主题会用更具体的选择器把主色改回蓝色，这里重新锁定青绿主色
+    --primary-1: 16, 42, 42;
+    --primary-2: 18, 58, 57;
+    --primary-3: 20, 78, 75;
+    --primary-4: 22, 98, 93;
+    --primary-5: 18, 110, 104;
+    --primary-6: 15, 118, 110;
+    --primary-7: 32, 138, 129;
+    --primary-8: 55, 160, 150;
+    --primary-9: 84, 184, 173;
+    --primary-10: 120, 210, 198;
+    --link-1: 16, 42, 42;
+    --link-2: 18, 58, 57;
+    --link-3: 20, 78, 75;
+    --link-4: 22, 98, 93;
+    --link-5: 18, 110, 104;
+    --link-6: 15, 118, 110;
+    --link-7: 32, 138, 129;
+    --link-8: 55, 160, 150;
+    --link-9: 84, 184, 173;
+    --link-10: 120, 210, 198;
+
+    --app-canvas: #0b0f16;
+    --app-surface: #121821;
+    --app-surface-soft: #171e29;
+    --app-ink: #e5e9ef;
+    --app-ink-2: #c3cad5;
+    --app-muted: #8c97a7;
+    --app-line: #232c3a;
+    --app-line-strong: #344052;
+    --app-sidebar: #0b0f16;
+    --app-sidebar-2: #131a25;
+    --app-sidebar-line: #223046;
+
+    background-color: var(--app-canvas);
+    color: var(--app-ink);
+
+    .work-area {
+        background-color: var(--app-canvas);
+    }
+
+    .work-area .ma-content-block {
+        background-color: var(--app-surface);
+        border-color: var(--app-line);
+    }
+
+    .layout-content {
+        background-color: var(--app-canvas);
+    }
+
+    .arco-table-th {
+        background-color: var(--app-surface-soft) !important;
+        color: var(--app-ink-2);
+    }
+
+    .arco-table-td {
+        border-bottom-color: var(--app-line);
+        color: var(--app-ink-2);
+    }
+
+    .arco-table-hover .arco-table-tr:hover .arco-table-td {
+        background-color: #18212c;
+    }
+
+    .arco-input-wrapper,
+    .arco-textarea-wrapper,
+    .arco-select-view,
+    .arco-input-number,
+    .arco-picker,
+    .arco-cascader-view,
+    .arco-tree-select-view {
+        background-color: var(--app-surface-soft);
+        border-color: var(--app-line);
+    }
+
+    .arco-card {
+        background-color: var(--app-surface);
+        border-color: var(--app-line);
+    }
+}

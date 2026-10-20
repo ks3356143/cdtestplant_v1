@@ -11,10 +11,10 @@ from docxtpl import DocxTemplate
 from docx import Document
 # 导入模型
 from apps.project.models import Project, Round, Dut
-from apps.dict.models import Dict
+from apps.dict.models import Dict, DictItem
 # 导入项目工具
-from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, get_testType
-from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
+from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, get_testType, digit_to_chinese
+from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
 from utils.chen_response import ChenResponse
 from apps.project.tools.access_control import check_project_access_by_id
 from apps.createDocument.extensions import util
@@ -30,7 +30,6 @@ from apps.createDocument.extensions.tools import demand_sort_by_designKey
 from apps.createDocument.extensions.table_creator import uniform_static_dynamic_response, RoundType
 from apps.project.models import StaticSoftItem, StaticSoftHardware, DynamicSoftTable, DynamicHardwareTable, EvaluateData
 
-chinese_round_name: list = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十']
 
 @api_controller("/generateHSM", tags=['生成回归说明系列文档'],
                 auth=JWTAuth(), permissions=[IsAuthenticated])
@@ -137,7 +136,7 @@ class GenerateControllerHSM(ControllerBase):
             # 每个轮次独立渲染context
             context_round = deepcopy(context)
             # 取中文名称
-            cname = chinese_round_name[int(hround.key)]  # 输出二、三...
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             # 取该轮次源代码版本放入版本列表
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
@@ -180,7 +179,7 @@ class GenerateControllerHSM(ControllerBase):
             # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
             doc = DocxTemplate(tpl_path)
             # 取出当前轮次key减1就是上一轮次
-            cname = chinese_round_name[int(hround.key)]  # 输出二、三...
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
                 return ChenResponse(code=400, status=400, message=f'您第{cname}轮次中缺少源代码被测件，请添加')
@@ -243,7 +242,7 @@ class GenerateControllerHSM(ControllerBase):
             doc = DocxTemplate(tpl_path)
             std_documents_round = deepcopy(std_documents)
             # 取出当前轮次key
-            cname = chinese_round_name[int(hround.key)]
+            cname = digit_to_chinese(int(hround.key) + 1)
             hsm_duty = {'doc_name': f'{project_obj.name}软件第{cname}轮测试说明',
                         'ident_version': f'PT-{project_obj.ident}-TD{int(hround.key) + 1}-1.00',
                         'publish_date': hround.beginTime, 'source': project_obj.test_unit}
@@ -284,7 +283,7 @@ class GenerateControllerHSM(ControllerBase):
             # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
             doc = DocxTemplate(tpl_path)
             context_round = deepcopy(context)
-            cname = chinese_round_name[int(hround.key)]  # 输出二、三...
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             so_dut: Dut = hround.rdField.filter(type='SO').first()
             if not so_dut:
                 return ChenResponse(code=400, status=400, message=f'您第{cname}轮次中缺少源代码被测件，请添加')
@@ -295,7 +294,7 @@ class GenerateControllerHSM(ControllerBase):
             last_round_so_dut = last_round.rdField.filter(type='SO').first()
             if not last_round_so_dut:
                 return ChenResponse(code=400, status=400,
-                                    message=f'您第{chinese_round_name[int(hround.key)]}轮次中缺少源代码版本信息，请添加')
+                                    message=f'您第{digit_to_chinese(int(hround.key) + 1)}轮次中缺少源代码版本信息，请添加')
             last_dm_version = last_round_so_dut.version
             now_dm_version = so_dut.version
             # 影响域分析暂不写入该文档（原计算行结果紧接着被覆盖，属于无用计算，已移除以避免创建多余子文档/图片）
@@ -306,7 +305,7 @@ class GenerateControllerHSM(ControllerBase):
                 last_xq_dut = last_round.rdField.filter(type='XQ').first()
                 if not last_xq_dut:
                     return ChenResponse(code=400, status=400,
-                                        message=f'您第{chinese_round_name[int(hround.key)]}轮次中缺少需求文档信息')
+                                        message=f'您第{digit_to_chinese(int(hround.key) + 1)}轮次中缺少需求文档信息')
                 last_xq_version = last_xq_dut.version
                 # 如果当前轮次有需求文档的修改
                 now_xq_version = xq_dut.version
@@ -337,13 +336,13 @@ class GenerateControllerHSM(ControllerBase):
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         # 一次取出 testType 数量与 testMethod 字典项，避免在轮次/测试项循环内反复查库（N+1）
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()
-        testmethod_items = list(Dict.objects.get(code="testMethod").dictItem.all())
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()
+        testmethod_items = list(DictItem.objects.filter(dict__code="testMethod"))
         # 遍历非第一轮的轮次
         for hround in hround_list:
             # 每轮重新实例化模板（富文本图片也需挂到本轮 doc 上）
             doc = DocxTemplate(tpl_path)
-            cname = chinese_round_name[int(hround.key)]  # var：输出二、三字样
+            cname = digit_to_chinese(int(hround.key) + 1)  # var：输出二、三字样
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
 
@@ -353,7 +352,10 @@ class GenerateControllerHSM(ControllerBase):
             sorted_demand_qs = sorted(testDemand_qs, key=demand_sort_by_designKey)
 
             for demand in sorted_demand_qs:
-                type_index = type_number_list.index(int(demand.testType))
+                try:
+                    type_index = type_number_list.index(int(demand.testType))
+                except (TypeError, ValueError):
+                    continue
                 content_list = []
                 for (index, content) in enumerate(demand.testQField.all()):
                     content_dict = {
@@ -424,16 +426,19 @@ class GenerateControllerHSM(ControllerBase):
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         # 一次取出 testType 数量，避免在轮次循环内反复查库
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()
         for hround in hround_list:
             # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
             doc = DocxTemplate(tpl_path)
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
-            cname = chinese_round_name[int(hround.key)]  # 输出二、三...
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             testDemands = hround.rtField.all()
             for demand in testDemands:
-                type_index = type_number_list.index(int(demand.testType))
+                try:
+                    type_index = type_number_list.index(int(demand.testType))
+                except (TypeError, ValueError):
+                    continue
                 demand_ident = get_ident(demand)
                 demand_dict = {
                     'name': demand.name,
@@ -473,11 +478,11 @@ class GenerateControllerHSM(ControllerBase):
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         # 一次取出 testType 数量，避免在轮次循环内反复查库
-        test_type_len = Dict.objects.get(code='testType').dictItem.count()
+        test_type_len = DictItem.objects.filter(dict__code='testType').count()
         for hround in hround_list:
             # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
             doc = DocxTemplate(tpl_path)
-            cname = chinese_round_name[int(hround.key)]  # 输出二、三...
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
             demand_prefix = '3.1'
@@ -485,13 +490,18 @@ class GenerateControllerHSM(ControllerBase):
             testDemands = hround.rtField.all()
             # 首先轮询所有测试需求
             for demand in testDemands:
-                type_index = type_number_list.index(int(demand.testType))
+                try:
+                    type_index = type_number_list.index(int(demand.testType))
+                except (TypeError, ValueError):
+                    continue
                 demand_ident = get_ident(demand)
                 # ~~~~~这里组装测试项~~~~~
                 ## 确定测试需求章节号（后面可提取后进行复用）
-                demand_last_chapter = last_chapter_items[demand.testType].index(demand.key) + 1
-                demand_chapter = ".".join([demand_prefix, str(testType_list.index(demand.testType) + 1),
-                                           str(demand_last_chapter)])
+                chapter_no_res = chapter_no(testType_list, last_chapter_items, demand.testType, demand.key)
+                if chapter_no_res is None:
+                    continue
+                type_no, demand_last_chapter = chapter_no_res
+                demand_chapter = ".".join([demand_prefix, str(type_no), str(demand_last_chapter)])
                 demand_dict = {
                     'name': demand.name,
                     'ident': demand_ident,
@@ -554,7 +564,7 @@ class GenerateControllerHSM(ControllerBase):
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
             # 取出当前轮次key减1就是上一轮次
-            cname = chinese_round_name[int(hround.key)]  # 输出二、三...
+            cname = digit_to_chinese(int(hround.key) + 1)  # 输出二、三...
             design_list = []
             testType_list, last_chapter_items = create_csx_chapter_dict(hround)
             # 找出当前轮次被测件为'SO'的
@@ -571,11 +581,13 @@ class GenerateControllerHSM(ControllerBase):
                     if test_item.testType in ['2', '3', '15', '8']:
                         design_dict.update({'name': "/", 'chapter': "/"})
                     reveal_ident = "_".join(
-                        ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                        ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                     # 查字典方式确认章节号最后一位
-                    test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                    test_chapter = ".".join([demand_prefix, str(testType_list.index(test_item.testType) + 1),
-                                             str(test_item_last_chapter)])
+                    chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                    if chapter_no_res is None:
+                        continue
+                    type_no, test_item_last_chapter = chapter_no_res
+                    test_chapter = ".".join([demand_prefix, str(type_no), str(test_item_last_chapter)])
                     test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident,
                                       'case_list': []}
                     for case in test_item.tcField.all():
@@ -599,11 +611,13 @@ class GenerateControllerHSM(ControllerBase):
                 test_items.extend(design.odField.all())
                 for test_item in test_items:
                     reveal_ident = "_".join(
-                        ["XQ", get_testType(test_item.testType, "testType"), test_item.ident])
+                        ["XQ", get_testType(test_item.testType, "testType"), test_item.ident or ''])
                     # 查字典方式确认章节号最后一位
-                    test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                    test_chapter = ".".join([demand_prefix, str(testType_list.index(test_item.testType) + 1),
-                                             str(test_item_last_chapter)])
+                    chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                    if chapter_no_res is None:
+                        continue
+                    type_no, test_item_last_chapter = chapter_no_res
+                    test_chapter = ".".join([demand_prefix, str(type_no), str(test_item_last_chapter)])
                     test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident,
                                       'case_list': []}
                     for case in test_item.tcField.all():

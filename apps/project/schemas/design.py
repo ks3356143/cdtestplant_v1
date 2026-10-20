@@ -12,14 +12,14 @@ class DeleteSchema(Schema):
 
 # 查询设计需求
 class DesignFilterSchema(Schema):
-    project_id: int = Field(None, alias='projectId')
-    round_id: str = Field(None, alias='round')
-    dut_id: str = Field(None, alias='dut')
-    ident: str = Field(None, alias='ident')
-    demandType: str = Field(None, alias='demandType')
-    name: str = Field(None, alias='name')
+    project_id: Optional[int] = Field(None, alias='projectId')
+    round_id: Optional[str] = Field(None, alias='round')
+    dut_id: Optional[str] = Field(None, alias='dut')
+    ident: Optional[str] = Field(None, alias='ident')
+    demandType: Optional[str] = Field(None, alias='demandType')
+    name: Optional[str] = Field(None, alias='name')
     # 新增字段 - chapter
-    chapter: str = Field(None, alias='chapter')
+    chapter: Optional[str] = Field(None, alias='chapter')
 
 # 2025年改为2个输出，因为下级需要上级，原始不再嵌套上级
 class DesignModelOutSchemaOrigin(ModelSchema):

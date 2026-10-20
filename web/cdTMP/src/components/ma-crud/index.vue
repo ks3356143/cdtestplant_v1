@@ -569,7 +569,8 @@ const refresh = async () => {
         await requestHandle()
     }
     selecteds.value = []
-    tableRef.value.selectAll(false)
+    // 表格可能尚未渲染（首屏/窄屏切换），空值保护
+    tableRef.value?.selectAll(false)
 }
 
 const searchSubmitHandler = async (formData) => {
@@ -616,13 +617,17 @@ const toggleSearch = async () => {
 }
 
 const settingFixedPage = () => {
-    const workAreaHeight = document.querySelector(".work-area").offsetHeight
+    const workArea = document.querySelector(".work-area")
+    const crudContent = crudContentRef.value
+    // 页面结构变化或组件刚挂载时可能取不到容器，直接跳过固定高度
+    if (!workArea || !crudContent) return
+    const workAreaHeight = workArea.offsetHeight
     const tableHeight =
         workAreaHeight -
         headerHeight.value -
         (openPagination.value ? 160 : 116) +
         (total.value === 0 && !loading.value ? 44 : 0)
-    crudContentRef.value.style.height = tableHeight + "px"
+    crudContent.style.height = tableHeight + "px"
 }
 
 const tableSetting = () => {

@@ -2,13 +2,13 @@
     <div class="flex justify-between">
         <div class="ma-content-block rounded-xs flex justify-between w-full p-3 bg-color">
             <div class="pl-0 flex">
-                <a-avatar :size="75" class="hidden lg:inline-block">
+                <a-avatar :size="64" class="welcome-avatar hidden lg:inline-block">
                     <img src="@/assets/avatar/zhu.jpg" />
                 </a-avatar>
                 <div class="pl-3 mt-2">
                     <div class="content-block-title">{{ userStore.name }}，好久不见，欢迎回来！</div>
                     <div class="leading-5 mt-2 flex items-center">
-                        <a-tag color="red" bordered class="mr-2">好用的测试工具集</a-tag>
+                        <a-tag color="arcoblue" bordered class="mr-2">好用的测试工具集</a-tag>
                         欢迎使用测试管理平台 ⭐长期更新。
                     </div>
                 </div>
@@ -43,13 +43,31 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
+.welcome-avatar {
+    border-radius: 0 !important;
+    border: 1px solid var(--app-line, #e4e7eb);
+    overflow: hidden;
+}
+
 .datetime {
-    background: rgb(var(--primary-6));
+    position: relative;
+    background: var(--app-sidebar, #0f172a);
     color: #fff;
-    width: 160px;
+    width: 176px;
     text-align: center;
-    border-radius: 2px;
-    padding: 5px 10px;
+    border-radius: 0;
+    padding: 8px 12px;
+    border-top: 3px solid rgb(var(--primary-6));
+}
+
+.datetime h2 {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.06em;
+}
+
+.datetime p {
+    color: var(--app-sidebar-text, #c7d0dd);
+    font-size: 12px;
 }
 .bg-color {
     background: var(--color-bg-2);

@@ -1,4 +1,4 @@
-import { Ref, ref } from "vue"
+import { Ref, ref, onUnmounted } from "vue"
 import projectApi from "@/api/project/project"
 import { useRoute } from "vue-router"
 import { useTreeDataStore } from "@/store"
@@ -40,11 +40,15 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
             if (count > 1) {
                 // 双击触发 value是点击的节点，data是节点数据
                 if (data.node.level == "0") {
-                    projectApi.getDutInfo(projectInfo.value.id, data.node.key, data.node.level).then((res: any) => {
-                        ;(treeData.value[value] as any).children = res.data
+                    const roundKey = data.node.key
+                    projectApi.getDutInfo(projectInfo.value.id, roundKey, data.node.level).then((res: any) => {
+                        // 注意：select 事件第一个参数是选中 key 的数组，不是下标；
+                        // 这里按 key 找到轮次节点再挂载子节点，避免 treeData.value[array] 恒为 undefined
+                        const roundNode = (treeData.value as any[])?.find((item: any) => item.key === roundKey)
+                        if (roundNode) roundNode.children = res?.data ?? []
                         // 添加需要展开数据，注意不要一直push，判断在已展开节点是否包含点击的节点
-                        if (!expandedKeys.value.includes(value[0])) {
-                            expandedKeys.value.push(value[0])
+                        if (!expandedKeys.value.includes(roundKey)) {
+                            expandedKeys.value.push(roundKey)
                         }
                     })
                 }
@@ -95,6 +99,14 @@ export default function useNodeClick(expandedKeys: Ref<string[]>) {
             }
         }, 250) as any
     }
+    // 组件卸载时清理双击判定定时器，避免路由切换后仍触发请求/写树
+    onUnmounted(() => {
+        if (timerId) {
+            clearTimeout(timerId)
+            timerId = null
+        }
+    })
+
     return {
         selectedKeys,
         pointNode,

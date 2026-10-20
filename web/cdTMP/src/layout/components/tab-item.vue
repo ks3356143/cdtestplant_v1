@@ -160,12 +160,16 @@ const actionSelect = async (value: any) => {
     text-decoration: none;
 }
 .link-activated {
-    color: rgb(var(--link-6));
+    background-color: rgb(var(--primary-1));
+    border-color: rgb(var(--primary-4)) !important;
+    color: rgb(var(--primary-7));
+    box-shadow: inset 0 -2px 0 rgb(var(--primary-6));
     .tag-link {
-        color: rgb(var(--link-6));
+        color: rgb(var(--primary-7));
+        font-weight: 600;
     }
     & + .arco-tag-close-btn {
-        color: rgb(var(--link-6));
+        color: rgb(var(--primary-7));
     }
 }
 :deep(.arco-dropdown-option-content) {

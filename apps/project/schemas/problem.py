@@ -19,21 +19,21 @@ class ProblemModelOutSchema(ModelSchema):
 
 # 查询问题单
 class ProblemFilterSchema(Schema):
-    project_id: int = Field(None, alias='projectId')
-    round_id: str = Field(None, alias='round')
-    dut_id: str = Field(None, alias='dut')
-    design_id: str = Field(None, alias='designDemand')
-    test_id: str = Field(None, alias='testDemand')
-    case_id: str = Field(None, alias='case')
-    key: str = Field(None, alias='key')
+    project_id: Optional[int] = Field(None, alias='projectId')
+    round_id: Optional[str] = Field(None, alias='round')
+    dut_id: Optional[str] = Field(None, alias='dut')
+    design_id: Optional[str] = Field(None, alias='designDemand')
+    test_id: Optional[str] = Field(None, alias='testDemand')
+    case_id: Optional[str] = Field(None, alias='case')
+    key: Optional[str] = Field(None, alias='key')
     # 其他字段
-    ident: str = Field(None, alias='ident')
-    name: str = Field(None, alias='name')
-    status: str = Field(None, alias='status')
-    type: str = Field(None, alias='type')
-    grade: str = Field(None, alias='grade')
-    operation: str = Field(None, alias='operation')
-    postPerson: str = Field(None, alias='postPerson')
+    ident: Optional[str] = Field(None, alias='ident')
+    name: Optional[str] = Field(None, alias='name')
+    status: Optional[str] = Field(None, alias='status')
+    type: Optional[str] = Field(None, alias='type')
+    grade: Optional[str] = Field(None, alias='grade')
+    operation: Optional[str] = Field(None, alias='operation')
+    postPerson: Optional[str] = Field(None, alias='postPerson')
 
 class ProblemFilterWithHangSchema(ProblemFilterSchema):
     # 搜索增加hang字段

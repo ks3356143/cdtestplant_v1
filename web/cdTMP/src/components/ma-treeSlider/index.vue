@@ -107,7 +107,7 @@ defineExpose({ maTree })
 <style scoped lang="less">
 :deep(.arco-tree-node:hover) {
     background-color: var(--color-fill-2);
-    border-radius: 3px;
+    border-radius: 0;
 }
 :deep(.arco-tree-node-switcher) {
     margin-left: 2px;

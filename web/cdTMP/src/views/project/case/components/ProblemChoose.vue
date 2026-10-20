@@ -21,7 +21,7 @@
                 </template>
                 <!-- ident插槽 -->
                 <template #ident="{ record }">
-                    {{ "PT_" + route.query.ident + "_" + record.ident.padStart(3, "0") }}
+                    {{ "PT_" + route.query.ident + "_" + (record.ident ?? "").padStart(3, "0") }}
                 </template>
                 <!-- table按钮后置插槽：这里用于提醒 -->
                 <template #tableAfterButtons>
@@ -249,7 +249,7 @@ const crudOptions = ref({
     // 添加删除后置处理方法：让父组件知道我删除了，你必须刷新表格
     afterDelete(response, record) {
         emits("deleted")
-        crudRef.value.tableRef.selectAll(false)
+        crudRef.value.tableRef?.selectAll(false)
     }
 })
 

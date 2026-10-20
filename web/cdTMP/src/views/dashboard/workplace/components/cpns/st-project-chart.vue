@@ -1,5 +1,5 @@
 <template>
-    <div class="ma-content-block p-3 mt-3 bg-white">
+    <div class="ma-content-block p-3 mt-3">
         <a-spin class="chartContainer" :loading="isPending" tip="图标数据加载中...">
             <div class="flex justify-center items-center" v-if="!isPending">
                 <template v-if="isError">

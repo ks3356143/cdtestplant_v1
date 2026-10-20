@@ -41,7 +41,7 @@ const imageUrl = ref("")
 
 const handleSyncOk = async () => {
     // 验证题注是否为空
-    if (fontnote.value?.trim().length <= 0 || !imageUrl.value?.trim()) {
+    if (!fontnote.value?.trim() || !imageUrl.value?.trim()) {
         Message.error("请输入题注和粘贴图片")
         return false
     }

@@ -1,12 +1,12 @@
 from apps.project.models import Project
-from utils.chapter_tools.csx_chapter import create_csx_chapter_dict
+from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
 from utils.util import get_testType, get_case_ident
 
 # 传入项目对象、dut的类型例如'XQ'、round_str字符串表示例如第一轮为'XQ'，测试项其实章节前缀例如
 def create_bg_round1_zhui(project_obj: Project, dut_str='XQ', round_str='0'):
     """传入项目对象，返回{仅第一轮}的design_list渲染到模版的列表"""
     # 首先定义后面用问题单前缀
-    problem_prefix = "".join(['PT_', project_obj.ident, '_'])
+    problem_prefix = "".join(['PT_', project_obj.ident or '', '_'])
     # 如果是第一轮，测试项章节号前缀则为6.2，其他轮次为4.1
     demand_prefix = '6.2' if round_str == '0' else "3.1"
     design_list = []
@@ -31,9 +31,11 @@ def create_bg_round1_zhui(project_obj: Project, dut_str='XQ', round_str='0'):
                         reveal_ident = "_".join(
                             ["XQ", get_testType(test_item.testType, "testType"),
                              test_item.ident, test_index])
-                        test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                        test_chapter = ".".join([demand_prefix, str(testType_list.index(test_item.testType) + 1),
-                                                 str(test_item_last_chapter)])
+                        chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                        if chapter_no_res is None:
+                            continue
+                        type_no, test_item_last_chapter = chapter_no_res
+                        test_chapter = ".".join([demand_prefix, str(type_no), str(test_item_last_chapter)])
                         test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident,
                                           'case_list': []}
                         for case in test_item.tcField.all():
@@ -42,7 +44,7 @@ def create_bg_round1_zhui(project_obj: Project, dut_str='XQ', round_str='0'):
                             is_passed = '通过'
                             problem_ident_list = []
                             for problem in case.caseField.all():
-                                problem_ident_list.append("".join([problem_prefix, problem.ident]))
+                                problem_ident_list.append("".join([problem_prefix, (problem.ident or '')]))
                             if len(problem_ident_list) > 0:
                                 is_passed = '未通过'
                             case_dict = {
@@ -71,9 +73,11 @@ def create_bg_round1_zhui(project_obj: Project, dut_str='XQ', round_str='0'):
                     reveal_ident = "_".join(
                         ["XQ", get_testType(test_item.testType, "testType"),
                          test_item.ident, test_index])
-                    test_item_last_chapter = last_chapter_items[test_item.testType].index(test_item.key) + 1
-                    test_chapter = ".".join([demand_prefix, str(testType_list.index(test_item.testType) + 1),
-                                             str(test_item_last_chapter)])
+                    chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
+                    if chapter_no_res is None:
+                        continue
+                    type_no, test_item_last_chapter = chapter_no_res
+                    test_chapter = ".".join([demand_prefix, str(type_no), str(test_item_last_chapter)])
                     test_item_dict = {'name': test_item.name, 'chapter': test_chapter, 'ident': reveal_ident,
                                       'case_list': []}
                     for case in test_item.tcField.all():
@@ -82,7 +86,7 @@ def create_bg_round1_zhui(project_obj: Project, dut_str='XQ', round_str='0'):
                         is_passed = '通过'
                         problem_ident_list = []
                         for problem in case.caseField.all():
-                            problem_ident_list.append("".join([problem_prefix, problem.ident]))
+                            problem_ident_list.append("".join([problem_prefix, (problem.ident or '')]))
                         if len(problem_ident_list) > 0:
                             is_passed = '未通过'
                         case_dict = {

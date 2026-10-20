@@ -20,7 +20,7 @@
                         <div class="text-red-600 font-bold">
                             {{ config.title === "buttonText" ? "点击上传" : config.title }}
                         </div>
-                        将文件拖到此处，或<span style="color: #3370ff">点击上传</span>
+                        将文件拖到此处，或<span style="color: rgb(var(--primary-6))">点击上传</span>
                     </div>
                 </div>
             </slot>
@@ -256,7 +256,7 @@ watch(
 <style lang="less" scoped>
 .file-list {
     background-color: var(--color-primary-light-1);
-    border-radius: 4px;
+    border-radius: 0;
     height: 36px;
     padding: 0 5px;
     width: 100%;

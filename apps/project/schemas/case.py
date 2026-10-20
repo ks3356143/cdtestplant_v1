@@ -41,19 +41,19 @@ class CaseModelOutSchema(ModelSchema):
 
 # 查询测试项
 class CaseFilterSchema(Schema):
-    id: int = Field(None, alias='id')
-    project_id: int = Field(None, alias='projectId')
-    round_id: str = Field(None, alias='round')
-    dut_id: str = Field(None, alias='dut')
-    design_id: str = Field(None, alias='designDemand')
-    test_id: str = Field(None, alias='testDemand')
+    id: Optional[int] = Field(None, alias='id')
+    project_id: Optional[int] = Field(None, alias='projectId')
+    round_id: Optional[str] = Field(None, alias='round')
+    dut_id: Optional[str] = Field(None, alias='dut')
+    design_id: Optional[str] = Field(None, alias='designDemand')
+    test_id: Optional[str] = Field(None, alias='testDemand')
     # 其他字段
-    ident: str = Field(None, alias='ident')
-    name: str = Field(None, alias='name')
-    designPerson: str = Field(None, alias='designPerson')
-    testPerson: str = Field(None, alias='testPerson')
-    monitorPerson: str = Field(None, alias='monitorPerson')
-    summarize: str = Field(None, alias='summarize')
+    ident: Optional[str] = Field(None, alias='ident')
+    name: Optional[str] = Field(None, alias='name')
+    designPerson: Optional[str] = Field(None, alias='designPerson')
+    testPerson: Optional[str] = Field(None, alias='testPerson')
+    monitorPerson: Optional[str] = Field(None, alias='monitorPerson')
+    summarize: Optional[str] = Field(None, alias='summarize')
 
 # 处理树状结构的schema
 class CaseTreeReturnSchema(Schema):
