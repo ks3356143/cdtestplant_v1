@@ -26,7 +26,7 @@ defineOptions({
 </script>
 
 <style scoped>
-/* 直角风格：深墨底 + 青绿描边，和顶栏/侧边栏保持同一套视觉语言 */
+/* 直角风格：白天青绿实底、暗色墨黑实底，均跟随主题令牌 */
 .button {
     display: flex;
     justify-content: center;
@@ -35,10 +35,10 @@ defineOptions({
     gap: 8px;
     height: 34px;
     min-width: 148px;
-    border: 1px solid #263145;
-    background: #0f172a;
+    border: 1px solid var(--app-brand-line, #0f766e);
+    background: var(--app-brand-tile, #0f766e);
     border-radius: 0;
-    color: #c7d0dd;
+    color: var(--app-brand-text, #ffffff);
     cursor: pointer;
     transition:
         background-color 0.15s ease,
@@ -58,12 +58,12 @@ defineOptions({
     display: block;
     width: 17px;
     height: 17px;
-    color: rgb(var(--primary-4));
+    color: var(--app-brand-icon, #d1fae5);
 }
 
 .button:hover {
-    background: rgb(var(--primary-6));
-    border-color: rgb(var(--primary-6));
+    background: rgb(var(--primary-5));
+    border-color: rgb(var(--primary-5));
     color: #ffffff;
 }
 

@@ -139,7 +139,7 @@ const handleClickLogo = () => {
     justify-content: center;
     width: 36px;
     height: 36px;
-    background-color: var(--app-brand-tile, #0f172a);
+    background-color: var(--app-brand-tile, #0f766e);
     cursor: pointer;
     transition: background-color 0.15s ease;
 
@@ -151,7 +151,7 @@ const handleClickLogo = () => {
     }
 
     &:hover {
-        background-color: rgb(var(--primary-6));
+        background-color: rgb(var(--primary-5));
 
         .logo {
             opacity: 0.9;

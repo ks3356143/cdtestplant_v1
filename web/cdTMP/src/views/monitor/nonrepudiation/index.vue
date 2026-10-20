@@ -42,11 +42,21 @@ const BUSINESS_TYPE_OPTIONS = [
   { value: "case", label: "用例" }
 ]
 const businessTypeLabel = (val) => BUSINESS_TYPE_OPTIONS.find((i) => i.value === val)?.label || val || "-"
+// 证据类型枚举与后端 NonrepudiationEvidence.evidence_type 一致
+const EVIDENCE_TYPE_LABELS = { "1": "原发证据", "2": "接收证据" }
+const evidenceTypeLabel = (val) => EVIDENCE_TYPE_LABELS[String(val)] || val || "-"
 // 数据摘要列太长，截断展示
 const truncate = (val) => (val ? String(val).slice(0, 20) + "…" : "")
+// 后端返回 ISO 时间，去掉微秒与时区后缀
+const formatTime = (val) => (val ? String(val).replace("T", " ").slice(0, 19) : "-")
 
 const columns = [
-  { title: "证据类型", dataIndex: "evidence_type", width: 100 },
+  {
+    title: "证据类型",
+    dataIndex: "evidence_type",
+    width: 110,
+    render: ({ record }) => evidenceTypeLabel(record.evidence_type)
+  },
   { title: "主体账号", dataIndex: "actor_name", width: 110 },
   { title: "主体角色", dataIndex: "actor_role", width: 110 },
   { title: "行为类型", dataIndex: "action", width: 140 },
@@ -65,7 +75,12 @@ const columns = [
     render: ({ record }) => truncate(record.data_digest)
   },
   { title: "操作IP", dataIndex: "operation_ip", width: 120 },
-  { title: "证据生成时间", dataIndex: "create_datetime", width: 170 }
+  {
+    title: "证据生成时间",
+    dataIndex: "create_datetime",
+    width: 180,
+    render: ({ record }) => formatTime(record.create_datetime)
+  }
 ]
 
 const loadData = async () => {

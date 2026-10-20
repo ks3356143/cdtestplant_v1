@@ -1,6 +1,6 @@
 <template>
     <div class="ma-content-block lg:flex justify-between p-4">
-        <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
+        <div class="lg:w-full w-full mt-5 lg:mt-0">
             <ma-crud :options="crudOptions" :columns="columns" ref="crudRef">
                 <template #create_datetime="{ record }">
                     {{ formatTime(record.create_datetime) }}

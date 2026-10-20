@@ -1,6 +1,6 @@
 <template>
     <div class="ma-content-block lg:flex justify-between p-4">
-        <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
+        <div class="lg:w-full w-full mt-5 lg:mt-0">
             <a-alert type="info" style="margin-bottom: 12px">
                 统一安全审计（GB/T 28452-2012 第三级 7.1.6）：覆盖登录鉴别、标记与策略变更、账号管理、越权告警等核心安全事件，
                 全程留痕、多维检索；审计日志受保护，仅能按保留期清理，无法被篡改或全清。
@@ -94,7 +94,7 @@
                                 <span style="white-space: nowrap">{{ fmtTime(record.create_datetime) }}</span>
                             </template>
                         </a-table-column>
-                        <a-table-column title="主体账号" data-index="username" :width="110"></a-table-column>
+                        <a-table-column title="主体账号" data-index="username" :width="140"></a-table-column>
                         <a-table-column title="角色" :width="115">
                             <template #cell="{ record }">
                                 <span style="white-space: nowrap">{{ roleLabel(record.role) }}</span>

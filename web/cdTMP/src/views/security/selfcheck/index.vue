@@ -35,15 +35,15 @@
       <a-table :data="items" :loading="loading" :pagination="false" size="medium" row-key="name">
         <template #columns>
           <a-table-column title="被测对象" data-index="category" :width="110"></a-table-column>
-          <a-table-column title="检测项" data-index="name" :width="180"></a-table-column>
-          <a-table-column title="检测方式" data-index="method" :width="220"></a-table-column>
+          <a-table-column title="检测项" data-index="name" :width="200"></a-table-column>
+          <a-table-column title="检测方式" data-index="method" :width="250"></a-table-column>
           <a-table-column title="结论" :width="100">
             <template #cell="{ record }">
               <a-tag :color="statusColor(record.status)">{{ record.status_label }}</a-tag>
             </template>
           </a-table-column>
-          <a-table-column title="检测结论" data-index="detail" ellipsis></a-table-column>
-          <a-table-column title="整改建议" data-index="advice" ellipsis></a-table-column>
+          <a-table-column title="检测结论" data-index="detail"></a-table-column>
+          <a-table-column title="整改建议" data-index="advice"></a-table-column>
         </template>
       </a-table>
     </a-card>
@@ -80,10 +80,10 @@ const checkedAt = ref("")
 const summary = reactive({ total: 0, passed: 0, risk: 0, notice: 0, na: 0, categories: [] })
 
 const statCards = computed(() => [
-  { key: "total", title: "检测项总数", value: summary.total, color: "#165DFF" },
-  { key: "passed", title: "通过", value: summary.passed, color: "#00B42A" },
-  { key: "risk", title: "风险", value: summary.risk, color: "#F53F3F" },
-  { key: "na", title: "不适用 / 提示", value: `${summary.na} / ${summary.notice}`, color: "#86909C" }
+  { key: "total", title: "检测项总数", value: summary.total, color: "var(--app-stat-primary)" },
+  { key: "passed", title: "通过", value: summary.passed, color: "var(--app-stat-success)" },
+  { key: "risk", title: "风险", value: summary.risk, color: "var(--app-stat-danger)" },
+  { key: "na", title: "不适用 / 提示", value: `${summary.na} / ${summary.notice}`, color: "var(--app-stat-neutral)" }
 ])
 
 const statusColor = (status) =>

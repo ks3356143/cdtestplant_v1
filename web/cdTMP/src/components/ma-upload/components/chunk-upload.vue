@@ -269,7 +269,7 @@ watch(
         max-width: 90%;
         margin: 0 5px;
         overflow: hidden;
-        color: #165dff;
+        color: rgb(var(--primary-6));
     }
 }
 </style>

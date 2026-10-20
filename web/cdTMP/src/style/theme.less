@@ -41,6 +41,11 @@ body {
     --app-line-strong: #cfd5dc;
     --app-accent: #d97706;
     --app-accent-soft: #fdf3e3;
+    // 数据强调色（统计数字等），暗色主题下换成更亮的同色系
+    --app-stat-primary: #0f766e;
+    --app-stat-success: #00b42a;
+    --app-stat-danger: #f53f3f;
+    --app-stat-neutral: #86909c;
     // 白天模式侧边栏：浅底 + 深字，与工作区同属亮色系
     --app-sidebar: #ffffff;
     --app-sidebar-2: #f2f4f6;
@@ -48,8 +53,11 @@ body {
     --app-sidebar-text: #374151;
     --app-sidebar-muted: #8a94a3;
     --app-sidebar-hover-text: #0f172a;
-    // 品牌方块与深色横幅在两种主题下都保持深色
-    --app-brand-tile: #0f172a;
+    // 品牌方块与深色横幅：白天用青绿、暗色用墨黑
+    --app-brand-tile: #0f766e;
+    --app-brand-line: #0f766e;
+    --app-brand-text: #ffffff;
+    --app-brand-icon: #d1fae5;
     --app-banner: #0f172a;
     --app-banner-text: #c7d0dd;
 
@@ -435,6 +443,10 @@ body[arco-theme="dark"] {
     --app-muted: #8c97a7;
     --app-line: #232c3a;
     --app-line-strong: #344052;
+    --app-stat-primary: #2dd4bf;
+    --app-stat-success: #4ade80;
+    --app-stat-danger: #f87171;
+    --app-stat-neutral: #94a3b8;
     --app-sidebar: #0b0f16;
     --app-sidebar-2: #131a25;
     --app-sidebar-line: #223046;
@@ -442,6 +454,9 @@ body[arco-theme="dark"] {
     --app-sidebar-muted: #8290a5;
     --app-sidebar-hover-text: #ffffff;
     --app-brand-tile: #131a25;
+    --app-brand-line: #263145;
+    --app-brand-text: #c7d0dd;
+    --app-brand-icon: #55b3a8;
     --app-banner: #0b0f16;
     --app-banner-text: #c7d0dd;
 
@@ -473,6 +488,12 @@ body[arco-theme="dark"] {
 
     .arco-table-hover .arco-table-tr:hover .arco-table-td {
         background-color: #18212c;
+    }
+
+    // Arco 暗色下灰色标签字色偏暗（#929293 叠 20% 灰底），提亮一档保证可读
+    .arco-tag-gray.arco-tag-checked {
+        color: #cbd5e1;
+        background-color: rgba(148, 163, 184, 0.22);
     }
 
     .arco-input-wrapper,

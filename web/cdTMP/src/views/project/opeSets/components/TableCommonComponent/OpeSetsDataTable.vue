@@ -207,11 +207,29 @@ defineExpose({ fetchData, refresh, selecteds, tableData, searchParams })
 
 <style lang="less">
 .hyperTextCell-table-chen {
+    // 长文本单元格内部滚动：统一顶端对齐，滚动条收细避免在表格中间形成一条粗线
+    .arco-table-td {
+        vertical-align: top;
+    }
+
     .arco-table-td-content {
         max-height: 15em;
         overflow-y: auto;
         line-height: 1.5em;
         word-break: break-word;
+        scrollbar-width: thin;
+    }
+
+    .arco-table-td-content::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .arco-table-td-content::-webkit-scrollbar-thumb {
+        background-color: var(--app-line-strong, #cfd5dc);
+    }
+
+    .arco-table-td-content::-webkit-scrollbar-track {
+        background-color: transparent;
     }
 }
 .arco-tabs-content-list {

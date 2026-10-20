@@ -1,6 +1,6 @@
 <template>
     <div class="ma-content-block lg:flex justify-between p-4">
-        <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0">
+        <div class="lg:w-full w-full mt-5 lg:mt-0">
             <a-spin :loading="loading" tip="正在加载中，请稍等...">
                 <template #icon>
                     <icon-sync />

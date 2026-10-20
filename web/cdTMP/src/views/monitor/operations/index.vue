@@ -18,7 +18,7 @@ const crudColumns = [
         title: "创建时间",
         dataIndex: "create_datetime",
         align: "center",
-        width: 150,
+        width: 170,
         addDisplay: false,
         editDisplay: false
     },

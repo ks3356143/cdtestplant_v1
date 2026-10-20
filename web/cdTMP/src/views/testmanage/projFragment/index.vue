@@ -1,7 +1,7 @@
 <template>
     <div class="proj-fragment-container">
         <div class="ma-content-block lg:flex justify-between p-4">
-            <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0" v-loading="isDataLoading">
+            <div class="lg:w-full w-full mt-5 lg:mt-0" v-loading="isDataLoading">
                 <page-header :data="headerData">
                     <a-popover position="right">
                         <icon-exclamation-circle-fill size="26" style="color: #ff9800" />

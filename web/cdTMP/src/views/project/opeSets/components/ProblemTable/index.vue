@@ -78,5 +78,18 @@ const handleOpenProblemModify = (record: any) => {
     overflow-y: auto;
     white-space: normal;
     word-break: break-all;
+    scrollbar-width: thin;
+}
+
+.max-height-class::-webkit-scrollbar {
+    width: 6px;
+}
+
+.max-height-class::-webkit-scrollbar-thumb {
+    background-color: var(--app-line-strong, #cfd5dc);
+}
+
+.max-height-class::-webkit-scrollbar-track {
+    background-color: transparent;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="ma-content-block lg:flex justify-between p-4">
-        <div class="lg:w-full w-full lg:ml-4 mt-5 lg:mt-0 h-full">
+        <div class="lg:w-full w-full mt-5 lg:mt-0 h-full">
             <!-- 1.标题：提示用户第几轮次 -->
             <div class="heading-1">{{ title }}测试过程数据</div>
             <!-- 2.容器：tab切换 -->

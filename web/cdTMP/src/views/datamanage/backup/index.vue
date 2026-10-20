@@ -41,7 +41,7 @@
         :data="rows"
         :loading="loading"
         :pagination="{ pageSize: 10 }"
-        :scroll="{ x: 1320 }"
+        :scroll="{ x: 1340 }"
         row-key="id"
       >
         <template #kind="{ record }">
@@ -49,8 +49,11 @@
         </template>
         <template #digest="{ record }">
           <a-tooltip :content="record.digest">
-            <a-typography-text code>{{ String(record.digest).slice(0, 16) }}…</a-typography-text>
+            <a-typography-text code style="white-space: nowrap">{{ String(record.digest).slice(0, 16) }}…</a-typography-text>
           </a-tooltip>
+        </template>
+        <template #size="{ record }">
+          <span style="white-space: nowrap">{{ record.size_text }}</span>
         </template>
         <template #state="{ record }">
           <a-tag v-if="record.status === 'success' && record.file_exists" color="green">完好</a-tag>
@@ -121,8 +124,8 @@ const columns = [
   { title: "类型", slotName: "kind", width: 90 },
   { title: "备份范围", dataIndex: "scope_label", ellipsis: true, width: 190 },
   { title: "数据条数", dataIndex: "record_count", width: 90 },
-  { title: "文件大小", dataIndex: "size_text", width: 90 },
-  { title: "SHA-256 摘要", slotName: "digest", width: 150 },
+  { title: "文件大小", slotName: "size", width: 100 },
+  { title: "SHA-256 摘要", slotName: "digest", width: 170 },
   { title: "状态", slotName: "state", width: 80 },
   { title: "创建人", slotName: "creator", width: 90 },
   { title: "创建时间", slotName: "time", width: 180 },
