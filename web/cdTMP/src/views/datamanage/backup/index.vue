@@ -204,7 +204,7 @@ const doRestore = async (record) => {
 const doDownload = async (record) => {
   try {
     const token = JSON.parse(localStorage.getItem("token") || "null")
-    const resp = await fetch(`/api/system/backup/${record.id}/download`, {
+    const resp = await fetch(tool.apiUrl(`/api/system/backup/${record.id}/download`), {
       headers: { Authorization: `Bearer ${token}` }
     })
     if (!resp.ok) {

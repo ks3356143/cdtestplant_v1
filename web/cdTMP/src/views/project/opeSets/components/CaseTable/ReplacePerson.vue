@@ -64,13 +64,19 @@ const { selectRows } = defineProps<{ selectRows: any }>()
 // emits
 const emit = defineEmits(["modifySuccess"])
 
-// 1.在created时候直接请求后端项目人员信息
+// 1.首次打开弹窗时请求项目人员信息（失败不影响弹窗操作，提示由拦截器统一处理）
 const persons = ref([])
+const personsLoaded = ref(false)
 async function fetchPersonByProject() {
-    const res = await userApi.getProjectList(route.query.id)
-    persons.value = res.data.map((it: { name: string }) => it.name)
+    if (personsLoaded.value) return
+    try {
+        const res = await userApi.getProjectList(route.query.id)
+        persons.value = (res.data || []).map((it: { name: string }) => it.name)
+        personsLoaded.value = true
+    } catch {
+        // 人员下拉为空，用户仍可手动输入
+    }
 }
-fetchPersonByProject()
 
 // 2.异步执行替换操作，返回boolean-true则关闭弹窗
 const submitReplace = async () => {
@@ -82,13 +88,17 @@ const submitReplace = async () => {
     const selecteds = selectRows || getSelectedsFunc.value() || []
     if (selecteds.length && selecteds.length > 0) {
         // 判断是否选择了行
-        // 请求后台执行
-        await caseApi.personReplace({
-            selectRows: selecteds,
-            designPerson: designPerson.value,
-            testPerson: testPerson.value,
-            monitorPerson: monitorPerson.value
-        })
+        // 请求后台执行（失败由 axios 拦截器提示，保持弹窗不关闭便于重试）
+        try {
+            await caseApi.personReplace({
+                selectRows: selecteds,
+                designPerson: designPerson.value,
+                testPerson: testPerson.value,
+                monitorPerson: monitorPerson.value
+            })
+        } catch {
+            return false
+        }
         emit("modifySuccess")
         Message.success("批量替换成功...")
         return true
@@ -104,6 +114,7 @@ const open = (getFunc: (() => number[]) | undefined) => {
     testPerson.value = "不替换"
     monitorPerson.value = "不替换"
     visible.value = true
+    fetchPersonByProject()
 }
 defineExpose({ open })
 </script>

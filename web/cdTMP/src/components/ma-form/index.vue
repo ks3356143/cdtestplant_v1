@@ -155,10 +155,17 @@ watch(
     { immediate: true, deep: true }
 )
 
+// 只有配置了 onControl 的列才需要联动计算，避免每次输入都全量扫描
+const hasInteractiveColumns = computed(() =>
+    flatteningColumns.value.some((item) => typeof item.onControl === "function")
+)
+
 watch(
     () => form.value,
     (vl) => {
-        interactiveControl(vl, flatteningColumns.value, { getColumnService, dictList })
+        if (hasInteractiveColumns.value) {
+            interactiveControl(vl, flatteningColumns.value, { getColumnService, dictList })
+        }
         emit("update:modelValue", vl)
     },
     { deep: true }

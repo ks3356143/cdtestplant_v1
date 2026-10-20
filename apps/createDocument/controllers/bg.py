@@ -136,8 +136,8 @@ class GenerateControllerBG(ControllerBase):
             so_dut: Dut | None = r.rdField.filter(type='SO').first()
             if so_dut:
                 round_dict['version'] = so_dut.version
-                round_dict['line_count'] = int(so_dut.total_lines)
-                round_dict['effective_line'] = int(so_dut.effective_lines)
+                round_dict['line_count'] = int(so_dut.total_lines or 0)
+                round_dict['effective_line'] = int(so_dut.effective_lines or 0)
                 round_list.append(round_dict)
 
         context = {

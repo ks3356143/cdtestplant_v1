@@ -86,7 +86,7 @@ def auto_create_jt_and_dm(user_name: str, dut_qs: Dut, project_obj: Project):
                             operation='使用LDRA TestBed软件和Klocwork软件工具对被测软件'
                                       '全部源程序进行静态分析，并配合人工以及检查单进行分析',
                             expect='静态审查单全部通过，且源代码满足编码规则和质量度量要求',
-                            result='静态度量结果符合国军标要求，静态分析审查单全部通过', )
+                            result='静态度量结果符合相关标准要求，静态分析审查单全部通过', )
     # 1.2.自动创建代码审查design
     dm_design_create_dict = {
         'ident': 'DMSC',

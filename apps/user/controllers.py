@@ -219,14 +219,13 @@ class UserManageController(ControllerBase):
     @route.post("/modifyPassword", auth=JWTAuth(), permissions=[IsAuthenticated])
     def modify_password(self, payload: AdminModifyPasswordSchema):
         user: UserClass = self.context.request.user  # type:ignore
-        if user:
-            # 判断就密码是否正确
-            user_old = authenticate(username=user.username, password=payload.oldPassword)
-            if not user_old:
-                return ChenResponse(status=400, code=400, message='旧密码错误，请检查')
-            user.set_password(payload.newPassword)
-            user.save()
-            return ChenResponse(status=200, code=200, message='管理员修改密码成功')
+        # 校验旧密码，避免会话被盗后直接改密
+        user_old = authenticate(username=user.username, password=payload.oldPassword)
+        if not user_old:
+            return ChenResponse(status=400, code=400, message='旧密码错误，请检查')
+        user.set_password(payload.newPassword)
+        user.save()
+        return ChenResponse(status=200, code=200, message='密码修改成功')
 
     # 用户登录后动态读取LDAP用户录入数据（仅系统管理员可触发全量同步）
     @route.get("/ldap", url_name='user-ldap', permissions=[IsAuthenticated, IsSystemAdmin])

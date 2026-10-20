@@ -40,12 +40,15 @@ class GenerateControllerHJL(ControllerBase):
         """生成回归测试记录的被测软件基本信息"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hjl' / '被测软件基本信息.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         # 第一轮次对象
         round1_obj: Union[Round, None] = project_obj.pField.filter(key='0').first()
+        if round1_obj is None:
+            return ChenResponse(code=400, status=400, message='未找到首轮测试信息!')
         # 第一轮源代码被测件对象
         round1_so_dut: Union[Dut, None] = round1_obj.rdField.filter(type='SO').first()
+        if round1_so_dut is None:
+            return ChenResponse(code=400, status=400, message='首轮缺少源代码被测件，请添加')
         languages = get_list_dict('language', project_obj.language)
         language_list = [item['ident_version'] for item in languages]
         runtimes = get_list_dict('runtime', project_obj.runtime)
@@ -73,10 +76,12 @@ class GenerateControllerHJL(ControllerBase):
         }
 
         version_info = [{'version': round1_so_dut.version,
-                         'line_count': int(round1_so_dut.total_lines),
-                         'effective_line': int(round1_so_dut.effective_lines)}]
+                         'line_count': int(round1_so_dut.total_lines or 0),
+                         'effective_line': int(round1_so_dut.effective_lines or 0)}]
         # 循环回归的轮次
         for hround in hround_list:
+            # 每轮重新实例化模板：docxtpl 的 render 会就地替换占位符，复用实例会导致后续轮次渲染失效
+            doc = DocxTemplate(tpl_path)
             # 每个轮次独立渲染context
             context_round = deepcopy(context)
             # 取中文名称
@@ -86,8 +91,8 @@ class GenerateControllerHJL(ControllerBase):
             if not so_dut:
                 return ChenResponse(code=400, status=400, message=f'您第{cname}轮次中缺少源代码被测件，请添加')
             version_info.append(
-                {'version': so_dut.version, 'line_count': int(so_dut.total_lines),
-                 'effective_line': int(so_dut.effective_lines)})
+                {'version': so_dut.version, 'line_count': int(so_dut.total_lines or 0),
+                 'effective_line': int(so_dut.effective_lines or 0)})
             context_round['version_info'] = version_info
             # 开始渲染每个轮次的二级文档
             save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hjl' / f"第{cname}轮被测软件基本信息.docx"
@@ -104,7 +109,6 @@ class GenerateControllerHJL(ControllerBase):
         """生成回归测试记录的-{测试用例记录}"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hjl' / '测试用例记录.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
         if len(hround_list) < 1:
@@ -114,6 +118,8 @@ class GenerateControllerHJL(ControllerBase):
         test_type_len = Dict.objects.get(code='testType').dictItem.count()  # 测试类型的个数
         # 循环每轮轮次对象
         for hround in hround_list:
+            # 每轮重新实例化模板（render 会消耗占位符，复用会导致后续轮次内容停留在第一轮）
+            doc = DocxTemplate(tpl_path)
             cname = chinese_round_name[int(hround.key)]  # var：输出二、三字样
             type_number_list = [i for i in range(1, test_type_len + 1)]  # 测试类型编号对应的列表
             list_list = [[] for j in range(1, test_type_len + 1)]  # 每个测试类型组合为一个列表[[],[],[],[]]

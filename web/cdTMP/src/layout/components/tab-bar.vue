@@ -15,7 +15,7 @@
 
 <script setup>
 import { ref, computed, watch, onUnmounted } from "vue"
-import { listenerRouteChange, removeRouteListener } from "@/utils/route-listener"
+import { listenerRouteChange } from "@/utils/route-listener"
 import { useAppStore, useTabBarStore } from "@/store"
 import tabItem from "./tab-item.vue"
 
@@ -36,14 +36,15 @@ watch(
         affixRef.value.updatePosition()
     }
 )
-listenerRouteChange((route) => {
+const removeRouteChangeListener = listenerRouteChange((route) => {
     if (!route.meta.noAffix && !tagList.value.some((tag) => tag.fullPath === route.fullPath)) {
         tabBarStore.updateTabList(route)
     }
 }, true)
 
 onUnmounted(() => {
-    removeRouteListener()
+    // 只注销本组件注册的监听，避免误删菜单等其它组件的路由监听
+    removeRouteChangeListener()
 })
 </script>
 

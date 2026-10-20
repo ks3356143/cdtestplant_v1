@@ -10,9 +10,11 @@ export default function () {
     const route = useRoute()
     // ref
     const tempCaseInfo = ref<any>(null)
-    // 项目id和当前case的key
-    const { id, key } = route.query
+    // 项目id和当前case的key（直链/刷新时 query 可能缺失，统一兜底）
+    const id = route.query.id ?? ""
+    const key = route.query.key ?? ""
     const fetchCaseOneStatus = async () => {
+        if (!id || !key) return
         try {
             const res = await caseApi.getCaseOne({ key, projectId: id })
             tempCaseInfo.value = res.data
@@ -27,7 +29,7 @@ export default function () {
     // hook里面判断函数：判断是否该用例未执行或未通过
     const caseIsNotPassedOrNotExe = function (): boolean {
         if (tempCaseInfo.value) {
-            const testSteps: any[] = tempCaseInfo.value.testStep
+            const testSteps: any[] = tempCaseInfo.value.testStep ?? []
             if (testSteps.length > 0) {
                 return testSteps.some((it) => it.passed === "2")
             }
@@ -46,7 +48,7 @@ export default function () {
 // hook外面判断函数
 export const caseIsPassed = function (caseInfo: any): boolean {
     if (caseInfo) {
-        const testSteps: any[] = caseInfo.testStep
+        const testSteps: any[] = caseInfo.testStep ?? []
         if (testSteps.length > 0) {
             return testSteps.some((it) => it.passed === "2")
         }

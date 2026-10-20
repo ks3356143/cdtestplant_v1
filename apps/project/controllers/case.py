@@ -15,7 +15,8 @@ from datetime import datetime
 from django.utils import timezone
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_case
-from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, Project, Problem, NonrepudiationEvidence
+from apps.project.models import Design, Dut, Round, TestDemand, Case, CaseStep, Project, Problem, NonrepudiationEvidence, \
+    TestDemandContentStep
 from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
                                                check_objects_access, get_object_in_project)
 from apps.project.schemas.case import DeleteSchema, CaseModelOutSchema, CaseFilterSchema, \
@@ -34,6 +35,37 @@ CASE_REPLACE_FIELDS = {
     'designPerson', 'testPerson', 'monitorPerson',
 }
 
+
+def _step_to_values(step: CaseStep) -> dict:
+    """CaseStep 实例转 dict，键与原 queryset.values() 保持一致（供预取后手工序列化）"""
+    return {
+        'id': step.id,
+        'operation': step.operation,
+        'expect': step.expect,
+        'result': step.result,
+        'passed': step.passed,
+        'case_id': step.case_id,
+        'remark': step.remark,
+        'update_datetime': step.update_datetime,
+        'create_datetime': step.create_datetime,
+        'sort': step.sort,
+    }
+
+
+def _content_step_to_values(step: TestDemandContentStep) -> dict:
+    """TestDemandContentStep 实例转 dict，键与 .values() 保持一致"""
+    return {
+        'id': step.id,
+        'operation': step.operation,
+        'expect': step.expect,
+        'testDemandContent_id': step.testDemandContent_id,
+        'remark': step.remark,
+        'update_datetime': step.update_datetime,
+        'create_datetime': step.create_datetime,
+        'sort': step.sort,
+    }
+
+
 @api_controller("/project", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['测试用例接口'])
 class CaseController(ControllerBase):
     @route.get("/getCaseList", response=List[CaseModelOutSchema], exclude_none=True,
@@ -47,7 +79,8 @@ class CaseController(ControllerBase):
         check_project_access_by_id(data.project_id, self.context.request.user)
         if case_id:
             # 当传入了id，则查询单个
-            qs = Case.objects.filter(id=case_id).select_related('test').prefetch_related('caseField', 'test__testQField')  # type:ignore
+            qs = Case.objects.filter(id=case_id).select_related('test').prefetch_related(
+                'caseField', 'step', 'test__testQField__testStepField')  # type:ignore
         else:
             conditionNoneToBlank(data)
             query_params = {
@@ -67,11 +100,11 @@ class CaseController(ControllerBase):
                 # 汇总界面只查round
                 query_params['round__key'] = data.round_id
             qs = (Case.objects.filter(**query_params).order_by("key").select_related('test')
-                  .prefetch_related('caseField', 'test__testQField'))
-        # 由于有嵌套query_set存在，把每个用例的schema加上一个字段
+                  .prefetch_related('caseField', 'step', 'test__testQField__testStepField'))
+        # 由于有嵌套query_set存在，把每个用例的schema加上一个字段（步骤已在预取中取回，不再逐用例查库）
         query_list = []
         for query_single in qs:
-            setattr(query_single, "testStep", query_single.step.all().values())
+            setattr(query_single, "testStep", [_step_to_values(s) for s in query_single.step.all()])
             # 增加一个字段，测试类型例如：FT
             setattr(query_single, 'testType', get_testType(query_single.test.testType, dict_code='testType'))
             # 如果有问题单字段则添加上
@@ -82,7 +115,7 @@ class CaseController(ControllerBase):
             test_obj = query_single.test
             sub_list = []
             for step_obj in test_obj.testQField.all():
-                setattr(step_obj, "subStep", step_obj.testStepField.all().values())
+                setattr(step_obj, "subStep", [_content_step_to_values(s) for s in step_obj.testStepField.all()])
                 sub_list.append(step_obj)
             setattr(test_obj, "testContent", sub_list)
             setattr(query_single, 'test', test_obj)
@@ -119,16 +152,14 @@ class CaseController(ControllerBase):
     @transaction.atomic
     def get_case_tree(self, payload: CaseTreeInputSchema = Query(...)):
         check_project_access_by_id(payload.project_id, self.context.request.user)
-        qs = Case.objects.filter(project__id=payload.project_id, test__key=payload.key)  # type:ignore
+        qs = Case.objects.filter(project__id=payload.project_id, test__key=payload.key) \
+            .prefetch_related('caseField', 'step')  # type:ignore
         for q in qs:
             # 遍历每个用例节点，查看是否有关联问题单
-            if q.caseField.count() > 0:
+            if q.caseField.all():
                 q.isRelatedProblem = True
             # 遍历用例的step查看是否有未通过
-            q.isNotPassed = False
-            for step in q.step.all():
-                if step.passed == '2':
-                    q.isNotPassed = True
+            q.isNotPassed = any(step.passed == '2' for step in q.step.all())
         return qs
 
     # 添加测试用例
@@ -172,6 +203,9 @@ class CaseController(ControllerBase):
             item["case"] = qs
             data_list.append(CaseStep(**item))
         CaseStep.objects.bulk_create(data_list)  # type:ignore
+        if data_list:
+            from apps.project.tools.integrity import refresh_tags
+            refresh_tags(list(qs.step.all()))
         return qs
 
     # 批量新增用例
@@ -182,6 +216,7 @@ class CaseController(ControllerBase):
         project_obj = get_object_or_404(Project, id=payload.project_id)
         user_name = self.context.request.user.name
         keys = []
+        created_cases = []
         demands = project_obj.ptField.all()  # 当前项目所有测试项
         for case_data in payload.cases:
             # 解析放在前面防止出错
@@ -216,11 +251,17 @@ class CaseController(ControllerBase):
                 "title": case_data.name
             }
             case_new_obj = Case.objects.create(**case_dict)
+            created_cases.append(case_new_obj)
             case_step_list = []
             for step in stepsOrErrorResponse:
                 case_step_list.append(CaseStep(**{"case": case_new_obj, "operation": step['operation'],
                                                   "expect": step['expect']}))
-            CaseStep.objects.bulk_create(case_step_list)
+            if case_step_list:
+                CaseStep.objects.bulk_create(case_step_list)
+        # bulk_create 不触发 post_save，统一补刷新建用例步骤的完整性标签
+        if created_cases:
+            from apps.project.tools.integrity import refresh_tags
+            refresh_tags(list(CaseStep.objects.filter(case__in=created_cases)))
         return ChenResponse(code=60000, status=200, data=keys, message='成功录入用例')
 
     # 更新测试用例
@@ -236,16 +277,27 @@ class CaseController(ControllerBase):
                 setattr(case_qs, "title", value)
             # testStep处理
             if attr == 'testStep':
-                content_list = case_qs.step.all()
-                for content_single in content_list:
-                    content_single.delete()
+                # 旧的步骤整体删除后重建（批量删除/批量创建，避免逐条往返）
+                case_qs.step.all().delete()
                 data_list = []
                 for item in value:
-                    if item['operation'] or item['expect'] or item['result'] or item['passed'] or item[
-                        'status']:
-                        item["case"] = case_qs
-                        data_list.append(CaseStep(**item))
-                CaseStep.objects.bulk_create(data_list)  # type:ignore
+                    # 前端可能提交整表空白行，跳过没有任何内容的步骤
+                    has_content = bool(item.get('operation') or item.get('expect') or item.get('result'))
+                    if not has_content and item.get('passed') in (None, '', '3'):
+                        continue
+                    data_list.append(CaseStep(
+                        case=case_qs,
+                        operation=item.get('operation'),
+                        expect=item.get('expect'),
+                        result=item.get('result'),
+                        passed=item.get('passed') or '3',
+                    ))
+                if data_list:
+                    CaseStep.objects.bulk_create(data_list)  # type:ignore
+                    # bulk_create 不触发 post_save，显式补刷完整性标签
+                    from apps.project.tools.integrity import refresh_tags
+                    refresh_tags(list(case_qs.step.all()))
+                continue
 
             setattr(case_qs, attr, value)
         # 处理标识-统一设置为YL
@@ -275,20 +327,20 @@ class CaseController(ControllerBase):
         multi_delete_case([obj.id for obj in case_objs], Case)
         # 每个受影响的测试项都重排 key（批量删除可能跨多个测试项）
         for test_id, test_key in affected:
-            index = 0
-            case_all_qs = Case.objects.filter(test__id=test_id).order_by('id')  # type:ignore
-            for single_qs in case_all_qs:
-                case_key = "".join([test_key, '-', str(index)])
-                single_qs.key = case_key
-                index = index + 1
-                single_qs.save()
+            case_all = list(Case.objects.filter(test__id=test_id).order_by('id'))  # type:ignore
+            for index, single_qs in enumerate(case_all):
+                single_qs.key = "".join([test_key, '-', str(index)])
+            if case_all:
+                Case.objects.bulk_update(case_all, ['key'])
         return ChenResponse(message="测试用例删除成功！影响域分析中如果有该关联用例则被删除。")
 
     # 右键测试项，根据测试子项生成用例
     @route.post("/case/create_by_demand", url_name='case-create-by-demand')
+    @transaction.atomic
     def create_case_by_demand(self, demand_node: DemandNodeSchema):
         check_project_access_by_id(demand_node.project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=demand_node.project_id)
+        created_cases = []
         if demand_node.key and demand_node.key != '':
             demand = get_object_or_404(TestDemand, key=demand_node.key, project=project_qs)
             # 先查询当前测试项下面有无case
@@ -321,17 +373,24 @@ class CaseController(ControllerBase):
                     'level': '4',
                 }
                 case_model = Case.objects.create(**case_dict)  # type:ignore
-                # 创建用例步骤
+                created_cases.append(case_model)
+                # 创建用例步骤（批量写入）
+                step_list = []
                 for demand_step_obj in sub.testStepField.all():
                     operation = demand_step_obj.operation
-                    case_step_dict = {
-                        'operation': "".join([operation if operation is not None else ""]),
-                        'expect': demand_step_obj.expect,
-                        'result': '',  # 暂时为空
-                        'case': case_model,  # 指定父级Case模型
-                    }
-                    CaseStep.objects.create(**case_step_dict)  # type:ignore
+                    step_list.append(CaseStep(
+                        operation="".join([operation if operation is not None else ""]),
+                        expect=demand_step_obj.expect,
+                        result='',  # 暂时为空
+                        case=case_model,  # 指定父级Case模型
+                    ))
+                if step_list:
+                    CaseStep.objects.bulk_create(step_list)  # type:ignore
                 index += 1
+        # bulk_create 不触发 post_save，统一补刷新建用例步骤的完整性标签
+        if created_cases:
+            from apps.project.tools.integrity import refresh_tags
+            refresh_tags(list(CaseStep.objects.filter(case__in=created_cases)))
         # 这里返回一个demand的key用于前端刷新树状图
         return ChenResponse(data={'key': demand_node.key}, status=200, code=200,
                             message='测试项自动生成用例成功')
@@ -399,12 +458,14 @@ class CaseController(ControllerBase):
             check_project_access(project, self.context.request.user)
         # 替换设计人员
         case_qs = selected_case_qs
+        replace_count = 0
         if payload.designPerson != '不替换' and payload.designPerson != '':
-            case_qs.update(designPerson=payload.designPerson)
+            replace_count += case_qs.update(designPerson=payload.designPerson)
         if payload.testPerson != '不替换' and payload.testPerson != '':
-            case_qs.update(testPerson=payload.testPerson)
+            replace_count += case_qs.update(testPerson=payload.testPerson)
         if payload.monitorPerson != '不替换' and payload.monitorPerson != '':
-            case_qs.update(monitorPerson=payload.monitorPerson)
+            replace_count += case_qs.update(monitorPerson=payload.monitorPerson)
+        return ChenResponse(message="批量替换成功", data={'count': replace_count})
 
     # 批量替换时间
     @route.post("/case/timeReplace/", url_name='case-time-replace')

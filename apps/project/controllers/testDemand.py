@@ -15,7 +15,7 @@ from utils.chen_crud import multi_delete_testDemand
 from utils.codes import HTTP_INDEX_ERROR
 from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
                                                check_objects_access, get_object_in_project)
-from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep, Project
+from apps.project.models import Design, Dut, Round, TestDemand, TestDemandContent, TestDemandContentStep, Project, Case
 from apps.project.schemas.testDemand import DeleteSchema, TestDemandModelOutSchema, TestDemandFilterSchema, \
     TestDemandTreeReturnSchema, TestDemandTreeInputSchema, TestDemandCreateOutSchema, \
     TestDemandCreateInputSchema, ReplaceDemandContentSchema, PriorityReplaceSchema, \
@@ -86,7 +86,7 @@ class TestDemandController(ControllerBase):
                 sub_list.append(step_obj)
             setattr(demand_qs, "testContent", sub_list)
             return demand_qs
-        raise HttpError(500, "未找到相应的数据")
+        raise HttpError(404, "未找到相应的数据")
 
     # 根据id直接查询
     @route.get("/getTestDemandOneById", response=TestDemandModelOutSchema, url_name='testDemand-one-by-id')
@@ -102,7 +102,7 @@ class TestDemandController(ControllerBase):
                 sub_list.append(step_obj)
             setattr(demand_qs, "testContent", sub_list)
             return demand_qs
-        raise HttpError(500, "未找到相应的数据")
+        raise HttpError(404, "未找到相应的数据")
 
     # 处理树状数据
     @route.get("/getTestdemandInfo", response=List[TestDemandTreeReturnSchema], url_name="testDemand-info")
@@ -238,24 +238,21 @@ class TestDemandController(ControllerBase):
         project_qs = get_object_or_404(Project, id=payload.project_id)
         old_ident = testDemand_qs.ident  # 用于判断是否要集体修改case的ident
         for attr, value in payload.dict().items():
-            # 判重复
-            if attr == 'ident':
-                # 先判断是否和原标识一样，且测试类型改变
-                if payload.dict()['testType'] != testDemand_qs.testType and value == old_ident:
-                    old_obj = project_qs.ptField.filter(ident=payload.ident).first()
-                    # 2025/06/24修改不同类型可以相同
-                    if old_obj and old_obj.testType == payload.dict()['testType']:
-                        return ChenResponse(code=500, status=500, message='更换的标识和其他测试项重复')
+            # 判重复：同项目、同测试类型的测试项标识不可重复（排除自身，空标识不校验）
+            if attr == 'ident' and value:
+                duplicate = project_qs.ptField.filter(
+                    ident=value, testType=payload.dict()['testType']).exclude(id=id)
+                # 2025/06/24修改：不同类型可以相同
+                if duplicate.exists():
+                    return ChenResponse(code=500, status=500, message='更换的标识和其他测试项重复')
             if attr == 'project_id' or attr == 'round_key' or attr == 'dut_key' or attr == 'design_key':
                 continue  # 如果发现是key则不处理
             if attr == 'name':
                 setattr(testDemand_qs, "title", value)
             # 找到attr为testContent的
             if attr == 'testContent':
-                content_list = testDemand_qs.testQField.all()
-                for content_single in content_list:
-                    # 删除TestDemandContent，会把CASCADE的TestDemandContentStep也删除
-                    content_single.delete()
+                # 删除 TestDemandContent 时其下 TestDemandContentStep 会级联删除
+                testDemand_qs.testQField.all().delete()
                 # 添加测试项步骤
                 for item in value:  # 遍历的是testContent字段,所以每个item是TestDemandContent的数据
                     # 存在subName就添加一个测试子项
@@ -275,9 +272,14 @@ class TestDemandController(ControllerBase):
             setattr(testDemand_qs, attr, value)
         # ~~~2024年5月9日：测试项更新标识后还要更新下面用例的标识~~~
         if testDemand_qs.ident != old_ident:
-            for case in testDemand_qs.tcField.all():
+            # 批量更新下级用例标识（Case 为完整性受保护模型，显式补刷标签）
+            cases = list(testDemand_qs.tcField.all())
+            for case in cases:
                 case.ident = testDemand_qs.ident
-                case.save()
+            if cases:
+                from apps.project.tools.integrity import refresh_tags
+                Case.objects.bulk_update(cases, ['ident'])
+                refresh_tags(cases)
         testDemand_qs.save()
         return testDemand_qs
 
@@ -325,7 +327,6 @@ class TestDemandController(ControllerBase):
     @transaction.atomic
     def solveRelatedTestDemand(self, data: TestDemandRelatedSchema):
         test_item_ids = data.data
-        non_exist_ids = [x for x in test_item_ids]
         check_project_access_by_id(data.project_id, self.context.request.user)
         project_qs = get_object_or_404(Project, id=data.project_id)
         key_str = "-".join([data.round_key, data.dut_key, data.design_key])
@@ -339,25 +340,13 @@ class TestDemandController(ControllerBase):
                 return ChenResponse(status=400, code=400,
                                     message=f'测试项不属于当前项目或不存在，已拒绝：{invalid_ids}')
             # 将test_item_ids中本身具有的测试项从id数组中移除
-            for test_id in test_item_ids:
-                for ti in design_item.dtField.all():
-                    if ti.pk == test_id:
-                        non_exist_ids.remove(test_id)
+            direct_ids = set(design_item.dtField.values_list('id', flat=True))
+            non_exist_ids = [test_id for test_id in test_item_ids if test_id not in direct_ids]
             if len(non_exist_ids) <= 0 < len(test_item_ids):
                 return ChenResponse(status=400, code=200,
                                     message='选择的测试项全部存在于当前设计需求中，请重新选择...')
-            # 先查询现在有的关联测试项
-            for item in design_item.odField.values('id'):
-                item_id = item.get('id', None)
-                if not item_id in test_item_ids:
-                    test_item_obj = TestDemand.objects.filter(id=item_id).first()
-                    design_item.odField.remove(test_item_obj)
-            for test_item_id in non_exist_ids:
-                if design_item.odField.filter(id=test_item_id).exists():
-                    continue
-                test_item_obj = TestDemand.objects.filter(id=test_item_id, project=project_qs).first()
-                if test_item_obj is not None:
-                    design_item.odField.add(test_item_obj)
+            # 一次性替换“其他关联测试项”集合：set 内部完成 remove + add，避免 O(n·m) 双层循环
+            design_item.odField.set([i for i in valid_ids if i not in direct_ids])
             return ChenResponse(status=200, code=200, message='添加关联测试项成功...')
         else:
             return ChenResponse(status=400, code=400, message='设计需求不存在，请检查...')
@@ -430,3 +419,4 @@ class TestDemandController(ControllerBase):
             return ChenResponse(status=400, code=400,
                                 message='部分测试项不属于当前项目或已被删除，已拒绝批量修改')
         demand_qs.update(priority=payload.priority)
+        return ChenResponse(message="批量替换优先级成功", data={'count': affected})

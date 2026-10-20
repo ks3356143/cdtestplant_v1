@@ -1,3 +1,5 @@
+import uploadConfig from "@/config/upload"
+
 const typeColor = (type = "default") => {
     let color = ""
     switch (type) {
@@ -129,13 +131,25 @@ tool.download = (data, filename = "下载文件") => {
 tool.attachUrl = (url, mode = "LOCAL") => {
     if (!url) return ""
     if (/^(https?:|blob:|data:)/i.test(url)) return url
-    const bases = {
-        LOCAL: "http://127.0.0.1:8000",
-        OSS: "",
-        COS: "",
-        QINIU: ""
+    const base = uploadConfig.storage[mode] || ""
+    return base + (url.startsWith("/") ? url : "/" + url)
+}
+
+// 非 axios 场景（下载、上传 action、iframe）使用的接口地址：
+// 开发代理模式用 /api 前缀，直连模式用完整后端地址
+tool.apiUrl = (path) => {
+    if (!path) return ""
+    if (/^(https?:|blob:|data:)/i.test(path)) return path
+    const apiBase =
+        (import.meta.env.VITE_APP_OPEN_PROXY === "true"
+            ? import.meta.env.VITE_APP_PROXY_PREFIX
+            : import.meta.env.VITE_APP_BASE_URL) || "/api"
+    const suffix = path.startsWith("/") ? path : "/" + path
+    // 调用方已带 /api 前缀时，避免拼成 /api/api/...
+    if (suffix.startsWith("/api/")) {
+        return apiBase.replace(/\/api\/?$/, "") + suffix
     }
-    return (bases[mode] || "") + (url.startsWith("/") ? url : "/" + url)
+    return apiBase.replace(/\/$/, "") + suffix
 }
 
 // 查看图片：兼容相对路径与哈希

@@ -11,8 +11,10 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
     const route = useRoute() as any
     const projectId = ref(route.query.id)
     const treeDataStore = useTreeDataStore()
-    const roundNumber = (route.query.key as any).split("-")[0]
-    const dutNumber = (route.query.key as any).split("-")[1]
+    // 刷新/直链时 key 可能缺失，统一兜底
+    const keyParts = String(route.query.key ?? "").split("-")
+    const roundNumber = keyParts[0]
+    const dutNumber = keyParts[1]
     // refs
     const crudOptions = ref({
         api: designDemandApi.getDesignDemandList,

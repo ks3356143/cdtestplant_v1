@@ -66,6 +66,43 @@ def refresh_tag(instance) -> 'object':
     return None
 
 
+def refresh_tags(instances) -> int:
+    """批量刷新同一模型的完整性标签（供 bulk_update 等不触发 post_save 的写路径使用）
+
+    一次查询已有标签 + 批量写入，避免逐条 update_or_create 的 N+1。
+    """
+    from apps.system.models import DataIntegrityTag
+    from django.utils import timezone
+    instances = [i for i in instances if getattr(i, 'pk', None)]
+    if not instances:
+        return 0
+    model_cls = type(instances[0])
+    entry = next((e for e in protected_models() if e['model'] is model_cls), None)
+    if entry is None:
+        return 0
+    table = model_cls._meta.db_table
+    digests = {str(i.pk): compute_digest(i, entry['fields']) for i in instances}
+    existing = {t.object_id: t
+                for t in DataIntegrityTag.objects.filter(table_name=table, object_id__in=digests)}
+    now = timezone.now()
+    to_create, to_update = [], []
+    for object_id, digest in digests.items():
+        tag = existing.get(object_id)
+        if tag is None:
+            to_create.append(DataIntegrityTag(table_name=table, object_id=object_id, digest=digest,
+                                              algorithm='SHA256', update_datetime=now, create_datetime=now))
+        elif tag.digest != digest or tag.algorithm != 'SHA256':
+            tag.digest = digest
+            tag.algorithm = 'SHA256'
+            tag.update_datetime = now
+            to_update.append(tag)
+    if to_create:
+        DataIntegrityTag.objects.bulk_create(to_create)
+    if to_update:
+        DataIntegrityTag.objects.bulk_update(to_update, ['digest', 'algorithm', 'update_datetime'])
+    return len(to_create) + len(to_update)
+
+
 def verify_all():
     """批量核查全部受保护数据：返回 [{object, fields, expected, actual, intact, broken}]"""
     from apps.system.models import DataIntegrityTag

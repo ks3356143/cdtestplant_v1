@@ -8,13 +8,14 @@ export default function () {
     const gradeOptions = computed(() => {
         return Object.fromEntries(originOption.value.map(({ title, key }) => [key, title]))
     })
-    // 请求字典中测试手段数据
+    // 请求问题单等级字典
     const fetchDictData = async () => {
+        loading.value = true
         try {
             const res = await dictApi.getDictByCode({ code: "problemGrade" })
-            originOption.value = res.data
+            originOption.value = res.data || []
         } catch (e) {
-            Message.error("获取测试手段选项失败，请关闭后重新打开!")
+            Message.error("获取问题单等级字典失败，请刷新重试!")
         } finally {
             loading.value = false
         }

@@ -46,6 +46,18 @@ const caseNumber = keyParts[4]
 const crudRef = ref()
 const projectId = ref(route.query.id)
 const problemchoose = ref()
+// 拼接弹窗标题的树路径：树缓存缺失或 key 不完整时降级为空串，避免链式取值崩溃
+const buildPathTitle = () => {
+    const td = treeDataStore.treeData || {}
+    const roundNode = td[roundNumber]
+    const dutNode = roundNode?.children?.[dutNumber]
+    const designNode = dutNode?.children?.[designDemandNumber]
+    const testNode = designNode?.children?.[testDemandNumber]
+    const caseNode = testNode?.children?.[caseNumber]
+    return [route.query.ident, roundNode?.title, dutNode?.title, designNode?.title, testNode?.title, caseNode?.title]
+        .filter(Boolean)
+        .join(" > ")
+}
 // ~~~~关联问题单逻辑~~~~
 //// 点击关联按钮
 const handleRelatedProblem = () => {
@@ -74,34 +86,11 @@ const crudOptions = ref({
             return false
         }
         // 下面是弹窗的标题路径
-        let key_split = route.query.key.split("-")
-        let round_key = key_split[0]
-        let dut_key = key_split[1]
-        let design_key = key_split[2]
-        let test_key = key_split[3]
-        let case_key = key_split[4]
-        let td = treeDataStore.treeData
-        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
-        ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
-        ${td[round_key].children[dut_key].children[design_key].title} >
-        ${td[round_key].children[dut_key].children[design_key].children[test_key].title} >
-        ${td[round_key].children[dut_key].children[design_key].children[test_key].children[case_key].title} > 问题单-`
+        crudRef.value.crudFormRef.actionTitle = `${buildPathTitle()} > 问题单-`
         return true
     },
     beforeOpenEdit: function (record) {
-        let key_split = route.query.key.split("-")
-        let round_key = key_split[0]
-        let dut_key = key_split[1]
-        let design_key = key_split[2]
-        let test_key = key_split[3]
-        let case_key = key_split[4]
-        let td = treeDataStore.treeData
-        crudRef.value.crudFormRef.actionTitle = `${route.query.ident} >
-        ${td[round_key].title} > ${td[round_key].children[dut_key].title} >
-        ${td[round_key].children[dut_key].children[design_key].title} >
-        ${td[round_key].children[dut_key].children[design_key].children[test_key].title} >
-        ${td[round_key].children[dut_key].children[design_key].children[test_key].children[case_key].title}
-        >用例[${record.name}]-`
+        crudRef.value.crudFormRef.actionTitle = `${buildPathTitle()} >用例[${record.name}]-`
         return true
     },
     parameters: {

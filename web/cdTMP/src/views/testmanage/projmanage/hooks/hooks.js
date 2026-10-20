@@ -1,4 +1,5 @@
 import { Message } from "@arco-design/web-vue"
+import tool from "@/utils/tool"
 
 export default {
     /**
@@ -15,7 +16,7 @@ export default {
                 throw new Error("生成文档失败：未获取到下载令牌")
             }
             // 2. 构建下载 URL（根据你的后端路由，这里假设前缀是 /create/download/{token}）
-            const downloadUrl = `/api/create/download/${token}`
+            const downloadUrl = tool.apiUrl(`/api/create/download/${token}`)
             // 3. 隐藏 iframe 触发浏览器原生下载（即刻弹出保存框）
             const iframe = document.createElement("iframe")
             iframe.style.display = "none"

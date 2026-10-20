@@ -71,10 +71,29 @@ def check_project_access_by_id(project_id, user):
     return project
 
 
-def accessible_project_ids(user) -> set:
-    """当前用户可访问的项目 id 集合（用于列表过滤）"""
+def accessible_projects(user):
+    """当前用户可访问项目的 QuerySet（列表过滤用，避免把全表读进内存逐条判断）"""
     from apps.project.models import Project
-    return {p.id for p in Project.objects.all() if is_project_accessible(p, user)}
+    from django.db.models import Q
+    if not getattr(user, 'is_authenticated', False):
+        return Project.objects.none()
+    if getattr(user, 'role', None) == 'admin':
+        return Project.objects.all()
+    identities = _user_identities(user)
+    if not identities:
+        return Project.objects.none()
+    query = Q()
+    for ident in identities:
+        query |= Q(duty_person=ident) | Q(member__contains=ident)
+    # 密级：项目密级不得高于用户密级许可（1公开 ~ 5绝密），secret 为空按公开处理
+    clearance = _secret_level(getattr(user, 'clearance', '1'))
+    allowed_levels = [str(level) for level in range(1, clearance + 1)]
+    return Project.objects.filter(query).filter(Q(secret__isnull=True) | Q(secret__in=allowed_levels))
+
+
+def accessible_project_ids(user) -> set:
+    """当前用户可访问的项目 id 集合（兼容旧调用）"""
+    return set(accessible_projects(user).values_list('id', flat=True))
 
 
 def ensure_creator_member(project, user):

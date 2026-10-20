@@ -32,11 +32,15 @@ const submitReplace = async () => {
     const selecteds = selectedRows || getSelectedsFunc.value() || []
     if (selecteds.length && selecteds.length > 0) {
         // 判断是否选择了行
-        // 请求后台执行
-        await demandApi.priorityReplace({
-            selectRows: selecteds as any,
-            priority: priority.value
-        })
+        // 请求后台执行（失败由 axios 拦截器提示，保持弹窗不关闭便于重试）
+        try {
+            await demandApi.priorityReplace({
+                selectRows: selecteds as any,
+                priority: priority.value
+            })
+        } catch {
+            return false
+        }
         emit("modifySuccess")
         Message.success("批量替换成功...")
         return true

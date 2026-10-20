@@ -1,6 +1,7 @@
 import datetime
 from ninja_extra import api_controller, ControllerBase, route
 from ninja import Query
+from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from ninja.pagination import paginate
@@ -77,7 +78,7 @@ class ProblemController(ControllerBase):
             query_params['case__round__key'] = data.round_id
         qs = Problem.objects.filter(**query_params).order_by("id")
 
-        # 遍历通过代码不通过ORM查询闭环方式-巧妙使用numpy中array对象的in方法来判断
+        # 关闭方式存储在 JSON 数组中，ORM 无法直接等值过滤，这里在内存中按条件筛选
         closeMethod1 = self.context.request.GET.get("closeMethod[0]")
         closeMethod2 = self.context.request.GET.get("closeMethod[1]")
         return [query for query in qs
@@ -117,19 +118,13 @@ class ProblemController(ControllerBase):
                 deleted_ids.add(pro_obj.id)
         if deleted_ids:
             query_final = [p for p in query_final if p.id not in deleted_ids]
-        # !!!如果是轮次查询则返回轮次，如果是关联查询则查询关联当前的case
-        if round_key:
-            pass
-        else:
+        # !!!如果是轮次查询则直接返回；否则标记每条问题单是否关联当前 case
+        if not round_key:
             case_obj = Case.objects.filter(project_id=project_id, key=data.key).first()
             if case_obj:
                 for pro_obj in query_final:
-                    # 查询关联的case
-                    related = False
-                    for re_case in pro_obj.case.all():
-                        if case_obj.id == re_case.id:
-                            related = True
-                    setattr(pro_obj, "related", related)
+                    setattr(pro_obj, "related",
+                            any(re_case.id == case_obj.id for re_case in pro_obj.case.all()))
         # 过滤查询悬挂逻辑
         query_last = []
         if data.hang == '3' or data.hang == '':  # 疑问：为什么会是空字符串
@@ -187,6 +182,9 @@ class ProblemController(ControllerBase):
                  payload.case_key])
             # 查询出所属的case
             case_obj = Case.objects.filter(project_id=project_id, key=case_key).first()
+            if case_obj is None:
+                # 关联用例不存在时整单回滚，避免留下无关联的问题单
+                raise HttpError(400, '关联的测试用例不存在，请刷新页面后重试')
             qs.case.add(case_obj)
             qs.save()
         # 对problem的ident排序
@@ -241,15 +239,13 @@ class ProblemController(ControllerBase):
         for project in {p.project for p in problems}:
             check_project_access(project, self.context.request.user)
         # 4.查询出当前项目id
-        project_id = None
-        # 2.循环该取出problem
-        for problem in problems:
-            project_id = problem.project_id
-            # 3. 直接删除case关联，然后删除自己
-            problem.case.clear()
-            problem.delete()
-        # 4.找到对应项目的所有problems进行排序
-        if project_id is not None:
+        problem_ids = list(problems.values_list('id', flat=True))
+        project_ids = set(problems.values_list('project_id', flat=True))
+        # 2/3. 批量解除用例关联后批量删除，避免逐条 clear/delete
+        Problem.case.through.objects.filter(problem_id__in=problem_ids).delete()
+        Problem.objects.filter(id__in=problem_ids).delete()
+        # 4.对每个受影响项目重排问题单 ident
+        for project_id in project_ids:
             self.reset_problem_ident(project_id)
         return ChenResponse(message="问题单删除成功！")
 
@@ -354,7 +350,13 @@ class ProblemController(ControllerBase):
         # 排序后修改ident
         round_sorted_problems = sorted(not_sorted_problems, key=lambda x: int(x['round_key']))
         last_sorted_problems = sorted(round_sorted_problems, key=lambda x: int(x['sort']))
-        # 根据排序修改problem的ident
+        # 根据排序修改problem的ident：批量 UPDATE + 批量刷新完整性标签
+        # （bulk_update 不触发 post_save，因此需要显式补刷标签）
+        problems = []
         for index, problem_dict in enumerate(last_sorted_problems):
             problem_dict['problem'].ident = str(index + 1)
-            problem_dict['problem'].save()
+            problems.append(problem_dict['problem'])
+        if problems:
+            Problem.objects.bulk_update(problems, ['ident'])
+            from apps.project.tools.integrity import refresh_tags
+            refresh_tags(problems)

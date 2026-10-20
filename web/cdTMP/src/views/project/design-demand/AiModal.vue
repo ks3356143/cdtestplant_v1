@@ -151,7 +151,10 @@ const testType = ref<any>([])
 const testMethod = ref<any>([])
 const fetchTestType = async () => {
     try {
-        const [typeResponse, methodResponse] = await Promise.all([dictApi.getDict("testType"), dictApi.getDict("testMethod")])
+        const [typeResponse, methodResponse] = await Promise.all([
+            dictApi.getDictByCode({ code: "testType" }),
+            dictApi.getDictByCode({ code: "testMethod" })
+        ])
         testType.value = typeResponse.data
         testMethod.value = methodResponse.data
     } catch (e) {
@@ -190,7 +193,15 @@ const generateClick = async () => {
         const question = tool.htmlToTextWithDOM(designObj.value?.description || "")
         // 请求后处理结果
         const res = await aiApi.getAiTestItemBackend({ question: question, project_type: isFPGA ? "fpga" : "cpu" })
-        const solveRes = JSON.parse(res.data.history[0].at(-1))
+        // AI 返回格式异常时给出明确提示，避免静默失败
+        let solveRes: any
+        try {
+            solveRes = JSON.parse(res.data.history[0].at(-1))
+        } catch {
+            percent.value = 0.0
+            Message.error("AI 返回内容格式异常，无法解析测试项，请重试")
+            return
+        }
         // 给Vue渲染测试项
         dataList.value = solveRes
         dataList.value.forEach((it: any) => {
@@ -203,6 +214,7 @@ const generateClick = async () => {
         Message.success("生成测试项成功，请完善信息后录入数据")
     } catch (e) {
         percent.value = 0.0
+        Message.error("生成测试项失败，请检查 AI 服务是否可用后重试")
     } finally {
         stopProgressSimulation()
         generateLoading.value = false

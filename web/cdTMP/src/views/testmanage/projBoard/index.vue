@@ -23,7 +23,7 @@ import useFetchData from "@/hooks/fetchData"
 const fetchData = async () => {
     return projectApi.getBoardInfo(route.params.projectId)
 }
-const { loadingData, isDataLoading } = useFetchData({}, fetchData)
+const { data: loadingData, isLoading: isDataLoading } = useFetchData({}, fetchData)
 
 defineOptions({
     name: "projBoard"

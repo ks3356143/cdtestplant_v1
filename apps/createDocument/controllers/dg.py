@@ -660,11 +660,13 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
         devplant_list = [item['ident_version'] for item in devplants]
         # 版本先找第一轮
         project_round = project_qs.pField.filter(key=0).first()
+        if project_round is None:
+            return ChenResponse(code=400, status=400, message='未找到首轮测试信息!')
         first_round_SO = project_round.rdField.filter(type='SO').first() # type:ignore
         if not first_round_SO:
             return ChenResponse(code=400, status=400, message='您还未创建轮次，请进入工作区创建')
         version = first_round_SO.version
-        line_count = int(first_round_SO.total_lines)
+        line_count = int(first_round_SO.total_lines or 0)
         dev_unit = project_qs.dev_unit
         # 渲染上下文
         context = {
@@ -1005,10 +1007,14 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
             source_dut: Dut = project_round_one.rdField.filter(type='SO').first()  # type:ignore
             if source_dut:
                 context.update({'version': source_dut.version})  # type:ignore
-                context.update({'size': int(source_dut.total_lines)})
-                context.update({'total_code_line': int(source_dut.effective_lines)})
-                context.update({'comment_line': int(source_dut.comment_lines)})
-                comment_ratio = int(source_dut.comment_lines) / int(source_dut.total_lines)
+                # 行数字段可能为空串/None（未上传源码统计），统一转 int 并防除零
+                total_lines = int(source_dut.total_lines or 0)
+                effective_lines = int(source_dut.effective_lines or 0)
+                comment_lines = int(source_dut.comment_lines or 0)
+                context.update({'size': total_lines})
+                context.update({'total_code_line': effective_lines})
+                context.update({'comment_line': comment_lines})
+                comment_ratio = (comment_lines / total_lines) if total_lines > 0 else 0
                 context.update({
                     'comment_ratio': f"{comment_ratio * 100:.2f}%",
                     'comment_ratio_right': '满足' if comment_ratio >= 0.2 else '不满足'

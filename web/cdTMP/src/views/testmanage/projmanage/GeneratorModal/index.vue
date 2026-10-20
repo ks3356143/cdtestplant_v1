@@ -13,7 +13,7 @@
                     <!-- 文件上传：其他文档 -->
                     <div v-else>
                         <a-upload
-                            :action="`/api/documentUpload/file?id=${projectId}&documentType=${title}`"
+                            :action="tool.apiUrl(`/api/documentUpload/file?id=${projectId}&documentType=${title}`)"
                             :limit="1"
                             accept=".docx, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                             @error="uploadErrorHandle"
@@ -88,6 +88,7 @@ import Empty from "@/components/Empty/index.vue" // 空状态组件
 import HgDocUpload from "@/views/testmanage/projmanage/GeneratorModal/HgDocUpload/index.vue"
 import Progress from "@/views/testmanage/projmanage/cpns/progress.vue"
 import { Message, Modal } from "@arco-design/web-vue"
+import tool from "@/utils/tool"
 import useGenerateSecond from "../hooks/useGenerateSecond"
 import useSeitaiModal from "../hooks/useSeitaiModal"
 

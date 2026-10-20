@@ -73,6 +73,8 @@ class GenerateControllerSM(ControllerBase):
                      range(1, test_type_len + 1)]  # [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         # 先找到第一轮次
         project_round_one = project_obj.pField.filter(key=0).first()
+        if project_round_one is None:
+            return ChenResponse(status=400, code=400, message="未找到首轮测试信息!")
         # 测试项的章节号预置处理
         demand_prefix = '6.2'
         testType_list, last_chapter_items = create_csx_chapter_dict(project_round_one)
@@ -145,6 +147,8 @@ class GenerateControllerSM(ControllerBase):
                      range(1, test_type_len + 1)]  # [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         # 先找到第一轮次
         project_round_one = project_obj.pField.filter(key=0).first()
+        if project_round_one is None:
+            return ChenResponse(status=400, code=400, message="未找到首轮测试信息!")
         # 找到第一轮的全部测试项
         testDemands = project_round_one.rtField.all()
         for demand in testDemands:

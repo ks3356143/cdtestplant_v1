@@ -77,8 +77,8 @@ class ProjectController(ControllerBase):
         # 避免出现"详情能进、列表却看不到"的两套口径
         auth_info: Users = self.context.request.auth
         if auth_info and auth_info.role != 'admin':
-            from apps.project.tools.access_control import is_project_accessible
-            return [proj for proj in qs if is_project_accessible(proj, auth_info)]
+            from apps.project.tools.access_control import accessible_projects
+            qs = qs.filter(id__in=accessible_projects(auth_info).values('id'))
         return qs
 
     @route.get("/findOneById/{int:project_id}", response=ProjectRetrieveSchema)
@@ -93,8 +93,7 @@ class ProjectController(ControllerBase):
     @transaction.atomic
     def create_project(self, data: ProjectCreateInput):
         data_dict = data.dict()
-        ident_qucover = Project.objects.filter(ident=data.dict()['ident'])
-        if ident_qucover:
+        if Project.objects.filter(ident=data_dict.get('ident')).exists():
             return ChenResponse(code=400, status=400, message="项目标识重复，请重新设置")
         qs = create(self.context.request, data_dict, Project)
         # 自主访问控制：非管理员创建项目时，把创建人写入负责人/成员（授权起点）
@@ -110,6 +109,8 @@ class ProjectController(ControllerBase):
                 copytree(src_dir, dist_dir)  # shutil模块直接是复制并命名，如果命名文件存在则抛出FileExists异常
             except PermissionError:
                 transaction.set_rollback(True)  # 标记回滚，避免报错但数据已落库
+                # 复制中途失败会留下半截目录，清理掉避免下次同 ident 建项目永远 FileExistsError
+                rmtree(dist_dir, ignore_errors=True)
                 return ChenResponse(code=500, status=500,
                                     message="错误，检查是否打开了服务器的conf中的文档，关闭后重试")
             except FileExistsError:
@@ -188,7 +189,7 @@ class ProjectController(ControllerBase):
         # 3.返回人员信息
         # 4.返回研制方信息
         # 5.返回用例信息
-        case_qs = project_obj.pcField.all()
+        case_ids = list(project_obj.pcField.values_list('id', flat=True))
         exe_count = 0  # 已执行数量
         noexe_count = 0  # 未执行数量
         partexe_count = 0  # 部分执行数量
@@ -203,8 +204,8 @@ class ProjectController(ControllerBase):
                 notpassed_cnt=Count('id', filter=Q(passed='2')),
             )
         }
-        for case in case_qs:
-            stat = step_stats.get(case.id)
+        for case_id in case_ids:
+            stat = step_stats.get(case_id)
             steps_count = stat['total_cnt'] if stat else 0  # 步骤总数
             passed_steps_count = stat['passed_cnt'] if stat else 0
             notPassed_steps_count = stat['notpassed_cnt'] if stat else 0
@@ -219,14 +220,9 @@ class ProjectController(ControllerBase):
                 exe_count += 1
 
         # 6.计算问题单数
-        problems = project_obj.projField.all()
-        close_count = 0
-        open_count = 0
-        for problem in problems:
-            if problem.status != '1':
-                open_count += 1
-            else:
-                close_count += 1
+        problem_status_list = list(project_obj.projField.values_list('status', flat=True))
+        close_count = sum(1 for status in problem_status_list if status == '1')
+        open_count = len(problem_status_list) - close_count
 
         # 7.将时间提取 todo:后续将计算的事件放入该页面
         timers = {'round_time': []}
@@ -285,7 +281,7 @@ class ProjectController(ControllerBase):
                 },
                 '人员': {
                     '负责人': project_obj.duty_person,
-                    '成员数': len(project_obj.member),
+                    '成员数': len(project_obj.member or []),
                 },
                 '开发方信息': {
                     '联系人': project_obj.dev_contact,
@@ -293,13 +289,13 @@ class ProjectController(ControllerBase):
                     '邮箱': project_obj.dev_email
                 },
                 '用例数': {
-                    '总数': len(case_qs),
+                    '总数': len(case_ids),
                     '已执行': exe_count,
                     '未执行': noexe_count,
                     '部分执行': partexe_count,
                 },
                 '问题数': {
-                    '总数': len(problems),
+                    '总数': len(problem_status_list),
                     '已闭环': close_count,
                     '未闭环': open_count,
                 }

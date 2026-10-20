@@ -91,12 +91,15 @@ class GenerateControllerHSM(ControllerBase):
         """生成回归测试说明的被测软件基本信息"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '被测软件基本信息.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj: Project = get_object_or_404(Project, id=id)
         # 第一轮次对象
         round1_obj: Union[Round, None] = project_obj.pField.filter(key='0').first()
+        if round1_obj is None:
+            return ChenResponse(code=400, status=400, message='未找到首轮测试信息!')
         # 第一轮源代码被测件对象
         round1_so_dut: Union[Dut, None] = round1_obj.rdField.filter(type='SO').first()
+        if round1_so_dut is None:
+            return ChenResponse(code=400, status=400, message='首轮缺少源代码被测件，请添加')
         languages = get_list_dict('language', project_obj.language)
         language_list = [item['ident_version'] for item in languages]
         runtimes = get_list_dict('runtime', project_obj.runtime)
@@ -129,6 +132,8 @@ class GenerateControllerHSM(ControllerBase):
         }]
         # 循环回归的轮次
         for hround in hround_list:
+            # 每轮重新实例化模板（render 会消耗占位符，复用会导致后续轮次沿用第一轮内容）
+            doc = DocxTemplate(tpl_path)
             # 每个轮次独立渲染context
             context_round = deepcopy(context)
             # 取中文名称
@@ -161,7 +166,6 @@ class GenerateControllerHSM(ControllerBase):
         """生成回归测试说明的文档概述"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '文档概述.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
@@ -173,6 +177,8 @@ class GenerateControllerHSM(ControllerBase):
         }
 
         for hround in hround_list:
+            # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
+            doc = DocxTemplate(tpl_path)
             # 取出当前轮次key减1就是上一轮次
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
             so_dut: Dut = hround.rdField.filter(type='SO').first()
@@ -204,7 +210,6 @@ class GenerateControllerHSM(ControllerBase):
         """生成回归测试说明的技术依据文件"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '技术依据文件.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         duties_qs = project_obj.pdField.filter(Q(type='XQ') | Q(type='SJ') | Q(type='XY'))
         std_documents = []
@@ -234,6 +239,8 @@ class GenerateControllerHSM(ControllerBase):
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
+            # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
+            doc = DocxTemplate(tpl_path)
             std_documents_round = deepcopy(std_documents)
             # 取出当前轮次key
             cname = chinese_round_name[int(hround.key)]
@@ -265,7 +272,6 @@ class GenerateControllerHSM(ControllerBase):
         """
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '软件更改部分.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         context = {
             'project_name': project_obj.name,
@@ -275,6 +281,8 @@ class GenerateControllerHSM(ControllerBase):
         if len(hround_list) < 1:
             return ChenResponse(code=400, status=400, message='您未创建轮次，请创建完毕后再试')
         for hround in hround_list:
+            # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
+            doc = DocxTemplate(tpl_path)
             context_round = deepcopy(context)
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
             so_dut: Dut = hround.rdField.filter(type='SO').first()
@@ -323,7 +331,6 @@ class GenerateControllerHSM(ControllerBase):
         """生成非第一轮的多个测试需求"""
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '回归测试需求.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
@@ -334,6 +341,8 @@ class GenerateControllerHSM(ControllerBase):
         testmethod_items = list(Dict.objects.get(code="testMethod").dictItem.all())
         # 遍历非第一轮的轮次
         for hround in hround_list:
+            # 每轮重新实例化模板（富文本图片也需挂到本轮 doc 上）
+            doc = DocxTemplate(tpl_path)
             cname = chinese_round_name[int(hround.key)]  # var：输出二、三字样
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
@@ -409,7 +418,6 @@ class GenerateControllerHSM(ControllerBase):
         """
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '回归测试用例概述.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
@@ -418,6 +426,8 @@ class GenerateControllerHSM(ControllerBase):
         # 一次取出 testType 数量，避免在轮次循环内反复查库
         test_type_len = Dict.objects.get(code='testType').dictItem.count()
         for hround in hround_list:
+            # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
+            doc = DocxTemplate(tpl_path)
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
@@ -457,7 +467,6 @@ class GenerateControllerHSM(ControllerBase):
         """
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hsm' / '测试用例.docx'
-        doc = DocxTemplate(tpl_path)
         project_obj = get_object_or_404(Project, id=id)
         # 非第一轮轮次对象
         hround_list: QuerySet = project_obj.pField.exclude(key='0')
@@ -466,6 +475,8 @@ class GenerateControllerHSM(ControllerBase):
         # 一次取出 testType 数量，避免在轮次循环内反复查库
         test_type_len = Dict.objects.get(code='testType').dictItem.count()
         for hround in hround_list:
+            # 每轮重新实例化模板，避免 render 复用导致后续轮次内容不更新
+            doc = DocxTemplate(tpl_path)
             cname = chinese_round_name[int(hround.key)]  # 输出二、三...
             type_number_list = [i for i in range(1, test_type_len + 1)]
             list_list = [[] for j in range(1, test_type_len + 1)]

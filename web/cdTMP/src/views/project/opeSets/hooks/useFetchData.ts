@@ -16,15 +16,18 @@ export default function useFetchData(fetchFn: Function, columns: Ref<any>) {
     }
     // 表格数据和isLoading数据
     const route = useRoute()
-    const projectId = route.query.id
-    const round = route.query.key
+    const projectId = route.query.id ?? ""
+    const round = route.query.key ?? ""
     const tableData = shallowRef([]) // 表格数据（整表替换、无需深层响应式）
     const total = ref(0)
     const isFetching = ref(false)
+    // 请求序号：快速翻页/搜索时丢弃过期响应，避免旧数据覆盖新数据
+    let requestSeq = 0
     const fetchData = async (isSearch: boolean = false) => {
         if (isSearch) {
             page.value = 1
         }
+        const seq = ++requestSeq
         isFetching.value = true
         try {
             const res = await fetchFn({
@@ -34,10 +37,15 @@ export default function useFetchData(fetchFn: Function, columns: Ref<any>) {
                 pageSize: pageSize.value, // 不要忘记value
                 ...searchParams.value
             })
-            tableData.value = res.data.items
-            total.value = res.data.pageInfo.total
+            if (seq !== requestSeq) return
+            tableData.value = res?.data?.items ?? []
+            total.value = res?.data?.pageInfo?.total ?? 0
+        } catch {
+            // 错误提示由 axios 拦截器统一处理，这里保留现有表格数据
         } finally {
-            isFetching.value = false
+            if (seq === requestSeq) {
+                isFetching.value = false
+            }
         }
     }
     // 首次加载时触发一次

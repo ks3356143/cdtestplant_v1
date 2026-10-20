@@ -17,9 +17,10 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
     const treeDataStore = useTreeDataStore()
     const route = useRoute() as any
     //  variable
-    const roundNumber = (route.query.key as string)!.split("-")[0]
-    const dutNumber = (route.query.key as string)!.split("-")[1]
-    const designDemandNumber = (route.query.key as string)!.split("-")[2]
+    const keyParts = String(route.query.key ?? "").split("-")
+    const roundNumber = keyParts[0]
+    const dutNumber = keyParts[1]
+    const designDemandNumber = keyParts[2]
     // refs
     const projectId = ref(route.query.id)
     // 处理弹窗关闭事件:处理用户数据是否保留
@@ -52,7 +53,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             // 1.新增则将form的content数据变为undifined以便判断
             beforeFormContent = undefined
             // 2.设置标识
-            let key_split = (route.query.key as string)!.split("-")
+            let key_split = keyParts
             let round_key = key_split[0]
             let dut_key = key_split[1]
             let design_key = key_split[2]
@@ -64,7 +65,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
             // 1.储存打开前form的content数据到ref中，以便后续比较
             beforeFormContent = cloneDeep(record.testContent)
             // 2.处理标识
-            let key_split = (route.query.key as string)!.split("-")
+            let key_split = keyParts
             let round_key = key_split[0]
             let dut_key = key_split[1]
             let design_key = key_split[2]
@@ -83,7 +84,7 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         afterDelete: (_: any, record: any) => {
             let id = projectId.value
             if (!record) {
-                record = { key: route.query.key + "-X" }
+                record = { key: String(route.query.key ?? "") + "-X" }
             }
             treeDataStore.updateTestDemandTreeData(record, id)
             // 清空选择

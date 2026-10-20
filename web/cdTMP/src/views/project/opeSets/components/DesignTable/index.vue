@@ -4,7 +4,7 @@
         <div class="lg:flex justify-between mb-2">
             <a-space>
                 <a-popconfirm content="确定要删除数据吗? 这会删除全部下级数据!" position="bottom" @ok="deletesMultipleAction">
-                    <a-button type="primary" status="danger">
+                    <a-button type="primary" status="danger" :loading="isDeleting">
                         批量删除
                         <template #icon><icon-delete /></template>
                     </a-button>
@@ -109,7 +109,7 @@
 </template>
 
 <script setup lang="ts">
-import { provide, ref } from "vue"
+import { provide, ref, watch } from "vue"
 import { Message } from "@arco-design/web-vue"
 import designApi from "@/api/project/designDemand"
 import useShowType from "@/views/project/opeSets/components/DesignTable/useShowType"
@@ -202,11 +202,14 @@ const formRef = ref<InstanceType<typeof Form> | null>(null)
 // 5.表格设置相关
 const { options, clickSetting, changeColumn, settingRef } = useSettings()
 
-// 6.行选择器相关-注意在fetchData时候没有清空（一定注意!!!）
+// 6.行选择器相关-表格数据变化（翻页/搜索/刷新）时清空勾选，避免批量操作作用到不可见行
 const selecteds = ref([])
+watch(tableData, () => {
+    selecteds.value = []
+})
 
 // 7.1.批量删除相关
-const { deletesMultipleAction } = useDelete(designApi.delete, fetchData, selecteds)
+const { deletesMultipleAction, isDeleting } = useDelete(designApi.delete, fetchData, selecteds)
 
 // 7.2.批量替换相关
 const replaceModal = ref<InstanceType<typeof ReplaceModal> | null>(null)

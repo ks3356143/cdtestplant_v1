@@ -8,9 +8,11 @@ import { useRoute } from "vue-router"
 export default function useRalateDemand(projectId: Ref<string>) {
     // global
     const route = useRoute()
-    const roundNumber = (route.query.key as string)!.split("-")[0]
-    const dutNumber = (route.query.key as string)!.split("-")[1]
-    const designDemandNumber = (route.query.key as string)!.split("-")[2]
+    // 刷新/直链时 key 可能缺失，统一兜底
+    const keyParts = String(route.query.key ?? "").split("-")
+    const roundNumber = keyParts[0]
+    const dutNumber = keyParts[1]
+    const designDemandNumber = keyParts[2]
     // refs
     const visible = ref(false) // 弹窗显示隐藏
     const relatedData: Ref<any[]> = ref([]) // 已关联数据

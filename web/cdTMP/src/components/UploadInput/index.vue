@@ -4,7 +4,7 @@
             accept=".zip"
             tip="只支持C/C++，不支持FPGA代码，上传后会自行录入圈复杂度等信息"
             :limit="1"
-            :action="`/api/dut_upload/upload_file?dut_id=${form.id}`"
+            :action="tool.apiUrl(`/api/dut_upload/upload_file?dut_id=${form.id}`)"
             @success="uploadSuccessHandle"
             @error="handleError"
         ></a-upload>
@@ -14,6 +14,7 @@
 <script setup lang="ts">
 import { Message } from "@arco-design/web-vue"
 import { inject } from "vue"
+import tool from "@/utils/tool"
 
 // 表单数据
 const form: any = inject("formModel")

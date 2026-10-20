@@ -11,7 +11,9 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
     const route = useRoute()
     const projectId = ref(route.query.id)
     const treeDataStore = useTreeDataStore()
-    const roundNumber = (route.query.key as any).split("-")[0]
+    // 刷新/直链时 key 可能缺失，统一兜底避免 setup 阶段抛错
+    const routeKey = String(route.query.key ?? "")
+    const roundNumber = routeKey.split("-")[0]
     // refs
     const crudOptions = {
         api: dutApi.getDutList,
@@ -20,12 +22,12 @@ export default function (crudRef: Ref<InstanceType<typeof MaCrud>>) {
         delete: { show: true, api: dutApi.delete },
         // 处理添加后函数
         beforeOpenAdd: function () {
-            let round_str = parseInt(route.query.key as any) + 1
+            let round_str = Number(routeKey) + 1
             crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件-`
             return true
         },
         beforeOpenEdit: function (record) {
-            let round_str = parseInt(route.query.key as any) + 1
+            let round_str = Number(routeKey) + 1
             crudRef.value.crudFormRef.actionTitle = `${route.query.ident}>第${round_str}轮>被测件[${record.name}]-`
             return true
         },

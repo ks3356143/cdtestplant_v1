@@ -104,10 +104,10 @@ class CaseCreateInputSchema(Schema):
     initialization: str = Field('', alias='initialization')
     premise: str = Field('', alias='premise')
     testStep: List[CaseInputSchema]
-    # 新增执行时间字段
-    exe_time: date = Field(None, alias='exe_time')
-    # 新增时序图字段
-    timing_diagram: str = Field("", alias="timing_diagram")
+    # 新增执行时间字段（可为空：未执行用例没有执行时间）
+    exe_time: Optional[date] = Field(None, alias='exe_time')
+    # 新增时序图字段（可为空：接口返回 null 时前端回传不应报 422）
+    timing_diagram: Optional[str] = Field("", alias="timing_diagram")
 
 # 批量新增测试用例
 class OneCaseBatchCreateSchema(Schema):

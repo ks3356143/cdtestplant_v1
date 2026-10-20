@@ -55,12 +55,14 @@ import editpassword from "./components/editpassword.vue"
 import { useUserStore } from "@/store"
 import logApi from "@/api/system/log"
 import useFetchData from "@/hooks/fetchData"
-const { loadingData, isDataLoading } = useFetchData([], logApi.getLoginLog)
+const { data: loadingData, isLoading: isDataLoading } = useFetchData([], logApi.getLoginLog)
+// 后端时间字段可能为空，统一做空值兜底
+const formatTime = (value) => (value ? String(value).split(".")[0].replace("T", " ") : "-")
 const userStore = useUserStore()
 const loginLogList = computed(() => {
     return loadingData.value.map((item) => ({
         ...item,
-        create_datetime: item.create_datetime.split(".")[0].replace("T", " ")
+        create_datetime: formatTime(item.create_datetime)
     }))
 })
 // 操作日志不用hook
@@ -78,7 +80,7 @@ logApi.getOperationLog()
 const operationLogList = computed(() => {
     return data.value.map((item) => ({
         ...item,
-        create_datetime: item.create_datetime.split(".")[0].replace("T", " ")
+        create_datetime: formatTime(item.create_datetime)
     }))
 })
 

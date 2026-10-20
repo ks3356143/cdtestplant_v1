@@ -1,6 +1,10 @@
+// 本地存储的下载前缀：优先用 VITE_APP_STORAGE_URL，未配置时从接口基址推导（去掉 /api 后缀）
+const apiBase = import.meta.env.VITE_APP_BASE_URL || "";
+const derivedOrigin = apiBase.replace(/\/api\/?$/, "");
+
 export default {
     storage: {
-        LOCAL: "http://127.0.0.1:8000",
+        LOCAL: import.meta.env.VITE_APP_STORAGE_URL || derivedOrigin,
         OSS: "",
         COS: "",
         QINIU: ""

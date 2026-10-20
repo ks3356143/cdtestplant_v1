@@ -156,6 +156,7 @@ import { onMounted, ref } from "vue"
 import { Message } from "@arco-design/web-vue"
 import roleMap from "@/utils/roleMap"
 import policyApi from "@/api/system/policy"
+import dictApi from "@/api/system/dict"
 
 // 登录失败锁定策略
 const saving = ref(false)
@@ -193,8 +194,16 @@ const savePolicy = async () => {
 const users = ref([])
 const usersLoading = ref(false)
 const savingId = ref(null)
-// 密级字典（与后端 secret 字典 key 一致）
-const secretLevels = { 1: "公开", 2: "内部", 3: "秘密★5年", 4: "机密★10年", 5: "绝密★20年" }
+// 密级字典来自后端 secret 字典，避免与后端定义重复维护
+const secretLevels = ref({})
+const loadSecretLevels = async () => {
+  try {
+    const res = await dictApi.getDictByCode({ code: "secret" })
+    secretLevels.value = Object.fromEntries((res.data || []).map((item) => [item.key, item.title]))
+  } catch {
+    // 字典接口失败时保留空选项，由用户刷新重试
+  }
+}
 const roleLabel = (role) => roleMap[role] || "普通用户"
 
 const loadUsers = async () => {
@@ -253,6 +262,7 @@ const doPurge = async () => {
 onMounted(() => {
   loadPolicy()
   loadUsers()
+  loadSecretLevels()
   loadSecrecy()
 })
 </script>

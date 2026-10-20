@@ -659,7 +659,7 @@ export const EnvDiffHTML = `<p>测评环境中的软硬件可以有效支持测�
 </div>
 <p style="text-align: center;">&nbsp;</p>`
 
-export const TestLevelAndTypeHTML = `<p>根据《军用软件鉴定测试指南》、软件需求规格说明及其他等效文档，本次测评的测试级别为配置项测试。所选取的测试类型有文档审查、静态分析、功能测试、性能测试、接口测试、边界测试、<em>XX</em>等，具体详见下表。</p>
+export const TestLevelAndTypeHTML = `<p>根据《软件鉴定测试指南》、软件需求规格说明及其他等效文档，本次测评的测试级别为配置项测试。所选取的测试类型有文档审查、静态分析、功能测试、性能测试、接口测试、边界测试、<em>XX</em>等，具体详见下表。</p>
 <p style="text-align: center;">表6-1测试级别和测试类型一览表</p>
 <div align="center">
 <table border="1" width="595" cellspacing="0" cellpadding="0">

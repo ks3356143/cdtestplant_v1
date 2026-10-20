@@ -29,8 +29,9 @@ import ProTable from "./ProTable/index.vue"
 
 const route = useRoute()
 
-// 1.标题
-const title: string = tool.chnRoundNameArray[+route.query.key!]
+// 1.标题（轮次 key 缺失/非法时回退为通用标题）
+const roundKey = Number(route.query.key)
+const title: string = Number.isFinite(roundKey) ? tool.chnRoundNameArray[roundKey] ?? "测试数据" : "测试数据"
 </script>
 
 <style lang="less" scoped>

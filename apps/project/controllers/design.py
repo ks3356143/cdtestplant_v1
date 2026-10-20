@@ -78,7 +78,7 @@ class DesignController(ControllerBase):
         design_qs = Design.objects.filter(project_id=project_id, key=key).first()
         if design_qs:
             return design_qs
-        raise HttpError(500, "未找到相应的数据")
+        raise HttpError(404, "未找到相应的数据")
 
     @route.get("/getDesignOneById", response=DesignModelOutSchema, url_name='design-one-by-id')
     def get_one_by_id(self, id: int):
@@ -86,7 +86,7 @@ class DesignController(ControllerBase):
         if design_qs:
             check_project_access(design_qs.project, self.context.request.user)
             return design_qs
-        raise HttpError(500, "未找到相应的数据")
+        raise HttpError(404, "未找到相应的数据")
 
     # 处理树状数据
     @route.get("/getDesignDemandInfo", response=List[DesignTreeReturnSchema], url_name="design-info")
@@ -186,9 +186,9 @@ class DesignController(ControllerBase):
         # 目标设计需求必须属于 payload 指定的项目
         design_qs = get_object_in_project(Design, id, payload.project_id, self.context.request.user)
         design_search = Design.objects.filter(project__id=payload.project_id, ident=payload.ident,
-                                              round__key=payload.round_key)
-        # 判断是否和同项目同轮次的标识重复（先判空标识，避免无意义的全量查询）
-        if payload.ident != '' and design_search.count() > 1:
+                                              round__key=payload.round_key).exclude(id=id)
+        # 判断是否和同项目同轮次的标识重复（排除自身，空标识不做校验）
+        if payload.ident != '' and design_search.exists():
             return ChenResponse(code=400, status=400, message='研制需求的标识重复，请检查')
 
         for attr, value in payload.dict().items():

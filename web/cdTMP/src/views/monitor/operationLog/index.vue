@@ -4,7 +4,7 @@
             <!-- crud组件 -->
             <ma-crud :options="crudOptions" :columns="crudColumns" ref="crudRef">
                 <template #create_datetime="{ record }">
-                    {{ record.create_datetime.split(".")[0].replace("T", " ") }}
+                    {{ record.create_datetime ? record.create_datetime.split(".")[0].replace("T", " ") : "-" }}
                 </template>
                 <template #tableBeforeButtons>
                     <a-popconfirm

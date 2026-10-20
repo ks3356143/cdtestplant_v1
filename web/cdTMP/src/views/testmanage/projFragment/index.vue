@@ -84,7 +84,7 @@ const { crudRef, crudOptions, crudColumns, route, selectedValue } = useCrudOptio
 const fetchData = async () => {
     return projectApi.getProjectById(route.params.projectId)
 }
-const { loadingData, isDataLoading } = useFetchData({}, fetchData)
+const { data: loadingData, isLoading: isDataLoading } = useFetchData({}, fetchData)
 // 3.给头部组件的计算属性
 const headerData: ComputedRef<IPageHeaderProps> = computed(() => {
     return {

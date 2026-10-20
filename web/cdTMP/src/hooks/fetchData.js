@@ -1,27 +1,35 @@
 import { ref } from "vue"
 
 /**
- * 该hook传入一个远程数据储存默认值以及请求服务器的异步函数，以及请求远程数据的函数
- * 后续使用@tanstack/vue-query库来管理远程数据
+ * 远程数据获取 hook：传入默认值与请求函数，返回数据、加载态、错误与刷新方法
+ * 说明：错误提示由 axios 拦截器统一弹出，这里只维护 error 状态，避免未捕获的 Promise
  */
-const useFetchData = (defaultValue = {}, fetDataFunc) => {
-    const loadingData = ref(defaultValue) // 远程请求的数据
-    const isDataLoading = ref(false)
-    // 该hook需要组件里面提供 -> fetchData的函数，返回远程请求数据的东西
-    /// 相当于created
-    async function fetchOrigin() {
-        isDataLoading.value = true
+const useFetchData = (defaultValue = {}, fetchDataFunc) => {
+    const data = ref(defaultValue)
+    const isLoading = ref(false)
+    const error = ref(null)
+
+    async function fetchData() {
+        isLoading.value = true
+        error.value = null
         try {
-            const res = await fetDataFunc()
-            loadingData.value = res.data
+            const res = await fetchDataFunc()
+            data.value = res?.data ?? defaultValue
+            return data.value
+        } catch (e) {
+            error.value = e
+            return data.value
         } finally {
-            isDataLoading.value = false
+            isLoading.value = false
         }
     }
-    fetchOrigin()
+
+    fetchData()
     return {
-        loadingData,
-        isDataLoading
+        data,
+        isLoading,
+        error,
+        fetchData
     }
 }
 export default useFetchData

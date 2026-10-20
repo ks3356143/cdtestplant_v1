@@ -34,7 +34,7 @@ export default function (crudOrFormRef: any) {
             dataIndex: "ident",
             search: true,
             // 这里做的标识预填
-            addDefaultValue: route.query.ident + "-R" + (parseInt(route.query.key as any) + 1) + "-UT",
+            addDefaultValue: route.query.ident + "-R" + (Number(route.query.key ?? 0) + 1) + "-UT",
             addDisabled: true,
             editDisabled: true,
             validateTrigger: "blur-sm",

@@ -1,8 +1,9 @@
 from ninja_extra import api_controller, ControllerBase, route
+from ninja.errors import HttpError
 from ninja_jwt.authentication import JWTAuth
 from ninja_extra.permissions import IsAuthenticated
 from django.db import transaction
-from apps.project.models import Round, InfluenceArea, InfluenceItem
+from apps.project.models import Round, InfluenceArea, InfluenceItem, Problem
 from apps.project.schemas.round import TreeReturnRound, RoundInfoOutSchema, EditSchemaIn, DeleteSchema, \
     CreateRoundOutSchema, CreateRoundInputSchema, InfluenceItemOutSchema, InfluenceInputSchema
 from typing import List
@@ -21,8 +22,9 @@ class RoundController(ControllerBase):
     @route.get("/getOneRoundInfo", response=RoundInfoOutSchema, url_name="round-one-info")
     def get_round_info(self, projectId: str, round: str):
         check_project_access_by_id(projectId, self.context.request.user)
-        # 这里问题是如果删除中间轮次会出现问题
-        qs = Round.objects.get(project__id=projectId, key=round)
+        qs = Round.objects.filter(project__id=projectId, key=round).first()
+        if qs is None:
+            raise HttpError(404, '轮次不存在，请刷新后重试')
         return qs
 
     # 更新轮次信息
@@ -48,10 +50,8 @@ class RoundController(ControllerBase):
         instance = self.get_object_or_exception(Round, project__id=project_id, key=data.key)
         if instance.key == '0':
             return ChenResponse(code=400, status=400, message="无法删除第一轮次数据")
-        # （多对多）删除下面case关联的problem关系
-        cases = instance.rcField.all()
-        for case in cases:
-            case.caseField.clear()
+        # （多对多）批量解除本轮次下所有用例与问题单的关联
+        Problem.case.through.objects.filter(case__round=instance).delete()
         instance.delete()
         # 注意：删除中间key必须发生变化，重写key
         ## 先查询出当前有多少轮次

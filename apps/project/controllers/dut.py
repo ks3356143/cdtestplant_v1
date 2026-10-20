@@ -54,7 +54,7 @@ class DutController(ControllerBase):
         dut_qs = Dut.objects.filter(project_id=project_id, key=key).first()
         if dut_qs:
             return dut_qs
-        raise HttpError(500, "未找到相应的数据")
+        raise HttpError(404, "未找到相应的数据")
 
     @route.get("/getDutOneById", response=DutModelOutSchema, url_name='dut-one-by-id')
     def get_one_by_id(self, id: int):
@@ -62,7 +62,7 @@ class DutController(ControllerBase):
         if dut_qs:
             check_project_access(dut_qs.project, self.context.request.user)
             return dut_qs
-        raise HttpError(500, "未找到相应的数据")
+        raise HttpError(404, "未找到相应的数据")
 
     # 添加被测件
     @route.post("/dut/save", url_name="dut-create", response=DutCreateOutSchema)
@@ -97,9 +97,9 @@ class DutController(ControllerBase):
         # 目标被测件必须属于 payload 指定的项目
         dut_qs = get_object_in_project(Dut, id, payload.project_id, self.context.request.user)
         dut_search = Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
-                                        ident=payload.ident)
-        # 判断是否和同项目同轮次的标识重复
-        if len(dut_search) > 1:
+                                        ident=payload.ident).exclude(id=id)
+        # 判断是否和同项目同轮次的标识重复（排除自身；空标识不校验）
+        if payload.ident and dut_search.exists():
             return ChenResponse(code=400, status=400, message='被测件的标识重复，请检查')
         # 两个分支（SO / 非SO）逻辑一致，仅非源代码被测件需清空代码统计字段，这里合并处理
         for attr, value in payload.dict().items():

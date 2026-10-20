@@ -28,19 +28,21 @@ import DutForm from "./DutForm.vue"
 const formRef = ref(null)
 // 0.props-表示不通用代码
 const { dutInfo } = defineProps<{ dutInfo: any }>()
-// 计算属性单独处理
+// 计算属性保持纯粹：返回新对象，不改写 props；行数为 0/空时显示“不适用”而不是 Infinity/NaN
 const dutInfoJudge = computed(() => {
-    if (dutInfo.type === "SO") {
-        // 计算注释率：注释行/总行数
-        dutInfo.comment_percent = (dutInfo.comment_lines / dutInfo.total_lines) * 100 + "%"
+    const info = { ...dutInfo }
+    if (info.type === "SO") {
+        const totalLines = Number(info.total_lines) || 0
+        const commentLines = Number(info.comment_lines) || 0
+        info.comment_percent = totalLines > 0 ? `${((commentLines / totalLines) * 100).toFixed(2)}%` : "不适用"
     } else {
         // 如果是非源代码被测件行数均填写：“不适用”
-        dutInfo.comment_lines = "不适用"
-        dutInfo.comment_percent = "不适用"
-        dutInfo.effective_lines = "不适用"
-        dutInfo.total_lines = "不适用"
+        info.comment_lines = "不适用"
+        info.comment_percent = "不适用"
+        info.effective_lines = "不适用"
+        info.total_lines = "不适用"
     }
-    return dutInfo
+    return info
 })
 
 // 1.导入crud的columns属性，然后去掉不需要展示的内容

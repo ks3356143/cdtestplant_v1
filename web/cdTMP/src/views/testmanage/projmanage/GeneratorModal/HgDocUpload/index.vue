@@ -6,7 +6,7 @@
         <a-tabs v-else :default-active-key="1" type="line">
             <a-tab-pane v-for="n in roundNum" :key="n" :title="`第${n + 1}轮${documentType}`">
                 <a-upload
-                    :action="`/api/documentUpload/file?id=${projectId}&documentType=${documentType}&round_num=${n + 1}`"
+                    :action="tool.apiUrl(`/api/documentUpload/file?id=${projectId}&documentType=${documentType}&round_num=${n + 1}`)"
                     :limit="1"
                     accept=".docx, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     @error="uploadErrorHandle"
@@ -26,6 +26,7 @@
 import { onMounted, ref } from "vue"
 import otherApi from "@/api/generate/other"
 import { Message, Modal } from "@arco-design/web-vue"
+import tool from "@/utils/tool"
 
 // props
 const { projectId, documentType } = defineProps<{ projectId: number | null; documentType: string }>()
