@@ -98,7 +98,7 @@ class GenerateControllerDG(ControllerBase, FragementToolsMixin):
                         testmethod_str += dict_item_qs.title + " "
             # ***Inspect-start：检查设计需求的描述是否为空***
             if single_qs.design.description == '':
-                design_info = single_qs.design.ident + '-' + single_qs.design.name
+                design_info = (single_qs.design.ident or '') + '-' + (single_qs.design.name or '')
                 self.logger.write_warning_log('测试项', f'设计需求中的描述为空，请检查 -> {design_info}')
             # ***Inspect-end***
             # 富文本解析

@@ -91,7 +91,7 @@ class TreeKey(object):
                 dut_qs = round_origin.rdField.all()
                 for dut in dut_qs:
                     dut_origin = deepcopy(dut)
-                    dut.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', dut.ident)
+                    dut.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', (dut.ident or ""))
                     dut.key = f"{round_count}-{dut.key.split('-')[-1]}"
                     dut.round = round_obj
                     dut.id = None
@@ -157,7 +157,7 @@ class TreeKey(object):
                         # 查询原始dut
                         dut_obj = _fetch_or_raise(Dut, f'被测件不存在：{dut_key_origin}', key=dut_key_origin, project=project_obj)
                         dut_obj.ident = (dut_obj.ident or '')[:11] + str(dut_index)
-                        dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', dut_obj.ident)
+                        dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', (dut_obj.ident or ""))
                         dut_obj.key = f"{round_count}-{dut_index - 1}"
                         dut_obj.round = round_obj
                         dut_obj.id = None
@@ -209,7 +209,7 @@ class TreeKey(object):
                     if isinstance(dut_v, dict):
                         dut_obj = _fetch_or_raise(Dut, f'被测件不存在：{dut_key_origin}', key=dut_key_origin, project=project_obj)
                         dut_obj.ident = (dut_obj.ident or '')[:11] + str(dut_index)
-                        dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', dut_obj.ident)
+                        dut_obj.ident = re.sub(r"-R\d+-", f'-R{round_count + 1}-', (dut_obj.ident or ""))
                         dut_obj.key = f"{round_count}-{dut_index - 1}"
                         dut_obj.round = round_obj
                         dut_obj.id = None

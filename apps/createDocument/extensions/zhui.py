@@ -30,7 +30,7 @@ def create_bg_round1_zhui(project_obj: Project, dut_str='XQ', round_str='0'):
                         test_index = str(key_index).rjust(3, '0')
                         reveal_ident = "_".join(
                             ["XQ", get_testType(test_item.testType, "testType"),
-                             test_item.ident, test_index])
+                             (test_item.ident or ''), test_index])
                         chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
                         if chapter_no_res is None:
                             continue
@@ -72,7 +72,7 @@ def create_bg_round1_zhui(project_obj: Project, dut_str='XQ', round_str='0'):
                     test_index = str(key_index).rjust(3, '0')
                     reveal_ident = "_".join(
                         ["XQ", get_testType(test_item.testType, "testType"),
-                         test_item.ident, test_index])
+                         (test_item.ident or ''), test_index])
                     chapter_no_res = chapter_no(testType_list, last_chapter_items, test_item.testType, test_item.key)
                     if chapter_no_res is None:
                         continue

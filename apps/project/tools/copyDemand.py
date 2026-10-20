@@ -20,7 +20,7 @@ def demand_copy_to_design(project_id: int, demand_key: str, design_id: int, dept
     demand.dut = design.dut
     demand.round = design.round
     demand.design = design
-    demand.ident += '(复制)'
+    demand.ident = (demand.ident or '') + '(复制)'
     # 先查询目标design下面有多少个demand，然后key+1
     demand.key = "".join([design.key, '-', str(design.dtField.count())])
     demand.save()
