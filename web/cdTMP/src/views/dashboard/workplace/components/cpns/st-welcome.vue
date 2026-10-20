@@ -44,7 +44,7 @@ onUnmounted(() => {
 
 <style lang="less" scoped>
 .welcome-avatar {
-    border-radius: 0 !important;
+    border-radius: 50% !important;
     border: 1px solid var(--app-line, #e4e7eb);
     overflow: hidden;
 }

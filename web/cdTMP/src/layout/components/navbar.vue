@@ -248,7 +248,8 @@ const handleClickLogo = () => {
     }
 
     :deep(.arco-avatar) {
-        border-radius: 0;
+        border-radius: 50%;
+        overflow: hidden;
     }
 
     .trigger-btn,

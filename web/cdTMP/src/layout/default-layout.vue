@@ -205,7 +205,18 @@ const paddingStyle = computed(() => {
         color: #ffffff;
     }
 
+    // Arco 会把选中项的 svg 图标单独染成主色，青绿底上会“消失”，这里显式覆盖
+    :deep(.arco-menu-item.arco-menu-selected .arco-menu-icon .arco-icon),
+    :deep(.arco-menu-item.arco-menu-selected .arco-menu-icon svg) {
+        color: #ffffff;
+    }
+
     :deep(.arco-menu-inline-header:hover .arco-menu-icon) {
+        color: var(--app-sidebar-hover-text, #0f172a);
+    }
+
+    :deep(.arco-menu-inline-header:hover .arco-menu-icon .arco-icon),
+    :deep(.arco-menu-inline-header:hover .arco-menu-icon svg) {
         color: var(--app-sidebar-hover-text, #0f172a);
     }
 

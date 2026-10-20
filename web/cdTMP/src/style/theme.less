@@ -60,6 +60,12 @@ body {
     --app-brand-icon: #d1fae5;
     --app-banner: #0f172a;
     --app-banner-text: #c7d0dd;
+    // 用户中心头部：白天浅青灰、暗色墨黑
+    --app-profile-bg: #eef4f3;
+    --app-profile-grid: rgba(15, 118, 110, 0.1);
+    --app-profile-ink: #111827;
+    --app-profile-muted: #4b5563;
+    --app-profile-note: #6b7280;
 
     // 直角系列：全站零圆角（Arco 原生为 0/2/4/6px）
     --border-radius-none: 0px;
@@ -272,8 +278,9 @@ body {
 }
 
 // ---------- 头像 ----------
+// 头像保持圆形（与直角控件形成对比，更符合用户头像的视觉习惯）
 .arco-avatar {
-    border-radius: 0;
+    border-radius: 50%;
 }
 
 // ---------- 标签 ----------
@@ -459,6 +466,11 @@ body[arco-theme="dark"] {
     --app-brand-icon: #55b3a8;
     --app-banner: #0b0f16;
     --app-banner-text: #c7d0dd;
+    --app-profile-bg: #0b0f16;
+    --app-profile-grid: rgba(148, 163, 184, 0.09);
+    --app-profile-ink: #ffffff;
+    --app-profile-muted: #9aa7b8;
+    --app-profile-note: #94a3b8;
 
     background-color: var(--app-canvas);
     color: var(--app-ink);

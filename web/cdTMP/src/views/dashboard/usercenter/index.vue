@@ -93,7 +93,7 @@ defineOptions({
 </script>
 
 <style scoped>
-/* 用户中心头部：墨黑底 + 青绿竖线 + 工程网格，与全站直角风格一致 */
+/* 用户中心头部：白天浅青灰、暗色墨黑，青绿竖线 + 工程网格 */
 .user-header {
     display: flex;
     align-items: center;
@@ -101,11 +101,11 @@ defineOptions({
     width: 100%;
     height: 136px;
     padding: 0 32px;
-    color: #ffffff;
-    background-color: #0f172a;
+    color: var(--app-profile-ink, #111827);
+    background-color: var(--app-profile-bg, #eef4f3);
     background-image:
-        linear-gradient(to right, rgba(148, 163, 184, 0.09) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+        linear-gradient(to right, var(--app-profile-grid, rgba(15, 118, 110, 0.1)) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--app-profile-grid, rgba(15, 118, 110, 0.1)) 1px, transparent 1px);
     background-size: 36px 36px;
     border-left: 4px solid rgb(var(--primary-6));
 }
@@ -127,11 +127,12 @@ defineOptions({
     color: #ffffff;
     font-size: 30px;
     font-weight: 700;
+    border-radius: 50%;
     flex-shrink: 0;
 }
 
 .user-name {
-    color: #ffffff;
+    color: var(--app-profile-ink, #111827);
     font-size: 24px;
     font-weight: 600;
     line-height: 1.3;
@@ -142,13 +143,13 @@ defineOptions({
 
 .user-account {
     margin-top: 6px;
-    color: #9aa7b8;
+    color: var(--app-profile-muted, #4b5563);
     font-size: 13px;
     letter-spacing: 0.02em;
 }
 
 .user-header-note {
-    color: #94a3b8;
+    color: var(--app-profile-note, #6b7280);
     font-size: 12px;
     letter-spacing: 0.08em;
     white-space: nowrap;
