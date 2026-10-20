@@ -70,6 +70,11 @@ class DutController(ControllerBase):
     def create_dut(self, payload: DutCreateInputSchema):
         check_project_access_by_id(payload.project_id, self.context.request.user)
         asert_dict = payload.dict(exclude_none=True)
+        # 归属轮次/标识缺失时明确报 400，避免拼 key 时 NoneType 导致 500
+        if not payload.round_key:
+            raise HttpError(400, '缺少归属轮次参数，请刷新页面后重试')
+        if not payload.ident:
+            raise HttpError(400, '被测件标识不能为空')
         # 当被测件为SO时，一个轮次只运行有一个
         if payload.type == 'SO':
             if Dut.objects.filter(project__id=payload.project_id, round__key=payload.round_key, type='SO').exists():
@@ -83,8 +88,8 @@ class DutController(ControllerBase):
         key_string = ''.join([payload.round_key, "-", str(dut_count)])
         # 然后在标识后面加上UT+KEY -> 注意删除时也改了key要对应修改blink1->>>>>>
         asert_dict['ident'] = ''.join([asert_dict['ident'], str(dut_count + 1)])
-        # 查询当前的round_id
-        round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
+        # 查询当前的round_id（key 不合法时返回 404 而非 500）
+        round_instance = get_object_or_404(Round, project__id=payload.project_id, key=payload.round_key)
         asert_dict.update({'key': key_string, 'round': round_instance, 'title': payload.name})
         asert_dict.pop("round_key")
         qs = Dut.objects.create(**asert_dict)

@@ -107,6 +107,9 @@ class DesignController(ControllerBase):
         # 如果识别description为None变为空字符串
         description = asert_dict.get('description')
         # 构造dut_key
+        # 归属节点参数缺失时明确报 400，避免拼 key 时 NoneType 导致 500
+        if not payload.round_key or not payload.dut_key:
+            raise HttpError(400, '缺少归属轮次/被测件参数，请刷新页面后重试')
         dut_key = "".join([payload.round_key, "-", payload.dut_key])
         # 判重标识-不需要再查询round以后的
         if Design.objects.filter(project__id=payload.project_id, round__key=payload.round_key,
@@ -116,9 +119,9 @@ class DesignController(ControllerBase):
         # 查询当前key应该为多少
         design_count = Design.objects.filter(project__id=payload.project_id, dut__key=dut_key).count()
         key_string = ''.join([dut_key, "-", str(design_count)])
-        # 查询当前的round_id
-        round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
-        dut_instance = Dut.objects.get(project__id=payload.project_id, key=dut_key)
+        # 查询当前的round_id（key 不合法时返回 404 而非 500）
+        round_instance = get_object_or_404(Round, project__id=payload.project_id, key=payload.round_key)
+        dut_instance = get_object_or_404(Dut, project__id=payload.project_id, key=dut_key)
         asert_dict.update(
             {'key': key_string, 'round': round_instance, 'dut': dut_instance, 'title': payload.name})
         asert_dict.pop("round_key")

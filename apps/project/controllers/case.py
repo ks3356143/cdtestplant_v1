@@ -168,6 +168,9 @@ class CaseController(ControllerBase):
     def create_case(self, payload: CaseCreateInputSchema):
         check_project_access_by_id(payload.project_id, self.context.request.user)
         asert_dict = payload.dict(exclude_none=True)
+        # 归属节点参数缺失时明确报 400，避免拼 key 时 NoneType 导致 500
+        if not all([payload.round_key, payload.dut_key, payload.design_key, payload.test_key]):
+            raise HttpError(400, '缺少归属轮次/被测件/设计需求/测试项参数，请刷新页面后重试')
         # 构造demand_key
         test_whole_key = "".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key])
@@ -175,13 +178,13 @@ class CaseController(ControllerBase):
         case_count = Case.objects.filter(project__id=payload.project_id,  # type:ignore
                                          test__key=test_whole_key).count()
         key_string = ''.join([test_whole_key, "-", str(case_count)])
-        # 查询当前各个前面节点的instance
-        round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
-        dut_instance = Dut.objects.get(project__id=payload.project_id,  # type:ignore
-                                       key="".join([payload.round_key, "-", payload.dut_key]))
-        design_instance = Design.objects.get(project__id=payload.project_id, key="".join(  # type:ignore
+        # 查询当前各个前面节点的instance（key 不合法时返回 404 而非 500）
+        round_instance = get_object_or_404(Round, project__id=payload.project_id, key=payload.round_key)
+        dut_instance = get_object_or_404(Dut, project__id=payload.project_id,  # type:ignore
+                                         key="".join([payload.round_key, "-", payload.dut_key]))
+        design_instance = get_object_or_404(Design, project__id=payload.project_id, key="".join(  # type:ignore
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key]))
-        test_instance = TestDemand.objects.get(project__id=payload.project_id, key="".join(  # type:ignore
+        test_instance = get_object_or_404(TestDemand, project__id=payload.project_id, key="".join(  # type:ignore
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key, '-', payload.test_key]))
         # 直接把测试项的标识给前端处理显示
         asert_dict['ident'] = test_instance.ident

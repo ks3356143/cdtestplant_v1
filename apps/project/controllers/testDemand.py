@@ -126,17 +126,20 @@ class TestDemandController(ControllerBase):
             if old_obj and old_obj.testType == payload.testType:
                 return ChenResponse(code=500, status=500,
                                     message='测试项标识和其他测试项重复，请更换测试项标识!!!')
+        # 归属节点参数缺失时明确报 400，避免拼 key 时 NoneType 导致 500
+        if not payload.round_key or not payload.dut_key or not payload.design_key:
+            raise HttpError(400, '缺少归属轮次/被测件/设计需求参数，请刷新页面后重试')
         # 构造design_key
         design_key = "".join([payload.round_key, "-", payload.dut_key, '-', payload.design_key])
         # 查询当前key应该为多少
         test_demand_count = TestDemand.objects.filter(project__id=payload.project_id,
                                                       design__key=design_key).count()
         key_string = ''.join([design_key, "-", str(test_demand_count)])
-        # 查询当前各个前面节点的instance
-        round_instance = Round.objects.get(project__id=payload.project_id, key=payload.round_key)
-        dut_instance = Dut.objects.get(project__id=payload.project_id,
-                                       key="".join([payload.round_key, "-", payload.dut_key]))
-        design_instance = Design.objects.get(project__id=payload.project_id, key="".join(
+        # 查询当前各个前面节点的instance（key 不合法时返回 404 而非 500）
+        round_instance = get_object_or_404(Round, project__id=payload.project_id, key=payload.round_key)
+        dut_instance = get_object_or_404(Dut, project__id=payload.project_id,
+                                         key="".join([payload.round_key, "-", payload.dut_key]))
+        design_instance = get_object_or_404(Design, project__id=payload.project_id, key="".join(
             [payload.round_key, "-", payload.dut_key, '-', payload.design_key]))
         asert_dict.update(
             {'key': key_string, 'round': round_instance, 'dut': dut_instance, 'design': design_instance,
