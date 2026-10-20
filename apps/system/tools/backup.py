@@ -142,14 +142,16 @@ def collect_rows(project_id=None, since=None) -> dict:
 
     # 多对多关系：Problem ↔ Case 不随任一单表导出，这里按本次备份到的问题单单独导出关系行，
     # 否则恢复后问题单全部变成“无关联用例”，报告与清单会失真。
-    problem_rows = result.get(_label(Problem)) or []
-    if problem_rows:
-        problem_ids = [row['id'] for row in problem_rows if row.get('id') is not None]
-        if problem_ids:
-            through = Problem.case.through
-            result['problem_case_relations'] = list(
-                through.objects.filter(problem_id__in=problem_ids).values('problem_id', 'case_id')
-            )
+    # 关系表的增删不会更新 Problem.update_datetime，增量备份也必须带全范围内的问题单关系
+    relation_problem_qs = Problem.objects.all()
+    if project_id is not None:
+        relation_problem_qs = relation_problem_qs.filter(project_id=project_id)
+    problem_ids = list(relation_problem_qs.values_list('id', flat=True))
+    if problem_ids:
+        through = Problem.case.through
+        result['problem_case_relations'] = list(
+            through.objects.filter(problem_id__in=problem_ids).values('problem_id', 'case_id')
+        )
 
     return result
 
