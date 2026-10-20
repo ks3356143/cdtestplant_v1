@@ -51,7 +51,7 @@ onUnmounted(() => {
 
 .datetime {
     position: relative;
-    background: var(--app-sidebar, #0f172a);
+    background: var(--app-banner, #0f172a);
     color: #fff;
     width: 176px;
     text-align: center;
@@ -66,7 +66,7 @@ onUnmounted(() => {
 }
 
 .datetime p {
-    color: var(--app-sidebar-text, #c7d0dd);
+    color: var(--app-banner-text, #c7d0dd);
     font-size: 12px;
 }
 .bg-color {

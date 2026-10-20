@@ -124,7 +124,7 @@ const paddingStyle = computed(() => {
     left: 0;
     z-index: 99;
     height: 100%;
-    background-color: var(--app-sidebar, #0f172a);
+    background-color: var(--app-sidebar, #ffffff);
     transition: all 0.2s cubic-bezier(0.34, 0.69, 0.1, 1);
     &::after {
         position: absolute;
@@ -133,7 +133,7 @@ const paddingStyle = computed(() => {
         display: block;
         width: 1px;
         height: 100%;
-        background-color: var(--app-sidebar-line, #263145);
+        background-color: var(--app-sidebar-line, #e4e7eb);
         content: "";
     }
 
@@ -149,10 +149,10 @@ const paddingStyle = computed(() => {
     overflow: auto;
     overflow-x: hidden;
 
-    // 侧边栏：墨黑底 + 青绿选中块，全部直角
+    // 侧边栏：浅底 + 青绿选中块（暗色主题由 --app-sidebar* 令牌切回墨黑）
     :deep(.arco-menu) {
         background-color: transparent;
-        color: var(--app-sidebar-text, #c7d0dd);
+        color: var(--app-sidebar-text, #374151);
 
         ::-webkit-scrollbar {
             width: 12px;
@@ -163,11 +163,11 @@ const paddingStyle = computed(() => {
             border: 4px solid transparent;
             background-clip: padding-box;
             border-radius: 0;
-            background-color: #334155;
+            background-color: var(--app-line-strong, #cfd5dc);
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background-color: #475569;
+            background-color: var(--app-muted, #6b7280);
         }
     }
 
@@ -177,7 +177,7 @@ const paddingStyle = computed(() => {
         width: auto;
         border-radius: 0;
         background-color: transparent;
-        color: var(--app-sidebar-text, #c7d0dd);
+        color: var(--app-sidebar-text, #374151);
         line-height: 40px;
         height: 40px;
     }
@@ -188,8 +188,8 @@ const paddingStyle = computed(() => {
 
     :deep(.arco-menu-item:hover),
     :deep(.arco-menu-inline-header:hover) {
-        background-color: var(--app-sidebar-2, #172033);
-        color: #ffffff;
+        background-color: var(--app-sidebar-2, #f2f4f6);
+        color: var(--app-sidebar-hover-text, #0f172a);
     }
 
     :deep(.arco-menu-item.arco-menu-selected) {
@@ -198,21 +198,25 @@ const paddingStyle = computed(() => {
     }
 
     :deep(.arco-menu-icon) {
-        color: var(--app-sidebar-muted, #8290a5);
+        color: var(--app-sidebar-muted, #8a94a3);
     }
 
-    :deep(.arco-menu-item.arco-menu-selected .arco-menu-icon),
-    :deep(.arco-menu-inline-header:hover .arco-menu-icon) {
+    :deep(.arco-menu-item.arco-menu-selected .arco-menu-icon) {
         color: #ffffff;
     }
 
+    :deep(.arco-menu-inline-header:hover .arco-menu-icon) {
+        color: var(--app-sidebar-hover-text, #0f172a);
+    }
+
     :deep(.arco-menu-icon-suffix) {
-        color: var(--app-sidebar-muted, #8290a5);
+        color: var(--app-sidebar-muted, #8a94a3);
     }
 
     :deep(.arco-menu-collapse-button) {
-        background-color: var(--app-sidebar-2, #172033);
-        color: var(--app-sidebar-muted, #8290a5);
+        background-color: var(--app-sidebar-2, #f2f4f6);
+        color: var(--app-sidebar-muted, #8a94a3);
+        border: 1px solid var(--app-sidebar-line, #e4e7eb);
         border-radius: 0;
     }
 

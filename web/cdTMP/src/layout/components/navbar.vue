@@ -139,7 +139,7 @@ const handleClickLogo = () => {
     justify-content: center;
     width: 36px;
     height: 36px;
-    background-color: var(--app-sidebar, #0f172a);
+    background-color: var(--app-brand-tile, #0f172a);
     cursor: pointer;
     transition: background-color 0.15s ease;
 

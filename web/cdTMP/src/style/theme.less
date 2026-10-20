@@ -41,11 +41,17 @@ body {
     --app-line-strong: #cfd5dc;
     --app-accent: #d97706;
     --app-accent-soft: #fdf3e3;
-    --app-sidebar: #0f172a;
-    --app-sidebar-2: #172033;
-    --app-sidebar-line: #263145;
-    --app-sidebar-text: #c7d0dd;
-    --app-sidebar-muted: #8290a5;
+    // 白天模式侧边栏：浅底 + 深字，与工作区同属亮色系
+    --app-sidebar: #ffffff;
+    --app-sidebar-2: #f2f4f6;
+    --app-sidebar-line: #e4e7eb;
+    --app-sidebar-text: #374151;
+    --app-sidebar-muted: #8a94a3;
+    --app-sidebar-hover-text: #0f172a;
+    // 品牌方块与深色横幅在两种主题下都保持深色
+    --app-brand-tile: #0f172a;
+    --app-banner: #0f172a;
+    --app-banner-text: #c7d0dd;
 
     // 直角系列：全站零圆角（Arco 原生为 0/2/4/6px）
     --border-radius-none: 0px;
@@ -432,6 +438,12 @@ body[arco-theme="dark"] {
     --app-sidebar: #0b0f16;
     --app-sidebar-2: #131a25;
     --app-sidebar-line: #223046;
+    --app-sidebar-text: #c7d0dd;
+    --app-sidebar-muted: #8290a5;
+    --app-sidebar-hover-text: #ffffff;
+    --app-brand-tile: #131a25;
+    --app-banner: #0b0f16;
+    --app-banner-text: #c7d0dd;
 
     background-color: var(--app-canvas);
     color: var(--app-ink);
