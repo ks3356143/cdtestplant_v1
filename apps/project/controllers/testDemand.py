@@ -125,7 +125,7 @@ class TestDemandController(ControllerBase):
             old_obj = project_qs.ptField.filter(ident=payload.ident).first()
             # 2025/06/24修改，现在运行不同测试类型有相同的标识
             if old_obj and old_obj.testType == payload.testType:
-                return ChenResponse(code=500, status=500,
+                return ChenResponse(code=400, status=400,
                                     message='测试项标识和其他测试项重复，请更换测试项标识!!!')
         # 归属节点参数缺失时明确报 400，避免拼 key 时 NoneType 导致 500
         if not payload.round_key or not payload.dut_key or not payload.design_key:
@@ -254,7 +254,7 @@ class TestDemandController(ControllerBase):
                     ident=value, testType=payload.dict()['testType']).exclude(id=id)
                 # 2025/06/24修改：不同类型可以相同
                 if duplicate.exists():
-                    return ChenResponse(code=500, status=500, message='更换的标识和其他测试项重复')
+                    return ChenResponse(code=400, status=400, message='更换的标识和其他测试项重复')
             if attr == 'project_id' or attr == 'round_key' or attr == 'dut_key' or attr == 'design_key':
                 continue  # 如果发现是key则不处理
             if attr == 'name':

@@ -4,19 +4,15 @@ request工具类
 import json
 from apps.system.models import LoginLog
 from user_agents import parse
+from utils.client_ip import get_client_ip
 
 def get_request_ip(request):
     """
-    获取请求IP
+    获取请求IP：仅受信代理的 X-Forwarded-For 生效，否则用 REMOTE_ADDR
     :param request:
     :return:
     """
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR', '')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[-1].strip()
-        return ip
-    ip = request.META.get('REMOTE_ADDR', '') or getattr(request, 'request_ip', None)
-    return ip or 'unknown'
+    return get_client_ip(request, 'unknown')
 
 def get_request_data(request):
     """

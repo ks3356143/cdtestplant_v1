@@ -1,5 +1,6 @@
 from django.db import models
 from utils.models import CoreModel
+from utils.client_ip import get_client_ip
 from tinymce.models import HTMLField
 from shortuuidfield import ShortUUIDField
 
@@ -716,5 +717,5 @@ class NonrepudiationEvidence(models.Model):
             business_name=business_name,
             data_digest=digest,
             content_snapshot=snapshot,
-            operation_ip=request.META.get('REMOTE_ADDR', '') if request is not None else '',
+            operation_ip=get_client_ip(request) if request is not None else '',
         )

@@ -128,11 +128,23 @@ tool.download = (data, filename = "下载文件") => {
 }
 
 // 拼接附件访问地址：绝对地址原样返回，相对地址按存储模式补全前缀
+// 本地存储需要 JWT 才能访问（后端 /uploads 已加鉴别），这里统一带上 token 查询参数
 tool.attachUrl = (url, mode = "LOCAL") => {
     if (!url) return ""
     if (/^(https?:|blob:|data:)/i.test(url)) return url
     const base = uploadConfig.storage[mode] || ""
-    return base + (url.startsWith("/") ? url : "/" + url)
+    let full = base + (url.startsWith("/") ? url : "/" + url)
+    if (mode === "LOCAL") {
+        let token = ""
+        try {
+            const raw = localStorage.getItem("token")
+            token = raw ? JSON.parse(raw) : ""
+        } catch {
+            token = ""
+        }
+        if (token) full += (full.includes("?") ? "&" : "?") + "token=" + encodeURIComponent(token)
+    }
+    return full
 }
 
 // 非 axios 场景（下载、上传 action、iframe）使用的接口地址：

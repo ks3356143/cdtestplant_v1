@@ -129,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, ref } from "vue"
+import { onUnmounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import designApi from "@/api/project/designDemand"
 import dictApi from "@/api/common"
@@ -161,8 +161,8 @@ const fetchTestType = async () => {
         Message.error("初始化测试类型或测试手段错误，请检查网络后重试!")
     }
 }
-fetchTestType()
-
+// 字典改为打开 AI 弹窗时再初始化：页面挂载即请求时若网络/服务抖动，
+// 会在用户尚未使用 AI 功能时弹出“初始化测试类型或测试手段错误”的误导提示
 const designObj: any = ref()
 
 // 初始化设计需求
@@ -253,6 +253,9 @@ onUnmounted(() => {
 
 // defineModel
 const visible = defineModel<boolean>("visible", { default: false })
+watch(visible, (v) => {
+    if (v && (!testType.value.length || !testMethod.value.length)) fetchTestType()
+})
 
 // 录入按钮相关
 const luButtonLoading = ref(false)

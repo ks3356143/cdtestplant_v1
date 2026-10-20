@@ -362,7 +362,7 @@ class CaseController(ControllerBase):
             # 先查询当前测试项下面有无case
             case_exists = demand.tcField.exists()
             if case_exists:
-                return ChenResponse(status=500, code=HTTP_EXISTS_CASES,
+                return ChenResponse(status=400, code=HTTP_EXISTS_CASES,
                                     message='测试项下面有用例，请删除后生成')
             # 查询所有测试子项
             sub_items = demand.testQField.all()
@@ -497,7 +497,7 @@ class CaseController(ControllerBase):
     def bulk_replace_time(self, payload: ExetimeReplaceSchema):
         selected_case_ids = payload.selectRows
         if not selected_case_ids:
-            return ChenResponse(status=500, code=50999, message='未选择行!', data="")
+            return ChenResponse(status=400, code=50999, message='未选择行!', data="")
         # 访问控制：对整批选中的用例逐一校验，避免只检查第一行造成跨项目篡改（自主访问控制 7.1.3）
         selected_case_qs = Case.objects.filter(id__in=payload.selectRows).select_related('project')
         for project in {c.project for c in selected_case_qs}:

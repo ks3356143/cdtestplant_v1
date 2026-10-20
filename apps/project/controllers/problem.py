@@ -234,7 +234,7 @@ class ProblemController(ControllerBase):
         # 1.查询出所有被删除id
         problems = Problem.objects.filter(id__in=data.ids)
         if not problems.exists():
-            return ChenResponse(status=500, code=HTTP_INDEX_ERROR, message='您未选取删除内容')
+            return ChenResponse(status=400, code=HTTP_INDEX_ERROR, message='您未选取删除内容')
         # 访问控制：对整批选中问题单逐一校验，避免只检查第一条造成跨项目删除（自主访问控制 7.1.3）
         for project in {p.project for p in problems}:
             check_project_access(project, self.context.request.user)

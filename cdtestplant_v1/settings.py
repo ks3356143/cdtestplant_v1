@@ -152,6 +152,8 @@ NINJA_JWT = {
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1),
 }
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=["*"])  # 见 conf/env.py 说明，生产环境应收敛
+# 受信反向代理：只有来自这些地址的请求才采信 X-Forwarded-For（默认本机 nginx）
+TRUSTED_PROXIES = env.list('TRUSTED_PROXIES', default=['127.0.0.1', '::1'])
 
 # 静态文件目录 - manage.py collectstatic
 # -> 会将所有app静态文件移动到STATIC_ROOT目录下面

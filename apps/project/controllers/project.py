@@ -117,10 +117,10 @@ class ProjectController(ControllerBase):
                                     message="错误，检查是否打开了服务器的conf中的文档，关闭后重试")
             except FileExistsError:
                 transaction.set_rollback(True)
-                return ChenResponse(code=500, status=500, message='文件标识已存在或输入为空格，请修改')
+                return ChenResponse(code=409, status=409, message='文件标识已存在或输入为空格，请修改')
             except FileNotFoundError:
                 transaction.set_rollback(True)
-                return ChenResponse(code=500, status=500, message='文件不存在，请检查')
+                return ChenResponse(code=404, status=404, message='文件不存在，请检查')
             return ChenResponse(code=200, status=200, message="添加项目成功，并添加第一轮测试")
         return ChenResponse(code=400, status=400, message="未添加任何项目")
 
@@ -152,10 +152,10 @@ class ProjectController(ControllerBase):
                 return ChenResponse(code=500, status=500, message="错误，请关闭文件资源管理器再试")
             except FileExistsError:
                 transaction.set_rollback(True)
-                return ChenResponse(code=500, status=500, message='文件标识已存在或输入为空格，请修改')
+                return ChenResponse(code=409, status=409, message='文件标识已存在或输入为空格，请修改')
             except FileNotFoundError:
                 transaction.set_rollback(True)
-                return ChenResponse(code=500, status=500, message='文件不存在，请检查')
+                return ChenResponse(code=404, status=404, message='文件不存在，请检查')
         return ChenResponse(code=200, status=200, message="项目更新成功")
 
     @route.delete("/delete")
