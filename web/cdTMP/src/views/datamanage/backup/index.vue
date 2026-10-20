@@ -41,7 +41,7 @@
         :data="rows"
         :loading="loading"
         :pagination="{ pageSize: 10 }"
-        :scroll="{ x: 1360 }"
+        :scroll="{ x: 1320 }"
         row-key="id"
       >
         <template #kind="{ record }">
@@ -117,16 +117,16 @@ const form = reactive({ name: "", kind: "full", project_id: undefined })
 const descColumns = { xs: 1, sm: 2, md: 3, xl: 5 }
 
 const columns = [
-  { title: "备份名称", dataIndex: "name", ellipsis: true, width: 200 },
-  { title: "类型", slotName: "kind", width: 100 },
-  { title: "备份范围", dataIndex: "scope_label", ellipsis: true, width: 200 },
-  { title: "数据条数", dataIndex: "record_count", width: 100 },
-  { title: "文件大小", dataIndex: "size_text", width: 100 },
-  { title: "SHA-256 摘要", slotName: "digest", width: 180 },
-  { title: "状态", slotName: "state", width: 90 },
-  { title: "创建人", slotName: "creator", width: 100 },
-  { title: "创建时间", slotName: "time", width: 185 },
-  { title: "操作", slotName: "operations", width: 190, fixed: "right" }
+  { title: "备份名称", dataIndex: "name", ellipsis: true, width: 190 },
+  { title: "类型", slotName: "kind", width: 90 },
+  { title: "备份范围", dataIndex: "scope_label", ellipsis: true, width: 190 },
+  { title: "数据条数", dataIndex: "record_count", width: 90 },
+  { title: "文件大小", dataIndex: "size_text", width: 90 },
+  { title: "SHA-256 摘要", slotName: "digest", width: 150 },
+  { title: "状态", slotName: "state", width: 80 },
+  { title: "创建人", slotName: "creator", width: 90 },
+  { title: "创建时间", slotName: "time", width: 180 },
+  { title: "操作", slotName: "operations", width: 160, fixed: "right" }
 ]
 
 const loadAll = async () => {
@@ -248,3 +248,10 @@ onMounted(() => {
 <script>
 export default { name: "backup" }
 </script>
+
+<style scoped>
+/* 操作列三个文字按钮紧凑排列，避免撑破固定列宽 */
+:deep(.arco-btn-text.arco-btn-size-small) {
+    padding: 0 6px;
+}
+</style>
