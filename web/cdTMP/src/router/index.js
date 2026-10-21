@@ -9,7 +9,8 @@ import createRouteGuard from "@/router/guard/index"
 export const WORK_AREA_NAME = "project"
 
 const router = createRouter({
-    history: createWebHistory(),
+    // 部署到子路径（如 /cdtestplant/）时由 VITE_APP_BASE 提供路由前缀，未配置时与本地一致为 /
+    history: createWebHistory(import.meta.env.VITE_APP_BASE || "/"),
     routes: [
         {
             path: "/",

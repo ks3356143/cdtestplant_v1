@@ -158,11 +158,12 @@ TRUSTED_PROXIES = env.list('TRUSTED_PROXIES', default=['127.0.0.1', '::1'])
 # 静态文件目录 - manage.py collectstatic
 # -> 会将所有app静态文件移动到STATIC_ROOT目录下面
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, '../../static')
+# 静态与媒体目录统一放在项目根下（原为 BASE_DIR/../../，在 Linux 上会落到根分区 /uploads，部署时不可写）
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # 配置MEDIA_ROOT和MEDIA_URL
 MEDIA_URL = "/uploads/"
-MEDIA_ROOT = os.path.join(BASE_DIR, '../../uploads')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
 
 # 接口日志记录
 API_LOG_ENABLE = True

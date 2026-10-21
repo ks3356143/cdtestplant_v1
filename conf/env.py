@@ -55,10 +55,13 @@ ENABLE_LOGIN_ANALYSIS_LOG = True  # 启动登录详细概略获取(通过调用a
 # ================================================= #
 # ***************  LDAP认证配置  *************** #
 # ================================================= #
-AUTHENTICATION_BACKENDS = [
-    'django_auth_ldap.backend.LDAPBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
+# LDAP 认证开关：内网环境保持校验（默认），公网/离线部署在 .env 中设为 false，
+# 此时仅保留本地数据库账号认证（ModelBackend）
+ENABLE_LDAP_AUTH = env.bool('ENABLE_LDAP_AUTH', default=True)
+AUTHENTICATION_BACKENDS = (
+    (['django_auth_ldap.backend.LDAPBackend'] if ENABLE_LDAP_AUTH else [])
+    + ['django.contrib.auth.backends.ModelBackend']
+)
 # ldap连接配置
 AUTH_LDAP_SERVER_URI = env('AUTH_LDAP_SERVER_URI', default='ldap://dns.paisat.cn:389')
 # 绑定的DN,注意大小写敏感Administrator，Users

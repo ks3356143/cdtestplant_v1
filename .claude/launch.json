@@ -12,6 +12,11 @@
             "runtimeExecutable": "npm",
             "runtimeArgs": ["--prefix", "web/cdTMP", "run", "dev"],
             "port": 3888
+        },
+        {
+            "name": "cloud",
+            "url": "http://47.108.230.220:8081/cdtestplant/",
+            "port": 8081
         }
     ]
 }
