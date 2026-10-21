@@ -71,6 +71,10 @@ def table(caption, header, rows, widths):
                           "layout": "fixed", "style": "afffffffff8", "align": "center"}})
     tc += 1
     t = tc
+    for edge, sz in (("top", "12"), ("left", "12"), ("bottom", "12"), ("right", "12"),
+                     ("horizontal", "6"), ("vertical", "6")):
+        ops.append({"command": "set", "path": f"/body/tbl[{t}]",
+                    "props": {f"border.{edge}": f"single;{sz};000000"}})
     for c, text in enumerate(header, start=1):
         ops.append({"command": "set", "path": f"/body/tbl[{t}]/tr[1]/tc[{c}]/p[1]",
                     "props": {"text": text, "bold": "true", "size": "10.5pt",

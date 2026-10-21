@@ -13,7 +13,7 @@
       "pre": "1. 被测版本受控；2. 后端仅监听本机回环；3. 抓包工具可用",
       "steps": [
         {
-          "op": "访问 https://47.108.230.220/cdtestplant/ ，核对 TLS 握手",
+          "op": "访问 https://XXX/cdtestplant/ ，核对 TLS 握手",
           "exp": "TLS 反代可用，握手成功",
           "act": "握手成功，协议 TLSv1.3",
           "pass": "通过"

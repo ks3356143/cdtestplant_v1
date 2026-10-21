@@ -9,7 +9,7 @@
       "name": "客体创建者默认全权",
       "track": "软件测试依据：GB/T 28452-2012 第 7.1.3 条 a) 项\n测试需求标识：7.1.3-1\n被测功能：项目创建者默认权限",
       "summary": "项目创建者即项目负责人（Project.duty_person），默认拥有该项目的全部管理权。以负责人身份执行项目信息修改、成员维护，验证均被放行。对应实现：apps/project/tools/access_control.py 的负责人判定。",
-      "init": "1. 线上服务均在运行；2. 项目 R2601（id=42）负责人为 srs_a（陈俊亦）；3. srs_a 已登录",
+      "init": "1. 线上服务均在运行；2. 项目 R2601（id=42）负责人为 srs_a（XXX）；3. srs_a 已登录",
       "pre": "1. 被测版本受控；2. 测试只改动可还原的项目字段；3. 用例结束后恢复项目信息",
       "steps": [
         {
@@ -33,7 +33,7 @@
         {
           "op": "核对权限判定依据是否为项目负责人身份",
           "exp": "按 duty_person 判定，非按角色硬编码",
-          "act": "access_control 中负责人判定命中，duty_person=陈俊亦",
+          "act": "access_control 中负责人判定命中，duty_person=XXX",
           "pass": "通过"
         },
         {

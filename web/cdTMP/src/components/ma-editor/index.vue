@@ -133,12 +133,16 @@ function removeCommentNodes(node) {
 // 解构pinia中app仓库中的主题响应式数据
 const { theme } = storeToRefs(appStore)
 
+// 子路径部署（如 /cdtestplant/）时，TinyMCE 的皮肤、语言包与内容样式必须带 base 前缀，
+// 否则会被请求到站点根路径而 404，表现为编辑器空白无工具栏
+const ASSET_BASE = (import.meta.env.VITE_APP_BASE || "/").replace(/\/?$/, "/")
+
 const initConfig = reactive({
     api_key: import.meta.env.VITE_TINYMCE_KEY || "",
     menubar: false, // 菜单栏显隐
-    language_url: "/tinymce/i18n/zh_CN.js",
+    language_url: `${ASSET_BASE}tinymce/i18n/zh_CN.js`,
     language: "zh_CN",
-    skin_url: "/tinymce/skins/ui/tinymce-5" + (theme.value === "dark" ? "-dark" : ""),
+    skin_url: `${ASSET_BASE}tinymce/skins/ui/tinymce-5` + (theme.value === "dark" ? "-dark" : ""),
     height: props.height,
     toolbar_mode: "wrap",
     plugins: props.plugins,
@@ -150,7 +154,7 @@ const initConfig = reactive({
     min_height: 100,
     max_height: 600,
     autoresize_bottom_margin: 10,
-    content_css: theme.value === "dark" ? "/tinymce/skins/content/dark/content.css" : "/tinymce/skins/content/default/content.css",
+    content_css: `${ASSET_BASE}tinymce/skins/content/${theme.value === "dark" ? "dark" : "default"}/content.css`,
     // selector: "#textarea1", // 下面自定义样式选中的区域为编辑区
     content_style: "body {line-height:1.5;font-size:14px;} p {margin:2px 0px;}", // 这里可以设置自定义样式
     // paste_as_text: false,
