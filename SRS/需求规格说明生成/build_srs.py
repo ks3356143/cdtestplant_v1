@@ -11,6 +11,41 @@ from srs_content_a import BLOCKS_A   # noqa: E402
 from srs_content_b import BLOCKS_B   # noqa: E402
 
 BLOCKS = BLOCKS_A + BLOCKS_B
+
+# ---- 表号统一重排：按出现顺序编号，并同步正文中的引用（插入新表后仍连续）----
+import re as _re
+
+
+def _renumber(blocks):
+    counters, mapping = {}, {}
+    for blk in blocks:
+        if blk[0] == "table":
+            m = _re.match(r"表 (\d+)-(\d+)", blk[1])
+            if not m:
+                continue
+            chap = m.group(1)
+            counters[chap] = counters.get(chap, 0) + 1
+            mapping[f"表 {chap}-{m.group(2)}"] = f"表 {chap}-{counters[chap]}"
+
+    def rep(text):
+        for old in sorted(mapping, key=len, reverse=True):
+            text = text.replace(old, mapping[old])
+        return text
+
+    out = []
+    for blk in blocks:
+        if blk[0] == "table":
+            out.append((blk[0], rep(blk[1])) + tuple(blk[2:]))
+        elif blk[0] in ("p", "pn"):
+            out.append((blk[0], rep(blk[1])))
+        elif blk[0] == "bullet":
+            out.append((blk[0], [rep(x) for x in blk[1]]))
+        else:
+            out.append(blk)
+    return out
+
+
+BLOCKS = _renumber(BLOCKS)
 TABLE_W = 9600           # 可用版心宽度（twips）
 BD = {"font.ea": "黑体", "font.latin": "Times New Roman"}
 ST = {"font.ea": "宋体", "font.latin": "Times New Roman"}
