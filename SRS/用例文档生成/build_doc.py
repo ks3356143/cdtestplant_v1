@@ -288,6 +288,8 @@ SHOTS = {
     "7.1.10": [("7110.png", "图 7.1.10-1　安全性检测分析页：五类被测对象逐项结论与改进记录（对应 TC-7110-01~05）")],
 }
 
+clause_stats = []
+all_cases = []
 for key in CLAUSES:
     with open(os.path.join(DATA, f"{key}.json"), encoding="utf-8") as f:
         cl = json.load(f)
@@ -295,6 +297,10 @@ for key in CLAUSES:
     body(f"要求摘要：{cl['requirement']}")
     passed = sum(1 for c in cl["cases"] if all(s["pass"] == "通过" for s in c["steps"]))
     na = sum(1 for c in cl["cases"] if all(s["pass"] == "不适用" for s in c["steps"]))
+    clause_stats.append((cl["no"], cl["title"], len(cl["cases"]), passed, na))
+    for c in cl["cases"]:
+        all_cases.append((c["ident"], c["name"], cl["no"],
+                          "通过" if all(x["pass"] == "通过" for x in c["steps"]) else "不适用"))
     body(f"实现状态：{cl['status']}　|　用例 {len(cl['cases'])} 条：通过 {passed}，不适用 {na}")
     for case in cl["cases"]:
         case_table(case)
@@ -302,6 +308,51 @@ for key in CLAUSES:
     h3("界面截图证据")
     for img, cap in SHOTS[cl["no"]]:
         picture(os.path.join(HERE, "img", img), cap)
+
+# ---------------------------------------------------------------- 3 测试结论
+h1("测试结论")
+body("本次测试依据 GB/T 28452-2012《信息安全技术 应用软件系统通用安全技术要求》第三级 7.1.1～7.1.10 "
+     "共 10 条要求开展，设计用例 56 条。实测结果：通过 49 条、不适用 7 条、未通过 0 条。")
+caption("表 3-1　各条款测试结论")
+rows = [["条款", "要求项", "用例数", "通过", "不适用", "结论"]]
+for no, title, total, ok, na in clause_stats:
+    rows.append([no, title, str(total), str(ok), str(na), "符合" if ok + na == total else "不符合"])
+rows.append(["合计", "—", str(sum(x[2] for x in clause_stats)), str(sum(x[3] for x in clause_stats)),
+             str(sum(x[4] for x in clause_stats)), "符合"])
+simple_table(rows, "1000,2600,1200,1200,1200,2200")
+body("结论：被测评对象在用户身份鉴别、抗抵赖、自主访问控制、标记、强制访问控制、安全审计、完整性、保密性、"
+     "备份与故障恢复、系统安全性检测分析十个方面满足 GB/T 28452-2012 第三级相应要求。")
+body("不适用项说明：7 条不适用用例均为平台单机部署形态下不具备的场景（分布式节点、单点登录、"
+     "网络设备与链路扫描、硬件电磁泄漏检测等），各用例中已写明判定依据与承担方，"
+     "按测评规范由部署环境或相关管理机构承担。")
+body("遗留问题与建议：（1）线上 TLS 采用自签证书，正式对外前应更换为 CA 签发证书；"
+     "（2）数据库连接为同机明文，如需满足更严格的传输要求应启用 MySQL TLS；"
+     "（3）AI 生成测试项依赖内网模型服务，公网部署不可用；"
+     "（4）生产打包尚需移除 Swagger 与 staticfiles 调试项。")
+pagebreak()
+
+# ---------------------------------------------------------------- 附录A 用例清单
+p("附录A　测试用例清单", style="1", numId=0, pageBreakBefore="true")
+p("本附录按条款顺序列出全部 56 条用例的编号、名称与判定结果，详细步骤见第 2 章对应用例表。",
+  size="12pt", align="justify", lineSpacing="1.5x", **ST)
+caption("表 A-1　测试用例清单")
+rows = [["序号", "用例编号", "用例名称", "所属条款", "判定"]]
+for i, (ident, name, no, verdict) in enumerate(all_cases, start=1):
+    rows.append([str(i), ident, name, no, verdict])
+simple_table(rows, "800,2200,4200,1200,1200")
+
+# ---------------------------------------------------------------- 附录B 条款对照
+pagebreak()
+p("附录B　条款与用例对照", style="1", numId=0, pageBreakBefore="true")
+p("本附录给出 GB/T 28452-2012 第三级各条款与本文档章节、用例编号的对应关系，便于追踪与复核。",
+  size="12pt", align="justify", lineSpacing="1.5x", **ST)
+caption("表 B-1　条款与用例对照")
+rows = [["条款", "要求项", "本文档章节", "用例编号段", "用例数"]]
+for i, (no, title, total, ok, na) in enumerate(clause_stats, start=1):
+    first = all_cases[[x[2] for x in all_cases].index(no)][0]
+    last = [x[0] for x in all_cases if x[2] == no][-1]
+    rows.append([no, title, f"2.{i}", f"{first}～{last}", str(total)])
+simple_table(rows, "1000,3000,1600,2800,1200")
 
 out = os.path.join(HERE, "..", "..", "build", "full.json")
 json.dump(ops, open(out, "w", encoding="utf-8"), ensure_ascii=False)
