@@ -142,19 +142,22 @@ def verify_instance(instance):
 
 
 def ensure_intact(instance, request=None, action='使用'):
-    """使用前完整性校验：发现破损即审计告警并拒绝继续（7.1.7 b/e）"""
+    """使用前完整性校验：发现破损即审计告警并拒绝继续（7.1.7 b/e）
+
+    告警文本挂在 HttpError 上，由 api.py 的异常处理器在事务回滚后落库——
+    视图带 @transaction.atomic 时，直接在此写审计会被异常回滚掉。
+    """
     from ninja.errors import HttpError
     result = verify_instance(instance)
     if result is None or result['intact']:
         return True
-    from utils.audit import audit_log, EVENT_INTEGRITY_BROKEN
     label = getattr(instance, 'ident', None) or getattr(instance, 'name', None) or instance.pk
-    audit_log(request, EVENT_INTEGRITY_BROKEN,
-              f'安全告警：{action}前完整性校验失败 {instance._meta.verbose_name} {label}'
-              f'（{instance._meta.db_table}#{instance.pk}），'
-              f'标签 {result["stored"]}… ≠ 重算 {result["actual"]}…，已拒绝继续使用',
-              success=False)
-    raise HttpError(409, '数据完整性校验失败：该记录疑似被绕过应用篡改，已拒绝使用并记录告警')
+    exc = HttpError(409, '数据完整性校验失败：该记录疑似被绕过应用篡改，已拒绝使用并记录告警')
+    exc.integrity_event = (
+        f'安全告警：{action}前完整性校验失败 {instance._meta.verbose_name} {label}'
+        f'（{instance._meta.db_table}#{instance.pk}），'
+        f'标签 {result["stored"]}… ≠ 重算 {result["actual"]}…，已拒绝继续使用')
+    raise exc
 
 
 def verify_round(project_obj, round_key):
@@ -189,17 +192,19 @@ def verify_round(project_obj, round_key):
 
 
 def ensure_round_intact(project_obj, round_key, request=None, action='生成报告'):
-    """生成报告等使用场景前的整轮完整性校验：发现破损即告警并拒绝继续"""
+    """生成报告等使用场景前的整轮完整性校验：发现破损即告警并拒绝继续
+
+    同 ensure_intact：告警文本交给 api.py 异常处理器，避免被事务回滚。
+    """
     from ninja.errors import HttpError
     broken = verify_round(project_obj, round_key)
     if not broken:
         return True
-    from utils.audit import audit_log, EVENT_INTEGRITY_BROKEN
     detail = '；'.join(f'{b["label"]}（{b["table"]}#{b["id"]}）' for b in broken[:5])
-    audit_log(request, EVENT_INTEGRITY_BROKEN,
-              f'安全告警：{action}前完整性校验失败，共 {len(broken)} 条数据破损：{detail}，已拒绝继续',
-              success=False)
-    raise HttpError(409, f'{action}前数据完整性校验失败：{len(broken)} 条数据疑似被篡改（{detail}），已拒绝继续并记录告警')
+    exc = HttpError(409, f'{action}前数据完整性校验失败：{len(broken)} 条数据疑似被篡改（{detail}），已拒绝继续并记录告警')
+    exc.integrity_event = (
+        f'安全告警：{action}前完整性校验失败，共 {len(broken)} 条数据破损：{detail}，已拒绝继续')
+    raise exc
 
 
 def verify_all():

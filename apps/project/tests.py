@@ -66,17 +66,17 @@ class IntegrityTagTests(TestCase):
         self.assertFalse(result['intact'])
         self.assertNotEqual(result['stored'], result['actual'])
 
-    def test_ensure_intact_raises_409_and_writes_alert(self):
-        """破损时拒绝继续使用，并写入 integrity_broken 审计告警"""
+    def test_ensure_intact_raises_409_with_alert_payload(self):
+        """破损时拒绝继续使用，告警文案挂在异常上交给接口层落库（避免事务回滚丢失）"""
         Project.objects.filter(pk=self.project.pk).update(secret='5')
         self.project.refresh_from_db()
+        before = AuditLog.objects.filter(event_type='integrity_broken').count()
         with self.assertRaises(HttpError) as ctx:
             ensure_intact(self.project, action='读取用例')
         self.assertEqual(ctx.exception.status_code, 409)
-        alert = AuditLog.objects.filter(event_type='integrity_broken').order_by('-id').first()
-        self.assertIsNotNone(alert)
-        self.assertFalse(alert.success)
-        self.assertIn('读取用例前完整性校验失败', alert.detail)
+        self.assertIn('读取用例前完整性校验失败', ctx.exception.integrity_event)
+        # 直接调用没有接口异常处理器，因此此处不落库；落库行为由 API 测试覆盖
+        self.assertEqual(AuditLog.objects.filter(event_type='integrity_broken').count(), before)
 
     def test_refresh_tags_repairs_bulk_update_drift(self):
         """bulk_update/queryset.update 后统一补刷标签，校验应恢复完好"""
@@ -207,3 +207,56 @@ class BatchImportApiTests(TestCase):
         self.assertTrue(body['success'])
         self.assertEqual(body['data'], [parent_key + '-0'])
         self.assertTrue(Case.objects.filter(project=self.project, name='用例一').exists())
+
+
+class IntegrityUseBeforeApiTests(TestCase):
+    """7.1.7 b/e：读取用例前的完整性校验必须真正留下篡改告警（不能被事务回滚）"""
+
+    def setUp(self):
+        from ninja_jwt.tokens import RefreshToken
+        from apps.user.models import Users
+        from apps.project.models import Case, Design, Dut, TestDemand
+        self.user = Users.objects.create_user(username='t_integrity_admin', password='x',
+                                              name='完整性接口测试', role='admin')
+        self.token = str(RefreshToken.for_user(self.user).access_token)
+        self.project = make_project(ident='T-INT-API-1', name='完整性接口测试项目')
+        self.round = Round.objects.create(project=self.project, ident='R1', name='第一轮',
+                                          key='0', title='第1轮', location='测评中心')
+        self.dut = Dut.objects.create(project=self.project, round=self.round, ident='D1',
+                                      name='被测件', key='0-0', title='被测件')
+        self.design = Design.objects.create(project=self.project, round=self.round, dut=self.dut,
+                                            ident='DS1', name='设计需求', key='0-0-0', title='设计需求')
+        self.demand = TestDemand.objects.create(project=self.project, round=self.round, dut=self.dut,
+                                                design=self.design, ident='T1', name='测试项',
+                                                key='0-0-0-0', title='测试项')
+        self.case = Case.objects.create(project=self.project, round=self.round, dut=self.dut,
+                                        design=self.design, test=self.demand, ident='C1',
+                                        name='原始用例', key='0-0-0-0-0', title='原始用例')
+
+    def _get_case(self):
+        return self.client.get('/api/project/getCaseOne', {'key': self.case.key,
+                                                           'projectId': self.project.id},
+                               HTTP_AUTHORIZATION=f'Bearer {self.token}')
+
+    def test_tampered_case_read_alert_is_persisted(self):
+        """直改用例后读取：409 且 integrity_broken 告警未被视图事务回滚掉"""
+        from apps.project.models import Case
+        Case.objects.filter(pk=self.case.pk).update(name='被直接篡改')
+        try:
+            response = self._get_case()
+            self.assertEqual(response.status_code, 409)
+            alert = AuditLog.objects.filter(event_type='integrity_broken').order_by('-id').first()
+            self.assertIsNotNone(alert)
+            self.assertFalse(alert.success)
+            self.assertIn('读取用例前完整性校验失败', alert.detail)
+        finally:
+            Case.objects.filter(pk=self.case.pk).update(name='原始用例')
+            refresh_tags([Case.objects.get(pk=self.case.pk)])
+
+    def test_restored_case_read_succeeds(self):
+        from apps.project.models import Case
+        Case.objects.filter(pk=self.case.pk).update(name='被直接篡改')
+        Case.objects.filter(pk=self.case.pk).update(name='原始用例')
+        refresh_tags([Case.objects.get(pk=self.case.pk)])
+        response = self._get_case()
+        self.assertEqual(response.status_code, 200)

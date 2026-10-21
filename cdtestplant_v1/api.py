@@ -21,6 +21,12 @@ api = ChenNinjaAPI(
 # 捕获HttpError - 注意这种方式不过create_response函数，需自己定义
 @api.exception_handler(HttpError)
 def in_program_exception_handler(request, exc):
+    # 完整性破损告警：ensure_intact 只把文案挂在异常上，由这里在视图事务回滚后落库，
+    # 避免 @transaction.atomic 把告警记录一并回滚（7.1.7 篡改告警必须留痕）
+    integrity_event = getattr(exc, 'integrity_event', None)
+    if integrity_event:
+        from utils.audit import audit_log, EVENT_INTEGRITY_BROKEN
+        audit_log(request, EVENT_INTEGRITY_BROKEN, integrity_event, success=False)
     # 合法的 HTTP 状态码原样返回（400/401/404/405…），自定义业务码统一落到 500
     raw = getattr(exc, 'status_code', 500)
     status = raw if isinstance(raw, int) and 400 <= raw <= 599 else 500
