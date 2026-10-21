@@ -14,25 +14,30 @@ import re as _re
 
 
 def _renumber(blocks):
-    counters, mapping = {}, {}
-    for blk in blocks:
-        if blk[0] == "table":
-            m = _re.match(r"表 (\d+)-(\d+)", blk[1])
-            if not m:
-                continue
-            chap = m.group(1)
-            counters[chap] = counters.get(chap, 0) + 1
-            mapping[f"表 {chap}-{m.group(2)}"] = f"表 {chap}-{counters[chap]}"
+    """按出现顺序重排表号（不依赖旧号映射），正文引用按首次出现的旧号对应。"""
+    counters, mapping, caption_new = {}, {}, {}
+    for i, blk in enumerate(blocks):
+        if blk[0] != "table":
+            continue
+        m = _re.match(r"表 (\d+)-(\d+)", blk[1])
+        if not m:
+            continue
+        chap = m.group(1)
+        counters[chap] = counters.get(chap, 0) + 1
+        new_label = f"表 {chap}-{counters[chap]}"
+        old_label = f"表 {chap}-{m.group(2)}"
+        mapping.setdefault(old_label, new_label)
+        caption_new[i] = new_label + blk[1][len(old_label):]
+
+    pattern = _re.compile(r"表 \d+-\d+")
 
     def rep(text):
-        for old in sorted(mapping, key=len, reverse=True):
-            text = text.replace(old, mapping[old])
-        return text
+        return pattern.sub(lambda mm: mapping.get(mm.group(0), mm.group(0)), text)
 
     out = []
-    for blk in blocks:
+    for i, blk in enumerate(blocks):
         if blk[0] == "table":
-            out.append((blk[0], rep(blk[1])) + tuple(blk[2:]))
+            out.append((blk[0], caption_new.get(i, blk[1])) + tuple(blk[2:]))
         elif blk[0] in ("p", "pn"):
             out.append((blk[0], rep(blk[1])))
         elif blk[0] == "bullet":
@@ -40,8 +45,6 @@ def _renumber(blocks):
         else:
             out.append(blk)
     return out
-
-
 BLOCKS = _renumber(BLOCKS)
 TABLE_W = 9600           # 可用版心宽度（twips）
 BD = {"font.ea": "黑体", "font.latin": "Times New Roman"}
