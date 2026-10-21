@@ -177,7 +177,7 @@ def _check_listen_scope():
     conf = (base / 'deploy' / 'https' / 'nginx_https.conf') if base else None
     if conf and conf.is_file():
         return _item('网络', '对外传输加密', '检查部署层 TLS 反向代理配置', PASS,
-                     '随附 nginx TLS 反向代理（8443，TLSv1.2/1.3），对外只暴露 443/8443 加密入口')
+                     '随附 nginx TLS 反向代理（TLSv1.2/1.3），线上仅对外暴露 443 加密入口，8081 仅做 301 跳转')
     return _item('网络', '对外传输加密', '检查部署层 TLS 反向代理配置', NOTICE,
                  '未发现 TLS 反向代理配置，需在部署环境落实')
 

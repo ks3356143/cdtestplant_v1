@@ -46,8 +46,10 @@ def _encrypted_fields() -> list:
 def _transport_security() -> TransportSecurityOut:
     """传输保密性：由部署环境的 HTTPS 反向代理承担，这里如实汇报配置是否就位"""
     enabled = HTTPS_CONF.is_file() and HTTPS_CERT.is_file()
-    detail = ('已随附 HTTPS 反向代理配置与证书（nginx 8443，TLSv1.2/TLSv1.3），'
-              '浏览器到服务器之间全程密文传输；由部署环节启用，见 deploy/https/README.md') \
+    # 端口随部署形态不同（打包部署 8443、云上为 443），这里只声明协议与承担方，不写死端口
+    detail = ('由部署层的 HTTPS 反向代理承担（TLSv1.2/TLSv1.3）：随附 nginx TLS 反代配置与证书，'
+              '线上以 443 为唯一入口（8081 仅 301 跳转），浏览器到服务器之间全程密文传输；'
+              '见 deploy/https/README.md') \
         if enabled else '未检测到 HTTPS 配置，需在部署环境启用 TLS 反代后再上线'
     return TransportSecurityOut(
         enabled=enabled,
