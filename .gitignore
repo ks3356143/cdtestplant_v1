@@ -38,3 +38,6 @@ media/backup/
 
 # Playwright MCP 运行产物（截图/快照/控制台日志）
 .playwright-mcp/
+
+# 客户提供的参考模板（35MB 二进制），不入库
+SRS/参考/
