@@ -221,20 +221,22 @@ p("本文档适用的范围：定义“测试管理平台（cdtestplant_v1）”
   style="1-21", numId=27, ilvl=0, size="12pt", **ST)
 
 h2("被测对象与测试环境")
-body("被测对象为测试管理平台 cdtestplant_v1（v0.1.2），采用 Django 6 + django-ninja 后端与 Vue 3 前端，"
-     "以 MySQL 存储业务数据、Redis 提供缓存与登录失败计数。测试采用接口实测、数据库直查与浏览器操作三种方式，"
-     "界面类用例在浏览器中按真实操作路径验证并截图存证。")
+body("被测对象为测试管理平台 cdtestplant_v1（v0.1.2），部署于云服务器：Django 6 + django-ninja 后端、Vue 3 前端，"
+     "MySQL 存储业务数据、Redis 提供缓存与登录失败计数，nginx 在 443 终结 TLS 并反向代理到本机 waitress。"
+     "测试采用接口实测、数据库直查、缓存核查与浏览器操作四种方式，界面类用例在浏览器中按真实操作路径验证并截图存证。")
 caption("表1-1 被测对象与测试环境")
 simple_table([
     ["项目", "内容"],
     ["被测对象", "测试管理平台 cdtestplant_v1"],
     ["版本", "v0.1.2（2026-10-15 安全测评增强版）"],
-    ["部署形态", "单机部署，后端 waitress 监听 127.0.0.1:8000，对外经 nginx TLS 反向代理"],
-    ["操作系统", "Windows 11（开发测试环境）"],
-    ["数据库", "MySQL 8.4，库名 chengdu_test_plant_v1"],
-    ["缓存", "Redis 5.0.14（登录失败计数、图形验证码、一次性下载令牌）"],
-    ["后端", "Python 3.13 + Django 6.1 + waitress"],
-    ["前端", "Vue 3.5 + Vite + Arco Design Vue，开发端口 3888"],
+    ["部署形态", "单机部署（云服务器）；nginx 1.26 反向代理并在 443 终结 TLS；后端 waitress 仅监听 127.0.0.1:8000"],
+    ["操作系统", "Ubuntu 24.04.4 LTS（2 vCPU / 1.6 GB 内存 / 40 GB 磁盘）"],
+    ["数据库", "MySQL 8.4.13，库名 chengdu_test_plant_v1，应用专用账号 cdtp_app（仅授权本库）"],
+    ["缓存", "Redis 7.0.15（登录失败计数、图形验证码、一次性下载令牌）"],
+    ["后端", "Python 3.13.16 + Django 6.1 + waitress 3.0（systemd 服务 cdtestplant）"],
+    ["前端", "Vue 3.5 + Vite 构建产物，由 nginx 托管于 /cdtestplant/"],
+    ["访问入口", "https://47.108.230.220/cdtestplant/（TLS 1.2/1.3，自签证书；8081 的 HTTP 入口仅 301 跳转）"],
+    ["鉴别方式", "本地账号口令 + 特权角色图形验证码；LDAP 未启用（公网不可达）"],
     ["测评依据", "GB/T 28452-2012 第三级 7.1.1～7.1.10"],
 ], "2000,7628")
 
