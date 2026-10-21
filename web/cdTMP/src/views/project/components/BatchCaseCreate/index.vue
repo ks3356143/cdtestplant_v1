@@ -190,8 +190,8 @@ const handleSubmit = async () => {
         }
         try {
             const res = await caseApi.batchSave({ ...submitData })
-            if (res.code === 60000) {
-                // 标识录入成功了
+            // 统一响应：code=200 表示整批创建成功；格式错误由后端返回 400，拦截器已提示
+            if (res.code === 200) {
                 handleDeleteAll()
                 res.data.forEach((it: any) => {
                     treeDataStore.updateTestDemandTreeData({ key: it }, route.query.id)
@@ -199,19 +199,6 @@ const handleSubmit = async () => {
                 emit("batchCaseCreateComplete")
                 Message.success("批量新增用例成功!")
                 return true
-            } else {
-                if (res.code === 60001) {
-                    // 有字符但没有@情况
-                    Message.error(res.message)
-                } else if (res.code === 60002) {
-                    // 操作输入为空，即@前面为空
-                    Message.error(res.message)
-                } else if (res.code === 60003) {
-                    // 预期为空，即@后面为空
-                    Message.error(res.message)
-                } else {
-                    Message.error("测试步骤快捷字符串录入错误，请检查!")
-                }
             }
             return false
         } catch {

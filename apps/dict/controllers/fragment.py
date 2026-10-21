@@ -104,7 +104,7 @@ class UserFiledController(ControllerBase):
         except Exception as e:
             # 保留原始异常信息，便于排查删除失败原因
             logger.exception("删除文档片段失败：ids=%s", data.ids)
-            raise HttpError(500, "删除失败") from e
+            raise HttpError(500, "删除文档片段失败，请稍后重试") from e
 
     @route.put("/update/{int:id}", url_name='fragment-update')
     def update_fragment(self, id: int, data: FragmentUpdateSchema):
@@ -116,7 +116,5 @@ class UserFiledController(ControllerBase):
         self._check_project(obj.project_id, user)
         if data.project_id is not None and data.project_id != obj.project_id:
             self._check_project(data.project_id, user)
-        update_obj = updateWithoutRequestParam(id, data, Fragment)
-        if update_obj:
-            return '更新成功'
-        raise HttpError(500, "设置替换磁盘文件渲染失败")
+        updateWithoutRequestParam(id, data, Fragment)
+        return '更新成功'

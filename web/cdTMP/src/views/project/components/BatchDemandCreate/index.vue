@@ -180,8 +180,8 @@ const handleSubmit = async () => {
         }
         try {
             const res = await demandApi.batchSave({ ...submitData })
-            // 单独接口：如果res.data==='ok'，则创建成功
-            if (res.code === 200991) {
+            // 统一响应：code=200 表示整批创建成功；解析/校验错误由后端返回 400，拦截器已提示
+            if (res.code === 200) {
                 handleDeleteAll()
                 res.data.forEach((it: any) => {
                     treeDataStore.updateDesignDemandTreeData({ key: it }, route.query.id)
@@ -189,21 +189,8 @@ const handleSubmit = async () => {
                 emit("batchDemandCreateComplete")
                 Message.success("批量新增成功!")
                 return true
-            } else {
-                if (res.code === 500102) {
-                    // 有+但没有测试项名称-后面再处理
-                    Message.error(res.message)
-                } else if (res.code === 500103) {
-                    // 有+的行解析错误
-                    Message.error(res.message)
-                } else if (res.code === 500104) {
-                    // 有-但无+的行解析错误
-                    Message.error(res.message)
-                } else {
-                    Message.error("测试子项字符串解析错误，请检查后重试!")
-                }
-                return false
             }
+            return false
         } catch {
             return false
         }

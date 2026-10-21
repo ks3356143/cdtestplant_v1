@@ -186,58 +186,53 @@ class TestDemandController(ControllerBase):
             if demandOne.ident and project_qs:
                 old_obj = project_qs.ptField.filter(ident=demandOne.ident).first()
                 if old_obj and old_obj.testType == demandOne.testType:
-                    message_temp = f"第{index}个测试项标识重复，请修改"
-                    return ChenResponse(status=200, code=500101, data=index, message=message_temp)
+                    raise HttpError(400, f"第{index + 1}个测试项标识重复，请修改")
         # 标识不重复就开始录入了
         for index, demand in enumerate(payload.demands):
             create_sub_demands = parse_test_content_string(demand.testContent)
-            if isinstance(create_sub_demands, ChenResponse):
-                return create_sub_demands
-            else:
-                # 这说明解析成功了
-                # 首先查询所属design、dut、round，方便新增
-                design_obj: Design = designs.filter(key=demand.parent_key).first()
-                # 前端传错/父级已被删除时给出明确 400，避免 None.dut 直接 500 并回滚整批
-                if design_obj is None:
-                    return ChenResponse(status=400, code=400,
-                                        message=f'第{index}个测试项的设计需求不存在（parent_key={demand.parent_key}）')
-                dut_obj = design_obj.dut
-                round_obj = design_obj.round
-                test_demand_count = TestDemand.objects.filter(project=project_qs,
-                                                              design=design_obj).count()
-                key_string = ''.join([design_obj.key, "-", str(test_demand_count)])
-                keys.append(key_string)
-                create_demand_dict = {
-                    'ident': demand.ident,
-                    'name': demand.name,
-                    'adequacy': demand.adequacy,
-                    'priority': demand.priority,
-                    'testType': demand.testType,
-                    'testMethod': demand.testMethod,
-                    'title': demand.name,
-                    'key': key_string,
-                    'project': project_qs,
-                    'round': round_obj,
-                    'dut': dut_obj,
-                    'design': design_obj,
-                    'testDesciption': demand.testDesciption
-                }
-                demand_created = TestDemand.objects.create(**create_demand_dict)
-                # 录入测试子项
-                for sub in create_sub_demands:
-                    content_obj = TestDemandContent.objects.create(
-                        testDemand=demand_created,
-                        subName=sub['subName'],
-                        subDescription=sub['subDescription']
+            # 解析失败时 parse_test_content_string 直接抛 400，整批事务回滚
+            # 首先查询所属design、dut、round，方便新增
+            design_obj: Design = designs.filter(key=demand.parent_key).first()
+            # 前端传错/父级已被删除时给出明确 400，避免 None.dut 直接 500 并回滚整批
+            if design_obj is None:
+                raise HttpError(400, f'第{index + 1}个测试项的设计需求不存在（parent_key={demand.parent_key}）')
+            dut_obj = design_obj.dut
+            round_obj = design_obj.round
+            test_demand_count = TestDemand.objects.filter(project=project_qs,
+                                                          design=design_obj).count()
+            key_string = ''.join([design_obj.key, "-", str(test_demand_count)])
+            keys.append(key_string)
+            create_demand_dict = {
+                'ident': demand.ident,
+                'name': demand.name,
+                'adequacy': demand.adequacy,
+                'priority': demand.priority,
+                'testType': demand.testType,
+                'testMethod': demand.testMethod,
+                'title': demand.name,
+                'key': key_string,
+                'project': project_qs,
+                'round': round_obj,
+                'dut': dut_obj,
+                'design': design_obj,
+                'testDesciption': demand.testDesciption
+            }
+            demand_created = TestDemand.objects.create(**create_demand_dict)
+            # 录入测试子项
+            for sub in create_sub_demands:
+                content_obj = TestDemandContent.objects.create(
+                    testDemand=demand_created,
+                    subName=sub['subName'],
+                    subDescription=sub['subDescription']
+                )
+                TestDemandContentStep.objects.bulk_create([
+                    TestDemandContentStep(
+                        testDemandContent=content_obj,
+                        **step.dict() if not isinstance(step, dict) else step
                     )
-                    TestDemandContentStep.objects.bulk_create([
-                        TestDemandContentStep(
-                            testDemandContent=content_obj,
-                            **step.dict() if not isinstance(step, dict) else step
-                        )
-                        for step in sub['subStep']
-                    ])
-        return ChenResponse(code=200991, status=200, data=keys, message='成功录入')
+                    for step in sub['subStep']
+                ])
+        return ChenResponse(code=200, status=200, data=keys, message='成功录入')
 
     # 更新测试项
     @route.put("/testDemand/update/{id}", response=TestDemandCreateOutSchema, url_name="testDemand-update")

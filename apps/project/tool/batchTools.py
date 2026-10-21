@@ -1,4 +1,5 @@
-from utils.chen_response import ChenResponse
+from ninja.errors import HttpError
+
 
 def parse_test_content_string(content: str):
     """
@@ -35,8 +36,7 @@ def parse_test_content_string(content: str):
                 # 判断名称是否为空
                 item_name = item_name.replace("^", "", count=1)
                 if not item_name:
-                    message = f"您字符串中，第{line_number}行没有测试子项名称"
-                    return ChenResponse(status=200, code=500102, data=line_number, message=message)
+                    raise HttpError(400, f"您字符串中，第{line_number}行没有测试子项名称")
 
                 # 组装一个测试子项
                 current_subDemand = {
@@ -44,10 +44,11 @@ def parse_test_content_string(content: str):
                     'subDescription': item_desc,
                     'subStep': []
                 }
+            except HttpError:
+                raise
             except Exception as e:
-                message = f"您字符串中，第{line_number}行解析错误，错误原因请检查"
                 print('解析^行报错，后台详情：', e)
-                return ChenResponse(status=200, code=500103, data=line_number, message=message)
+                raise HttpError(400, f"您字符串中，第{line_number}行解析错误，错误原因请检查")
 
         elif '@' in line and current_subDemand is not None:
             try:
@@ -57,9 +58,8 @@ def parse_test_content_string(content: str):
                     'expect': expect
                 })
             except Exception as e:
-                message = f"第{line_number}发现您子项步骤格式有问题，请检查"
                 print('解析步骤行报错，后台详情：', e)
-                return ChenResponse(status=200, code=500104, data=line_number, message=message)
+                raise HttpError(400, f"第{line_number}发现您子项步骤格式有问题，请检查")
         else:
             # 这里就是即没有^也没有@的情况，直接跳出本次循环即可
             continue
@@ -67,6 +67,7 @@ def parse_test_content_string(content: str):
     if current_subDemand:
         create_subDemands.append(current_subDemand)
     return create_subDemands
+
 
 def parse_case_content_string(content: str):
     """
@@ -86,21 +87,17 @@ def parse_case_content_string(content: str):
             continue
         # 判断是否有“@”，如果没有则给用户报错
         if "@" not in line:
-            message = f"第{line_number}行没有使用@符号分割，请检查!"
-            return ChenResponse(status=200, code=60001, data=line_number, message=message)
+            raise HttpError(400, f"第{line_number}行没有使用@符号分割，请检查!")
         # 这里必然有@，组装current_step（一行内@多于1个时给出明确错误，避免 ValueError 直冒 500）
         try:
             [operation, expect] = line.strip().split("@")
         except ValueError:
-            message = f"第{line_number}行@符号数量不正确，请检查!"
-            return ChenResponse(status=200, code=60005, data=line_number, message=message)
+            raise HttpError(400, f"第{line_number}行@符号数量不正确，请检查!")
         # 错误处理两种情况，操作为空，预期为空
         if not operation.strip():
-            message = f"第{line_number}行@符号前面的输入内容为空，请检查!"
-            return ChenResponse(status=200, code=60002, data=line_number, message=message)
+            raise HttpError(400, f"第{line_number}行@符号前面的输入内容为空，请检查!")
         if not expect.strip():
-            message = f"第{line_number}行@符号后面的预期为空，请检查!"
-            return ChenResponse(status=200, code=60003, data=line_number, message=message)
+            raise HttpError(400, f"第{line_number}行@符号后面的预期为空，请检查!")
         # 组装当前步骤行
         create_step.append({
             "operation": operation,

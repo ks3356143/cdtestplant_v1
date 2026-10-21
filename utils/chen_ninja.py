@@ -13,7 +13,8 @@ class ChenNinjaAPI(NinjaExtraAPI):
             "code": code,
             "data": data,
             "message": message,
-            "success": True
+            # 统一响应：HTTP 状态或业务码非 200 即失败，前端可直接用 success 判断
+            "success": status < 400 and code == 200
         }
         # 因为extra的APIException会添加到data['detail']里面的，所以做一致性处理转换
         if isinstance(std_data['data'], dict) and 'detail' in std_data['data']:

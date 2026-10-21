@@ -20,7 +20,8 @@ class ChenResponse(HttpResponse):
             "code": code,
             "data": data,
             "message": message,
-            "success": True
+            # 与 ChenNinjaAPI.create_response 保持一致：HTTP 状态或业务码非 200 即失败
+            "success": int(kwargs.get('status') or 200) < 400 and code == 200
         }
         data = json.dumps(std_data, cls=DateEncoder)
         super().__init__(data, *args, **kwargs)

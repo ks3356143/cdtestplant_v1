@@ -199,7 +199,7 @@ def ensure_round_intact(project_obj, round_key, request=None, action='生成报�
     audit_log(request, EVENT_INTEGRITY_BROKEN,
               f'安全告警：{action}前完整性校验失败，共 {len(broken)} 条数据破损：{detail}，已拒绝继续',
               success=False)
-    raise HttpError(409, f'数据完整性校验失败：{len(broken)} 条数据疑似被篡改（{detail}），已拒绝继续并记录告警')
+    raise HttpError(409, f'{action}前数据完整性校验失败：{len(broken)} 条数据疑似被篡改（{detail}），已拒绝继续并记录告警')
 
 
 def verify_all():

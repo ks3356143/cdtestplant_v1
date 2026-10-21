@@ -233,15 +233,13 @@ class CaseController(ControllerBase):
         created_cases = []
         demands = project_obj.ptField.all()  # 当前项目所有测试项
         for case_data in payload.cases:
-            # 解析放在前面防止出错
-            stepsOrErrorResponse = parse_case_content_string(case_data.test_step)
-            if isinstance(stepsOrErrorResponse, ChenResponse):
-                return stepsOrErrorResponse
+            # 解析放在前面防止出错；格式错误时 parse_case_content_string 抛 400，整批回滚
+            case_steps = parse_case_content_string(case_data.test_step)
             # 查询当前测试项下case数量，以设置case的key
             demand_key = case_data.parent_key
             demand_obj = demands.filter(key=demand_key).first()
             if not demand_obj:
-                return ChenResponse(status=400, code=60004, message=f'测试项不存在：{demand_key}，请检查')
+                raise HttpError(400, f'测试项不存在：{demand_key}，请检查')
             # 锁住父测试项行，批量创建时串行分配用例 key
             TestDemand.objects.select_for_update().filter(pk=demand_obj.pk).first()
             case_count = demand_obj.tcField.count()
@@ -269,7 +267,7 @@ class CaseController(ControllerBase):
             case_new_obj = Case.objects.create(**case_dict)
             created_cases.append(case_new_obj)
             case_step_list = []
-            for step in stepsOrErrorResponse:
+            for step in case_steps:
                 case_step_list.append(CaseStep(**{"case": case_new_obj, "operation": step['operation'],
                                                   "expect": step['expect']}))
             if case_step_list:
@@ -278,7 +276,7 @@ class CaseController(ControllerBase):
         if created_cases:
             from apps.project.tools.integrity import refresh_tags
             refresh_tags(list(CaseStep.objects.filter(case__in=created_cases)))
-        return ChenResponse(code=60000, status=200, data=keys, message='成功录入用例')
+        return ChenResponse(code=200, status=200, data=keys, message='成功录入用例')
 
     # 更新测试用例
     @route.put("/case/update/{id}", response=CaseCreateOutSchema, url_name="case-update")
