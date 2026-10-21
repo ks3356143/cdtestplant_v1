@@ -190,8 +190,7 @@ def caption(text):
 
 
 # ---------------- 封面 ----------------
-p("标识：PT-CDTP-TN                                             密级：公开",
-  **BD, size="16pt", align="left")
+p("标识：PT-CDTP-TN" + " " * 30 + "密级：公开", **BD, size="16pt", align="left")
 for _ in range(4):
     p("")
 p("测试管理平台", **BD, size="24pt", align="center", lineSpacing="1.5x")

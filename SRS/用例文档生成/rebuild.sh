@@ -23,7 +23,7 @@ def run(*a):
 # 行不跨页 + 用例表表头重复 + 封面标识行
 tables = json.loads(run("query", F, "table", "--json"))["data"]["results"]
 ops = [{"command": "set", "path": "/body/p[1]", "props": {
-    "text": "标识：PT-CDTP-TN　　　　　　　　密级：公开",
+    "text": "标识：PT-CDTP-TN" + " " * 30 + "密级：公开",
     "font.ea": "黑体", "size": "16pt", "align": "left"}}]
 for i, t in enumerate(tables, start=1):
     for r in range(1, int(t["format"]["rows"]) + 1):

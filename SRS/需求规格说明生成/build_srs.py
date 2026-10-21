@@ -65,13 +65,12 @@ def table(caption, header, rows, widths):
     scale = TABLE_W / sum(w)
     cols = ",".join(str(int(x * scale)) for x in w)
     n_r = len(rows) + 1
+    p(caption, align="center", size="10.5pt", spaceBefore="6pt", spaceAfter="3pt", **BD)
     ops.append({"command": "add", "parent": "/body", "type": "table",
                 "props": {"rows": n_r, "cols": len(w), "colWidths": cols,
                           "layout": "fixed", "style": "afffffffff8", "align": "center"}})
     tc += 1
     t = tc
-    # 表题
-    p(caption, align="center", size="10.5pt", spaceBefore="6pt", spaceAfter="3pt", **BD)
     for c, text in enumerate(header, start=1):
         ops.append({"command": "set", "path": f"/body/tbl[{t}]/tr[1]/tc[{c}]/p[1]",
                     "props": {"text": text, "bold": "true", "size": "10.5pt",
@@ -89,7 +88,7 @@ def table(caption, header, rows, widths):
 
 
 # ---------------------------------------------------------------- 封面
-p("标识：PT-CDTP-SRS　　　　　　　　密级：公开", size="16pt", align="left", **BD)
+p("标识：PT-CDTP-SRS" + " " * 30 + "密级：公开", size="16pt", align="left", **BD)
 for _ in range(4):
     p("")
 p("测试管理平台", size="24pt", align="center", lineSpacing="1.5x", **BD)
