@@ -11,7 +11,7 @@ from docxtpl import DocxTemplate
 from docx import Document
 # 导入模型
 from apps.project.models import Project, Round, Dut
-from apps.dict.models import Dict, DictItem
+from apps.dict.models import DictItem
 # 导入项目工具
 from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, get_testType, digit_to_chinese
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
@@ -39,6 +39,8 @@ class GenerateControllerHSM(ControllerBase):
     # important：删除之前的文件
     @route.get('/create/deleteHSMDocument', url_name='delete-hsm-document')
     def delete_hsm_document(self, id: int):
+        # 项目级访问控制：不能凭项目 id 删除他人项目的生成文件（GB/T 28452 7.1.3）
+        check_project_access_by_id(id, self.context.request.user)
         project_path_str = project_path(id)
         save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hsm'
         try:

@@ -11,7 +11,6 @@ from django.db import transaction
 from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_dut
-from utils.codes import HTTP_INDEX_ERROR
 from apps.project.models import Dut, Round, Project, DutMetrics
 from django.shortcuts import get_object_or_404
 # 自主访问控制（GB/T 28452-2012 7.1.3）
@@ -158,6 +157,8 @@ class DutController(ControllerBase):
     @route.get("/dut/soExist", url_name="dut-soExist")
     @transaction.atomic
     def delete_soExist(self, id: int):
+        # 项目级访问控制：轮次/被测件结构属于项目数据（GB/T 28452 7.1.3）
+        check_project_access_by_id(id, self.context.request.user)
         project_obj = get_object_or_404(Project, id=id)
         # 先查询项目的所有轮次（预取被测件，避免逐轮 exists 查询）
         round_qs = project_obj.pField.prefetch_related('rdField')

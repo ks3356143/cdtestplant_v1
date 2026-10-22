@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 # 导入模型
 from apps.project.models import Project
-from apps.dict.models import Dict, DictItem
+from apps.dict.models import DictItem
 # 导入文档处理类
 from docxtpl import DocxTemplate
 from docx import Document

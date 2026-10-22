@@ -8,7 +8,6 @@
   也可由计划任务定时调用 manage.py 命令触发（见 apps/system/tools/backup.py）。
 - 每条备份记录 SHA-256 摘要，页面可核对文件未被改动；恢复为按主键 upsert，可重复执行。
 """
-from pathlib import Path
 
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
@@ -21,7 +20,6 @@ from apps.system.models import BackupRecord
 from apps.system.schemas.backup import BackupCreateSchema, BackupRecordOutSchema, BackupSummaryOutSchema
 from apps.system.tools.backup import (backup_dir, backup_summary, create_backup, delete_backup,
                                       restore_backup, verify_backup)
-from apps.user.models import Users
 from utils.audit import audit_log, EVENT_BUSINESS_CHANGE
 from utils.chen_response import ChenResponse
 

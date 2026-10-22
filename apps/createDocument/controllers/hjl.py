@@ -6,12 +6,13 @@ from ninja_jwt.authentication import JWTAuth
 from django.db import transaction
 from django.db.models import QuerySet
 from docxtpl import DocxTemplate
-from apps.dict.models import Dict, DictItem
+from apps.dict.models import DictItem
 from utils.chen_response import ChenResponse
 from django.shortcuts import get_object_or_404
 from typing import Union
 from docxtpl import InlineImage
 from apps.project.models import Dut, Project, Round
+from apps.project.tools.access_control import check_project_access_by_id
 from utils.util import get_list_dict, get_str_dict, get_ident, get_case_ident, digit_to_chinese
 from utils.chapter_tools.csx_chapter import create_csx_chapter_dict, chapter_no
 from utils.path_utils import project_path
@@ -29,6 +30,8 @@ class GenerateControllerHJL(ControllerBase):
     # important：删除之前的文件
     @route.get('/create/deleteHJLDocument', url_name='delete-hjl-document')
     def delete_hjl_document(self, id: int):
+        # 项目级访问控制：不能凭项目 id 删除他人项目的生成文件（GB/T 28452 7.1.3）
+        check_project_access_by_id(id, self.context.request.user)
         project_path_str = project_path(id)
         save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/hjl'
         delete_dir_files(save_path)
@@ -37,6 +40,7 @@ class GenerateControllerHJL(ControllerBase):
     @transaction.atomic
     def create_basicInformation(self, id: int):
         """生成回归测试记录的被测软件基本信息"""
+        check_project_access_by_id(id, self.context.request.user)
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hjl' / '被测软件基本信息.docx'
         project_obj = get_object_or_404(Project, id=id)
@@ -106,6 +110,7 @@ class GenerateControllerHJL(ControllerBase):
     @transaction.atomic
     def create_caseinfo(self, id: int):
         """生成回归测试记录的-{测试用例记录}"""
+        check_project_access_by_id(id, self.context.request.user)
         project_path_str = project_path(id)
         tpl_path = Path.cwd() / 'media' / project_path_str / 'form_template/hjl' / '测试用例记录.docx'
         project_obj = get_object_or_404(Project, id=id)

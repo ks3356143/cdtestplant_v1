@@ -35,6 +35,11 @@ from utils.codes import HTTP_CAPTCHA_REQUIRED
 Users = get_user_model()
 logger = logging.getLogger(__name__)
 
+# 角色/状态取值白名单（与前端下拉、三权分立保持一致）
+ALLOWED_ROLES = ('admin', 'secadmin', 'auditadmin', 'user')
+ALLOWED_STATUS = ('1', '2')
+MIN_PASSWORD_LENGTH = 8
+
 
 def _generate_captcha_svg(code: str) -> str:
     """生成 4 位图形验证码 SVG（不依赖 Pillow）"""
@@ -119,6 +124,11 @@ class UserManageController(ControllerBase):
     @route.post("/save", response=CreateUserOutSchema, url_name="user_create", auth=JWTAuth(),
                 permissions=[IsAuthenticated, IsSystemAdmin])
     def create_user(self, user_schema: CreateUserSchema):
+        if getattr(user_schema, 'role', None) not in ALLOWED_ROLES:
+            return ChenResponse(code=400, status=400, message="角色取值不合法")
+        if len(user_schema.password or '') < MIN_PASSWORD_LENGTH:
+            return ChenResponse(code=400, status=400,
+                                message=f'密码长度不能少于 {MIN_PASSWORD_LENGTH} 位')
         user = user_schema.create()
         # 审计留痕（7.1.6：账号注册/权限授予）
         audit_log(self.context.request, EVENT_USER_CHANGE,
@@ -131,8 +141,13 @@ class UserManageController(ControllerBase):
     @transaction.atomic
     def list_user(self, project_id: int = None):
         """如果传了project_id则返回项目中的成员而非全部用户"""
+        current = self.context.request.user
         qs = Users.objects.all()
         if project_id is not None:
+            # 项目成员清单属于项目数据：非管理员需能访问该项目才能查看（GB/T 28452 7.1.3）
+            if getattr(current, 'role', None) != 'admin':
+                from apps.project.tools.access_control import check_project_access_by_id
+                check_project_access_by_id(project_id, current)
             project_obj = get_object_or_404(Project, id=project_id)
             # member 为 JSONField(null=True)，可能为 None；避免直接 append 抛 AttributeError
             all_member: list = list(project_obj.member) if project_obj.member else []
@@ -141,7 +156,6 @@ class UserManageController(ControllerBase):
                 all_member.append(project_obj.duty_person)
             qs = qs.filter(name__in=all_member)
         # 该接口供业务选择人员使用：非管理员只返回脱敏后的联系方式，避免全员明文电话/邮箱外泄
-        current = self.context.request.user
         if getattr(current, 'role', None) != 'admin':
             from utils.sensitive import mask_phone, mask_email
             for u in qs:
@@ -177,10 +191,15 @@ class UserManageController(ControllerBase):
         if payload.username == "superAdmin":
             return ChenResponse(code=400, status=400, message="无法编辑，唯一管理员账号")
         payload.validate_unique_username(user_id)
+        if payload.role not in ALLOWED_ROLES:
+            return ChenResponse(code=400, status=400, message="角色取值不合法")
+        if payload.status not in ALLOWED_STATUS:
+            return ChenResponse(code=400, status=400, message="状态取值不合法")
         # 一次查询拿到旧角色并就地更新（避免 audit 埋点带来的额外 SELECT）
         target = get_object_or_404(Users, id=user_id)
         old_role = target.role
-        for attr, value in payload.dict().items():
+        # 只覆盖请求中显式给出的字段：局部提交（如仅改状态）不会把其他字段清空
+        for attr, value in payload.model_dump(exclude_unset=True).items():
             setattr(target, attr, value)
         target.save()
         # 审计留痕（7.1.6：账号信息/权限变更）
@@ -203,6 +222,8 @@ class UserManageController(ControllerBase):
     @route.put('/change_status', auth=JWTAuth(), permissions=[IsAuthenticated, IsSystemAdmin],
                url_name='user-change')
     def change_user_status(self, user_status: str, userId: int):
+        if user_status not in ALLOWED_STATUS:
+            return ChenResponse(status=400, code=400, message='状态取值不合法')
         user = Users.objects.filter(id=userId).first()
         if not user:
             return ChenResponse(status=400, code=400, message='用户未找到')
@@ -223,8 +244,15 @@ class UserManageController(ControllerBase):
         user_old = authenticate(username=user.username, password=payload.oldPassword)
         if not user_old:
             return ChenResponse(status=400, code=400, message='旧密码错误，请检查')
+        if len(payload.newPassword or '') < MIN_PASSWORD_LENGTH:
+            return ChenResponse(status=400, code=400,
+                                message=f'新密码长度不能少于 {MIN_PASSWORD_LENGTH} 位')
+        if payload.newPassword == payload.oldPassword:
+            return ChenResponse(status=400, code=400, message='新密码不能与旧密码相同')
         user.set_password(payload.newPassword)
         user.save()
+        # 审计留痕（7.1.6：鉴别信息变更）
+        audit_log(self.context.request, EVENT_USER_CHANGE, f'账号修改：用户 {user.username} 修改本人密码')
         return ChenResponse(status=200, code=200, message='密码修改成功')
 
     # 用户登录后动态读取LDAP用户录入数据（仅系统管理员可触发全量同步）

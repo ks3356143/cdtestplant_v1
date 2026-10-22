@@ -136,7 +136,6 @@ def check_objects_access(model, ids, user, project_field='project'):
     同时校验 id 是否全部存在——避免"只校验第一行、其余行跨项目删除"的横向越权。
     返回对象列表（保持传入顺序）。
     """
-    from django.shortcuts import get_object_or_404
     ids = list(ids or [])
     if not ids:
         from ninja.errors import HttpError

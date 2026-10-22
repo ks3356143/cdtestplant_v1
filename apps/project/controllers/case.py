@@ -24,7 +24,7 @@ from apps.project.schemas.case import DeleteSchema, CaseModelOutSchema, CaseFilt
     CaseTreeInputSchema, CaseCreateOutSchema, CaseCreateInputSchema, DemandNodeSchema, \
     CaseModelOutSchemaWithoutProblem, BatchCreateCaseInputSchema
 from utils.util import get_testType
-from utils.codes import HTTP_INDEX_ERROR, HTTP_EXISTS_CASES
+from utils.codes import HTTP_EXISTS_CASES
 from apps.project.tools.copyCase import case_move_to_test, case_copy_to_test, case_to_case_copy_or_move
 from apps.project.tools.integrity import ensure_intact, refresh_tags
 from utils.smallTools.interfaceTools import conditionNoneToBlank
@@ -426,6 +426,8 @@ class CaseController(ControllerBase):
     @transaction.atomic
     def copy_move_case_by_case(self, project_id: int, drag_key: str, drop_key: str, move: bool,
                                position: int):
+        # 项目级访问控制：不能凭 project_id 移动/复制他人项目的用例（GB/T 28452 7.1.3）
+        check_project_access_by_id(project_id, self.context.request.user)
         case_to_case_copy_or_move(project_id, drag_key, drop_key, move, position)
         return ChenResponse(data={'old': {'key': drag_key}, 'new': {'key': drop_key}})
 

@@ -5,7 +5,7 @@ from ninja.errors import HttpError
 from utils.chen_response import ChenResponse
 from typing import Any
 from apps.project.models import Project
-from apps.dict.models import Dict, DictItem
+from apps.dict.models import DictItem
 from utils.path_utils import project_path
 
 def merge_all_cell(table: Table) -> None:

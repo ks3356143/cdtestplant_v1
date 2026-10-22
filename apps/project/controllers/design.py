@@ -14,7 +14,6 @@ from django.shortcuts import get_object_or_404
 from typing import List
 from utils.chen_response import ChenResponse
 from utils.chen_crud import multi_delete_design
-from utils.codes import HTTP_INDEX_ERROR
 from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
                                                check_objects_access, get_object_in_project)
 from apps.project.models import Design, Dut, Round, Project, JKDesignInfo

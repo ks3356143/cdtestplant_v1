@@ -23,7 +23,7 @@ from apps.system.models import BackupRecord
 from apps.system.tools.backup import (BACKUP_MODELS, backup_dir, collect_rows, create_backup,
                                       delete_backup, restore_backup, verify_backup)
 from apps.system.tools.residue import purge_temp_files, temp_dir_usage
-from apps.system.tools.security_check import (CATEGORY_ORDER, CHECKS, IMPROVEMENTS, PASS, RISK,
+from apps.system.tools.security_check import (CATEGORY_ORDER, CHECKS, IMPROVEMENTS, RISK,
                                               run_security_check)
 
 

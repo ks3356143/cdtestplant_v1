@@ -1,5 +1,6 @@
 import { createApp } from "vue"
 import ArcoVue from "@arco-design/web-vue"
+import { Message } from "@arco-design/web-vue"
 import ArcoVueIcon from "@arco-design/web-vue/es/icon"
 import globalComponents from "@/components"
 import App from "./App.vue"
@@ -48,6 +49,23 @@ app.config.globalProperties.$tool = tool
 app.config.globalProperties.$title = import.meta.env.VITE_APP_TITLE
 app.config.globalProperties.$url = import.meta.env.VITE_APP_BASE
 app.config.globalProperties.$version = packageJson.version
+
+// 全局异常兜底：组件渲染/生命周期抛错时给出提示，避免整页白屏且用户无感知。
+// 接口业务错误（success=false）已由 axios 拦截器统一提示，这里直接跳过，避免重复告警。
+// 同类提示 3 秒内只弹一次，防止连环异常刷屏。
+let lastErrorAt = 0
+app.config.errorHandler = (err, _instance, info) => {
+    if (err && typeof err === "object" && (err as { success?: boolean }).success === false) {
+        return
+    }
+    console.error("[全局异常]", info, err)
+    const now = Date.now()
+    if (now - lastErrorAt > 3000) {
+        lastErrorAt = now
+        Message.error("页面出现异常，请刷新后重试")
+    }
+}
+
 app.mount("#app")
 
 // show version tag in console

@@ -10,7 +10,7 @@ from docxtpl import DocxTemplate
 from typing import Optional
 from docx import Document
 # 导入模型
-from apps.project.models import Project, Dut, TestDemand, Problem
+from apps.project.models import Project, Dut, TestDemand
 # 工具类函数
 from apps.createDocument.extensions import util
 from utils.chen_response import ChenResponse
@@ -51,6 +51,8 @@ class GenerateControllerBG(ControllerBase):
     # important：删除之前的文件
     @route.get('/create/deleteBGDocument', url_name='delete-bg-document')
     def delete_bg_document(self, id: int):
+        # 项目级访问控制：不能凭项目 id 删除他人项目的生成文件（GB/T 28452 7.1.3）
+        check_project_access_by_id(id, self.context.request.user)
         project_path_str = project_path(id)
         save_path = Path.cwd() / 'media' / project_path_str / 'output_dir/bg'
         delete_dir_files(save_path)

@@ -36,7 +36,7 @@ class CreateUserSchema(ModelSchema):
 
     def create(self):
         # 注意这里使用exclude_none，dict()方式属于pydantic
-        return UserModel.objects.create_user(**self.dict(exclude_none=True), email='xxx@qq.com')
+        return UserModel.objects.create_user(**self.dict(exclude_none=True), email='')
 
 # schema:作用于创建用户后response
 class CreateUserOutSchema(ModelSchema):

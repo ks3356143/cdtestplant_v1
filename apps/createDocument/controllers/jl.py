@@ -8,7 +8,7 @@ from ninja_extra.permissions import IsAuthenticated
 from ninja_jwt.authentication import JWTAuth
 # 导入数据库模型
 from apps.project.models import Project
-from apps.dict.models import Dict, DictItem
+from apps.dict.models import DictItem
 from docxtpl import InlineImage
 # 导入文档处理相关
 from docxtpl import DocxTemplate

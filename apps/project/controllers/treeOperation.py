@@ -11,6 +11,7 @@ from apps.project.models import Project
 from apps.project.tools.keyTools import TreeKey
 # 导入项目工具
 from utils.chen_response import ChenResponse
+from apps.project.tools.access_control import check_project_access
 
 @api_controller("/treeOperation", auth=JWTAuth(), permissions=[IsAuthenticated], tags=['树的操作'])
 class TreeController(ControllerBase):
@@ -19,6 +20,8 @@ class TreeController(ControllerBase):
     def tree_copy(self, data: CopySchema):
         """新建下一个轮次，并复制选中的节点"""
         project_obj = get_object_or_404(Project, id=data.pid)
+        # 项目级访问控制：复制轮次会写入项目数据（GB/T 28452 7.1.3）
+        check_project_access(project_obj, self.context.request.user)
         round_count = project_obj.pField.count()
         tree_keys = data.data
         # 逻辑是：如果大节点有值，则复制整个大节点而不关心其子节点

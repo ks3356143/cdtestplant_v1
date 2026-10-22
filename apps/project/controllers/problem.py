@@ -14,7 +14,7 @@ from utils.codes import HTTP_INDEX_ERROR
 from django.shortcuts import get_object_or_404
 from apps.project.models import Case, Problem, Project, TestDemand, NonrepudiationEvidence
 from apps.project.tools.access_control import (check_project_access, check_project_access_by_id,
-                                               check_objects_access, get_object_in_project)
+                                               get_object_in_project)
 from apps.project.schemas.problem import (
     DeleteSchema,
     ProblemModelOutSchema,
