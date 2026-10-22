@@ -4,6 +4,7 @@
 生成 officecli batch 命令流：封面 → 目录 → 1 范围 → 2 测试记录（10 个条款、56 条用例）
 """
 import json
+from datetime import date
 import os
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -164,7 +165,8 @@ def img_width_cm(path, max_w=14.5, max_h=17.0):
 
 def picture(path, caption_text="", width=None):
     width = width or f"{img_width_cm(path)}cm"
-    para = p("", **CENTER)
+    # 图片与图题必须同页
+    para = p("", keepNext="true", **CENTER)
     ops.append({"command": "add", "parent": para, "type": "picture",
                 "props": {"src": path, "width": width}})
     if caption_text:
@@ -192,7 +194,8 @@ def body(text, indent=True):
 
 
 def caption(text):
-    p(text, align="center", **BD, size="10.5pt")
+    # 表题与表格同页
+    p(text, align="center", keepNext="true", **BD, size="10.5pt")
 
 
 # ---------------- 封面 ----------------
@@ -206,13 +209,16 @@ p("总页数：PAGECOUNT", **ST, size="16pt", align="center")
 for _ in range(10):
     p("")
 p("中国科学院卫星软件评测中心", **BD, size="18pt", align="center")
-p("2026年10月21日", **BD, size="16pt", align="center")
+p(f"{date.today().year}年{date.today().month}月{date.today().day}日", **BD, size="16pt", align="center")
 pagebreak()
 
 # ---------------- 目录 ----------------
 p("目    录", **ST, size="18pt", align="center")
 ops.append({"command": "add", "parent": "/body", "type": "toc"})
 pc += 1  # 目录域会占用一个段落，后续段落索引整体后移一位
+# 目录域的占位文字改为中文提示（Word 打开时域会自动更新）
+ops.append({"command": "set", "path": f"/body/p[{pc}]/r[4]",
+            "props": {"text": "（目录由域自动生成：打开文档时更新；如未显示，请按 Ctrl+A 后 F9 刷新）"}})
 pagebreak()
 
 # ---------------- 1 范围 ----------------

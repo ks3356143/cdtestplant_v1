@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """生成《测试管理平台软件需求规格说明》——基于参考模板的 officecli batch 命令流。"""
 import json
+from datetime import date
 import os
 import sys
 
@@ -103,7 +104,8 @@ def table(caption, header, rows, widths):
     scale = TABLE_W / sum(w)
     cols = ",".join(str(int(x * scale)) for x in w)
     n_r = len(rows) + 1
-    p(caption, align="center", size="10.5pt", spaceBefore="6pt", spaceAfter="3pt", **BD)
+    p(caption, align="center", size="10.5pt", spaceBefore="6pt", spaceAfter="3pt",
+      keepNext="true", **BD)
     ops.append({"command": "add", "parent": "/body", "type": "table",
                 "props": {"rows": n_r, "cols": len(w), "colWidths": cols,
                           "layout": "fixed", "style": "afffffffff8", "align": "center"}})
@@ -140,13 +142,16 @@ p("总页数：PAGECOUNT", size="16pt", align="center", **ST)
 for _ in range(10):
     p("")
 p("中国科学院卫星软件评测中心", size="18pt", align="center", **BD)
-p("2026年10月21日", size="16pt", align="center", **BD)
+p(f"{date.today().year}年{date.today().month}月{date.today().day}日", size="16pt", align="center", **BD)
 pagebreak()
 
 # ---------------------------------------------------------------- 目录
 p("目    录", size="18pt", align="center", **ST)
 ops.append({"command": "add", "parent": "/body", "type": "toc"})
 pc += 1
+# 目录域的占位文字改为中文提示（Word 打开时域会自动更新）
+ops.append({"command": "set", "path": f"/body/p[{pc}]/r[4]",
+            "props": {"text": "（目录由域自动生成：打开文档时更新；如未显示，请按 Ctrl+A 后 F9 刷新）"}})
 pagebreak()
 
 # ---------------------------------------------------------------- 正文

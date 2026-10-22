@@ -51,4 +51,12 @@ officecli set "$F" "$P" --prop text="总页数：$PAGES" --prop align=center --p
 officecli save "$F" >/dev/null
 officecli close "$F" >/dev/null 2>&1 || true
 python SRS/tools/clean_docx_parts.py "$F"
+# 清理后再量一次页数：残留页眉页脚会轻微影响分页，封面总页数以最终文件为准
+PAGES=$(officecli view "$F" stats --page-count 2>/dev/null | grep -i "^Pages:" | grep -oE "[0-9]+")
+echo "最终页数：$PAGES"
+P=$(officecli query "$F" 'p:contains("总页数")' --json 2>/dev/null |
+    python -c "import sys,json;print([r['path'] for r in json.load(sys.stdin)['data']['results'] if r['type']=='paragraph'][0])")
+officecli set "$F" "$P" --prop text="总页数：$PAGES" --prop align=center --prop size=16pt --prop font.ea=宋体 >/dev/null
+officecli save "$F" >/dev/null
+officecli close "$F" >/dev/null 2>&1 || true
 echo "完成"
