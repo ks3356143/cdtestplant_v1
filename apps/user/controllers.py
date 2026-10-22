@@ -60,11 +60,11 @@ def _verify_login_captcha(captcha_key: str, captcha_code: str):
     """特权角色登录双因子：校验图形验证码（一次性，Redis 5 分钟有效）"""
     from django.core.cache import cache
     if not captcha_key or not captcha_code:
-        raise HttpError(40001, "特权账号登录需要图形验证码，请刷新后输入")
+        raise HttpError(401, "特权账号登录需要图形验证码，请刷新后输入")
     real_code = cache.get(f'captcha:{captcha_key}')
     cache.delete(f'captcha:{captcha_key}')  # 一次性使用，防重放
     if not real_code or str(real_code).lower() != str(captcha_code).strip().lower():
-        raise HttpError(40001, "验证码错误或已过期，请刷新后重试")
+        raise HttpError(401, "验证码错误或已过期，请刷新后重试")
 
 # 定义用户登录接口，包含token刷新和生成
 @api_controller("/system", tags=['用户token控制和登录接口'])

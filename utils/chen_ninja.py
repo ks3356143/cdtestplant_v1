@@ -39,6 +39,10 @@ class ChenNinjaAPI(NinjaExtraAPI):
                 std_data['data']['code'] = HTTP_USER_PASSWORD_ERROR_CODE  # TODO:后续单独以枚举方式定义code
             elif detail:
                 std_data['message'] = detail
+                # 登录接口的验证码错误、账号锁定等业务失败也归入 40001，
+                # 前端据此提示具体原因并留在登录页，而不是当成“登录状态过期”跳走
+                if isinstance(std_data['data'], dict) and str(getattr(request, 'path', '')).endswith('/login'):
+                    std_data['data']['code'] = HTTP_USER_PASSWORD_ERROR_CODE
             else:
                 std_data['message'] = '身份认证失败或登录状态已失效，请重新登录'
         # 3.因为前端是获取message，所以这里处理（404/422 判断需排在通用失败分支之前，否则永远不可达）

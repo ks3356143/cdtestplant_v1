@@ -33,6 +33,9 @@ def in_program_exception_handler(request, exc):
     data = {}
     if raw == PROJECT_ENDTIME_ERROR_CODE:
         data['flag'] = PROJECT_ENDTIME_ERROR_CODE
+    # 401 的具体原因放到 detail，供统一响应处理保留（验证码错误/账号锁定等业务失败）
+    if status == 401 and getattr(exc, 'message', None):
+        data['detail'] = exc.message
     return api.create_response(request, status=status, message=exc.message, data=data)
 
 # 越权拒绝统一审计告警（7.1.6）：所有 403（DAC/标记/管理权限）记为安全告警事件

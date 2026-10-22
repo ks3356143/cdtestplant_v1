@@ -22,7 +22,7 @@ def check_login_locked(username: str):
     lock_until = cache.get(_login_lock_key(username))
     if lock_until and time.time() < lock_until:
         remain = max(1, int((lock_until - time.time()) // 60) + 1)
-        raise HttpError(40001, f"账号已锁定（连续登录失败超限），约 {remain} 分钟后可重试")
+        raise HttpError(401, f"账号已锁定（连续登录失败超限），约 {remain} 分钟后可重试")
 
 
 def record_login_failure(username: str, request=None):

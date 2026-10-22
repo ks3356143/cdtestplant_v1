@@ -71,20 +71,21 @@ export function createService() {
                     case 400:
                         err("服务器抛出逻辑错误")
                         break
-                    case 401:
-                        err("登录状态已过期，需要重新登录")
-                        tool.local.clear()
-                        // 登录接口自身返回 401（账号口令错误）时留在登录页，其余 401 跳回登录
-                        if (
+                    case 401: {
+                        const loginFail =
                             error.response.data?.data?.code === 40001 ||
                             error.response.data?.data?.detail ===
                                 "No active account found with the given credentials"
-                        ) {
-                            // 账号或口令错误，不跳转
+                        if (loginFail) {
+                            // 登录接口业务失败（口令错误/验证码错误/账号锁定）：提示具体原因并留在登录页
+                            err(error.response.data.message || "账号或密码错误")
                         } else {
+                            err("登录状态已过期，需要重新登录")
+                            tool.local.clear()
                             window.location.href = "/"
                         }
                         break
+                    }
                     case 403:
                         err("没有权限访问该资源")
                         break
