@@ -72,28 +72,60 @@ def _auto_fields(model) -> set:
             if getattr(f, 'auto_now', False) or getattr(f, 'auto_now_add', False)}
 
 
-def _changed_since_condition(model, since: datetime):
+def _changed_since_condition(model, since: datetime, watermark=None):
     """
-    增量筛选条件：优先按最后修改时间（update_datetime），退化为创建时间。
+    增量筛选条件：修改时间晚于水位线，或主键大于上次备份的最大主键（新增行）。
+
+    CoreModel 的 update_datetime 是 DateField，只能精确到“天”：若仍用 ``>=``，
+    同一天先做全量、再做增量时会把当天修改过的所有行都算进来（增量等于全量）。
+    这里改用 ``>`` 并辅以主键水位，既避免重复整表，又能覆盖新增数据。
     两者都没有的模型（纯关系子表）无法判定增量，整表带上（宁可多备不可漏备）。
     """
+    cond = None
     for name in ('update_datetime', 'create_datetime'):
         field = next((f for f in model._meta.fields if f.name == name), None)
         if field is None:
             continue
-        # CoreModel 的时间字段是 DateField，比较值也要降到"天"粒度
         value = since if isinstance(field, models.DateTimeField) else since.date()
-        return Q(**{f'{name}__gte': value})
-    return None
+        cond = Q(**{f'{name}__gt': value})
+        break
+    if watermark is not None:
+        pk_cond = Q(pk__gt=watermark)
+        cond = pk_cond if cond is None else (cond | pk_cond)
+    return cond
 
 
-def collect_rows(project_id=None, since=None) -> dict:
+def _load_watermarks(record) -> dict:
+    """读取上次备份文件中各表的最大主键，作为增量新增数据的判据。"""
+    path = backup_dir() / record.file_name
+    if not path.is_file():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding='utf-8'))
+    except (ValueError, OSError):
+        return {}
+    labels = _label_map()
+    result = {}
+    for label, rows in (payload.get('data') or {}).items():
+        model = labels.get(label)
+        if model is None or not rows:
+            continue
+        pk = model._meta.pk.attname
+        values = [r.get(pk) for r in rows if isinstance(r, dict) and r.get(pk) is not None]
+        if values:
+            result[label] = max(values)
+    return result
+
+
+def collect_rows(project_id=None, since=None, watermarks=None) -> dict:
     """
     采集待备份数据。
     :param project_id: 指定项目时只备份该项目及其下游数据；None 表示全部业务数据
     :param since: 增量水位线（只取该时间之后新增/变更的数据）；None 表示全量
+    :param watermarks: 上次备份各表的最大主键（{label: max_pk}）
     :return: {模型标识: [行字典, ...]}
     """
+    watermarks = watermarks or {}
     result = {}
     ids = {}
 
@@ -108,7 +140,7 @@ def collect_rows(project_id=None, since=None) -> dict:
             else:
                 continue          # 与项目无直接关联的子表，交给下面的父子推导
         if since is not None:
-            cond = _changed_since_condition(model, since)
+            cond = _changed_since_condition(model, since, watermarks.get(_label(model)))
             if cond is not None:
                 qs = qs.filter(cond)
         rows = list(qs.values())
@@ -185,6 +217,7 @@ def create_backup(kind: str, project_id, name: str, creator) -> tuple:
     """
     from apps.system.models import BackupRecord
     since = None
+    watermarks = {}
     if kind == 'incremental':
         # 增量水位线：同范围内的最近一次成功备份时间；没有历史备份则退化为全量
         last = BackupRecord.objects.filter(kind__in=('full', 'incremental'), status='success')
@@ -193,8 +226,9 @@ def create_backup(kind: str, project_id, name: str, creator) -> tuple:
         last = last.order_by('-create_datetime').first()
         if last:
             since = last.create_datetime
+            watermarks = _load_watermarks(last)
 
-    data = collect_rows(project_id=project_id, since=since)
+    data = collect_rows(project_id=project_id, since=since, watermarks=watermarks)
     total = sum(len(rows) for rows in data.values())
     payload = {
         'format': BACKUP_FORMAT,
