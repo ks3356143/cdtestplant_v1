@@ -353,6 +353,8 @@ const useCrudInit = function () {
             search: true,
             // 报告类型名称较长（如“CPU 软件配置项三方测评报告”），固定列宽合计需小于版心
             width: 170,
+            // 允许换行显示全称：默认 ellipsis 会把名称截成“…”，鼠标悬停才能看全
+            ellipsis: false,
             commonRules: [{ required: true, message: "报告类型必填" }],
             // 字典-report_type
             formType: "radio",

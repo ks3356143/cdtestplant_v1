@@ -95,6 +95,34 @@ def _changed_since_condition(model, since: datetime, watermark=None):
     return cond
 
 
+def _row_digest(row) -> str:
+    """单行内容摘要：用于增量备份判断记录是否真的发生变化"""
+    blob = json.dumps(row, cls=DjangoJSONEncoder, ensure_ascii=False, sort_keys=True)
+    return hashlib.sha256(blob.encode('utf-8')).hexdigest()
+
+
+def _load_prev_digests(record):
+    """读取上次备份文件中每行内容的摘要：{(表标识, 主键): sha256}；文件不可读时返回 None"""
+    path = backup_dir() / record.file_name
+    if not path.is_file():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding='utf-8'))
+    except (ValueError, OSError):
+        return None
+    labels = _label_map()
+    digests = {}
+    for label, rows in (payload.get('data') or {}).items():
+        model = labels.get(label)
+        if model is None:
+            continue
+        pk = model._meta.pk.attname
+        for row in rows or []:
+            if isinstance(row, dict) and row.get(pk) is not None:
+                digests[(label, row[pk])] = _row_digest(row)
+    return digests
+
+
 def _load_watermarks(record) -> dict:
     """读取上次备份文件中各表的最大主键，作为增量新增数据的判据。"""
     path = backup_dir() / record.file_name
@@ -117,14 +145,34 @@ def _load_watermarks(record) -> dict:
     return result
 
 
-def collect_rows(project_id=None, since=None, watermarks=None) -> dict:
+def collect_rows(project_id=None, since=None, watermarks=None, prev_digests=None) -> dict:
     """
     采集待备份数据。
     :param project_id: 指定项目时只备份该项目及其下游数据；None 表示全部业务数据
     :param since: 增量水位线（只取该时间之后新增/变更的数据）；None 表示全量
-    :param watermarks: 上次备份各表的最大主键（{label: max_pk}）
+    :param watermarks: 上次备份各表的最大主键（{label: max_pk}），上次备份文件不可读时兜底
+    :param prev_digests: 上次备份各行的内容摘要；可用时按“内容是否变化”精确判定增量
     :return: {模型标识: [行字典, ...]}
     """
+    if since is not None and prev_digests is not None:
+        # 精确增量：先取全量范围内数据，再与上次备份逐行比对摘要。
+        # 这样只按日期判断时“同一天修改”的旧记录不会被漏掉。
+        full = collect_rows(project_id=project_id, since=None, watermarks=None)
+        labels = _label_map()
+        changed = {}
+        for label, rows in full.items():
+            model = labels.get(label)
+            if model is None:
+                # 多对多关系行：增删不会更新业务表时间戳，整表带上
+                if rows:
+                    changed[label] = rows
+                continue
+            pk = model._meta.pk.attname
+            kept = [r for r in rows if prev_digests.get((label, r.get(pk))) != _row_digest(r)]
+            if kept:
+                changed[label] = kept
+        return changed
+
     watermarks = watermarks or {}
     result = {}
     ids = {}
@@ -218,6 +266,7 @@ def create_backup(kind: str, project_id, name: str, creator) -> tuple:
     from apps.system.models import BackupRecord
     since = None
     watermarks = {}
+    prev_digests = None
     if kind == 'incremental':
         # 增量水位线：同范围内的最近一次成功备份时间；没有历史备份则退化为全量
         last = BackupRecord.objects.filter(kind__in=('full', 'incremental'), status='success')
@@ -226,9 +275,13 @@ def create_backup(kind: str, project_id, name: str, creator) -> tuple:
         last = last.order_by('-create_datetime').first()
         if last:
             since = last.create_datetime
-            watermarks = _load_watermarks(last)
+            prev_digests = _load_prev_digests(last)
+            if prev_digests is None:
+                # 上次备份文件不可读时退回按日期/主键水位判断
+                watermarks = _load_watermarks(last)
 
-    data = collect_rows(project_id=project_id, since=since, watermarks=watermarks)
+    data = collect_rows(project_id=project_id, since=since, watermarks=watermarks,
+                        prev_digests=prev_digests)
     total = sum(len(rows) for rows in data.values())
     payload = {
         'format': BACKUP_FORMAT,

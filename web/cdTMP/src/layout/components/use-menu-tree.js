@@ -22,6 +22,12 @@ export default function useMenuTree() {
             if (!_routes) return null
 
             const collector = _routes.map((element) => {
+                // 没有可显示名称的路由不进菜单：否则会渲染成一个空白菜单项，
+                // 在侧边栏里表现为“标题下方一块悬停才出现的灰条”
+                if (!element.meta?.locale) {
+                    return null
+                }
+
                 // no access
                 if (!permission.accessRouter(element)) {
                     return null
