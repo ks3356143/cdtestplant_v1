@@ -11,7 +11,8 @@ bash SRS/需求规格说明生成/rebuild.sh
 脚本会从 `SRS/参考/参考记录.docx`（客户模板）复制一份、清空正文，按模板的样式与自动编号重建全文，
 回填总页数后输出到 `build/srs-work.docx`；确认无误后复制为 `SRS/测试管理平台软件需求规格说明.docx`。
 
-依赖 [officecli](https://github.com/iOfficeAI/OfficeCLI) 与 Python 3。
+依赖 [officecli](https://github.com/iOfficeAI/OfficeCLI) 与 Python 3。重建末尾会调用
+`SRS/tools/clean_docx_parts.py` 删除模板残留的未引用页眉/页脚，避免旧项目标题留在文档包内。
 
 ## 目录
 
@@ -20,7 +21,7 @@ bash SRS/需求规格说明生成/rebuild.sh
 | `srs_content_a.py` | 正文第 1~3.2 章（范围、引用文件、状态与方式、能力需求） |
 | `srs_content_b.py` | 正文第 3.3~7 章（接口、数据、安全性、保密性、环境、资源、质量、约束、数据元素、操作、故障处理、算法、人员、培训、包装、合格性、追踪性、未决问题、注解） |
 | `build_srs.py` | 把内容块编译为 officecli batch 命令流（封面、目录、标题、段落、表格） |
-| `rebuild.sh` | 一键重建：清空模板 → 填内容 → 表头重复/行不跨页 → 回填页数 |
+| `rebuild.sh` | 一键重建：清空模板 → 填内容 → 表头重复/行不跨页 → 回填页数 → 清理残留页眉页脚 |
 
 ## 结构（按 GJB 438B-2009《软件需求规格说明》）
 

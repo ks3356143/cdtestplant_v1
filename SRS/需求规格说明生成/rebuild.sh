@@ -40,4 +40,6 @@ P=$(officecli query "$F" 'p:contains("总页数")' --json 2>/dev/null |
     python -c "import sys,json;print([r['path'] for r in json.load(sys.stdin)['data']['results'] if r['type']=='paragraph'][0])")
 officecli set "$F" "$P" --prop text="总页数：$PAGES" --prop align=center --prop size=16pt --prop font.ea=宋体 >/dev/null
 officecli save "$F" >/dev/null
+officecli close "$F" >/dev/null 2>&1 || true
+python SRS/tools/clean_docx_parts.py "$F"
 echo "完成：build/srs-work.docx"
