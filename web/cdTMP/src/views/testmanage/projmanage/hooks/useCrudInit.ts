@@ -19,7 +19,7 @@ const useCrudInit = function () {
         // 日期列，导致 1280 宽屏下“2026-09-01”被截断
         operationWidth: 380,
         // 窄屏时横向滚动，保持各列固定宽度不压缩
-        scroll: { x: 1300 },
+        scroll: { x: 1260 },
         showIndex: false,
         operationColumnWidth: 400, // 操作列宽度
         operationColumnAlign: "center", // 操作列对齐方式
@@ -159,7 +159,7 @@ const useCrudInit = function () {
         },
         {
             title: "项目名称",
-            width: 120,
+            width: 110,
             align: "center",
             dataIndex: "name",
             search: true,
@@ -351,8 +351,8 @@ const useCrudInit = function () {
             align: "center",
             addDefaultValue: "9",
             search: true,
-            // 报告类型名称较长（如“CPU 软件配置项三方测评报告”），110px 会被截断
-            width: 190,
+            // 报告类型名称较长（如“CPU 软件配置项三方测评报告”），固定列宽合计需小于版心
+            width: 170,
             commonRules: [{ required: true, message: "报告类型必填" }],
             // 字典-report_type
             formType: "radio",
