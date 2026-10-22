@@ -229,9 +229,8 @@ const requestCascaderData = async (val, dict, dictList, name) => {
                 }
             })
             dictList[name].pageInfo = response.data.pageInfo ?? undefined
-        } else {
-            console.error(response)
         }
+        // 字典接口异常时不再把整个响应对象打印到控制台（错误提示已由 axios 拦截器统一弹出）
     }
 }
 

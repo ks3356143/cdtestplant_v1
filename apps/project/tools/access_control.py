@@ -127,7 +127,7 @@ def is_project_manageable(project, user) -> bool:
 def check_project_manage(project, user):
     """非负责人/管理员修改或删除项目 → 403（防止成员自我提权）"""
     if not is_project_manageable(project, user):
-        raise PermissionDenied('仅项目负责人或系统管理员可执行此操作（自主访问控制）')
+        raise PermissionDenied('没有权限：仅项目负责人或系统管理员可执行此操作（自主访问控制）')
 
 
 def check_objects_access(model, ids, user, project_field='project'):
@@ -162,5 +162,5 @@ def get_object_in_project(model, object_id, project_id, user):
     from django.shortcuts import get_object_or_404
     obj = get_object_or_404(model, id=object_id)
     if getattr(obj, 'project_id', None) != project.id:
-        raise PermissionDenied('数据不属于该测试项目，已拒绝操作（自主访问控制）')
+        raise PermissionDenied('没有权限：数据不属于该测试项目，已拒绝操作（自主访问控制）')
     return obj

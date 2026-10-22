@@ -69,9 +69,11 @@ class Round(CoreModel):
                              help_text="轮次标识")  # 后面加上unique=True
     name = models.CharField(max_length=64, blank=True, null=True, verbose_name="轮次名称",
                             help_text="轮次名称")
-    beginTime = models.DateField(auto_now_add=True, null=True, blank=True, help_text="开始时间",
+    # 注意：不能用 auto_now_add —— 轮次起止时间由测试人员填写，auto_now_add 会在新建时
+    # 用当天日期覆盖用户输入，导致新建轮次的开始/结束时间恒为当天，进而影响文档时间推断
+    beginTime = models.DateField(null=True, blank=True, help_text="开始时间",
                                  verbose_name="开始时间")
-    endTime = models.DateField(auto_now_add=True, null=True, blank=True, help_text="结束时间",
+    endTime = models.DateField(null=True, blank=True, help_text="结束时间",
                                verbose_name="结束时间")
     grade = models.CharField(max_length=64, blank=True, null=True, verbose_name="等级", help_text="等级",
                              default='1')
@@ -132,7 +134,8 @@ class Dut(CoreModel):
                                help_text="发布版本")
     release_union = models.CharField(max_length=64, blank=True, null=True, verbose_name="发布版本",
                                      help_text="发布版本")
-    release_date = models.DateField(auto_now_add=True, null=True, blank=True, help_text="发布时间",
+    # 发布时间由用户填写（auto_now_add 会在新建时覆盖为当天，导致被测件发布时间失真）
+    release_date = models.DateField(null=True, blank=True, help_text="发布时间",
                                     verbose_name="发布时间")
     # 新增用户文档的编号
     ref = models.CharField(max_length=32, blank=True, null=True, verbose_name="文档编号",
@@ -266,8 +269,9 @@ class TestDemand(CoreModel):
                                on_delete=models.CASCADE,
                                verbose_name='归属设计需求', help_text='归属设计需求',
                                related_query_name='dtQuery')
-    otherDesign = models.ManyToManyField(to="Design", db_constraint=False, related_name="odField",
-                                         related_query_name='odQuery', blank=True)
+    otherDesign = models.ManyToManyField(to="Design", related_name="odField",
+                                         related_query_name='odQuery', blank=True,
+                                         through='TestDemandOtherDesign')
     # 新模版要求：测试项描述对整个测试项进行描述
     testDesciption = models.CharField(max_length=1024, blank=True, null=True, verbose_name='测试项描述',
                                       default="",
@@ -275,6 +279,23 @@ class TestDemand(CoreModel):
 
     def __str__(self):
         return f'测试项:{self.name}'
+
+class TestDemandOtherDesign(models.Model):
+    """测试项与“关联设计需求”的中间表。
+
+    显式指定小写表名：Django 默认按字段名 otherDesign 生成
+    project_testdemand_otherDesign，而历史库中的实际表名为全小写。
+    Windows 下 MySQL 表名不区分大小写所以一直正常，Linux 下区分大小写，
+    会报 (1146) Table ... doesn't exist，导致测试项追踪表等文档生成失败。
+    """
+    testdemand = models.ForeignKey(to="TestDemand", on_delete=models.CASCADE, db_constraint=False)
+    design = models.ForeignKey(to="Design", on_delete=models.CASCADE, db_constraint=False)
+
+    class Meta:
+        db_table = 'project_testdemand_otherdesign'
+        unique_together = (('testdemand', 'design'),)
+        verbose_name = "测试项-关联设计需求"
+        verbose_name_plural = verbose_name
 
 class TestDemandContent(CoreModel):
     objects = models.Manager()
@@ -403,15 +424,16 @@ class Problem(CoreModel):
     result = HTMLField(blank=True, null=True, verbose_name="问题结果/影响", help_text="问题结果/影响")
     postPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="提出人员",
                                   help_text="提出人员")
-    postDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="提单日期",
+    # 问题单的提单/确认/验证日期均由测试人员填写，不能由 auto_now_add 强制为当天
+    postDate = models.DateField(null=True, blank=True, help_text="提单日期",
                                 verbose_name="提单日期")
     designerPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="开发人员",
                                       help_text="开发人员")
-    designDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="确认日期",
+    designDate = models.DateField(null=True, blank=True, help_text="确认日期",
                                   verbose_name="确认日期")
     verifyPerson = models.CharField(max_length=16, blank=True, null=True, verbose_name="验证人员",
                                     help_text="验证人员")
-    verifyDate = models.DateField(auto_now_add=True, null=True, blank=True, help_text="验证日期",
+    verifyDate = models.DateField(null=True, blank=True, help_text="验证日期",
                                   verbose_name="验证日期")
     project = models.ForeignKey(to="Project", db_constraint=False, related_name="projField",
                                 on_delete=models.CASCADE,

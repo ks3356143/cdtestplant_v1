@@ -14,34 +14,47 @@ import re as _re
 
 
 def _renumber(blocks):
-    """按出现顺序重排表号（不依赖旧号映射），正文引用按首次出现的旧号对应。"""
+    """按出现顺序重排表号/图号（不依赖旧号映射），正文引用按首次出现的旧号对应。"""
     counters, mapping, caption_new = {}, {}, {}
     for i, blk in enumerate(blocks):
-        if blk[0] != "table":
+        kind = blk[0]
+        if kind == "table":
+            text, prefix = blk[1], "表"
+        elif kind == "img":
+            text, prefix = blk[2], "图"
+        else:
             continue
-        m = _re.match(r"表 (\d+)-(\d+)", blk[1])
+        m = _re.match(rf"{prefix} (\d+)-(\d+)", text)
         if not m:
             continue
         chap = m.group(1)
-        counters[chap] = counters.get(chap, 0) + 1
-        new_label = f"表 {chap}-{counters[chap]}"
-        old_label = f"表 {chap}-{m.group(2)}"
+        key = (prefix, chap)
+        counters[key] = counters.get(key, 0) + 1
+        new_label = f"{prefix} {chap}-{counters[key]}"
+        old_label = f"{prefix} {chap}-{m.group(2)}"
         mapping.setdefault(old_label, new_label)
-        caption_new[i] = new_label + blk[1][len(old_label):]
+        caption_new[i] = new_label + text[len(old_label):]
 
-    pattern = _re.compile(r"表 \d+-\d+")
+    pattern = _re.compile(r"[表图] \d+-\d+")
 
     def rep(text):
+        text = text.replace("　", " ")
         return pattern.sub(lambda mm: mapping.get(mm.group(0), mm.group(0)), text)
 
     out = []
     for i, blk in enumerate(blocks):
         if blk[0] == "table":
-            out.append((blk[0], caption_new.get(i, blk[1])) + tuple(blk[2:]))
+            cap = caption_new.get(i, blk[1]).replace("　", " ")
+            out.append((blk[0], cap) + tuple(blk[2:]))
+        elif blk[0] == "img":
+            cap = caption_new.get(i, blk[2]).replace("　", " ")
+            out.append((blk[0], blk[1], cap))
         elif blk[0] in ("p", "pn"):
             out.append((blk[0], rep(blk[1])))
         elif blk[0] == "bullet":
             out.append((blk[0], [rep(x) for x in blk[1]]))
+        elif blk[0] in ("h1", "h1n", "h2", "h3", "h4"):
+            out.append((blk[0], rep(blk[1])))
         else:
             out.append(blk)
     return out

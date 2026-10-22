@@ -57,9 +57,9 @@ const columns = [
     width: 110,
     render: ({ record }) => evidenceTypeLabel(record.evidence_type)
   },
-  { title: "主体账号", dataIndex: "actor_name", width: 110 },
+  { title: "主体账号", dataIndex: "actor_name", width: 130 },
   { title: "主体角色", dataIndex: "actor_role", width: 110 },
-  { title: "行为类型", dataIndex: "action", width: 140 },
+  { title: "行为类型", dataIndex: "action", width: 165 },
   {
     dataIndex: "business_type",
     title: "业务类型",

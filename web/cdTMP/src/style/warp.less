@@ -23,6 +23,12 @@ body {
     margin-bottom: 5px;
 }
 
+// 上面的 display:flex 会覆盖 Arco 的纵向表单规则（.arco-form-item-layout-vertical
+// 原本是 display:block），导致 layout="vertical" 的表单标签与控件挤在同一行，这里还原
+.arco-form-item.arco-form-item-layout-vertical {
+    display: block;
+}
+
 // 覆盖card组件actions的margin-top，原来为20px
 .arco-card-actions {
     margin-top: 0px !important;

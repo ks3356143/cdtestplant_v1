@@ -95,6 +95,10 @@ class AuditLog(models.Model):
             models.Index(fields=['event_type'], name='auditlog_type_idx'),
         )
 
+    def __str__(self):
+        # 便于后台/日志中辨认，避免出现 “AuditLog object (2910)” 这类无意义文本
+        return f'审计事件[{self.event_type}]{self.username or "-"}'
+
 
 class DataIntegrityTag(models.Model):
     """数据完整性校验标签（GB/T 28452-2012 第三级 7.1.7）：重要敏感数据的关键字段快照摘要，

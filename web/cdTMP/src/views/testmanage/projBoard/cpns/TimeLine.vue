@@ -3,13 +3,13 @@
         <div class="ma-content-block rounded-xs flex-column justify-between w-full p-3 bg-color">
             <div class="title">填写的项目时间轴</div>
             <a-timeline direction="horizontal" class="timeline" mode="alternate">
-                <a-timeline-item :label="pInfo.time_line.start_time">
+                <a-timeline-item :label="pInfo.time_line?.start_time">
                     <a-row :style="{ display: 'inline-flex', alignItems: 'center' }">
                         <div>开始时间</div>
                     </a-row>
                 </a-timeline-item>
                 <a-timeline-item
-                    v-for="(item, index) in pInfo.time_line.round_time"
+                    v-for="(item, index) in pInfo.time_line?.round_time || []"
                     :key="index"
                     :dot-color="isErrorHighlight && index === pInfo.time_line.round_time.length - 1 ? 'red' : undefined"
                 >
@@ -23,7 +23,7 @@
                 </a-timeline-item>
                 <a-timeline-item :dot-color="isErrorHighlight ? 'red' : undefined">
                     <template #label>
-                        <span :class="{ 'text-red-500': isErrorHighlight }">{{ pInfo.time_line.end_time }}</span>
+                        <span :class="{ 'text-red-500': isErrorHighlight }">{{ pInfo.time_line?.end_time }}</span>
                     </template>
                     <a-row :style="{ display: 'inline-flex', alignItems: 'center' }">
                         <span>结束时间</span>

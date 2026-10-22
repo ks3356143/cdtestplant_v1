@@ -2,7 +2,7 @@
     <component
         :is="getComponentName()"
         v-model="value"
-        :placeholder="props.component.formType === 'range' ? ['请选择开始时间', '请选择结束时间'] : `请选择${props.component.title}`"
+        :placeholder="props.component.formType === 'range' ? ['开始时间', '结束时间'] : `请选择${props.component.title}`"
         :time-picker-props="props.component.formType == 'range' ? { defaultValue: ['00:00:00', '23:59:59'] } : {}"
         :show-time="props.component.showTime"
         :type="props.component.range ? (props.component.formType === 'time' ? 'time-range' : 'range') : ''"

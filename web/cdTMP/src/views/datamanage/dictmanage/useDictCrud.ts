@@ -25,7 +25,8 @@ export default function useDictCrud() {
         showIndex: false,
         operationColumnAlign: "center",
         rowSelection: { showCheckedAll: true },
-        searchColNumber: 4,
+        // 三列检索：更新时间是日期区间，四列时输入框过窄会把占位文字截断
+        searchColNumber: 3,
         tablePagination: false,
         operationColumn: true,
         afterDelete() {

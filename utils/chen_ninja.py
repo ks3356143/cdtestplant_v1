@@ -20,9 +20,14 @@ class ChenNinjaAPI(NinjaExtraAPI):
         if isinstance(std_data['data'], dict) and 'detail' in std_data['data']:
             std_data['message'] = std_data['data']['detail']
         # ~~~~~~~~~~正常异常,status进行通用处理:TODO:后续规划~~~~~~~~~~
-        # 1.当状态码为403时候，给前端提示message
+        # 0.错误响应的业务码与 HTTP 状态保持一致（此前 403 响应体仍是 code=200，前端难以区分）
+        if status >= 400 and code == 200:
+            std_data['code'] = status
+        # 1.当状态码为403时候：保留调用方给出的中文原因；空值或框架英文缺省文案改回中文
         if status == 403:
-            std_data['message'] = '您没有权限这样做'
+            msg = std_data['message'] or ''
+            if (not msg) or msg == '请求成功' or msg.isascii():
+                std_data['message'] = '您没有权限这样做'
         # 2.当状态码为401时候，根据APIException处理
         elif status == 401:
             detail = ''

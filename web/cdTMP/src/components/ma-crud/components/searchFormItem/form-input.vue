@@ -40,12 +40,9 @@ const props = defineProps({
 const searchForm = inject("searchForm")
 const minData = ref(isArray(props.component?.searchDefaultValue) ? props.component?.searchDefaultValue[0] : undefined)
 const maxData = ref(isArray(props.component?.searchDefaultValue) ? props.component?.searchDefaultValue[1] : undefined)
+// 检索项默认留空：input-number 过去默认 0，会在检索框里显示 0 并可能被当成真实条件提交
 const value = ref(
-    get(
-        searchForm.value,
-        props.component.dataIndex,
-        (props.component.searchDefaultValue ?? props.component.formType === "input-number") ? 0 : ""
-    )
+    get(searchForm.value, props.component.dataIndex, props.component.searchDefaultValue ?? "")
 )
 
 if (props.component.formType === "input-number" && (props.component?.rangeSearch ?? false)) {

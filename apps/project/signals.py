@@ -18,6 +18,7 @@ from utils.chen_response import ChenResponse
 # 导入中间件记录日志模型
 from apps.system.models import LoginLog
 from apps.system.models import OperationLog
+from apps.system.models import AuditLog, DataIntegrityTag
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +27,10 @@ log_manager = TableOperationLog.objects
 _thread_local = local()
 
 # 记录操作日志时需要排除的模型（日志模块、用例步骤表、测试项步骤表、用户表）
-_SKIP_LOG_SENDERS = {TableOperationLog, CaseStep, TestDemandContent, LoginLog, OperationLog, Users}
+# AuditLog 是统一审计的落库对象，DataIntegrityTag 由信号自动维护：
+# 两者都不是用户的业务操作，若也写入操作日志会形成“审计写审计”的噪声与日志膨胀。
+_SKIP_LOG_SENDERS = {TableOperationLog, CaseStep, TestDemandContent, LoginLog, OperationLog,
+                     Users, AuditLog, DataIntegrityTag}
 
 # 记录操作日志时需要排除的 Django 自带应用：迁移记录、内容类型、权限、会话等不属于业务对象。
 # 其中 django_migrations 尤其关键——迁移执行过程中会保存“迁移记录”模型，若这里再去写操作日志，

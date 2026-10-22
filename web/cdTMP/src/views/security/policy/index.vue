@@ -25,11 +25,13 @@
             <a-button @click="loadPolicy">刷新</a-button>
           </a-space>
         </a-form-item>
-        <a-form-item label="策略说明" disabled>
+        <!-- 说明文字单独成块：Arco 的 form-item 在此页为横向布局，标签会与正文挤在同一行 -->
+        <div class="policy-desc">
+          <div class="policy-desc-title">策略说明</div>
           <a-typography-text type="secondary">
             锁定策略在登录接口实时生效：窗口内失败达次数→锁定账号指定时长，并记录登录日志与告警。
           </a-typography-text>
-        </a-form-item>
+        </div>
       </a-form>
     </a-card>
 
@@ -266,3 +268,15 @@ onMounted(() => {
   loadSecrecy()
 })
 </script>
+
+<style scoped>
+.policy-desc {
+    margin-top: 8px;
+    line-height: 1.8;
+}
+.policy-desc-title {
+    color: var(--color-text-2);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+</style>

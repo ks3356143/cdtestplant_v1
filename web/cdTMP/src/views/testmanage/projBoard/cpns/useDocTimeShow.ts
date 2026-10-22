@@ -5,6 +5,8 @@ export function useDocTimeShow(projectId: number, showError: Function) {
     const visible = ref<boolean>(false)
     const handleModalVisible = (): void => {
         visible.value = true
+        // 按需加载：项目时间不完整时后端会返回业务错误，避免进入看板就弹一次提示
+        if (!timeTemp.value.length) getTimeByBackend()
     }
     // 获取时间模块
     const timeTemp = ref<any[]>([])
@@ -19,7 +21,6 @@ export function useDocTimeShow(projectId: number, showError: Function) {
             }
         }
     }
-    getTimeByBackend()
     const timeList = computed(() => {
         timeTemp.value.forEach((item) => {
             if (!item || typeof item !== "object") return

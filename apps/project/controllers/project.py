@@ -131,8 +131,8 @@ class ProjectController(ControllerBase):
         project = self.get_object_or_exception(Project, id=project_id)
         check_project_manage(project, self.context.request.user)
         old_ident = project.ident
-        # 更新操作
-        for attr, value in payload.dict().items():
+        # 更新操作：只覆盖请求里显式给出的字段，避免前端部分提交时把开始/结束时间等清空
+        for attr, value in payload.model_dump(exclude_unset=True).items():
             setattr(project, attr, value)
         project.save()
         new_ident = project.ident

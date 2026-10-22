@@ -15,7 +15,11 @@ const useCrudInit = function () {
         searchColNumber: 3,
         tablePagination: false,
         operationColumn: true,
-        operationWidth: 500,
+        // 操作列放“文档生成/工作区/更多/编辑/删除”，380px 足够；原来 500px 会挤压
+        // 日期列，导致 1280 宽屏下“2026-09-01”被截断
+        operationWidth: 380,
+        // 窄屏时横向滚动，保持各列固定宽度不压缩
+        scroll: { x: 1300 },
         showIndex: false,
         operationColumnWidth: 400, // 操作列宽度
         operationColumnAlign: "center", // 操作列对齐方式
@@ -141,7 +145,8 @@ const useCrudInit = function () {
         {
             title: "项目标识",
             align: "center",
-            width: 80,
+            // 100px 时“项目标识”四个字加上排序图标会被截断成“项目...”
+            width: 120,
             sortable: { sortDirections: ["ascend"] },
             dataIndex: "ident",
             search: true,
@@ -166,14 +171,15 @@ const useCrudInit = function () {
             align: "center",
             commonRules: [{ required: true, message: "开始时间必填" }],
             formType: "date",
-            width: 110
+            // 110px 时“2026-09-01”会被截成“2026-09...”
+            width: 125
         },
         {
             title: "结束时间",
             align: "center",
             dataIndex: "endTime",
             formType: "date",
-            width: 110,
+            width: 125,
             extra: "注意：结束时间需要晚于最后一轮结束时间",
             commonRules: [
                 {
@@ -345,7 +351,8 @@ const useCrudInit = function () {
             align: "center",
             addDefaultValue: "9",
             search: true,
-            width: 110,
+            // 报告类型名称较长（如“CPU 软件配置项三方测评报告”），110px 会被截断
+            width: 190,
             commonRules: [{ required: true, message: "报告类型必填" }],
             // 字典-report_type
             formType: "radio",

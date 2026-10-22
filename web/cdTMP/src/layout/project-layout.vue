@@ -432,7 +432,7 @@ const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop,
     color: #f53f3fed;
     transition: all 0.3s;
 }
-// 有右键菜单节点显示图标
+// 有右键菜单节点显示图标（平时隐藏，悬停节点时提示，避免树里常驻“右键”字样）
 .small-right-context-tip {
     align-items: center;
     background: #eef1f4;
@@ -447,11 +447,16 @@ const { paoVisible, paoContainer, pao2Visible, pao2Container, ondrop, allowdrop,
     padding: 0 3px;
     position: absolute;
     top: 7px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
     i {
         zoom: 0.7;
         color: #6b7280;
         font-size: 10px;
         font-style: normal;
     }
+}
+:deep(.arco-tree-node:hover .small-right-context-tip) {
+    opacity: 1;
 }
 </style>

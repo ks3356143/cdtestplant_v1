@@ -206,7 +206,8 @@ class ProblemController(ControllerBase):
     def update_problem(self, id: int, payload: ProblemCreateInputSchema):
         # 目标问题单必须属于 payload 指定的项目；project_id 不允许通过本接口挪动
         problem_qs = get_object_in_project(Problem, id, payload.project_id, self.context.request.user)
-        for attr, value in payload.dict().items():
+        # 只更新请求里显式给出的字段：弹窗可能只提交部分字段，整表覆盖会清空问题描述与日期
+        for attr, value in payload.model_dump(exclude_unset=True).items():
             if attr == 'project_id':
                 continue
             setattr(problem_qs, attr, value)
@@ -219,7 +220,7 @@ class ProblemController(ControllerBase):
     @transaction.atomic
     def update_modal_problem(self, id: int, payload: ProblemUpdateInputSchema):
         problem_qs = get_object_in_project(Problem, id, payload.project_id, self.context.request.user)
-        for attr, value in payload.dict().items():
+        for attr, value in payload.model_dump(exclude_unset=True).items():
             if attr == 'project_id':
                 continue
             setattr(problem_qs, attr, value)
