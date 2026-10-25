@@ -68,7 +68,8 @@ const visible = ref(false)
 const passwordSafePercent = ref(0)
 
 const resetLogin = () => {
-    window.location.href = "/"
+    // 子路径部署（/cdtestplant/）时不能跳站点根，否则会落到应用之外
+    window.location.href = import.meta.env.BASE_URL
 }
 
 const modifyPassword = async (data) => {

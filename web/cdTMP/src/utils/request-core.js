@@ -82,7 +82,8 @@ export function createService() {
                         } else {
                             err("登录状态已过期，需要重新登录")
                             tool.local.clear()
-                            window.location.href = "/"
+                            // 子路径部署（/cdtestplant/）时不能跳站点根，否则会落到应用之外
+                            window.location.href = import.meta.env.BASE_URL
                         }
                         break
                     }
