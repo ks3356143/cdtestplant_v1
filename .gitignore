@@ -41,3 +41,6 @@ media/backup/
 
 # 客户提供的参考模板（35MB 二进制），不入库
 SRS/参考/
+
+# 内网一键部署产物（离线二进制包，不入库；打包脚本与说明保留）
+/cdtestplant-offline/

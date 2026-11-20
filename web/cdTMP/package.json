@@ -8,6 +8,7 @@
         "build:dev": "vite build --mode development",
         "build:prod": "vite build --mode production",
         "build:server": "vite build --mode server",
+        "build:intranet": "vite build --mode intranet",
         "preview": "vite preview",
         "prettier": "prettier --write ."
     },
