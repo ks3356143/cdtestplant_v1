@@ -32,6 +32,12 @@ Copy-Tree $venvSite  (Join-Path $pkg 'python\Lib\site-packages')
 
 Write-Host "== 2/7 便携 MySQL（含 data 现成数据）/ Redis / nginx =="
 Copy-Tree (Join-Path $root 'packagesInitialize\mysql-8.4.3-winx64') (Join-Path $pkg 'mysql-8.4.3-winx64')
+# MySQL 8.4 zip 版不带 VC++ 运行库，新机器没装 VC++ 2015-2022 x64 会起不来，直接补进 bin 做全自包含
+$vcdlls = 'vcruntime140.dll', 'vcruntime140_1.dll', 'msvcp140.dll'
+foreach ($d in $vcdlls) {
+    $dst = Join-Path $pkg 'mysql-8.4.3-winx64\bin' $d
+    if (-not (Test-Path $dst)) { Copy-Item "C:\Windows\System32\$d" $dst }
+}
 Copy-Tree (Join-Path $root 'packagesInitialize\redis')               (Join-Path $pkg 'redis')
 Copy-Tree (Join-Path $root 'packagesInitialize\nginx-1.28.0')       (Join-Path $pkg 'nginx-1.28.0')
 # 旧包里的前端产物、nginx 旧日志清掉，换新构建
@@ -59,6 +65,23 @@ Copy-Item (Join-Path $root 'run.py')    $app
 robocopy (Join-Path $root 'media') (Join-Path $app 'media') /E /XD __pycache__ output_dir final_seitai temp reuse temporary backup /NFL /NDL /NJH /NJS /NP | Out-Null
 if ($LASTEXITCODE -ge 8) { throw 'media 拷贝失败' }
 $global:LASTEXITCODE = 0
+# 生成代码会直接往这些目录写文件且不自建目录（如 sm.py 的 form_template/sm/temporary），
+# 源 media 里存在的一律以空目录形式镜像进包，否则全新环境首次文档生成会 FileNotFoundError
+$excluded = 'output_dir','final_seitai','temp','reuse','temporary','backup'
+$mediaSrc = Join-Path $root 'media'
+Get-ChildItem $mediaSrc -Recurse -Directory | Where-Object { $excluded -contains $_.Name } | ForEach-Object {
+    $rel = $_.FullName.Substring($mediaSrc.Length + 1)
+    New-Item -ItemType Directory -Force (Join-Path $app ('media\' + $rel)) | Out-Null
+}
+# 存量项目再铺一遍 conf/base_document 的目录骨架（与新建项目 copytree 的结果对齐），
+# 保证 output_dir/sm 等输出子目录在全新环境就位
+$baseDoc = Join-Path $root 'conf\base_document'
+Get-ChildItem (Join-Path $app 'media') -Directory | Where-Object { Test-Path (Join-Path $_.FullName 'form_template') } | ForEach-Object {
+    $projDir = $_.FullName
+    Get-ChildItem $baseDoc -Recurse -Directory | ForEach-Object {
+        New-Item -ItemType Directory -Force (Join-Path $projDir ($_.FullName.Substring($baseDoc.Length + 1))) | Out-Null
+    }
+}
 New-Item -ItemType Directory -Force (Join-Path $app 'logs'), (Join-Path $app 'uploads'), (Join-Path $app 'static') | Out-Null
 
 Write-Host "== 5/7 生成 app\.env + collectstatic =="
