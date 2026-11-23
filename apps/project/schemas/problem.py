@@ -1,4 +1,4 @@
-from pydantic import AliasChoices
+from pydantic import AliasChoices, field_validator
 
 from apps.project.models import Problem
 from ninja import Field, Schema, ModelSchema
@@ -62,11 +62,11 @@ class ProblemCreateInputSchema(Schema):
     status: str = Field(None, alias='status')
     type: str = Field(None, alias='type')
     postPerson: str = Field(None, alias='postPerson')
-    postDate: str = Field(None, alias='postDate')
+    postDate: Optional[str] = Field(None, alias='postDate')
     designerPerson: str = Field("", alias='designerPerson')
-    designDate: str = Field(None, alias='designDate')
+    designDate: Optional[str] = Field(None, alias='designDate')
     verifyPerson: str = Field("", alias='verifyPerson')
-    verifyDate: str = Field(None, alias='verifyDate')
+    verifyDate: Optional[str] = Field(None, alias='verifyDate')
     closeMethod: List[str]
     # 2024年3月27日新增-处理方式字段
     solve: Optional[str] = ""
@@ -74,6 +74,12 @@ class ProblemCreateInputSchema(Schema):
     analysis: str = Field("", alias='analysis')
     effect_scope: str = Field("", alias='effect_scope')
     verify_result: str = Field("", alias='verify_result')
+
+    # 空串日期归一化为 None：DateField 收到 '' 会抛异常返回 500，"无日期"是合法业务场景
+    @field_validator('postDate', 'designDate', 'verifyDate', mode='before')
+    @classmethod
+    def _empty_date_to_none(cls, v):
+        return None if v == '' else v
 
 # 不带round_key、dut_key、design_key、test_key、case_key的更新Schema
 class ProblemUpdateInputSchema(Schema):
@@ -87,11 +93,11 @@ class ProblemUpdateInputSchema(Schema):
     status: str = Field(None, alias='status')
     type: str = Field(None, alias='type')
     postPerson: str = Field(None, alias='postPerson')
-    postDate: str = Field(None, alias='postDate')
+    postDate: Optional[str] = Field(None, alias='postDate')
     designerPerson: str = Field(None, alias='designerPerson')
-    designDate: str = Field(None, alias='designDate')
+    designDate: Optional[str] = Field(None, alias='designDate')
     verifyPerson: str = Field(None, alias='verifyPerson')
-    verifyDate: str = Field(None, alias='verifyDate')
+    verifyDate: Optional[str] = Field(None, alias='verifyDate')
     closeMethod: List[str]
     # 5月13日新增字段
     analysis: str = Field(None, alias='analysis')
@@ -99,6 +105,11 @@ class ProblemUpdateInputSchema(Schema):
     verify_result: str = Field(None, alias='verify_result')
     # 更新字段
     solve: Optional[str] = None
+
+    @field_validator('postDate', 'designDate', 'verifyDate', mode='before')
+    @classmethod
+    def _empty_date_to_none(cls, v):
+        return None if v == '' else v
 
 class ProblemSingleInputSchema(Schema):
     project_id: int = Field(..., alias="projectId")

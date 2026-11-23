@@ -11,8 +11,9 @@ class Total(Schema):
 
 class MyPagination(PaginationBase):
     class Input(Schema):
-        pageSize: int = Field(10, gt=0)
-        page: int = Field(1, ge=1)
+        # 上限校验：堵住扫描发现的 page/pageSize 整数溢出类问题（异常值一律 422 拒绝）
+        pageSize: int = Field(10, gt=0, le=200)
+        page: int = Field(1, ge=1, le=10000)
 
     class Output(Schema):
         items: List[Any]

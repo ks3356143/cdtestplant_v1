@@ -62,9 +62,13 @@ def set_request_locals(sender, **kwargs):
     被request_started连接的信号处理函数，_thread_local.user属性设置为当前登录用户
     """
     bearer_token = kwargs['environ'].get('HTTP_AUTHORIZATION', None)
-    if not bearer_token or bearer_token == 'Bearer null':
+    # 日志接收器只负责"能解析就绑定用户"，不拦截请求：空值/格式错/解码失败一律跳过，
+    # 鉴权拒绝交给 JWTAuth 正常返回 401/403（修复空 Bearer 头触发 DecodeError 500）
+    if not bearer_token or not bearer_token.startswith('Bearer '):
         return
-    bearer_token = bearer_token.replace('Bearer ', '')
+    bearer_token = bearer_token[7:].strip()
+    if not bearer_token or bearer_token == 'null':
+        return
     # 逻辑：先获取NINJA_JWT配置中秘钥、和加密算法信息
     jwt_settings = settings.NINJA_JWT
     jwt_secret = jwt_settings.get('SIGNING_KEY', None)
@@ -77,6 +81,8 @@ def set_request_locals(sender, **kwargs):
         jwt_dict = jwt.decode(bearer_token, secret_key, algorithms=[algorithms_str])
     except ExpiredSignatureError as exc:
         return ChenResponse(status=403, code=500, message='您的token已过期，请重新登录')
+    except Exception:
+        return
     user_id = jwt_dict.get('user_id', None)
     if user_id:
         _thread_local.user = SimpleLazyObject(lambda: get_user_model().objects.get(id=user_id))
