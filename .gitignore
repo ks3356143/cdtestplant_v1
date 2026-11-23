@@ -43,4 +43,5 @@ media/backup/
 SRS/参考/
 
 # 内网一键部署产物（离线二进制包，不入库；打包脚本与说明保留）
-/cdtestplant-offline/
+/安全验证目录/cdtestplant/
+/cdtestplant-fresh-sim/

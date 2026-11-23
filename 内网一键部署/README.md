@@ -9,7 +9,7 @@
 powershell -NoProfile -ExecutionPolicy Bypass -File 内网一键部署/build_package.ps1
 ```
 
-产物：`<项目根>/cdtestplant-offline/`（约 2GB，已 gitignore），整文件夹拷到内网机器的**纯英文路径**（如 `D:\cdtestplant`）即可——MySQL 8.4 便携版不吃中文路径，一键启动脚本里已带拦截提示。
+产物：`<项目根>/安全验证目录/cdtestplant/`（约 2GB，已 gitignore）。**交付时拷内层 `cdtestplant` 文件夹**到内网机器的**纯英文路径**（如 `D:\cdtestplant`）——MySQL 8.4 便携版不吃中文路径，一键启动脚本里已带拦截提示。
 脚本做的事：拷贝便携 CPython 3.13 + `.venv` 全部依赖、便携 MySQL（含现成 data 目录）、Redis、
 nginx；前端按 `build:intranet` 模式构建并放入 `nginx/html/dist`；后端源码 + 自动生成 `app/.env`
 （随机 DJANGO_SECRET_KEY，FIELD_ENCRYPTION_KEY 沿用本机 .env 以保证历史密文可解）+ collectstatic；

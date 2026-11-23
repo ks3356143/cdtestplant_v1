@@ -6,8 +6,9 @@
 $ErrorActionPreference = 'Stop'
 
 $root = Split-Path -Parent $PSScriptRoot      # 项目根
-# 产物必须放在纯英文路径：MySQL 8.4 便携版无法在含中文的路径下运行
-$pkg  = Join-Path $root 'cdtestplant-offline'
+# 产物：安全验证目录/cdtestplant —— 交付时用户拷的是内层 cdtestplant 文件夹（必须纯英文），
+# 本目录路径含中文没关系：打包过程不运行 MySQL，只有拷到目标机后才执行
+$pkg  = Join-Path $root '安全验证目录\cdtestplant'
 
 $pyRuntime = 'D:\programs\uv\python\cpython-3.13.11-windows-x86_64-none'
 $venvSite  = Join-Path $root '.venv\Lib\site-packages'
@@ -35,7 +36,7 @@ Copy-Tree (Join-Path $root 'packagesInitialize\mysql-8.4.3-winx64') (Join-Path $
 # MySQL 8.4 zip 版不带 VC++ 运行库，新机器没装 VC++ 2015-2022 x64 会起不来，直接补进 bin 做全自包含
 $vcdlls = 'vcruntime140.dll', 'vcruntime140_1.dll', 'msvcp140.dll'
 foreach ($d in $vcdlls) {
-    $dst = Join-Path $pkg 'mysql-8.4.3-winx64\bin' $d
+    $dst = Join-Path $pkg "mysql-8.4.3-winx64\bin\$d"
     if (-not (Test-Path $dst)) { Copy-Item "C:\Windows\System32\$d" $dst }
 }
 Copy-Tree (Join-Path $root 'packagesInitialize\redis')               (Join-Path $pkg 'redis')
