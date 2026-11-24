@@ -13,22 +13,13 @@ if %errorlevel%==1 (
     exit /b 1
 )
 
-rem If already running, just open the page again.
-%SystemRoot%\System32\curl.exe -s -o nul --connect-timeout 2 http://127.0.0.1:8181/
-if %errorlevel%==0 (
-    echo Already running, opening the page.
-    start http://127.0.0.1:8181/
-    pause
-    exit /b 0
-)
+rem Each service is detected separately and only missing ones are started, so it
+rem is safe to re-run this script after manually closing any console window.
 
-echo [1/5] starting MySQL on 3307 ...
+echo [1/4] MySQL on 3307 ...
+"%~dp0mysql-8.4.3-winx64\bin\mysqladmin.exe" -h127.0.0.1 -P3307 -uroot -proot ping >nul 2>&1
+if %errorlevel%==0 goto MYSQL_SKIP
 start "MySQL-3307" /min /d "%~dp0mysql-8.4.3-winx64\bin" mysqld.exe "--defaults-file=%~dp0mysql-8.4.3-winx64\my.ini" --console
-
-echo [2/5] starting Redis on 6379 ...
-start "Redis-6379" /min /d "%~dp0redis" redis-server.exe
-
-echo [3/5] waiting for MySQL, up to 30s ...
 set /a TRIES=0
 :WAIT_MYSQL
 "%~dp0mysql-8.4.3-winx64\bin\mysqladmin.exe" -h127.0.0.1 -P3307 -uroot -proot ping >nul 2>&1
@@ -44,11 +35,45 @@ echo MySQL is not ready in 30s. Check the minimized MySQL window for errors.
 pause
 exit /b 1
 
-:MYSQL_OK
-echo [4/5] starting backend waitress on 8000 ...
-start "backend-8000" /min /d "%~dp0app" "%~dp0python\python.exe" run.py
+:MYSQL_SKIP
+echo       MySQL already running, skip.
+goto REDIS_STEP
 
-echo waiting for backend, up to 60s ...
+:MYSQL_OK
+echo       MySQL is up.
+
+:REDIS_STEP
+echo [2/4] Redis on 6379 ...
+"%~dp0redis\redis-cli.exe" -h 127.0.0.1 -p 6379 ping 2>nul | %SystemRoot%\System32\find.exe "PONG" >nul
+if %errorlevel%==0 goto REDIS_SKIP
+rem bare redis-server.exe dies silently on some Win10 machines: always start with the bundled conf
+start "Redis-6379" /min /d "%~dp0redis" redis-server.exe redis.windows.conf
+set /a TRIES=0
+:WAIT_REDIS
+"%~dp0redis\redis-cli.exe" -h 127.0.0.1 -p 6379 ping 2>nul | %SystemRoot%\System32\find.exe "PONG" >nul
+if %errorlevel%==0 goto REDIS_OK
+set /a TRIES+=1
+if %TRIES% geq 15 goto REDIS_FAIL
+ping -n 2 127.0.0.1 >nul
+goto WAIT_REDIS
+
+:REDIS_FAIL
+echo Redis is not ready in 15s. Check the minimized Redis-6379 window for errors.
+pause
+exit /b 1
+
+:REDIS_SKIP
+echo       Redis already running, skip.
+goto BE_STEP
+
+:REDIS_OK
+echo       Redis is up.
+
+:BE_STEP
+echo [3/4] backend waitress on 8000 ...
+%SystemRoot%\System32\curl.exe -s -o nul --connect-timeout 2 http://127.0.0.1:8000/api/docs
+if %errorlevel%==0 goto BE_SKIP
+start "backend-8000" /min /d "%~dp0app" "%~dp0python\python.exe" run.py
 set /a TRIES=0
 :WAIT_BE
 %SystemRoot%\System32\curl.exe -s -o nul --connect-timeout 2 http://127.0.0.1:8000/api/docs
@@ -63,10 +88,40 @@ echo Backend is not ready in 60s. Check the minimized backend-8000 window for er
 pause
 exit /b 1
 
+:BE_SKIP
+echo       Backend already running, skip.
+goto NGINX_STEP
+
 :BE_OK
-echo [5/5] starting nginx on 8181 and opening the page ...
+echo       Backend is up.
+
+:NGINX_STEP
+echo [4/4] nginx on 8181 ...
+%SystemRoot%\System32\curl.exe -s -o nul --connect-timeout 2 http://127.0.0.1:8181/
+if %errorlevel%==0 goto NGINX_SKIP
 start "nginx-8181" /min /d "%~dp0nginx-1.28.0" nginx.exe
-ping -n 3 127.0.0.1 >nul
+set /a TRIES=0
+:WAIT_NGINX
+%SystemRoot%\System32\curl.exe -s -o nul --connect-timeout 2 http://127.0.0.1:8181/
+if %errorlevel%==0 goto NGINX_OK
+set /a TRIES+=1
+if %TRIES% geq 15 goto NGINX_FAIL
+ping -n 2 127.0.0.1 >nul
+goto WAIT_NGINX
+
+:NGINX_FAIL
+echo nginx is not ready in 15s. Check the minimized nginx window for errors.
+pause
+exit /b 1
+
+:NGINX_SKIP
+echo       nginx already running, skip.
+goto OPEN
+
+:NGINX_OK
+echo       nginx is up.
+
+:OPEN
 start http://127.0.0.1:8181/
 
 echo.
